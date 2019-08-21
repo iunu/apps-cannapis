@@ -29,6 +29,8 @@ gem 'bootsnap', '>= 1.4.2', require: false
 
 gem 'http'
 
+# gem 'acts_as_paranoid', '~> 0.6.0'
+
 # Metrc API client
 # [WIP] set environment variable if modifications are needed.
 if ENV['LOCAL_METRC_GEM_DEV']
