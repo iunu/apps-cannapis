@@ -24,7 +24,7 @@
 #  * zeus: 'zeus rspec' (requires the server to be started separately)
 #  * 'just' rspec: 'rspec'
 
-guard :rspec, cmd: 'bundle exec rspec' do
+guard :rspec, cmd: 'bundle exec rspec', notify: true do
   require 'guard/rspec/dsl'
   dsl = Guard::RSpec::Dsl.new(self)
   notification :growl
@@ -65,4 +65,9 @@ guard :rspec, cmd: 'bundle exec rspec' do
   watch(%r{^spec/acceptance/steps/(.+)_steps\.rb$}) do |m|
     Dir[File.join("**/#{m[1]}.feature")][0] || 'spec/acceptance'
   end
+end
+
+guard :rubocop, all_on_start: false, cli: ['--format', 'clang', '--rails'], notification: true do
+  watch('Gemfile.lock')
+  watch(%r{^(config|lib)/.*})
 end

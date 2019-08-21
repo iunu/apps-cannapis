@@ -8,6 +8,8 @@ class AuthorizationController < ApplicationController
   end
 
   def callback
+    return render json: {}, status: :bad_request unless params[:code]
+
     client = oauth_client
     token = client.auth_code.get_token(params[:code], redirect_uri: oauth_callback_url)
     auth = Cappapi::AuthorizationService.create(token)
@@ -18,6 +20,8 @@ class AuthorizationController < ApplicationController
   end
 
   def unauthorize
+    return render json: {}, status: :bad_request unless params[:id]
+
     account = Account.find(params[:id])
     account.update(access_token: nil,
                    refresh_token: nil,

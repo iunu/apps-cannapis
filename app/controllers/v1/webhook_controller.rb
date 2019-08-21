@@ -14,6 +14,7 @@ module V1
     private
 
     def valid_params
+      return render json: {}, status: :bad_request unless params[:data]
       return render json: {}, status: :bad_request if params[:data][:type] != 'actions' && params[:meta][:event_type] != 'creation'
       return render json: {}, status: :not_found unless SUPPORTED_ACTIONS.include? params[:data][:attributes][:action_type]
     end
