@@ -1,0 +1,23 @@
+<h1>Artemis <-> Cannapis Integration</h1>
+
+<% if @current_account %>
+  <p>
+    Hello <%= @current_account.name %>! You are already connected with Artemis.
+  </p>
+
+  <% if @facilities && @facilities.count > 0 %>
+    <p>
+      Facilities:
+    </p>
+
+    <ul>
+      <% @facilities.each do |f| %>
+        <li><%= "#{f.name} - #{f.city}, #{f.state}" %></li>
+      <% end %>
+    </ul>
+  <% end %>
+
+  <%= button_to "Revoke authorization", unauthorize_url(id: @current_account.id) %>
+<% else %>
+  <%= button_to "Connect with Artemis", authorize_url %>
+<% end %>
