@@ -1,0 +1,28 @@
+require: rubocop-rails
+
+Documentation:
+  Enabled: false
+
+Encoding:
+  Enabled: false
+
+NumericLiterals:
+  Enabled: false
+
+Metrics/ModuleLength:
+  Enabled: false
+
+Metrics/MethodLength:
+  Enabled: false
+
+Metrics/BlockLength:
+  Enabled: false
+
+Metrics/ClassLength:
+  Enabled: false
+
+Metrics/LineLength:
+  Enabled: false
+
+Style/FrozenStringLiteralComment:
+  Enabled: false

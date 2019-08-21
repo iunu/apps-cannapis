@@ -1,0 +1,44 @@
+version: '3'
+
+services:
+  app:
+    image: cannapi-app
+    container_name: cannapi-app
+    env_file: .env
+    build: .
+    command: bash -c "/wait && bundle exec puma -t 5:5 -p 3000 -e development"
+    volumes:
+      - ./:/var/artemis/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - db
+    links:
+      - db
+    environment:
+      WAIT_HOSTS: db:5432
+    labels:
+      - 'traefik.enable=true'
+      - 'traefik.backend=api'
+      - 'traefik.port=3000'
+      - 'traefik.frontend.entryPoints=http'
+      - 'traefik.frontend.rule=PathPrefix:/'
+
+  db:
+    image: postgres
+    container_name: cannapi-db
+    env_file: .env
+    ports:
+      - 5432
+    volumes:
+      - ./db/.data:/var/lib/postgresql/data
+
+  traefik:
+    image: traefik
+    container_name: cannapi-traefik
+    command: --web --docker --docker.domain=docker.localhost --logLevel=INFO --docker.exposedbydefault=false
+    ports:
+      - 80:80
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - /dev/null:/traefik.toml
