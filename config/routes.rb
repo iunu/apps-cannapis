@@ -5,4 +5,8 @@ Rails.application.routes.draw do
   post 'authorize'      => 'authorization#authorize'
   get  'oauth/callback' => 'authorization#callback'
   post 'unauthorize'    => 'authorization#unauthorize'
+
+  namespace :v1 do
+    post 'webhook' => 'webhook#handler'
+  end
 end
