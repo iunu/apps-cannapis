@@ -26,3 +26,6 @@ Metrics/LineLength:
 
 Style/FrozenStringLiteralComment:
   Enabled: false
+
+Naming/RescuedExceptionsVariableName:
+  Enabled: false
