@@ -1,0 +1,2 @@
+class MetrcJob < ApplicationJob
+end
