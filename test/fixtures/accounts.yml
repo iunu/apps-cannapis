@@ -1,0 +1,17 @@
+# Read about fixtures at https://api.rubyonrails.org/classes/ActiveRecord/FixtureSet.html
+
+one:
+  artemis_id: 1
+  name: MyString
+  access_token: MyString
+  refresh_token: MyString
+  access_token_expires_in: 1
+  access_token_created_at: 2019-08-21 12:27:46
+
+two:
+  artemis_id: 1
+  name: MyString
+  access_token: MyString
+  refresh_token: MyString
+  access_token_expires_in: 1
+  access_token_created_at: 2019-08-21 12:27:46
