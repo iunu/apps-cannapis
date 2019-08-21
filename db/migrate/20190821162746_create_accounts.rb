@@ -11,6 +11,7 @@ class CreateAccounts < ActiveRecord::Migration[6.0]
       t.timestamps
     end
 
+    add_index :accounts, :id, unique: true
     add_index :accounts, :artemis_id, unique: true
   end
 end
