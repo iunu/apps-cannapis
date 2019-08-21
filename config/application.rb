@@ -31,5 +31,10 @@ module Cannapi
     # the framework and any gems in your application.
 
     config.active_job.queue_adapter = :sidekiq
+
+    # Generate AR migration with UUID as primary keys
+    config.generators do |g|
+      g.orm :active_record, primary_key_type: :uuid
+    end
   end
 end
