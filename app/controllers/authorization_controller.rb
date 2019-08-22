@@ -12,7 +12,7 @@ class AuthorizationController < ApplicationController
 
     client = oauth_client
     token = client.auth_code.get_token(params[:code], redirect_uri: oauth_callback_url)
-    account = Cappapi::AuthorizationService.create(token)
+    account = AuthorizationService.create(token)
     session[:current_account_id] = account.id
 
     redirect_to root_path

@@ -14,6 +14,8 @@ class Account < ApplicationRecord
   end
 
   def client
-    ArtemisApi::Client.new(access_token, refresh_token, access_token_expires_in, access_token_created_at)
+    ArtemisApi::Client.new(access_token,
+                           refresh_token,
+                           access_token_expires_in)
   end
 end
