@@ -36,5 +36,9 @@ module Cannapi
     config.generators do |g|
       g.orm :active_record, primary_key_type: :uuid
     end
+
+    if ENV['WAIT_HOSTS'] # We're running on docker-compose!
+      config.web_console.whiny_requests = false
+    end
   end
 end
