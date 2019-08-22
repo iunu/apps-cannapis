@@ -54,14 +54,13 @@ group :development, :test do
 end
 
 group :development do
-  gem 'growl'
   gem 'guard-rspec', require: false
   gem 'guard-rubocop', '~> 1.3'
   gem 'listen', '>= 3.0.5', '< 3.2'
   gem 'rb-readline'
   gem 'rubocop'
   gem 'rubocop-rails'
-  gem 'ruby_gntp'
+  gem 'terminal-notifier-guard'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
