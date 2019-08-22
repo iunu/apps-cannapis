@@ -1,5 +1,9 @@
 require: rubocop-rails
 
+AllCops:
+  Exclude:
+    - db/schema.rb
+
 Documentation:
   Enabled: false
 
