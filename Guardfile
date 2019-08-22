@@ -23,11 +23,11 @@
 #                          installed the spring binstubs per the docs)
 #  * zeus: 'zeus rspec' (requires the server to be started separately)
 #  * 'just' rspec: 'rspec'
+notification :growl
 
-guard :rspec, cmd: 'bundle exec rspec', notify: true do
+guard :rspec, cmd: 'bundle exec rspec' do
   require 'guard/rspec/dsl'
   dsl = Guard::RSpec::Dsl.new(self)
-  notification :growl
 
   # Feel free to open issues for suggestions and improvements
 
@@ -65,9 +65,6 @@ guard :rspec, cmd: 'bundle exec rspec', notify: true do
   watch(%r{^spec/acceptance/steps/(.+)_steps\.rb$}) do |m|
     Dir[File.join("**/#{m[1]}.feature")][0] || 'spec/acceptance'
   end
-end
 
-guard :rubocop, all_on_start: false, cli: ['--format', 'clang', '--rails'], notification: true do
-  watch('Gemfile.lock')
-  watch(%r{^(config|lib)/.*})
+  watch(%r{^spec/.+_spec\.rb$})
 end
