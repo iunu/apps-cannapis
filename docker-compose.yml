@@ -8,7 +8,7 @@ services:
     build: .
     command: bash -c "/wait && bundle exec puma -t 5:5 -p 3000 -e development"
     volumes:
-      - ./:/var/artemis/app
+      - .:/var/artemis/app
     ports:
       - 3000:3000
     depends_on:
@@ -30,10 +30,12 @@ services:
     image: cannapi-app
     container_name: cannapi-app-migration
     env_file: .env
-    entrypoint: bash -c "/wait && bundle exec rake db:setup"
+    entrypoint: bash -c "/wait && bundle exec rake db:migrate"
     environment:
       WAIT_HOSTS: db:5432
     depends_on:
+      - db
+    links:
       - db
 
   db:
