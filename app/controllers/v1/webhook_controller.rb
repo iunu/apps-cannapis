@@ -3,10 +3,10 @@ module V1
     skip_before_action :verify_authenticity_token
     before_action :valid_params, only: :handler
     # FIXME: Use the correct bits to whitelist payloads
-    SUPPORTED_ACTIONS = %w[start move discard].freeze
+    SUPPORTED_TYPES = %w[start move discard split harvest].freeze
 
     def handler
-      Cannapi::IntegrationService.call(params)
+      IntegrationService.call(params[:data])
 
       render json: {}, status: :no_content
     end
@@ -14,8 +14,9 @@ module V1
     private
 
     def valid_params
-      return render json: {}, status: :bad_request if !params[:data] || (params[:data][:type] != 'actions' && params[:meta][:event_type] != 'creation')
-      return render json: {}, status: :not_found unless SUPPORTED_ACTIONS.include? params[:data][:attributes][:action_type]
+      return render json: {}, status: :bad_request unless params[:data]
+      return render json: {}, status: :bad_request if params[:data][:type] != 'completions'
+      return render json: {}, status: :not_found unless SUPPORTED_TYPES.include? params[:data][:attributes][:action_type]
     end
   end
 end
