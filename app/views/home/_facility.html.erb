@@ -1,0 +1,11 @@
+<% if facility.state %>
+  <fieldset>
+    <legend><%= "#{facility.name} - #{facility.city}, #{facility.state}" %></legend>
+    <%= label_tag("facility[][license_number]", "Metrc License Number:") %>
+    <%= text_field_tag("facility[][license_number]", facility.license_number) %>
+    <%= hidden_field_tag("facility[][facility_id]", facility.id) %>
+
+    <p>User API keys (per facility)</p>
+    <%= render partial: 'user', collection: facility.users %>
+  </fieldset>
+<% end %>

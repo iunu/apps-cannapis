@@ -1,4 +1,4 @@
-<h1>Artemis <-> Cannapis Integration</h1>
+<h1>Artemis Integrations</h1>
 
 <% if @current_account %>
   <p>
@@ -6,15 +6,12 @@
   </p>
 
   <% if @facilities && @facilities.count > 0 %>
-    <p>
-      Facilities:
-    </p>
+    <h2>Facilities:</h2>
 
-    <ul>
-      <% @facilities.each do |f| %>
-        <li><%= "#{f.name} - #{f.city}, #{f.state}" %></li>
-      <% end %>
-    </ul>
+    <%= form_tag do %>
+      <%= render partial: 'facility', collection: @facilities %>
+      <%= submit_tag "Save" %>
+    <% end %>
   <% end %>
 
   <%= button_to "Revoke authorization", unauthorize_url(id: @current_account.id) %>
