@@ -60,5 +60,5 @@ Rails.application.configure do
   config.hosts << 'cannapis.test'
   config.hosts << 'cannapis.dev'
   config.hosts << 'local.artemis.dev'
-  config.hosts << '*.ngrok.io'
+  config.hosts << ENV['NGROK_HOST'] if ENV['NGROK_HOST']
 end
