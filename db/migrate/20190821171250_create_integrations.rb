@@ -4,10 +4,10 @@ class CreateIntegrations < ActiveRecord::Migration[6.0]
       t.references :account, null: false, foreign_key: true, type: :uuid
       t.integer :facility_id
       t.string :state
-      t.string :vendor
-      t.string :vendor_id
-      t.string :key
-      t.string :secret
+      t.string :vendor # Vendor name, in lowercase
+      t.string :vendor_id # License number
+      t.string :key # API Key or access token
+      t.string :secret # API secret or token secret
       t.datetime :deleted_at
 
       t.timestamps
