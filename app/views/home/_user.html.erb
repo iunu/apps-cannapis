@@ -1,5 +1,6 @@
-<%= label_tag("facility[][user][api_key]", "#{user.full_name} Metrc API Key:") %>
-<%= text_field_tag("facility[][user][api_key]", user.id) %>
-<%= text_field_tag("facility[][user][api_key]", user.api_key) %>
-<%= hidden_field_tag("facility[][user][facility_id]", user.facility_id) %>
-<%= hidden_field_tag("facility[][user][user_id]", user.id) %>
+<%= label_tag("facility[][user][api_key]", "#{user['id']} Metrc API Key:") %>
+<%= text_field_tag("facility[][user][api_key]", user['id']) %>
+<%= text_field_tag("facility[][user][api_key]", user['api_key']) %>
+<%= hidden_field_tag("facility[][user][facility_id]", user['facility_id']) %>
+<%= hidden_field_tag("facility[][user][user_id]", user['id']) %>
+<br />
