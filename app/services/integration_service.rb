@@ -14,8 +14,8 @@ class IntegrationService < ApplicationService
     return unless integrations.size.positive?
 
     integrations.each do |integration|
-      modulez = "#{integration.vendor.camelize}Service".constantize
-      modulez.send 'figure_out_handler', integration, @ctx
+      vendor_job = "#{integration.vendor.camelize}Job".constantize
+      vendor_job.send "perform_#{@ctx[:attributes][:action_type]}_batch", @ctx, integration
     end
   end
 end
