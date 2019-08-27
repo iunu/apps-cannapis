@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/artemis-ag/Metrc.git
-  revision: 03da5f721655d2bd1a845422ac9cd10838b275be
+  revision: 7dd8a2d52e88d5ac734500941e2b14f9cfec493c
   specs:
-    Metrc (0.1.0)
+    Metrc (0.2.0)
       bundler
       httparty
       rake
