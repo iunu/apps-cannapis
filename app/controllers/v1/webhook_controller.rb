@@ -3,7 +3,7 @@ module V1
     skip_before_action :verify_authenticity_token
     before_action :valid_params, only: :handler
     # FIXME: Use the correct bits to whitelist payloads
-    SUPPORTED_TYPES = %w[start move discard split harvest].freeze
+    SUPPORTED_TYPES = %w[start move discard harvest].freeze
 
     def handler
       IntegrationService.call(completion_params)
