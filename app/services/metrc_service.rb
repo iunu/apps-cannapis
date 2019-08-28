@@ -7,22 +7,26 @@ class MetrcService < ApplicationService
   end
 
   def start_batch
+    @integration.account.refresh_token_if_needed
     client = metrc_client
-    batch = ArtemisApi::Batch.find(@batch_id,
-                                   @facility_id,
-                                   @integration.account.client,
-                                   include: %i[zone barcodes])
-    # barcode = batch
+    batch  = ArtemisApi::Batch.find(@batch_id,
+                                    @facility_id,
+                                    @integration.account.client,
+                                    include: 'zone,barcodes')
+
+    return unless batch.crop == 'Cannabis'
+
     payload = build_start_payload(batch)
     client.create_plant_batches(@integration.vendor_id, [payload])
   end
 
   def discard_batch
+    @integration.account.client.refresh_token_if_needed
     client = metrc_client
     batch  = ArtemisApi::BatchDiscards.find(@ctx.relationships['action_result']['data']['id'],
                                             @facility_id,
                                             @integration.account.client,
-                                            include: 'batch.barcodes')
+                                            include: 'batch,barcodes')
     # barcode = batch
     payload = build_discard_payload(batch)
     client.destroy_plant_batches(@integration.vendor_id, [payload])
@@ -31,8 +35,9 @@ class MetrcService < ApplicationService
   private
 
   def build_start_payload(batch)
+    barcode_id = batch.relationships.dig('barcodes', 'data')&.find { |el| el['type'] == 'barcodes' }['id']
     {
-      'Name': batch.relationships.dig('barcodes', 'data', 'id'),
+      'Name': barcode_id,
       'Type': batch.attributes['seeding_unit']&.capitalize,
       'Count': batch.attributes['quantity']&.to_i,
       'Strain': batch.attributes['crop_variety'],
@@ -43,15 +48,12 @@ class MetrcService < ApplicationService
   end
 
   def build_discard_payload(batch)
-    reason_note = if batch.attributes['reason_type'] && batch.attributes['reason_description'] then
-                    "#{attributes['reason_type']}: #{attributes['reason_description']}"
-                  else
-                    'Does not meet internal QC'
-                  end
+    reason_note = 'Does not meet internal QC'
+    reason_note = "#{attributes['reason_type']}: #{attributes['reason_description']}" if batch.attributes['reason_type'] && batch.attributes['reason_description']
 
     {
       'PlantBatch': batch.id,
-      'Count': batch.attributes['quantity'].to_i,
+      'Count': batch.attributes['quantity']&.to_i,
       'ReasonNote': reason_note,
       'ActualDate': batch.attributes['seeded_at'] # map to dump date
     }
