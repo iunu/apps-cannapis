@@ -6,7 +6,7 @@ module V1
     SUPPORTED_TYPES = %w[start move discard split harvest].freeze
 
     def handler
-      IntegrationService.call(params[:data])
+      IntegrationService.call(completion_params)
 
       render json: {}, status: :no_content
     end
@@ -17,6 +17,10 @@ module V1
       return render json: {}, status: :bad_request unless params[:data]
       return render json: {}, status: :bad_request if params[:data][:type] != 'completions'
       return render json: {}, status: :not_found unless SUPPORTED_TYPES.include? params[:data][:attributes][:action_type]
+    end
+
+    def completion_params
+      params.require(:data).permit!
     end
   end
 end
