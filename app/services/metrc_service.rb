@@ -2,12 +2,12 @@ class MetrcService < ApplicationService
   def initialize(ctx, integration)
     @batch_id    = ctx.dig(:relationships, :batch, :data, :id)
     @facility_id = ctx.dig(:relationships, :facility, :data, :id)
+    @ctx         = ctx
     @integration = integration
   end
 
   def start_batch
-    client = metrc_client(@integration.key, @integration.secret, @integration.state)
-    puts "\nMetrc API Request debug\n#{client.uri}\n########################\n"
+    client = metrc_client
     batch = ArtemisApi::Batch.find(@batch_id,
                                    @facility_id,
                                    @integration.account.client,
@@ -15,6 +15,17 @@ class MetrcService < ApplicationService
     # barcode = batch
     payload = build_start_payload(batch)
     client.create_plant_batches(@integration.vendor_id, [payload])
+  end
+
+  def discard_batch
+    client = metrc_client
+    batch  = ArtemisApi::BatchDiscards.find(@ctx.relationships['action_result']['data']['id'],
+                                            @facility_id,
+                                            @integration.account.client,
+                                            include: 'batch.barcodes')
+    # barcode = batch
+    payload = build_discard_payload(batch)
+    client.destroy_plant_batches(@integration.vendor_id, [payload])
   end
 
   private
@@ -31,14 +42,29 @@ class MetrcService < ApplicationService
     }
   end
 
-  def metrc_client(api_key, user_key, state)
+  def build_discard_payload(batch)
+    reason_note = if batch.attributes['reason_type'] && batch.attributes['reason_description'] then
+                    "#{attributes['reason_type']}: #{attributes['reason_description']}"
+                  else
+                    'Does not meet internal QC'
+                  end
+
+    {
+      'PlantBatch': batch.id,
+      'Count': batch.attributes['quantity'].to_i,
+      'ReasonNote': reason_note,
+      'ActualDate': batch.attributes['seeded_at'] # map to dump date
+    }
+  end
+
+  def metrc_client
     Metrc.configure do |config|
-      config.api_key  = api_key
-      config.state    = state.to_sym
+      config.api_key  = @integration.key
+      config.state    = @integration.state
       config.sandbox  = Rails.env.development?
     end
 
-    Metrc::Client.new(user_key: user_key,
+    Metrc::Client.new(user_key: @integration.secret,
                       debug: Rails.env.development?)
   end
 end
