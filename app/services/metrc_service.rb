@@ -46,7 +46,7 @@ class MetrcService < ApplicationService
     }
   end
 
-  def build_discard_payload(batch)
+  def build_discard_payload(batch) # rubocop:disable Metrics/AbcSize
     reason_note = 'Does not meet internal QC'
     reason_note = "#{batch.attributes['reason_type'].capitalize}: #{batch.attributes['reason_description']}" if batch.attributes['reason_type'] && batch.attributes['reason_description']
 

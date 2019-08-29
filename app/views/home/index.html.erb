@@ -1,20 +1,27 @@
-<h1>Artemis Integrations</h1>
-
 <% if @current_account %>
-  <p>
-    Hello <%= @current_account.name %>! You are already connected with Artemis.
-  </p>
+  <div class="my-lg ta-center">
+    <h3 class="h3 mb-0">
+      Welcome, <%= @current_account.name %>!
+    </h3>
 
+    <h4 class="h4 text--darkGray">
+      These are your facilities
+    </h4>
+  </div>
+<% end %>
+
+<div class="width">
   <% if @facilities && @facilities.count > 0 %>
-    <h2>Facilities:</h2>
-
-    <%= form_tag do %>
-      <%= render partial: 'facility', collection: @facilities %>
-      <%= submit_tag "Save" %>
-    <% end %>
+    <%= render partial: 'facility', collection: @facilities, locals: { integrations: @integrations } %>
   <% end %>
+</div>
 
-  <%= button_to "Revoke authorization", unauthorize_url(id: @current_account.id) %>
-<% else %>
-  <%= button_to "Connect with Artemis", authorize_url %>
+<% content_for :header_aux do %>
+  <div class="directional-text">
+    <% if @current_account %>
+      <%= button_to 'Revoke authorization', unauthorize_url(id: @current_account.id), class: 'btn btn--plain' %>
+    <% else %>
+      <%= button_to 'Connect with Artemis', authorize_url, class: 'btn btn--plain' %>
+    <% end %>
+  </div>
 <% end %>

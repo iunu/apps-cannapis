@@ -7,9 +7,33 @@
 
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_pack_tag 'application' %>
+    <link rel="apple-touch-icon" sizes="180x180" href="/assets/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/assets/favicon-16x16.png">
   </head>
 
   <body>
-    <%= yield %>
+    <div class="container">
+      <header class="header">
+        <div class="js-header-logo directional-text">
+          <a class="header__title" href="#">
+            <img alt="Artemis Icon" class="header__logo" src="/assets/shield-color-logo.svg">
+            <span class="header__facility-name">Artemis Integrations</span>
+          </a>
+        </div>
+
+        <nav class="header__nav js-header-nav">
+          <%= yield :header_nav %>
+        </nav>
+
+        <div class="header__aux">
+          <%= yield :header_aux %>
+        </div>
+      </header>
+
+      <div class="main">
+        <%= yield %>
+      </div>
+    </div>
   </body>
 </html>

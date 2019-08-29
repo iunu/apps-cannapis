@@ -1,11 +1,37 @@
 <% if facility.state %>
-  <fieldset>
-    <legend><%= "#{facility.name} - #{facility.city}, #{facility.state}" %></legend>
-    <%= label_tag("facility[][license_number]", "Metrc License Number:") %>
-    <%= text_field_tag("facility[][license_number]", facility.license_number) %>
-    <%= hidden_field_tag("facility[][facility_id]", facility.id) %>
+  <%= form_tag "/v1/facility/#{facility.id}", method: :put, class: 'panel facility__widget' do %>
+    <header class="panel__header">
+      <h4 class="panel__title">
+        <%= facility.name %>
+      </h4>
 
-    <p>User API keys (per facility)</p>
-    <%= render partial: 'user', collection: facility.relationships['users']['data'] %>
-  </fieldset>
+      <span class="pill pill--purple ml-auto">
+        <%= "#{facility.city}, #{facility.state}" %>
+      </span>
+    </header>
+
+    <div class="w-50 pr">
+      <div class="my">
+        <%= label_tag('facility[license_number]', 'Metrc License Number') %>
+        <%= text_field_tag('facility[license_number]', integrations[facility.id]&.vendor_id, class: 'text--mono') %>
+      </div>
+
+      <div class="my">
+        <%= label_tag('facility[api_key]', 'Metrc API Key') %>
+        <%= text_field_tag('facility[api_key]', integrations[facility.id]&.key, class: 'text--mono') %>
+      </div>
+
+      <div class="my">
+        <%= label_tag('facility[api_secret]', 'Metrc API Secret') %>
+        <%= text_field_tag('facility[api_secret]', integrations[facility.id]&.secret, class: 'text--mono') %>
+      </div>
+
+      <%= hidden_field_tag('facility[vendor]', :metrc) %>
+      <%= hidden_field_tag('facility[state]', facility.state&.downcase) %>
+    </div>
+    <div class="clearfix"></div>
+
+    <%= button_tag 'Save', type: :submit, class: 'btn btn--green fr' %>
+    <div class="clearfix"></div>
+  <% end %>
 <% end %>
