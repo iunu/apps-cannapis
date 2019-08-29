@@ -14,13 +14,6 @@
  *= require_self
  */
 
- /* body {
-  background-color: #f7f7f9;
-  color: #343434;
-  min-height: 100vh;
-  min-width: 960px;
- } */
-
  @charset "UTF-8";
 /* Responsive
 ========================================================================== */
@@ -5266,6 +5259,11 @@ p {
 a {
   color: #3B82F4;
   cursor: pointer;
+}
+
+/* line 70, app/assets/stylesheets/base/_type.scss */
+.text--xxs {
+  font-size: .65rem !important;
 }
 
 /* line 70, app/assets/stylesheets/base/_type.scss */
@@ -14754,6 +14752,18 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
   display: flex;
 }
 
+.header__aux .btn {
+  color: #fff;
+}
+
+.header__aux .btn--sm {
+  font-size: .75em;
+}
+
+.header__aux .btn--outline {
+  border-color: #fff;
+}
+
 @media (min-width: 1024px) {
   /* line 122, app/assets/stylesheets/components/_header.scss */
   .header.no-nav {
@@ -19949,4 +19959,8 @@ td.print-table__write-in {
 /* line 25, app/assets/stylesheets/print/tasks.scss */
 .print-tasks__entry {
   border-left: 2px solid #aaa !important;
+}
+
+.hidden {
+  display: none;
 }

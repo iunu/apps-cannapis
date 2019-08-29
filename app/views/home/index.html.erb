@@ -13,15 +13,17 @@
 <div class="width">
   <% if @facilities && @facilities.count > 0 %>
     <%= render partial: 'facility', collection: @facilities, locals: { integrations: @integrations } %>
+
+    <div class="clearfix"></div>
   <% end %>
 </div>
 
 <% content_for :header_aux do %>
   <div class="directional-text">
     <% if @current_account %>
-      <%= button_to 'Revoke authorization', unauthorize_url(id: @current_account.id), class: 'btn btn--plain' %>
+      <%= link_to 'Revoke authorization', unauthorize_url(id: @current_account.id), class: 'btn btn--outline btn--sm' %>
     <% else %>
-      <%= button_to 'Connect with Artemis', authorize_url, class: 'btn btn--plain' %>
+      <%= link_to 'Connect to Artemis', authorize_url, class: 'btn btn--outline btn--sm' %>
     <% end %>
   </div>
 <% end %>
