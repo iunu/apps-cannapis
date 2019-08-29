@@ -32,6 +32,8 @@ services:
     container_name: cannapi-sidekiq
     env_file: .env
     entrypoint: bash -c "/wait && bundle exec sidekiq"
+    volumes:
+      - .:/var/artemis/app
     environment:
       WAIT_HOSTS: app:3000
     depends_on:
