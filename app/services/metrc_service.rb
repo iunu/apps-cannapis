@@ -27,15 +27,14 @@ class MetrcService < ApplicationService
                                             @facility_id,
                                             @integration.account.client,
                                             include: 'batch,barcodes')
-    # barcode = batch
     payload = build_discard_payload(batch)
     client.destroy_plant_batches(@integration.vendor_id, [payload])
   end
 
   private
 
-  def build_start_payload(batch)
-    barcode_id = batch.relationships.dig('barcodes', 'data')&.find { |el| el['type'] == 'barcodes' }['id']
+  def build_start_payload(batch) # rubocop:disable Metrics/AbcSize
+    barcode_id = batch.relationships.dig('barcodes', 'data')&.first || ['id']
     {
       'Name': barcode_id,
       'Type': batch.attributes['seeding_unit']&.capitalize,
@@ -49,7 +48,7 @@ class MetrcService < ApplicationService
 
   def build_discard_payload(batch)
     reason_note = 'Does not meet internal QC'
-    reason_note = "#{attributes['reason_type']}: #{attributes['reason_description']}" if batch.attributes['reason_type'] && batch.attributes['reason_description']
+    reason_note = "#{batch.attributes['reason_type']}: #{batch.attributes['reason_description']}" if batch.attributes['reason_type'] && batch.attributes['reason_description']
 
     {
       'PlantBatch': batch.id,
