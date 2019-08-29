@@ -21,9 +21,9 @@ class MetrcService < ApplicationService
   end
 
   def discard_batch
-    @integration.account.client.refresh_token_if_needed
+    @integration.account.refresh_token_if_needed
     client = metrc_client
-    batch  = ArtemisApi::BatchDiscards.find(@ctx.relationships['action_result']['data']['id'],
+    batch  = ArtemisApi::BatchDiscards.find(@ctx[:relationships][:action_result][:data][:id],
                                             @facility_id,
                                             @integration.account.client,
                                             include: 'batch,barcodes')
@@ -48,13 +48,13 @@ class MetrcService < ApplicationService
 
   def build_discard_payload(batch)
     reason_note = 'Does not meet internal QC'
-    reason_note = "#{batch.attributes['reason_type']}: #{batch.attributes['reason_description']}" if batch.attributes['reason_type'] && batch.attributes['reason_description']
+    reason_note = "#{batch.attributes['reason_type'].capitalize}: #{batch.attributes['reason_description']}" if batch.attributes['reason_type'] && batch.attributes['reason_description']
 
     {
       'PlantBatch': batch.id,
       'Count': batch.attributes['quantity']&.to_i,
       'ReasonNote': reason_note,
-      'ActualDate': batch.attributes['seeded_at'] # map to dump date
+      'ActualDate': batch.attributes['dumped_at']
     }
   end
 
