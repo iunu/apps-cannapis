@@ -1,5 +1,11 @@
 require 'rails_helper'
 
 RSpec.describe VendorJob, type: :job do
-  pending "add some examples to (or delete) #{__FILE__}"
+  before :all do
+    ActiveJob::Base.queue_adapter = :test
+  end
+
+  it 'enqueues a new vendor job' do
+    expect { VendorJob.perform_later }.to have_enqueued_job
+  end
 end
