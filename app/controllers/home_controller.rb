@@ -1,13 +1,12 @@
 class HomeController < ApplicationController
   def index
     @current_account = Account.find_by(id: session[:current_account_id])
-
     return unless @current_account
 
-    client = @current_account.client
-    @current_account.refresh_token_if_needed
-
     begin
+      client = @current_account.client
+      @current_account.refresh_token_if_needed
+
       @facilities   = ArtemisApi::Facility.find_all(client)
       @integrations = Integration.active.where(account_id: @current_account.id).index_by(&:facility_id)
     rescue OAuth2::Error

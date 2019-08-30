@@ -50,7 +50,8 @@ gem 'sidekiq', '~> 5.2', '>= 5.2.7'
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: %w[mri mingw x64_mingw]
-  gem 'rspec-rails', '~> 3.8'
+  gem 'rails-controller-testing'
+  gem 'rspec-rails', '~> 4.0.0.beta2'
 end
 
 group :development do
