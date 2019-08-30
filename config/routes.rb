@@ -7,7 +7,7 @@ Rails.application.routes.draw do
   post 'unauthorize'    => 'authorization#unauthorize'
 
   namespace :v1 do
-    post 'webhook'     => 'webhook#handler'
-    put 'facility/:id' => 'facility#update'
+    post 'webhook'      => 'webhook#handler'
+    post 'facility/:id' => 'facility#update'
   end
 end

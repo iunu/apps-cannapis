@@ -1,11 +1,10 @@
 require 'rails_helper'
 
 RSpec.describe V1::FacilityController, type: :controller do
-  describe "PUT #update" do
-    it "returns http success" do
-      put :update
-      expect(response).to have_http_status(:success)
+  describe 'POST #update' do
+    it 'redirects to home' do
+      post :update, params: { id: 1 }
+      expect(response).to redirect_to(root_path)
     end
   end
-
 end
