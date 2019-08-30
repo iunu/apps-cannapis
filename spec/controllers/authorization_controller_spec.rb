@@ -1,9 +1,9 @@
 require 'rails_helper'
 
 RSpec.describe AuthorizationController, type: :controller do
-  describe 'POST #authorize' do
+  describe 'GET #authorize' do
     it 'returns bad request' do
-      post 'authorize'
+      get 'authorize'
       expect(response).to have_http_status(:found)
     end
   end
