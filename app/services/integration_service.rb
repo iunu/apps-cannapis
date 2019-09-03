@@ -7,7 +7,7 @@ class IntegrationService < ApplicationService
     # Look up for active integrations
     integrations = Integration.active.where(facility_id: @ctx['relationships']['facility']['data']['id'])
 
-    return unless integrations.size.positive?
+    raise 'No integrations for this facility' unless integrations.size.positive?
 
     integrations.each do |integration|
       VendorJob.perform_later(@ctx, integration)
