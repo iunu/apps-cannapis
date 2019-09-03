@@ -28,7 +28,11 @@
       <%= text_field_tag('facility[api_secret]', integrations[facility.id]&.secret, class: 'text--mono') %>
     </div>
 
-    <%= button_tag 'Save', type: :submit, class: 'btn btn--green fr' %>
+    <% if integrations[facility.id] %>
+      <%= button_tag 'Update', type: :submit, class: 'btn btn--green fr' %>
+    <% else %>
+      <%= button_tag 'Save', type: :submit, class: 'btn btn--green fr' %>
+    <% end %>
     <div class="clearfix"></div>
   </section>
 <% end %>

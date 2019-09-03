@@ -23,10 +23,16 @@ RSpec.describe 'home/_facility', type: :view do
     expect(rendered).to have_tag("form#facility-form-#{subject.id}", with: { action: "/v1/facility/#{subject.id}", method: 'post' }) do
       with_hidden_field 'facility[vendor]', 'metrc'
       with_hidden_field 'facility[state]', subject.state.downcase
-      # with_text_field 'facility[license_number]', integration&.vendor_id
-      # with_text_field 'facility[api_key]', integration&.key
-      # with_text_field 'facility[api_secret]', integration&.secret
-      # with_submit 'Update'
+
+      # with_tag :section do
+      #   with_button 'Update'
+
+      #   with_tag 'div.my', count: 3 do
+      #     with_text_field 'facility[license_number]', integration&.vendor_id
+      #     with_text_field 'facility[api_key]', integration&.key
+      #     with_text_field 'facility[api_secret]', integration&.secret
+      #   end
+      # end
     end
   end
 
