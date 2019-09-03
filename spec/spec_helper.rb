@@ -1,5 +1,6 @@
 require 'simplecov'
 require 'simplecov-console'
+require 'capybara/rspec'
 
 SimpleCov.formatters = [
   SimpleCov::Formatter::HTMLFormatter,
