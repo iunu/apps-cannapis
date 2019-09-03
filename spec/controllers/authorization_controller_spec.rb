@@ -15,7 +15,7 @@ RSpec.describe AuthorizationController, type: :controller do
     end
   end
 
-  describe 'POST #unauthorize' do
+  describe 'GET #unauthorize' do
     it 'returns http success' do
       get :unauthorize
       expect(response).to have_http_status(:bad_request)
