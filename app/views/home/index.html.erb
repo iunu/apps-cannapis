@@ -4,9 +4,11 @@
       Welcome, <%= @current_account.name %>!
     </h3>
 
-    <h4 class="h4 text--darkGray">
-      These are your facilities
-    </h4>
+    <% if @facilities && @facilities.count > 0 %>
+      <h4 class="h4 text--darkGray">
+        These are your facilities
+      </h4>
+    <% end %>
   </div>
 <% end %>
 
@@ -21,9 +23,9 @@
 <% content_for :header_aux do %>
   <div class="directional-text">
     <% if @current_account %>
-      <%= link_to 'Revoke authorization', unauthorize_url(id: @current_account.id), class: 'btn btn--outline btn--sm' %>
+      <%= link_to 'Revoke authorization', unauthorize_url(id: @current_account.id), class: 'btn btn--outline btn--sm', id: 'btn-unauthorize' %>
     <% else %>
-      <%= link_to 'Connect to Artemis', authorize_url, class: 'btn btn--outline btn--sm' %>
+      <%= link_to 'Connect to Artemis', authorize_url, class: 'btn btn--outline btn--sm', id: 'btn-authorize' %>
     <% end %>
   </div>
 <% end %>
