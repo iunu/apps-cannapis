@@ -74,6 +74,7 @@ group :test do
   gem 'capybara', '>= 2.15'
   gem 'ci_reporter'
   gem 'database_cleaner'
+  gem 'rspec-html-matchers', '~> 0.9.1'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers'
   gem 'simplecov'
