@@ -10,7 +10,7 @@ GIT
 
 GIT
   remote: https://github.com/artemis-ag/artemis_api
-  revision: 00ffdd1224c2cceae901a646f4cf5031440abc33
+  revision: 5859a8f0671b064119ab8b9e8355211d34e66e9b
   specs:
     artemis_api (0.1.1)
 
