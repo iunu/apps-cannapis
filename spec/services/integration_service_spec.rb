@@ -3,12 +3,10 @@ require 'rails_helper'
 RSpec.describe IntegrationService, sidekiq: :fake do
   describe 'when there is no integration' do
     let(:subject) do
-      params = ActionController::Parameters.new({
-                                                  relationships: {
-                                                    facility: {
-                                                      data: {
-                                                        id: 123
-                                                      }
+      params = ActionController::Parameters.new(relationships: {
+                                                  facility: {
+                                                    data: {
+                                                      id: 123
                                                     }
                                                   }
                                                 })
@@ -39,12 +37,10 @@ RSpec.describe IntegrationService, sidekiq: :fake do
                          key: 'ABC-123',
                          secret: 'DEF-456',
                          deleted_at: Time.current)
-      params = ActionController::Parameters.new({
-                                                  relationships: {
-                                                    facility: {
-                                                      data: {
-                                                        id: 456
-                                                      }
+      params = ActionController::Parameters.new(relationships: {
+                                                  facility: {
+                                                    data: {
+                                                      id: 456
                                                     }
                                                   }
                                                 })
@@ -74,12 +70,10 @@ RSpec.describe IntegrationService, sidekiq: :fake do
                          vendor_id: '123-ABC',
                          key: 'ABC-123',
                          secret: 'DEF-456')
-      params = ActionController::Parameters.new({
-                                                  relationships: {
-                                                    facility: {
-                                                      data: {
-                                                        id: 456
-                                                      }
+      params = ActionController::Parameters.new(relationships: {
+                                                  facility: {
+                                                    data: {
+                                                      id: 456
                                                     }
                                                   }
                                                 })
