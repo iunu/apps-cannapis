@@ -12,7 +12,7 @@
   </div>
 <% end %>
 
-<div class="width">
+<div class="width" id="panel-wrapper">
   <% if @facilities && @facilities.count > 0 %>
     <%= render partial: 'facility', collection: @facilities, locals: { integrations: @integrations } %>
 
