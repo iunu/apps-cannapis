@@ -1,4 +1,6 @@
 class MetrcService < ApplicationService
+  CANNABIS = 'cannabis'.freeze
+
   def initialize(ctx, integration)
     @batch_id    = ctx.dig(:relationships, :batch, :data, :id)
     @facility_id = ctx.dig(:relationships, :facility, :data, :id)
@@ -14,7 +16,7 @@ class MetrcService < ApplicationService
                                     @integration.account.client,
                                     include: 'zone,barcodes')
 
-    return unless batch.crop == 'Cannabis'
+    raise 'Batch crop is not cannabis' unless batch.crop.downcase == CANNABIS
 
     payload = build_start_payload(batch)
     client.create_plant_batches(@integration.vendor_id, [payload])
@@ -66,6 +68,6 @@ class MetrcService < ApplicationService
     end
 
     Metrc::Client.new(user_key: @integration.secret,
-                      debug: Rails.env.development?)
+                      debug: Rails.env.development? || Rails.env.test?)
   end
 end
