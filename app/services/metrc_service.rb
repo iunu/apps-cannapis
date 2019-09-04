@@ -25,10 +25,10 @@ class MetrcService < ApplicationService
   def discard_batch
     @integration.account.refresh_token_if_needed
     client = metrc_client
-    batch  = ArtemisApi::BatchDiscards.find(@ctx[:relationships][:action_result][:data][:id],
-                                            @facility_id,
-                                            @integration.account.client,
-                                            include: 'batch,barcodes')
+    batch  = ArtemisApi::Discards.find(@ctx[:relationships][:action_result][:data][:id],
+                                       @facility_id,
+                                       @integration.account.client,
+                                       include: 'batch,barcodes')
     payload = build_discard_payload(batch)
     client.destroy_plant_batches(@integration.vendor_id, [payload])
   end
