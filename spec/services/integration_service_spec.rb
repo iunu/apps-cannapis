@@ -29,8 +29,8 @@ RSpec.describe IntegrationService, sidekiq: :fake do
                                artemis_id: 123,
                                access_token: 'abc-123',
                                refresh_token: 'abc-123',
-                               access_token_expires_in: 'abc-123',
-                               access_token_created_at: 'abc-123')
+                               access_token_expires_in: Time.current + 1.day,
+                               access_token_created_at: Time.current)
       Integration.create(account_id: account.id,
                          facility_id: 456,
                          state: :ca,
@@ -38,7 +38,7 @@ RSpec.describe IntegrationService, sidekiq: :fake do
                          vendor_id: '123-ABC',
                          key: 'ABC-123',
                          secret: 'DEF-456',
-                         deleted_at: DateTime.now)
+                         deleted_at: Time.current)
       params = ActionController::Parameters.new({
                                                   relationships: {
                                                     facility: {
@@ -65,8 +65,8 @@ RSpec.describe IntegrationService, sidekiq: :fake do
                                artemis_id: 123,
                                access_token: 'abc-123',
                                refresh_token: 'abc-123',
-                               access_token_expires_in: 'abc-123',
-                               access_token_created_at: 'abc-123')
+                               access_token_expires_in: Time.current + 1.day,
+                               access_token_created_at: Time.current)
       Integration.create(account_id: account.id,
                          facility_id: 456,
                          state: :ca,
