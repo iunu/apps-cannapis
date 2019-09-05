@@ -19,24 +19,27 @@ class MetrcService < ApplicationService
     raise 'Batch crop is not cannabis' unless batch.crop.downcase == CANNABIS
 
     payload = build_start_payload(batch)
+    puts "\nMetrc API Request debug\n#{client.uri}\n########################\n" if client.debug
     client.create_plant_batches(@integration.vendor_id, [payload])
   end
 
   def discard_batch
     @integration.account.refresh_token_if_needed
     client = metrc_client
-    batch  = ArtemisApi::Discards.find(@ctx[:relationships][:action_result][:data][:id],
-                                       @facility_id,
-                                       @integration.account.client,
-                                       include: 'batch,barcodes')
+    batch  = ArtemisApi::Discard.find(@ctx[:relationships][:action_result][:data][:id],
+                                      @facility_id,
+                                      @integration.account.client,
+                                      include: 'batch,barcodes')
     payload = build_discard_payload(batch)
+    puts "\nMetrc API Request debug\n#{client.uri}\n########################\n" if client.debug
     client.destroy_plant_batches(@integration.vendor_id, [payload])
   end
 
   private
 
   def build_start_payload(batch) # rubocop:disable Metrics/AbcSize
-    barcode_id = batch.relationships.dig('barcodes', 'data')&.first || ['id']
+    puts "\n########################\n#{batch.relationships}\n########################"
+    barcode_id = batch.relationships.dig('barcodes', 'data').first['id']
     {
       'Name': barcode_id,
       'Type': batch.attributes['seeding_unit']&.capitalize,
@@ -68,6 +71,6 @@ class MetrcService < ApplicationService
     end
 
     Metrc::Client.new(user_key: @integration.secret,
-                      debug: Rails.env.development? || Rails.env.test?)
+                      debug: Rails.env.development?)
   end
 end
