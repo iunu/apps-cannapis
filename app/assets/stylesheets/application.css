@@ -17680,7 +17680,6 @@ body[class^='reports'] .l-sidebar.is_stuck {
 
 /* line 167, app/assets/stylesheets/pages/_reports.scss */
 .facility__widget {
-  margin: 0 0 1rem;
   transition: box-shadow 0.1s ease-in-out, opacity 0.1s ease-in-out;
 }
 
@@ -19969,4 +19968,5 @@ td.print-table__write-in {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
   grid-column-gap: 1rem;
+  grid-row-gap: 1rem;
 }
