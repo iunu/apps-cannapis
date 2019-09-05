@@ -14,7 +14,7 @@ class MetrcService < ApplicationService
     batch  = ArtemisApi::Batch.find(@batch_id,
                                     @facility_id,
                                     @integration.account.client,
-                                    include: 'zone,barcodes')
+                                    include: 'zone,barcodes,items,custom_data,seeding_unit,harvest_unit,sub_zone')
 
     raise 'Batch crop is not cannabis' unless batch.crop.downcase == CANNABIS
 
@@ -42,10 +42,10 @@ class MetrcService < ApplicationService
     barcode_id = batch.relationships.dig('barcodes', 'data').first['id']
     {
       'Name': barcode_id,
-      'Type': batch.attributes['seeding_unit']&.capitalize,
-      'Count': batch.attributes['quantity']&.to_i,
+      'Type': batch.attributes['seeding_unit']&.capitalize || 'Seed',
+      'Count': batch.attributes['quantity']&.to_i || 1,
       'Strain': batch.attributes['crop_variety'],
-      'Room': batch.attributes['zone_name'],
+      'Room': batch.attributes['zone_name'] || 'Germination',
       'PatientLicenseNumber': nil,
       'ActualDate': batch.attributes['seeded_at']
     }

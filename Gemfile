@@ -39,7 +39,7 @@ else
   gem 'Metrc', git: 'https://github.com/artemis-ag/Metrc.git' # rubocop:disable Bundler/DuplicatedGem
 end
 
-gem 'artemis_api', git: 'https://github.com/artemis-ag/artemis_api'
+gem 'artemis_api', git: 'https://github.com/artemis-ag/artemis_api', branch: :fix_discards_typo
 
 # Serialization
 gem 'jsonapi-rails', '~> 0.4.0' # JSONAPI serialization
