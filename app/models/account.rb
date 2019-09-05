@@ -6,7 +6,7 @@ class Account < ApplicationRecord
     return unless client.oauth_token.expired?
 
     new_token = client.refresh
-    expires_in = (new_token.to_hash[:expires_at].to_i - new_token.to_hash['created_at'].to_i)
+    expires_in = (new_token.to_hash[:expires_at].to_i - new_token.to_hash[:created_at].to_i)
     update(access_token: new_token.to_hash[:access_token],
            refresh_token: new_token.to_hash[:refresh_token],
            access_token_expires_in: expires_in,
