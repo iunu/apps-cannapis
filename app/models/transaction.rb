@@ -1,4 +1,6 @@
 class Transaction < ApplicationRecord
+  self.inheritance_column = :_type
+
   belongs_to :account
   belongs_to :integration
   validates :account_id, presence: true
