@@ -13,6 +13,9 @@ Encoding:
 NumericLiterals:
   Enabled: false
 
+Metrics/AbcSize:
+  Enabled: false
+
 Metrics/ModuleLength:
   Enabled: false
 

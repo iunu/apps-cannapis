@@ -2,7 +2,7 @@ module V1
   class FacilityController < ApplicationController
     before_action :validate, only: :update
 
-    def update # rubocop:disable Metrics/AbcSize
+    def update
       integration = Integration.find_or_create_by(account_id: session[:current_account_id], facility_id: params[:id])
       integration.update(vendor: params.dig(:facility, :vendor),
                          vendor_id: params.dig(:facility, :license_number),

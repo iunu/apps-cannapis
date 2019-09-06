@@ -2,7 +2,7 @@ class Account < ApplicationRecord
   has_many :integrations
   has_many :transactions
 
-  def refresh_token_if_needed # rubocop:disable Metrics/AbcSize
+  def refresh_token_if_needed
     return unless client.oauth_token.expired?
 
     new_token = client.refresh

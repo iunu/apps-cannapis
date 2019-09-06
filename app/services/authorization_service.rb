@@ -1,5 +1,5 @@
 class AuthorizationService < ApplicationService
-  def self.create(token) # rubocop:disable Metrics/AbcSize
+  def self.create(token)
     @token     = token
     token_hash = @token.to_hash
     expires_in = (token_hash[:expires_at].to_i - token_hash[:created_at].to_i)
