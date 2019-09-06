@@ -36,7 +36,7 @@ class MetrcService < ApplicationService
       client.create_plant_batches(@integration.vendor_id, [payload])
       transaction.success = true
       Rails.logger.info "[START_BATCH] Success: batch ID #{@batch_id}, completion ID #{@completion_id}; #{payload}"
-    rescue => exception # rubocop:disable Style/RescueStandardError
+    rescue => exception
       Rails.logger.error "[START_BATCH] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{exception.inspect}"
     ensure
       transaction.save
@@ -67,11 +67,52 @@ class MetrcService < ApplicationService
       client.destroy_plant_batches(@integration.vendor_id, [payload])
       transaction.success = true
       Rails.logger.info "[DISCARD_BATCH] Success: batch ID #{@batch_id}, completion ID #{@completion_id}; #{payload}"
-    rescue => exception # rubocop:disable Style/RescueStandardError
+    rescue => exception
       Rails.logger.error "[DISCARD_BATCH] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{exception.inspect}"
     ensure
       transaction.save
       Rails.logger.debug "[DISCARD_BATCH] Transaction: #{transaction.inspect}"
+    end
+
+    transaction
+  end
+
+  def move_batch
+    Rails.logger.info "[MOVE_BATCH] Started: batch ID #{@batch_id}, completion ID #{@completion_id}"
+    transaction = lookup_transaction :move_batch
+
+    if transaction.success
+      Rails.logger.error "[MOVE_BATCH] Success: transaction previously performed. #{transaction.inspect}"
+      return
+    end
+
+    begin
+      @integration.account.refresh_token_if_needed
+      client = metrc_client
+      batch  = ArtemisApi::Batch.find(@batch_id,
+                                      @facility_id,
+                                      @integration.account.client,
+                                      include: 'zone,barcodes,items,custom_data,seeding_unit,harvest_unit,sub_zone')
+
+      zone_name = @ctx.dig(:data, :attributes, :options, :zone_name)
+      payload_method = 'move'
+      client_method  = 'move_plant_batches'
+
+      if zone_name.downcase.include?('flower')
+        payload_method = 'growth_cycle'
+        client_method  = 'change_growth_phase'
+      end
+
+      payload = send("build_#{payload_method}_payload", batch)
+      Rails.logger.debug "[MOVE_BATCH] Metrc API request. URI #{client.uri}, on #{payload_method}, payload #{payload}"
+      client.send(client_method, [payload])
+      transaction.success = true
+      Rails.logger.info "[MOVE_BATCH] Success: batch ID #{@batch_id}, completion ID #{@completion_id}; #{payload}"
+    rescue => exception
+      Rails.logger.error "[MOVE_BATCH] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{exception.inspect}"
+    ensure
+      transaction.save
+      Rails.logger.debug "[MOVE_BATCH] Transaction: #{transaction.inspect}"
     end
 
     transaction
@@ -101,6 +142,33 @@ class MetrcService < ApplicationService
       'Count': batch.attributes['quantity']&.to_i,
       'ReasonNote': reason_note,
       'ActualDate': batch.attributes['dumped_at']
+    }
+  end
+
+  def build_growth_cycle_payload(batch)
+    barcodes = batch.included.find_all { |el| el['type'] == 'barcodes' }
+                    .sort_by { |barcode| barcode['id'] }
+    batch_barcode, start_tag = barcodes.values_at 0, -1
+
+    {
+      'Name': batch_barcode,
+      'Count': batch.attributes['quantity']&.to_i || 1,
+      'StartingTag': start_tag,
+      'GrowthPhase': 'Flowering',
+      'Room': batch.attributes['zone_name'] || 'Germination',
+      # TODO: Fix the date below
+      'GrowthDate': DateTime.now.to_date.strftime('%F')
+    }
+  end
+
+  def build_move_payload(batch)
+    barcode_id = batch.relationships.dig('barcodes', 'data').first['id']
+
+    {
+      'Name': barcode_id,
+      'Room': batch.attributes['zone_name'] || 'Germination',
+      # TODO: Fix the date below
+      'MoveDate': DateTime.now.to_date.strftime('%F')
     }
   end
 
