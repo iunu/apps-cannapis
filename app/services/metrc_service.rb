@@ -1,26 +1,52 @@
 class MetrcService < ApplicationService
-  CANNABIS = 'cannabis'.freeze
+  CROP = 'Cannabis'.freeze
 
   def initialize(ctx, integration)
-    @batch_id    = ctx.dig(:relationships, :batch, :data, :id)
-    @facility_id = ctx.dig(:relationships, :facility, :data, :id)
-    @ctx         = ctx
-    @integration = integration
+    @batch_id      = ctx.dig(:relationships, :batch, :data, :id)
+    @facility_id   = ctx.dig(:relationships, :facility, :data, :id)
+    @completion_id = ctx[:id]
+    @ctx           = ctx
+    @integration   = integration
   end
 
   def start_batch
-    @integration.account.refresh_token_if_needed
-    client = metrc_client
-    batch  = ArtemisApi::Batch.find(@batch_id,
-                                    @facility_id,
-                                    @integration.account.client,
-                                    include: 'zone,barcodes,items,custom_data,seeding_unit,harvest_unit,sub_zone')
+    Rails.logger.info "[START_BATCH] Started: batch ID #{@batch_id}, completion ID #{@completion_id}"
+    transaction = Transaction.find_or_create_by(account: @integration.account,
+                                                integration: @integration,
+                                                batch_id: @batch_id,
+                                                completion_id: @completion_id,
+                                                type: 'start_batch')
 
-    raise 'Batch crop is not cannabis' unless batch.crop.downcase == CANNABIS
+    if transaction.success
+      Rails.logger.error "[START_BATCH] Success: transaction previously performed. #{transaction.inspect}"
+      return
+    end
 
-    payload = build_start_payload(batch)
-    puts "\nMetrc API Request debug\n#{client.uri}\n########################\n" if client.debug
-    client.create_plant_batches(@integration.vendor_id, [payload])
+    begin
+      @integration.account.refresh_token_if_needed
+      client = metrc_client
+      batch  = ArtemisApi::Batch.find(@batch_id,
+                                      @facility_id,
+                                      @integration.account.client,
+                                      include: 'zone,barcodes,items,custom_data,seeding_unit,harvest_unit,sub_zone')
+
+      unless batch.crop == CROP
+        Rails.logger.error "[START_BATCH] Failed: Crop is not #{CROP} but #{batch.crop}. batch ID #{@batch_id}, completion ID #{@completion_id}"
+        return
+      end
+
+      payload = build_start_payload(batch)
+      puts "\nMetrc API Request debug\n#{client.uri}\n#{payload}\n########################\n" if client.debug
+      client.create_plant_batches(@integration.vendor_id, [payload])
+      transaction.success = true
+      Rails.logger.info "[START_BATCH] Success: batch ID #{@batch_id}, completion ID #{@completion_id}; #{payload}"
+    rescue => exception # rubocop:disable Style/RescueStandardError
+      Rails.logger.error "[START_BATCH] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{exception.inspect}"
+    end
+
+    transaction.save
+    Rails.logger.debug "[START_BATCH] Transaction: #{transaction.inspect}"
+    transaction
   end
 
   def discard_batch
@@ -31,14 +57,13 @@ class MetrcService < ApplicationService
                                       @integration.account.client,
                                       include: 'batch,barcodes')
     payload = build_discard_payload(batch)
-    puts "\nMetrc API Request debug\n#{client.uri}\n########################\n" if client.debug
+    puts "\nMetrc API Request debug\n#{client.uri}\n#{payload}\n########################\n" if client.debug
     client.destroy_plant_batches(@integration.vendor_id, [payload])
   end
 
   private
 
   def build_start_payload(batch) # rubocop:disable Metrics/AbcSize
-    puts "\n########################\n#{batch.relationships}\n########################"
     barcode_id = batch.relationships.dig('barcodes', 'data').first['id']
     {
       'Name': barcode_id,
