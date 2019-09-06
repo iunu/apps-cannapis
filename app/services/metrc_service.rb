@@ -11,11 +11,7 @@ class MetrcService < ApplicationService
 
   def start_batch
     Rails.logger.info "[START_BATCH] Started: batch ID #{@batch_id}, completion ID #{@completion_id}"
-    transaction = Transaction.find_or_create_by(account: @integration.account,
-                                                integration: @integration,
-                                                batch_id: @batch_id,
-                                                completion_id: @completion_id,
-                                                type: 'start_batch')
+    transaction = lookup_transaction :start_batch
 
     if transaction.success
       Rails.logger.error "[START_BATCH] Success: transaction previously performed. #{transaction.inspect}"
@@ -36,34 +32,54 @@ class MetrcService < ApplicationService
       end
 
       payload = build_start_payload(batch)
-      puts "\nMetrc API Request debug\n#{client.uri}\n#{payload}\n########################\n" if client.debug
+      Rails.logger.debug "[START_BATCH] Metrc API request. URI #{client.uri}, payload #{payload}"
       client.create_plant_batches(@integration.vendor_id, [payload])
       transaction.success = true
       Rails.logger.info "[START_BATCH] Success: batch ID #{@batch_id}, completion ID #{@completion_id}; #{payload}"
     rescue => exception # rubocop:disable Style/RescueStandardError
       Rails.logger.error "[START_BATCH] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{exception.inspect}"
+    ensure
+      transaction.save
+      Rails.logger.debug "[START_BATCH] Transaction: #{transaction.inspect}"
     end
 
-    transaction.save
-    Rails.logger.debug "[START_BATCH] Transaction: #{transaction.inspect}"
     transaction
   end
 
   def discard_batch
-    @integration.account.refresh_token_if_needed
-    client = metrc_client
-    batch  = ArtemisApi::Discard.find(@ctx[:relationships][:action_result][:data][:id],
-                                      @facility_id,
-                                      @integration.account.client,
-                                      include: 'batch,barcodes')
-    payload = build_discard_payload(batch)
-    puts "\nMetrc API Request debug\n#{client.uri}\n#{payload}\n########################\n" if client.debug
-    client.destroy_plant_batches(@integration.vendor_id, [payload])
+    Rails.logger.info "[DISCARD_BATCH] Started: batch ID #{@batch_id}, completion ID #{@completion_id}"
+    transaction = lookup_transaction :discard_batch
+
+    if transaction.success
+      Rails.logger.error "[DISCARD_BATCH] Success: transaction previously performed. #{transaction.inspect}"
+      return
+    end
+
+    begin
+      @integration.account.refresh_token_if_needed
+      client = metrc_client
+      batch  = ArtemisApi::Discard.find(@ctx[:relationships][:action_result][:data][:id],
+                                        @facility_id,
+                                        @integration.account.client,
+                                        include: 'batch,barcodes')
+      payload = build_discard_payload(batch)
+      Rails.logger.debug "[DISCARD_BATCH] Metrc API request. URI #{client.uri}, payload #{payload}"
+      client.destroy_plant_batches(@integration.vendor_id, [payload])
+      transaction.success = true
+      Rails.logger.info "[DISCARD_BATCH] Success: batch ID #{@batch_id}, completion ID #{@completion_id}; #{payload}"
+    rescue => exception # rubocop:disable Style/RescueStandardError
+      Rails.logger.error "[DISCARD_BATCH] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{exception.inspect}"
+    ensure
+      transaction.save
+      Rails.logger.debug "[DISCARD_BATCH] Transaction: #{transaction.inspect}"
+    end
+
+    transaction
   end
 
   private
 
-  def build_start_payload(batch) # rubocop:disable Metrics/AbcSize
+  def build_start_payload(batch)
     barcode_id = batch.relationships.dig('barcodes', 'data').first['id']
     {
       'Name': barcode_id,
@@ -76,7 +92,7 @@ class MetrcService < ApplicationService
     }
   end
 
-  def build_discard_payload(batch) # rubocop:disable Metrics/AbcSize
+  def build_discard_payload(batch)
     reason_note = 'Does not meet internal QC'
     reason_note = "#{batch.attributes['reason_type'].capitalize}: #{batch.attributes['reason_description']}" if batch.attributes['reason_type'] && batch.attributes['reason_description']
 
@@ -97,5 +113,13 @@ class MetrcService < ApplicationService
 
     Metrc::Client.new(user_key: @integration.secret,
                       debug: Rails.env.development?)
+  end
+
+  def lookup_transaction(name)
+    Transaction.find_or_create_by(account: @integration.account,
+                                  integration: @integration,
+                                  batch_id: @batch_id,
+                                  completion_id: @completion_id,
+                                  type: name)
   end
 end
