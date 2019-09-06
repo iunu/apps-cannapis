@@ -10,8 +10,7 @@ GIT
 
 GIT
   remote: https://github.com/artemis-ag/artemis_api
-  revision: 51c0cc2499ddbd70560c8c66196a3915833be065
-  branch: fix_discards_typo
+  revision: f53dd3dfe26b0b451ff963f90c43cf5c8a8c95d6
   specs:
     artemis_api (0.1.1)
 
