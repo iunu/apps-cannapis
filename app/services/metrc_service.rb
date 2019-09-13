@@ -14,7 +14,7 @@ module MetrcService
       config.sandbox  = Rails.env.development?
     end
 
-    @client = Metrc::Client.new(user_key: @integration.secret,
+    @client = Metrc::Client.new(user_key: integration.secret,
                                 debug: Rails.env.development?)
 
     @client
