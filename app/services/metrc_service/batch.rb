@@ -1,18 +1,19 @@
 module MetrcService
   class Batch < ApplicationService
     def initialize(ctx, integration)
-      @batch_id      = ctx.dig(:relationships, :batch, :data, :id)
-      @facility_id   = ctx.dig(:relationships, :facility, :data, :id)
-      @completion_id = ctx[:id]
-      @ctx           = ctx
       @integration   = integration
+      @relationships = ctx[:relationships]
+      @attributes    = ctx[:attributes]
+      @completion_id = ctx[:id]
+      @batch_id      = @relationships.dig(:batch, :data, :id)
+      @facility_id   = @relationships.dig(:facility, :data, :id)
       @logger        = MetrcService.logger
       @client        = MetrcService.client(@integration)
     end
 
     def start
       @logger.info "[BATCH_START] Started: batch ID #{@batch_id}, completion ID #{@completion_id}"
-      transaction = MetrcService.transaction @integration, @batch_id, @completion_id, :start_batch
+      transaction = MetrcService.transaction @integration, @batch_id, @completion_id, :start_batch, @attributes
 
       if transaction.success
         @logger.error "[BATCH_START] Success: transaction previously performed. #{transaction.inspect}"
@@ -45,7 +46,7 @@ module MetrcService
 
     def discard
       @logger.info "[BATCH_DISCARD] Started: batch ID #{@batch_id}, completion ID #{@completion_id}"
-      transaction = MetrcService.transaction @integration, @batch_id, @completion_id, :discard_batch
+      transaction = MetrcService.transaction @integration, @batch_id, @completion_id, :discard_batch, @attributes
 
       if transaction.success
         @logger.error "[BATCH_DISCARD] Success: transaction previously performed. #{transaction.inspect}"
@@ -54,7 +55,7 @@ module MetrcService
 
       begin
         @integration.account.refresh_token_if_needed
-        batch   = ArtemisApi::Discard.find(@ctx[:relationships][:action_result][:data][:id],
+        batch   = ArtemisApi::Discard.find(@relationships.dig(:action_result, :data, :id),
                                            @facility_id,
                                            @integration.account.client,
                                            include: 'batch,barcodes')
@@ -75,7 +76,7 @@ module MetrcService
 
     def move
       @logger.info "[BATCH_MOVE] Started: batch ID #{@batch_id}, completion ID #{@completion_id}"
-      transaction = MetrcService.transaction @integration, @batch_id, @completion_id, :move_batch
+      transaction = MetrcService.transaction @integration, @batch_id, @completion_id, :move_batch, @attributes
 
       if transaction.success
         @logger.error "[BATCH_MOVE] Success: transaction previously performed. #{transaction.inspect}"
@@ -91,7 +92,7 @@ module MetrcService
           return
         end
 
-        zone_name      = @ctx.dig(:data, :attributes, :options, :zone_name)
+        zone_name      = @attributes.dig(:options, :zone_name)
         payload_method = 'move'
         client_method  = 'move_plant_batches'
 
@@ -118,7 +119,7 @@ module MetrcService
     private
 
     def build_start_payload(batch)
-      barcode_id = batch.relationships.dig('barcodes', 'data').first['id']
+      barcode_id = batch.relationships.dig('barcodes', 'data', 0, 'id')
 
       {
         Name: barcode_id,
