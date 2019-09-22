@@ -1,5 +1,10 @@
 module MetrcService
   CROP = 'Cannabis'.freeze
+  GROWTH_CYCLES = {
+    clone: %i[clone vegetative],
+    vegetative: %i[vegetative flowering],
+    flowering: %i[flowering]
+  }.freeze
 
   def self.logger
     @logger ||= Rails.logger
@@ -20,11 +25,13 @@ module MetrcService
     @client
   end
 
-  def self.transaction(integration, batch_id, completion_id, name)
+  def self.transaction(integration, batch_id, completion_id, name, metadata)
     Transaction.find_or_create_by(account: integration.account,
+                                  vendor: :metrc,
                                   integration: integration,
                                   batch_id: batch_id,
                                   completion_id: completion_id,
-                                  type: name)
+                                  type: name,
+                                  metadata: metadata)
   end
 end
