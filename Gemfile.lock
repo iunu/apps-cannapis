@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/artemis-ag/Metrc.git
-  revision: d1fd5c9db59ef206dd320dbcc0a9697eba78f8a7
+  revision: 161d8a9571868b97839c87d243cef9bfc0cc319a
   specs:
     Metrc (0.2.2)
       bundler
@@ -10,7 +10,7 @@ GIT
 
 GIT
   remote: https://github.com/betacar/artemis_api
-  revision: 20d2acaec16b9a3d524dfcdb1f22643ba3ba48a7
+  revision: e758c42af0c81421510ef986760e99d4bb8b4565
   branch: add/items
   specs:
     artemis_api (0.1.2)
@@ -140,7 +140,7 @@ GEM
       domain_name (~> 0.5)
     http-form_data (2.1.1)
     http_parser.rb (0.6.0)
-    httparty (0.17.0)
+    httparty (0.17.1)
       mime-types (~> 3.0)
       multi_xml (>= 0.5.2)
     i18n (1.6.0)
