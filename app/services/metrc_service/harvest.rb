@@ -39,51 +39,43 @@ module MetrcService
     private
 
     def manicure_plants(items)
-      begin
-        date           = @attributes.dig(:start_time)
-        room_name      = @attributes.dig(:options, :zone_name)
-        average_weight = items.map { |item| item.dig('attributes', 'secondary_harvest_quantity').to_f }.reduce(&:+) / items.size
-        payload = items.map do |item|
-          {
-            Plant: item.dig('relationships', 'barcode', 'data', 'id'),
-            Weight: average_weight,
-            UnitOfWeight: item.dig('attributes', 'secondary_harvest_unit'),
-            DryingRoom: room_name,
-            HarvestName: nil,
-            PatientLicenseNumber: nil,
-            ActualDate: date
-          }
-        end
-
-        @logger.debug "[MANICURE_PLANTS] Metrc API request. URI #{@client.uri}, payload #{payload}"
-        @client.manicure_plants(@integration.vendor_id, payload)
-      rescue => exception # rubocop:disable Style/RescueStandardError
-        @logger.error "[MANICURE_PLANTS] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{exception.inspect}"
+      date           = @attributes.dig(:start_time)
+      room_name      = @attributes.dig(:options, :zone_name)
+      average_weight = items.map { |item| item.dig('attributes', 'secondary_harvest_quantity').to_f }.reduce(&:+) / items.size
+      payload = items.map do |item|
+        {
+          Plant: item.dig('relationships', 'barcode', 'data', 'id'),
+          Weight: average_weight,
+          UnitOfWeight: item.dig('attributes', 'secondary_harvest_unit'),
+          DryingRoom: room_name,
+          HarvestName: nil,
+          PatientLicenseNumber: nil,
+          ActualDate: date
+        }
       end
+
+      @logger.debug "[MANICURE_PLANTS] Metrc API request. URI #{@client.uri}, payload #{payload}"
+      @client.manicure_plants(@integration.vendor_id, payload)
     end
 
     def harvest_plants(items, batch)
-      begin
-        date           = @attributes.dig(:start_time)
-        room_name      = @attributes.dig(:options, :zone_name)
-        average_weight = items.map { |item| item.dig('attributes', 'secondary_harvest_quantity').to_f }.reduce(&:+) / items.size
-        payload = items.map do |item|
-          {
-            Plant: item.dig('relationships', 'barcode', 'data', 'id'),
-            Weight: average_weight,
-            UnitOfWeight: item.dig('attributes', 'harvest_unit'),
-            DryingRoom: room_name,
-            HarvestName: batch.attributes[:arbitrary_id],
-            PatientLicenseNumber: nil,
-            ActualDate: date
-          }
-        end
-
-        @logger.debug "[HARVEST_PLANTS] Metrc API request. URI #{@client.uri}, payload #{payload}"
-        @client.harvest_plants(@integration.vendor_id, payload)
-      rescue => exception # rubocop:disable Style/RescueStandardError
-        @logger.error "[HARVEST_PLANTS] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{exception.inspect}"
+      date           = @attributes.dig(:start_time)
+      room_name      = @attributes.dig(:options, :zone_name)
+      average_weight = items.map { |item| item.dig('attributes', 'secondary_harvest_quantity').to_f }.reduce(&:+) / items.size
+      payload = items.map do |item|
+        {
+          Plant: item.dig('relationships', 'barcode', 'data', 'id'),
+          Weight: average_weight,
+          UnitOfWeight: item.dig('attributes', 'harvest_unit'),
+          DryingRoom: room_name,
+          HarvestName: batch.attributes[:arbitrary_id],
+          PatientLicenseNumber: nil,
+          ActualDate: date
+        }
       end
+
+      @logger.debug "[HARVEST_PLANTS] Metrc API request. URI #{@client.uri}, payload #{payload}"
+      @client.harvest_plants(@integration.vendor_id, payload)
     end
   end
 end
