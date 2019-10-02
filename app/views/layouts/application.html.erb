@@ -7,9 +7,9 @@
 
     <%= stylesheet_link_tag 'application', media: 'all' %>
     <%= javascript_pack_tag 'application' %>
-    <link rel="apple-touch-icon" sizes="180x180" href="<%= asset_path('apple-touch-icon.png') %>%">
-    <link rel="icon" type="image/png" sizes="32x32" href="<%= asset_path('favicon-32x32.png') %>%">
-    <link rel="icon" type="image/png" sizes="16x16" href="<%= asset_path('favicon-16x16.png') %>%">
+    <%= favicon_link_tag 'apple-touch-icon.png', rel: 'apple-touch-icon', sizes: '180x180' %>
+    <%= favicon_link_tag 'favicon-32x32.png', rel: :icon, type: 'image/png', sizes: '32x32' %>
+    <%= favicon_link_tag 'favicon-16x16.png', rel: :icon, type: 'image/png', sizes: '16x16' %>
   </head>
 
   <body>
@@ -17,7 +17,7 @@
       <header class="header">
         <div class="js-header-logo directional-text">
           <a class="header__title" href="#">
-            <img alt="Artemis Icon" class="header__logo" src="<%= asset_path('shield-color-logo.svg') %>%">
+            <%= image_tag 'shield-color-logo.svg', alt: 'Artemis Icon', class: 'header__logo' %>
             <span class="header__facility-name">Integrations</span>
           </a>
         </div>
@@ -37,7 +37,7 @@
 
       <footer class="footer width d-f ai-c jc-c fs-0 py-lg ta-center">
         <a href="/">
-          <img alt="Artemis Logo" class="footer__logo" src="<%= asset_path('logo-black.svg') %>%">
+          <%= image_tag 'logo-black.svg', alt: 'Artemis Icon', class: 'footer__logo' %>
         </a>
       </footer>
     </div>
