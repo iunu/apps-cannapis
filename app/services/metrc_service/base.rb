@@ -16,7 +16,7 @@ module MetrcService
     def client
       return @client if @client
 
-      debug = Rails.env.development? || Rails.env.test?
+      debug = !ENV['DEMO'].nil? || Rails.env.development? || Rails.env.test?
 
       Metrc.configure do |config|
         config.api_key  = @integration.key
