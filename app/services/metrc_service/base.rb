@@ -5,8 +5,8 @@ module MetrcService
       @relationships = ctx[:relationships]
       @attributes    = ctx[:attributes]
       @completion_id = ctx[:id]
-      @batch_id      = @relationships.dig(:batch, :data, :id)
-      @facility_id   = @relationships.dig(:facility, :data, :id)
+      @batch_id      = @relationships&.dig(:batch, :data, :id)
+      @facility_id   = @relationships&.dig(:facility, :data, :id)
       @logger        = Rails.logger
       @client        = client
     end
