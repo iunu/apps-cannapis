@@ -53,7 +53,7 @@ services:
       - db
 
   db:
-    image: postgres
+    image: postgres:11
     container_name: cannapi-db
     env_file: .env
     ports:
