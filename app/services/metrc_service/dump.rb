@@ -24,9 +24,9 @@ module MetrcService
           return
         end
 
-        discard = ArtemisApi::Discard.find(@relationships.dig('action_result', 'data', 'id'),
-                                           @facility_id,
-                                           @integration.account.client,
+        discard = ArtemisApi::Discard.find(id: @relationships.dig('action_result', 'data', 'id'),
+                                           facility_id: @facility_id,
+                                           client: @integration.account.client,
                                            include: 'batch,barcodes')
         payload = build_discard_payload(discard)
         @logger.debug "[BATCH_DISCARD] Metrc API request. URI #{@client.uri}, payload #{payload}"
