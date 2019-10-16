@@ -46,18 +46,13 @@ module MetrcService
     end
 
     def get_batch(include = 'zone,barcodes,items,custom_data,seeding_unit,harvest_unit,sub_zone')
-      ArtemisApi::Batch.find(@batch_id,
-                             @facility_id,
-                             @integration.account.client,
-                             include: include)
+      @integration.account.client.facility(@facility_id).batch(@batch_id, include: include)
     end
 
     def get_items(seeding_unit_id, include: 'barcodes,seeding_unit')
-      ArtemisApi::Items.find_all(@facility_id,
-                                 @batch_id,
-                                 @integration.account.client,
-                                 seeding_unit_id: seeding_unit_id,
-                                 include: include)
+      @integration.account.client.facility(@facility_id)
+                                 .batch(@batch_id)
+                                 .items(seeding_unit_id: seeding_unit_id, include: include)
     end
   end
 end

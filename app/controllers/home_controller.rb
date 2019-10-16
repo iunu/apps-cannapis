@@ -7,7 +7,7 @@ class HomeController < ApplicationController
       client = @current_account.client
       @current_account.refresh_token_if_needed
 
-      @facilities   = ArtemisApi::Facility.find_all(client)
+      @facilities   = client.facilities
       @integrations = Integration.active.where(account_id: @current_account.id).index_by(&:facility_id)
     rescue OAuth2::Error
       @current_account.update(access_token: nil,
