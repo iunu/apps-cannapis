@@ -11,7 +11,7 @@ module MetrcService
 
       begin
         @integration.account.refresh_token_if_needed
-        batch   = get_batch
+        batch        = get_batch
         seeding_unit = batch.included.detect { |item| item[:type] == 'seeding_units' }
 
         unless batch.crop == MetrcService::CROP
@@ -24,10 +24,8 @@ module MetrcService
           return
         end
 
-        discard = ArtemisApi::Discard.find(id: @relationships.dig('action_result', 'data', 'id'),
-                                           facility_id: @facility_id,
-                                           client: @integration.account.client,
-                                           include: 'batch,barcodes')
+        discard = @artemis.facility(@facility_id)
+                          .discard(@relationships.dig('action_result', 'data', 'id'), include: 'batch,barcodes')
         payload = build_discard_payload(discard)
         @logger.debug "[BATCH_DISCARD] Metrc API request. URI #{@client.uri}, payload #{payload}"
         @client.destroy_plant_batches(@integration.vendor_id, [payload])

@@ -9,6 +9,7 @@ module MetrcService
       @facility_id   = @relationships&.dig(:facility, :data, :id)
       @logger        = Rails.logger
       @client        = client
+      @artemis       = @integration.account.client
     end
 
     private
@@ -46,13 +47,19 @@ module MetrcService
     end
 
     def get_batch(include = 'zone,barcodes,items,custom_data,seeding_unit,harvest_unit,sub_zone')
-      @integration.account.client.facility(@facility_id).batch(@batch_id, include: include)
+      @artemis.facility(@facility_id)
+              .batch(@batch_id, include: include)
     end
 
     def get_items(seeding_unit_id, include: 'barcodes,seeding_unit')
-      @integration.account.client.facility(@facility_id)
-                                 .batch(@batch_id)
-                                 .items(seeding_unit_id: seeding_unit_id, include: include)
+      @artemis.facility(@facility_id)
+              .batch(@batch_id)
+              .items(seeding_unit_id: seeding_unit_id, include: include)
+    end
+
+    def get_zone(zone_id, include: nil)
+      @artemis.facility(@facility_id)
+              .zone(zone_id, include: include)
     end
   end
 end
