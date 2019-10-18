@@ -32,7 +32,7 @@ module MetrcService
     protected
 
     def get_transaction(name, metadata = @attributes&.to_json)
-      transaction = Transaction.where('vendor = ? AND account_id = ? AND integration_id = ? AND batch_id = ? AND completion_id = ? AND type = ?',
+      transaction = Transaction.where('(vendor = ? AND account_id = ?) AND (integration_id = ? AND batch_id = ?) AND (completion_id = ? AND type = ?)',
                                       :metrc, @integration.account.id, @integration.id, @batch_id, @completion_id, name)&.first
 
       return transaction unless transaction.nil?
