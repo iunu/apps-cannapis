@@ -1,5 +1,3 @@
-require 'pp'
-
 module MetrcService
   class Move < MetrcService::Base
     GROWTH_CYCLES = {
