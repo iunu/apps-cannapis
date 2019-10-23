@@ -31,7 +31,7 @@ module MetrcService
         next_step_name  = 'change_growth_phase'
 
         if transactions.size.positive?
-          previous_zone = normalize_growth_phase(transactions.last.metadata[:zone_name])
+          previous_zone = normalize_growth_phase(transactions.last.metadata['zone_name'])
           # Does last move includes new move?
           is_included = GROWTH_CYCLES[previous_zone.to_sym]&.include?(zone_name.to_sym)
           @logger.info "[MOVE] Transactions: #{transactions.size}, Previous zone: #{previous_zone}, Zone is included: #{is_included}, Batch ID #{@batch_id}, completion ID #{@completion_id}"
@@ -92,7 +92,7 @@ module MetrcService
       @client.move_plant_batches(@integration.vendor_id, payload)
     end
 
-    def change_growth_phase(batch: {}, zone_name: nil, seeding_unit_id: nil)
+    def change_growth_phase(batch: {}, zone_name: nil)
       date         = @attributes.dig(:start_time)
       seeding_unit = batch.seeding_unit.name
       items        = batch.client.objects['items']
