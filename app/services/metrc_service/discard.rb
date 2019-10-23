@@ -34,8 +34,7 @@ module MetrcService
         transaction.success = true
         @logger.info "[BATCH_DISCARD] Success: batch ID #{@batch_id}, completion ID #{@completion_id}; #{payload}"
       rescue => exception # rubocop:disable Style/RescueStandardError
-        pp exception.backtrace
-        @logger.error "[BATCH_DISCARD] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{exception.inspect}"
+\        @logger.error "[BATCH_DISCARD] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{exception.inspect}"
       ensure
         transaction.save
         @logger.debug "[BATCH_DISCARD] Transaction: #{transaction.inspect}"
