@@ -24,9 +24,9 @@ module MetrcService
           return
         end
 
-        zone            = batch.client.objects['zones'][@attributes.dig(:options, :zone_id).to_i]
+        zone            = batch.client.objects['zones'][@attributes.dig('options', 'zone_id').to_i]
         zone_name       = normalize_growth_phase(zone.attributes['name'])
-        seeding_unit_id = @attributes.dig(:options, :seeding_unit_id)
+        seeding_unit_id = @attributes.dig('options', 'seeding_unit_id')
         transactions    = Transaction.where('batch_id = ? AND type = ? AND vendor = ? AND id NOT IN (?)', @batch_id, :move_batch, :metrc, transaction.id)
         next_step_name  = 'change_growth_phase'
 
@@ -65,7 +65,7 @@ module MetrcService
 
     private
 
-    def move_plants(seeding_unit_id: nil, zone_name: nil)
+    def move_plants(batch: nil, seeding_unit_id: nil, zone_name: nil)
       date    = @attributes.dig(:start_time)
       items   = get_items(seeding_unit_id)
       payload = items.map do |item|
@@ -81,7 +81,7 @@ module MetrcService
       @client.move_plants(@integration.vendor_id, payload)
     end
 
-    def move_plant_batches(batch: {}, zone_name: nil)
+    def move_plant_batches(batch: nil, zone_name: nil, seeding_unit_id: nil)
       payload = {
         Name: batch.dig('attributes', 'arbitrary_id'),
         Room: zone_name,
@@ -92,7 +92,7 @@ module MetrcService
       @client.move_plant_batches(@integration.vendor_id, payload)
     end
 
-    def change_growth_phase(batch: {}, zone_name: nil)
+    def change_growth_phase(batch: nil, zone_name: nil, seeding_unit_id: nil)
       date         = @attributes.dig(:start_time)
       seeding_unit = batch.seeding_unit.name
       items        = batch.client.objects['items']
@@ -112,7 +112,7 @@ module MetrcService
       @client.change_growth_phase(@integration.vendor_id, [payload])
     end
 
-    def change_growth_phases(seeding_unit_id: nil, zone_name: nil, batch: {})
+    def change_growth_phases(seeding_unit_id: nil, zone_name: nil, batch: nil)
       date         = @attributes.dig(:start_time)
       seeding_unit = batch.included.select { |relationship| relationship['id'] == seeding_unit_id && relationship['type'] == 'seeding_units' }.first['attributes']
       items        = get_items(seeding_unit_id)
