@@ -8,30 +8,30 @@ module MetrcService
 
     def call
       @logger.info "[MOVE] Started: batch ID #{@batch_id}, completion ID #{@completion_id}"
-      transaction = get_transaction :move_batch
-
-      if transaction.success
-        @logger.error "[MOVE] Success: transaction previously performed. #{transaction.inspect}"
-        return
-      end
 
       begin
         @integration.account.refresh_token_if_needed
-        batch = get_batch
+        batch       = get_batch
+        zone        = batch.zone.attributes
+        transaction = get_transaction :move_batch, @attributes.merge(zone: zone)
+
+        if transaction.success
+          @logger.error "[MOVE] Success: transaction previously performed. #{transaction.inspect}"
+          return
+        end
 
         unless batch.crop == MetrcService::CROP
           @logger.error "[MOVE] Failed: Crop is not #{CROP} but #{batch.crop}. Batch ID #{@batch_id}, completion ID #{@completion_id}"
           return
         end
 
-        zone            = batch.client.objects['zones'][@attributes.dig('options', 'zone_id').to_i]
-        zone_name       = normalize_growth_phase(zone.attributes['name'])
+        zone_name       = normalize_growth_phase(zone['name'])
         seeding_unit_id = @attributes.dig('options', 'seeding_unit_id')
         transactions    = Transaction.where('batch_id = ? AND type = ? AND vendor = ? AND id NOT IN (?)', @batch_id, :move_batch, :metrc, transaction.id)
         next_step_name  = 'change_growth_phase'
 
         if transactions.size.positive?
-          previous_zone = normalize_growth_phase(transactions.last.metadata['zone_name'])
+          previous_zone = normalize_growth_phase(transactions.last.metadata.dig('zone', 'name'))
           # Does last move includes new move?
           is_included = GROWTH_CYCLES[previous_zone.to_sym]&.include?(zone_name.to_sym)
           @logger.info "[MOVE] Transactions: #{transactions.size}, Previous zone: #{previous_zone}, Zone is included: #{is_included}, Batch ID #{@batch_id}, completion ID #{@completion_id}"
@@ -41,7 +41,7 @@ module MetrcService
             return
           end
 
-          next_step_name = case true
+          next_step_name = case true # rubocop:disable Lint/LiteralAsCondition
                            when previous_zone&.include?('clone') && zone_name&.downcase.include?('veg') then 'change_growth_phase'
                            when previous_zone&.include?('clone') && zone_name&.downcase.include?('clone') then 'move_plant_batches'
                            when previous_zone&.include?('veg') && (zone_name&.downcase.include?('flower') || zone_name&.downcase.include?('veg')) then 'move_plants'
@@ -55,17 +55,16 @@ module MetrcService
         transaction.success = true
       rescue => exception # rubocop:disable Style/RescueStandardError
         @logger.error "[MOVE] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{exception}"
-        exception.backtrace.each { |line| @logger.error line }
       ensure
         transaction.save
       end
 
-      transaction
+      # transaction
     end
 
     private
 
-    def move_plants(batch: nil, seeding_unit_id: nil, zone_name: nil)
+    def move_plants(batch: nil, seeding_unit_id: nil, zone_name: nil) # rubocop:disable Lint/UnusedMethodArgument
       date    = @attributes.dig(:start_time)
       items   = get_items(seeding_unit_id)
       payload = items.map do |item|
@@ -81,7 +80,7 @@ module MetrcService
       @client.move_plants(@integration.vendor_id, payload)
     end
 
-    def move_plant_batches(batch: nil, zone_name: nil, seeding_unit_id: nil)
+    def move_plant_batches(batch: nil, zone_name: nil, seeding_unit_id: nil) # rubocop:disable Lint/UnusedMethodArgument
       payload = {
         Name: batch.dig('attributes', 'arbitrary_id'),
         Room: zone_name,
@@ -92,7 +91,7 @@ module MetrcService
       @client.move_plant_batches(@integration.vendor_id, payload)
     end
 
-    def change_growth_phase(batch: nil, zone_name: nil, seeding_unit_id: nil)
+    def change_growth_phase(batch: nil, zone_name: nil, seeding_unit_id: nil) # rubocop:disable Lint/UnusedMethodArgument
       date         = @attributes.dig(:start_time)
       seeding_unit = batch.seeding_unit.name
       items        = batch.client.objects['items']
@@ -132,9 +131,11 @@ module MetrcService
     end
 
     def normalize_growth_phase(zone_name)
-      return 'vegetative' if zone_name&.downcase.include?('veg')
+      return 'clone' if zone_name.nil?
 
-      return 'flowering' if zone_name&.downcase.include?('flow')
+      return 'vegetative' if zone_name.downcase&.include?('veg')
+
+      return 'flowering' if zone_name.downcase&.include?('flow')
 
       'clone'
     end
