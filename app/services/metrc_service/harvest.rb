@@ -1,3 +1,5 @@
+require 'pp'
+
 module MetrcService
   class Harvest < MetrcService::Base
     def call
@@ -25,7 +27,7 @@ module MetrcService
 
         @logger.info "[HARVEST] Next step: #{next_step}. Batch ID #{@batch_id}, completion ID #{@completion_id}"
         send next_step, items, batch
-        transaction.success = true
+        # transaction.success = true
       rescue => exception # rubocop:disable Style/RescueStandardError
         @logger.error "[HARVEST] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{exception.inspect}"
       ensure
@@ -41,12 +43,12 @@ module MetrcService
     def manicure_plants(items)
       date           = @attributes.dig(:start_time)
       room_name      = @attributes.dig(:options, :zone_name)
-      average_weight = items.map { |item| item.dig('attributes', 'secondary_harvest_quantity').to_f }.reduce(&:+) / items.size
+      average_weight = items.map { |item| item.attributes['secondary_harvest_quantity'].to_f }.reduce(&:+) / items.size
       payload = items.map do |item|
         {
-          Plant: item.dig('relationships', 'barcode', 'data', 'id'),
+          Plant: item.relationships.dig('barcode', 'data', 'id'),
           Weight: average_weight,
-          UnitOfWeight: item.dig('attributes', 'secondary_harvest_unit'),
+          UnitOfWeight: item.attributes['secondary_harvest_unit'],
           DryingRoom: room_name,
           HarvestName: nil,
           PatientLicenseNumber: nil,
@@ -61,14 +63,15 @@ module MetrcService
     def harvest_plants(items, batch)
       date           = @attributes.dig(:start_time)
       room_name      = @attributes.dig(:options, :zone_name)
-      average_weight = items.map { |item| item.dig('attributes', 'secondary_harvest_quantity').to_f }.reduce(&:+) / items.size
+      average_weight = items.map { |item| item.attributes['secondary_harvest_quantity'].to_f }.reduce(&:+) / items.size
+
       payload = items.map do |item|
         {
-          Plant: item.dig('relationships', 'barcode', 'data', 'id'),
+          Plant: item.relationships.dig('barcode', 'data', 'id'),
           Weight: average_weight,
-          UnitOfWeight: item.dig('attributes', 'harvest_unit'),
+          UnitOfWeight: item.attributes['harvest_unit'],
           DryingRoom: room_name,
-          HarvestName: batch.attributes[:arbitrary_id],
+          HarvestName: batch.attributes['arbitrary_id'],
           PatientLicenseNumber: nil,
           ActualDate: date
         }
