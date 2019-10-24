@@ -1,5 +1,3 @@
-require 'pp'
-
 module MetrcService
   class Harvest < MetrcService::Base
     def call

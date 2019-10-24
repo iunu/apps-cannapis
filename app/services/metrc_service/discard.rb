@@ -1,5 +1,3 @@
-require 'pp'
-
 module MetrcService
   class Discard < MetrcService::Base
     def call
