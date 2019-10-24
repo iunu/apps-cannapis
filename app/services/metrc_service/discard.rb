@@ -53,6 +53,7 @@ module MetrcService
         reason_note = "#{type.capitalize}: #{description}"
       else
         reason_note = 'Does not meet internal QC'
+      end
 
       {
         PlantBatch: discard.id,
