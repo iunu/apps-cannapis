@@ -27,11 +27,13 @@ module MetrcService
         discard = @artemis.facility(@facility_id)
                           .discard(@relationships.dig('action_result', 'data', 'id'))
         payload = build_discard_payload(discard)
+
         @logger.debug "[BATCH_DISCARD] Metrc API request. URI #{@client.uri}, payload #{payload}"
+
         @client.destroy_plant_batches(@integration.vendor_id, [payload])
         transaction.success = true
         @logger.info "[BATCH_DISCARD] Success: batch ID #{@batch_id}, completion ID #{@completion_id}; #{payload}"
-      rescue => exception # rubocop:disable Style/RescueStandardError
+      rescue => exception
         @logger.error "[BATCH_DISCARD] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{exception.inspect}"
       ensure
         transaction.save
@@ -44,8 +46,13 @@ module MetrcService
     private
 
     def build_discard_payload(discard)
-      reason_note = 'Does not meet internal QC'
-      reason_note = "#{discard.attributes['reason_type'].capitalize}: #{discard.attributes['reason_description']}" if discard.attributes['reason_type'] && discard.attributes['reason_description']
+      type        = discard.attributes['reason_type']
+      description = discard.attributes['reason_description']
+
+      if type && description
+        reason_note = "#{type.capitalize}: #{description}"
+      else
+        reason_note = 'Does not meet internal QC'
 
       {
         PlantBatch: discard.id,

@@ -22,10 +22,13 @@ module MetrcService
         seeding_unit_id = @attributes.dig(:options, :seeding_unit_id)
         items           = get_items(seeding_unit_id)
         next_step       = type == 'complete' ? 'harvest_plants' : 'manicure_plants'
+        payload         = send "build_#{next_step}_payload", items, batch
 
-        @logger.info "[HARVEST] Next step: #{next_step}. Batch ID #{@batch_id}, completion ID #{@completion_id}"
-        send next_step, items, batch
-        # transaction.success = true
+        @logger.debug "[HARVEST] Metrc API request. URI #{@client.uri}, payload #{payload}"
+
+        @client.send next_step, @integration.vendor_id, payload
+        transaction.success = true
+        @logger.info "[HARVEST] Success: batch ID #{@batch_id}, completion ID #{@completion_id}; #{payload}"
       rescue => exception # rubocop:disable Style/RescueStandardError
         @logger.error "[HARVEST] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{exception.inspect}"
       ensure
@@ -38,10 +41,10 @@ module MetrcService
 
     private
 
-    def manicure_plants(items)
+    def build_manicure_plants_payload(items)
       date           = @attributes.dig(:start_time)
       room_name      = @attributes.dig(:options, :zone_name)
-      average_weight = items.map { |item| item.attributes['secondary_harvest_quantity'].to_f }.reduce(&:+) / items.size
+      average_weight = calculate_average_weight(items)
       payload = items.map do |item|
         {
           Plant: item.relationships.dig('barcode', 'data', 'id'),
@@ -54,29 +57,30 @@ module MetrcService
         }
       end
 
-      @logger.debug "[MANICURE_PLANTS] Metrc API request. URI #{@client.uri}, payload #{payload}"
-      @client.manicure_plants(@integration.vendor_id, payload)
+      payload
     end
 
-    def harvest_plants(items, batch)
-      date           = @attributes.dig(:start_time)
+    def build_harvest_plants_payload(items, batch)
       room_name      = @attributes.dig(:options, :zone_name)
-      average_weight = items.map { |item| item.attributes['secondary_harvest_quantity'].to_f }.reduce(&:+) / items.size
-
+      average_weight = calculate_average_weight(items)
+      harvest_name   = batch.arbitrary_id
       payload = items.map do |item|
         {
           Plant: item.relationships.dig('barcode', 'data', 'id'),
           Weight: average_weight,
           UnitOfWeight: item.attributes['harvest_unit'],
           DryingRoom: room_name,
-          HarvestName: batch.attributes['arbitrary_id'],
+          HarvestName: harvest_name,
           PatientLicenseNumber: nil,
-          ActualDate: date
+          ActualDate: @attributes.dig(:start_time)
         }
       end
 
-      @logger.debug "[HARVEST_PLANTS] Metrc API request. URI #{@client.uri}, payload #{payload}"
-      @client.harvest_plants(@integration.vendor_id, payload)
+      payload
+    end
+
+    def calculate_average_weight(items)
+      items.map { |item| item.attributes['secondary_harvest_quantity'].to_f }.reduce(&:+) / items.size
     end
   end
 end

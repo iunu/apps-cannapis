@@ -19,7 +19,9 @@ module MetrcService
         end
 
         payload = build_start_payload(batch)
+
         @logger.debug "[METRC_START] Metrc API request. URI #{@client.uri}, payload #{payload}"
+
         @client.create_plant_batches(@integration.vendor_id, [payload])
         transaction.success = true
         @logger.info "[METRC_START] Success: batch ID #{@batch_id}, completion ID #{@completion_id}; #{payload}"

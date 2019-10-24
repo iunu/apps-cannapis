@@ -51,6 +51,7 @@ module MetrcService
         end
 
         @logger.info "[MOVE] Next step: #{next_step_name}. Batch ID #{@batch_id}, completion ID #{@completion_id}"
+
         send next_step_name, seeding_unit_id: seeding_unit_id, batch: batch, zone_name: zone['name']
         transaction.success = true
       rescue => exception # rubocop:disable Style/RescueStandardError
