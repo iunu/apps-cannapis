@@ -1,8 +1,8 @@
 module MetrcService
   class Move < MetrcService::Base
     GROWTH_CYCLES = {
-      clone: %w[clone vegetation],
-      vegetation: %w[vegetation flowering],
+      clone: %w[clone vegetative],
+      vegetative: %w[vegetative flowering],
       flowering: %w[flowering]
     }.freeze
 
