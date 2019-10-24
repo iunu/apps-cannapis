@@ -51,28 +51,28 @@ module MetrcService
         end
 
         @logger.info "[MOVE] Next step: #{next_step_name}. Batch ID #{@batch_id}, completion ID #{@completion_id}"
-        send next_step_name, seeding_unit_id: seeding_unit_id, batch: batch, zone_name: zone_name
+        send next_step_name, seeding_unit_id: seeding_unit_id, batch: batch, zone_name: zone['name']
         transaction.success = true
       rescue => exception # rubocop:disable Style/RescueStandardError
         @logger.error "[MOVE] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{exception}"
       ensure
         transaction.save
+        @logger.debug "[MOVE] Transaction: #{transaction.inspect}"
       end
 
-      # transaction
+      transaction
     end
 
     private
 
     def move_plants(batch: nil, seeding_unit_id: nil, zone_name: nil) # rubocop:disable Lint/UnusedMethodArgument
-      date    = @attributes.dig(:start_time)
       items   = get_items(seeding_unit_id)
       payload = items.map do |item|
         {
           Id: nil,
           Label: item.dig('relationships', 'barcode', 'data', 'id'),
           Room: zone_name,
-          ActualDate: date
+          ActualDate: @attributes.dig('start_time')
         }
       end
 
@@ -82,9 +82,9 @@ module MetrcService
 
     def move_plant_batches(batch: nil, zone_name: nil, seeding_unit_id: nil) # rubocop:disable Lint/UnusedMethodArgument
       payload = {
-        Name: batch.dig('attributes', 'arbitrary_id'),
+        Name: batch.arbitrary_id,
         Room: zone_name,
-        MoveDate: @attributes.dig(:start_time)
+        MoveDate: @attributes.dig('start_time')
       }
 
       @logger.debug "[MOVE_PLANT_BATCHES] Metrc API request. URI #{@client.uri}, payload #{payload}"
@@ -92,8 +92,7 @@ module MetrcService
     end
 
     def change_growth_phase(batch: nil, zone_name: nil, seeding_unit_id: nil) # rubocop:disable Lint/UnusedMethodArgument
-      date         = @attributes.dig(:start_time)
-      seeding_unit = batch.seeding_unit.name
+      seeding_unit = batch.seeding_unit.attributes
       items        = batch.client.objects['items']
       first_tag_id = items.keys.last
       barcode      = items[first_tag_id].relationships.dig('barcode', 'data', 'id')
@@ -103,7 +102,7 @@ module MetrcService
         StartingTag: barcode,
         GrowthPhase: seeding_unit['name'],
         NewRoom: zone_name,
-        GrowthDate: date,
+        GrowthDate: @attributes.dig('start_time'),
         PatientLicenseNumber: nil
       }
 
@@ -112,17 +111,16 @@ module MetrcService
     end
 
     def change_growth_phases(seeding_unit_id: nil, zone_name: nil, batch: nil)
-      date         = @attributes.dig(:start_time)
-      seeding_unit = batch.included.select { |relationship| relationship['id'] == seeding_unit_id && relationship['type'] == 'seeding_units' }.first['attributes']
+      seeding_unit = batch.zone.attributes['seeding_unit']
       items        = get_items(seeding_unit_id)
       payload      = items.map do |item|
         {
           Id: nil,
-          Label: item.dig('relationships', 'barcode', 'data', 'id'),
+          Label: item.relationships.dig('barcode', 'data', 'id'),
           NewTag: seeding_unit['name'], # TODO: Fix me
           GrowthPhase: seeding_unit['name'], # TODO: Fix me
           NewRoom: zone_name,
-          GrowthDate: date
+          GrowthDate: @attributes.dig('start_time')
         }
       end
 
