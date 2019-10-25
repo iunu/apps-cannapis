@@ -87,14 +87,14 @@ module MetrcService
       payload = items.map do |item|
         {
           Id: nil,
-          Label: item.dig('relationships', 'barcode', 'data', 'id'),
+          Label: item.relationships.dig('barcode', 'data', 'id'),
           Room: options[:zone_name],
           ActualDate: @attributes.dig('start_time')
         }
       end
 
       @logger.debug "[MOVE_PLANTS] Metrc API request. URI #{@client.uri}, payload #{payload}"
-      @client.move_plants(@integration.vendor_id, payload)
+      @client.move_plants(@integration.vendor_id, [payload])
     end
 
     def move_plant_batches(options)
