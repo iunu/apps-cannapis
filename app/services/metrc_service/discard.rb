@@ -19,19 +19,25 @@ module MetrcService
           return
         end
 
-        unless seeding_unit.item_tracking_method == 'preprinted'
+        unless seeding_unit.item_tracking_method == 'preprinted' || seeding_unit.item_tracking_method.nil?
           @logger.warn "[MOVE] Failed: Seeding unit is not valid for Metrc #{seeding_unit.item_tracking_method}. Batch ID #{@batch_id}, completion ID #{@completion_id}"
           return
         end
 
+        plant_type = seeding_unit.item_tracking_method.nil? ? 'immature' : 'mature'
         discard = @artemis.facility(@facility_id)
                           .batch(batch.id)
                           .discard(@relationships.dig('action_result', 'data', 'id'))
-        payload = build_discard_payload(discard, batch.arbitrary_id)
 
+        payload = send "build_#{plant_type}_payload", discard, batch
         @logger.debug "[BATCH_DISCARD] Metrc API request. URI #{@client.uri}, payload #{payload}"
 
-        @client.destroy_plant_batches(@integration.vendor_id, [payload])
+        if plant_type == 'immature'
+          @client.destroy_plant_batches(@integration.vendor_id, payload)
+        else
+          @client.destroy_plants(@integration.vendor_id, payload)
+        end
+
         transaction.success = true
         @logger.info "[BATCH_DISCARD] Success: batch ID #{@batch_id}, completion ID #{@completion_id}; #{payload}"
       rescue => exception # rubocop:disable Style/RescueStandardError
@@ -46,19 +52,54 @@ module MetrcService
 
     private
 
-    def build_discard_payload(discard, batch_name)
-      quantity      = discard.attributes['quantity']&.to_i
-      reason_type   = discard.attributes['reason_type']
+    def build_immature_payload(discard, batch)
+      quantity = discard.attributes['quantity']&.to_i
+      reason   = reason_note(discard)
+
+      [
+        {
+          PlantBatch: batch.arbitrary_id,
+          Count: quantity,
+          ReasonNote: reason,
+          ActualDate: discard.attributes['discarded_at']
+        }
+      ]
+    end
+
+    def build_mature_payload(discard, batch)
+      discard_type = @attributes.dig('options', 'discard_type')
+      reason       = reason_note(discard)
+
+      if discard_type == 'partial'
+        return [
+          {
+            Id: nil,
+            Label: @attributes.dig('options', 'barcode'),
+            ReasonNote: reason,
+            ActualDate: discard.attributes['discarded_at']
+          }
+        ]
+
+      end
+
+      items = get_items(batch.seeding_unit.id)
+      items.map do |item|
+        {
+          Id: nil,
+          Label: item.relationships.dig('barcode', 'data', 'id'),
+          ReasonNote: reason,
+          ActualDate: discard.attributes['discarded_at']
+        }
+      end
+    end
+
+    def reason_note(discard)
       reason_description = discard.attributes['reason_description']
+      reason_type = discard.attributes['reason_type']
       reason_note = 'Does not meet internal QC'
       reason_note = "#{reason_type.capitalize}: #{reason_description}. #{@attributes.dig('options', 'note_content')}" if type && description
 
-      {
-        PlantBatch: batch_name,
-        Count: quantity,
-        ReasonNote: reason_note,
-        ActualDate: discard.attributes['discarded_at']
-      }
+      reason_note
     end
   end
 end
