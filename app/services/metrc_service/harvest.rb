@@ -41,7 +41,7 @@ module MetrcService
 
     private
 
-    def build_manicure_plants_payload(items)
+    def build_manicure_plants_payload(items, batch) # rubocop:disable Lint/UnusedMethodArgument
       date           = @attributes.dig(:start_time)
       room_name      = @attributes.dig(:options, :zone_name)
       average_weight = calculate_average_weight(items)
