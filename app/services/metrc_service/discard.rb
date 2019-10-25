@@ -47,8 +47,7 @@ module MetrcService
     private
 
     def build_discard_payload(discard, batch_name)
-      discard_type  = @attributes.dig('options', 'discard_type')
-      quantity      = discard_type == 'complete' ? @attributes.dig('options', 'barcode').size : discard.attributes['quantity']&.to_i
+      quantity      = discard.attributes['quantity']&.to_i
       reason_type   = discard.attributes['reason_type']
       reason_description = discard.attributes['reason_description']
       reason_note = 'Does not meet internal QC'

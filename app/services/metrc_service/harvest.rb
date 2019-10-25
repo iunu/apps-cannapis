@@ -80,7 +80,7 @@ module MetrcService
     end
 
     def calculate_average_weight(items)
-      items.map { |item| item.attributes['secondary_harvest_quantity'].to_f }.reduce(&:+) / items.size
+      items.inject { |sum, item| sum + item.attributes['secondary_harvest_quantity'].to_f }.to_f / items.size
     end
   end
 end
