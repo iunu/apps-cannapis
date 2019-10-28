@@ -5,7 +5,7 @@ module MetrcService
       vegetative: %i[vegetative flowering],
       flowering: %i[flowering]
     }.freeze
-    DEFAULT_MOVE_STEP = 'change_growth_phase'.freeze
+    DEFAULT_MOVE_STEP = :change_growth_phase
 
     def call
       @logger.info "[MOVE] Started: batch ID #{@batch_id}, completion ID #{@completion_id}"
@@ -71,13 +71,13 @@ module MetrcService
 
       new_zone.downcase!
 
-      return 'change_growth_phase' if previous_zone.include?('clone') && new_zone.include?('veg')
+      return DEFAULT_MOVE_STEP if previous_zone.include?('clone') && new_zone.include?('veg')
 
-      return 'move_plant_batches' if previous_zone.include?('clone') && new_zone.include?('clone')
+      return :move_plant_batches if previous_zone.include?('clone') && new_zone.include?('clone')
 
-      return 'move_plants' if previous_zone.include?('veg') && %w[flow veg].any? { |room| new_zone.include? room }
+      return :move_plants if previous_zone.include?('veg') && %w[flow veg].any? { |room| new_zone.include? room }
 
-      return 'change_growth_phases' if previous_zone.include?('veg') && new_zone.include?('flow')
+      return :change_growth_phases if previous_zone.include?('veg') && new_zone.include?('flow')
 
       DEFAULT_MOVE_STEP
     end

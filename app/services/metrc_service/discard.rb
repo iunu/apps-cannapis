@@ -79,7 +79,6 @@ module MetrcService
             ActualDate: discard.attributes['discarded_at']
           }
         ]
-
       end
 
       items = get_items(batch.seeding_unit.id)
