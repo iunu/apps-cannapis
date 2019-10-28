@@ -10,6 +10,7 @@ module V1
                          secret: params.dig(:facility, :api_secret),
                          state: params.dig(:facility, :state)&.downcase)
 
+      IntegrationService.subscribe(request.base_url, integration)
       redirect_to root_path
     end
 

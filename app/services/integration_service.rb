@@ -13,4 +13,8 @@ class IntegrationService < ApplicationService
       VendorJob.perform_later(@ctx, integration)
     end
   end
+
+  def self.subscribe(domain, integration)
+    SubscriptionJob.perform_later(domain, integration)
+  end
 end
