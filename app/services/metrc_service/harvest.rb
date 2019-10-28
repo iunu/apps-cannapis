@@ -21,7 +21,7 @@ module MetrcService
         type            = @attributes.dig(:options, :harvest_type)
         seeding_unit_id = @attributes.dig(:options, :seeding_unit_id)
         items           = get_items(seeding_unit_id)
-        next_step       = type == 'complete' ? 'harvest_plants' : 'manicure_plants'
+        next_step       = type == 'complete' ? :harvest_plants : :manicure_plants
         payload         = send "build_#{next_step}_payload", items, batch
 
         @logger.debug "[HARVEST] Metrc API request. URI #{@client.uri}, payload #{payload}"
@@ -42,41 +42,37 @@ module MetrcService
     private
 
     def build_manicure_plants_payload(items, batch) # rubocop:disable Lint/UnusedMethodArgument
-      date           = @attributes.dig(:start_time)
-      room_name      = @attributes.dig(:options, :zone_name)
       average_weight = calculate_average_weight(items)
       payload = items.map do |item|
-        {
-          Plant: item.relationships.dig('barcode', 'data', 'id'),
-          Weight: average_weight,
-          UnitOfWeight: item.attributes['secondary_harvest_unit'],
-          DryingRoom: room_name,
-          HarvestName: nil,
-          PatientLicenseNumber: nil,
-          ActualDate: date
-        }
+        base.merge(Plant: item.relationships.dig('barcode', 'data', 'id'),
+                   Weight: average_weight,
+                   UnitOfWeight: item.attributes['secondary_harvest_unit'],
+                   DryingRoom: room_name)
       end
 
       payload
     end
 
     def build_harvest_plants_payload(items, batch)
-      room_name      = @attributes.dig(:options, :zone_name)
       average_weight = calculate_average_weight(items)
       harvest_name   = batch.arbitrary_id
       payload = items.map do |item|
-        {
-          Plant: item.relationships.dig('barcode', 'data', 'id'),
-          Weight: average_weight,
-          UnitOfWeight: item.attributes['harvest_unit'],
-          DryingRoom: room_name,
-          HarvestName: harvest_name,
-          PatientLicenseNumber: nil,
-          ActualDate: @attributes.dig(:start_time)
-        }
+        base.merge(Plant: item.relationships.dig('barcode', 'data', 'id'),
+                   Weight: average_weight,
+                   UnitOfWeight: item.attributes['harvest_unit'],
+                   DryingRoom: room_name,
+                   HarvestName: harvest_name)
       end
 
       payload
+    end
+
+    def build_base_payload
+      {
+        DryingRoom: @attributes.dig(:options, :zone_name),
+        PatientLicenseNumber: nil,
+        ActualDate: @attributes.dig(:start_time)
+      }
     end
 
     def calculate_average_weight(items)
