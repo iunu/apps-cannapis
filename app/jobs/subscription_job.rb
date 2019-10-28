@@ -14,10 +14,10 @@ class SubscriptionJob < ApplicationJob
       ArtemisApi::Subscription.create(facility_id: facility_id,
                                       subject: :completions,
                                       destination: "#{base_url}/v1/webhook",
-                                      client: integration.account.client)x
+                                      client: integration.account.client)
 
       logger.error "[SUBSCRIPTION] Success: facility ID #{facility_id}, account ID #{account_id}"
-    rescue => exception
+    rescue => exception # rubocop:disable Style/RescueStandardError
       logger.error "[SUBSCRIPTION] Failed: facility ID #{facility_id}, account ID #{account_id}; #{exception.inspect}"
     end
   end
