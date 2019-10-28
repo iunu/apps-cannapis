@@ -1,6 +1,7 @@
 <%= form_tag "/v1/facility/#{facility.id}", method: :post, class: 'panel facility__widget', id: "facility-form-#{facility.id}" do %>
   <%= hidden_field_tag('facility[vendor]', :metrc) %>
-  <%= hidden_field_tag('facility[state]', facility.state&.downcase) %>
+  <%= hidden_field_tag('facility[state]', integrations[facility.id]&.state || facility.state&.downcase) %>
+  <%= hidden_field_tag('facility[timezone]', facility.time_zone&.downcase) %>
 
   <header class="panel__header">
     <h4 class="panel__title">
@@ -13,6 +14,11 @@
   </header>
 
   <section>
+    <div class="my">
+      <%= label_tag('facility[eod]', "Time after end-of-workday when Metrc should be updated (#{facility.time_zone})") %>
+      <%= select_hour integrations[facility.id]&.eod, prefix: :facility, field_name: :eod, ampm: true %>
+    </div>
+
     <div class="my">
       <%= label_tag('facility[license_number]', 'Metrc License Number') %>
       <%= text_field_tag('facility[license_number]', integrations[facility.id]&.vendor_id, class: 'text--mono') %>
