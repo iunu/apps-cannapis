@@ -36,3 +36,6 @@ Style/FrozenStringLiteralComment:
 
 Naming/RescuedExceptionsVariableName:
   Enabled: false
+
+Rails/CreateTableWithTimestamps:
+  Enabled: false
