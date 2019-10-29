@@ -1,6 +1,7 @@
 class Integration < ApplicationRecord
   belongs_to :account
   has_many :transactions # rubocop:disable Rails/HasManyOrHasOneDependent
+  has_many :schedulers # rubocop:disable Rails/HasManyOrHasOneDependent
   validates :account_id, :state, :vendor, :vendor_id, :key, presence: true
   validates :facility_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
 
