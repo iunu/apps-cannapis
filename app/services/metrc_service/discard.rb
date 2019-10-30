@@ -11,7 +11,7 @@ module MetrcService
 
       begin
         @integration.account.refresh_token_if_needed
-        batch        = @batch ? @batch : get_batch
+        batch        = @batch || get_batch
         seeding_unit = batch.seeding_unit
 
         unless batch.crop == MetrcService::CROP
