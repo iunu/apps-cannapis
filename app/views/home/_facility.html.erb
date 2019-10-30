@@ -1,7 +1,7 @@
 <%= form_tag "/v1/facility/#{facility.id}", method: :post, class: 'panel facility__widget', id: "facility-form-#{facility.id}" do %>
   <%= hidden_field_tag('facility[vendor]', :metrc) %>
   <%= hidden_field_tag('facility[state]', integrations[facility.id]&.state || facility.state&.downcase) %>
-  <%= hidden_field_tag('facility[timezone]', facility.time_zone&.downcase) %>
+  <%= hidden_field_tag('facility[timezone]', facility.time_zone) %>
 
   <header class="panel__header">
     <h4 class="panel__title">
