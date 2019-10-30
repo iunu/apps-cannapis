@@ -1,14 +1,10 @@
-require 'sidekiq-scheduler'
-
-class ScheduledJob
-  include Sidekiq::Worker
-
+class ScheduledJob < ApplicationJob
   def perform
     now = DateTime.now
     beginning_of_hour = now.beginning_of_hour
     end_of_hour       = now.end_of_hour
 
-    tasks = Schedule.where(run_on: beginning_of_hour..end_of_hour)
+    tasks = Scheduler.where(run_on: beginning_of_hour..end_of_hour)
 
     return unless tasks.size.positive?
 
