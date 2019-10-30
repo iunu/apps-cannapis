@@ -11,7 +11,7 @@ module MetrcService
 
       begin
         @integration.account.refresh_token_if_needed
-        batch = get_batch
+        batch = @batch ? @batch : get_batch
 
         unless batch.crop == MetrcService::CROP
           @logger.error "[METRC_START] Failed: Crop is not #{CROP} but #{batch.crop}. Batch ID #{@batch_id}, completion ID #{@completion_id}"
