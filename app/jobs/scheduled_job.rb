@@ -1,5 +1,7 @@
-class ScheduledJob < ApplicationJob
-  queue_as :default
+require 'sidekiq-scheduler'
+
+class ScheduledJob
+  include Sidekiq::Worker
 
   def perform
     now = DateTime.now
