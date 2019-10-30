@@ -1,5 +1,3 @@
-require 'pp'
-
 class SubscriptionJob < ApplicationJob
   queue_as :default
 
