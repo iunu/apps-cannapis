@@ -34,8 +34,14 @@ module MetrcService
         end
 
         completions.each do |completion|
+          ctx = {
+            id: completion.id,
+            relationships: @relationships,
+            attributes: completion.attributes
+          }.with_indifferent_access
           module_for_completion = "MetrcService::#{completion.action_type.camelize}".constantize
-          module_for_completion.new(completion.attributes, @integration, batch).call
+
+          module_for_completion.call(ctx, @integration, batch)
         end
 
         task.delete
