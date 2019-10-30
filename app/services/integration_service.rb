@@ -21,7 +21,7 @@ class IntegrationService < ApplicationService
         Scheduler.create(integration: integration,
                          facility_id: facility_id,
                          batch_id: batch_id,
-                         run_on: later)
+                         run_on: later.utc)
       end
     end
   end
