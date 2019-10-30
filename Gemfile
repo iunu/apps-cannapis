@@ -44,7 +44,6 @@ gem 'artemis_api', git: 'https://github.com/artemis-ag/artemis_api'
 # Serialization
 gem 'jsonapi-rails', '~> 0.4.0' # JSONAPI serialization
 
-gem 'parallel', '~> 1.17'
 gem 'pry'
 gem 'sidekiq', '~> 5.2', '>= 5.2.7'
 gem 'sidekiq-scheduler', '~> 3.0'

@@ -31,7 +31,7 @@ module MetrcService
           return
         end
 
-        Parallel.each(completions) do |completion|
+        completions.each do |completion|
           module_for_completion = "MetrcService::#{completion.action_type}".constantize
           module_for_completion.new(completion.attributes, @integration, batch).call
         end
