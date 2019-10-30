@@ -13,6 +13,10 @@ module MetrcService
       @batch  = batch if batch
     end
 
+    def self.call(*args, &block)
+      new(*args, &block).call
+    end
+
     private
 
     def client
