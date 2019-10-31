@@ -5,6 +5,6 @@ class VendorJob < ApplicationJob
     raise 'Missing arguments for job' unless ctx && integration
 
     vendor_module = "#{integration.vendor.camelize}Service::#{ctx[:attributes][:action_type].capitalize}".constantize
-    vendor_module.new(ctx, integration).call
+    vendor_module.call(ctx, integration)
   end
 end

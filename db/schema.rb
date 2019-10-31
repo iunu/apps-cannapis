@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2019_09_21_131732) do
+ActiveRecord::Schema.define(version: 2019_10_29_180012) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -40,6 +40,8 @@ ActiveRecord::Schema.define(version: 2019_09_21_131732) do
     t.datetime "deleted_at"
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+    t.time "eod", default: "2000-01-01 19:00:00", null: false
+    t.string "timezone", default: "+00:00"
     t.index ["account_id"], name: "index_integrations_on_account_id"
     t.index ["facility_id"], name: "index_integrations_on_facility_id"
     t.index ["id"], name: "index_integrations_on_id", unique: true
@@ -48,6 +50,18 @@ ActiveRecord::Schema.define(version: 2019_09_21_131732) do
   create_table "papertrails", force: :cascade do |t|
     t.datetime "created_at", precision: 6, null: false
     t.datetime "updated_at", precision: 6, null: false
+  end
+
+  create_table "schedulers", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
+    t.uuid "integration_id", null: false
+    t.integer "facility_id", null: false
+    t.integer "batch_id", null: false
+    t.datetime "run_on", null: false
+    t.datetime "received_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
+    t.index ["batch_id", "facility_id"], name: "index_schedulers_on_batch_id_and_facility_id"
+    t.index ["facility_id"], name: "index_schedulers_on_facility_id"
+    t.index ["integration_id"], name: "index_schedulers_on_integration_id"
+    t.index ["run_on"], name: "index_schedulers_on_run_on"
   end
 
   create_table "transactions", id: :uuid, default: -> { "gen_random_uuid()" }, force: :cascade do |t|
@@ -70,6 +84,7 @@ ActiveRecord::Schema.define(version: 2019_09_21_131732) do
   end
 
   add_foreign_key "integrations", "accounts"
+  add_foreign_key "schedulers", "integrations"
   add_foreign_key "transactions", "accounts"
   add_foreign_key "transactions", "integrations"
 end

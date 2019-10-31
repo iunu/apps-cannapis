@@ -1,15 +1,20 @@
 module MetrcService
   class Base
-    def initialize(ctx, integration)
-      @integration   = integration
+    def initialize(ctx, integration, batch = nil)
       @relationships = ctx[:relationships]
-      @attributes    = ctx[:attributes]
       @completion_id = ctx[:id]
-      @batch_id      = @relationships&.dig(:batch, :data, :id)
-      @facility_id   = @relationships&.dig(:facility, :data, :id)
-      @logger        = Rails.logger
-      @client        = client
-      @artemis       = @integration.account.client
+      @integration = integration
+      @attributes  = ctx[:attributes]
+      @facility_id = @relationships&.dig(:facility, :data, :id)
+      @batch_id = @relationships&.dig(:batch, :data, :id)
+      @artemis  = @integration.account.client
+      @logger = Rails.logger
+      @client = client
+      @batch  = batch if batch
+    end
+
+    def self.call(*args, &block)
+      new(*args, &block).call
     end
 
     private

@@ -5510,7 +5510,7 @@ input.icon--calendar,
 textarea.icon--calendar,
 select.icon--calendar,
 .bootstrap-typeahead input.icon--calendar {
-  background-image: url(/assets/agrilysticons/darkGray/calendar-4ff15e1b32e10ae344e2abe89b1e9f46564f690b99d345d4283592c85b3aad38.svg);
+  background-image: url(/assets/calendar.svg);
 }
 
 /* line 59, app/assets/stylesheets/base/_forms.scss */
@@ -5563,7 +5563,7 @@ textarea {
 
 /* line 93, app/assets/stylesheets/base/_forms.scss */
 select {
-  background-image: url(/assets/agrilysticons/darkGray/chevron-down-98d3aafb0f07b64860bfbd89d5060abdbcac28086a82df4fed84933924ed26bf.svg);
+  background-image: url(/assets/chevron-down.svg);
   background-position: calc(100% - 0.5rem) center;
   background-repeat: no-repeat;
   padding-right: 2rem;
@@ -5571,7 +5571,7 @@ select {
 
 /* line 102, app/assets/stylesheets/base/_forms.scss */
 select[disabled] {
-  background-image: url(/assets/agrilysticons/gray/chevron-down-7ab87f27cfd6d7b028b98046d96b07d0eaeef2374b204d0accdd43c34b8f871f.svg);
+  background-image: url(/assets/chevron-down.svg);
 }
 
 /* line 107, app/assets/stylesheets/base/_forms.scss */
@@ -5594,7 +5594,7 @@ input[type='radio'],
 /* line 123, app/assets/stylesheets/base/_forms.scss */
 input[type='checkbox'],
 .task__checkbox {
-  background-image: url(/assets/agrilysticons/white/check-7034bde074983de733741b4671791ac94ee74d89507ae88a23e15f1cd773544d.svg);
+  background-image: url(/assets/check.svg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: 100%;
@@ -5627,7 +5627,7 @@ input[type='radio']:checked {
 
 /* line 150, app/assets/stylesheets/base/_forms.scss */
 input[type='file'] {
-  background-image: url(/assets/agrilysticons/darkGray/export-07b2154947db159bdbd700aeebcb1a4e7cc34461235b10f300a2da340cb3eb11.svg);
+  background-image: url(/assets/export.svg);
   background-position: calc(100% - 0.5rem) center;
   background-repeat: no-repeat;
   cursor: pointer;
@@ -5744,7 +5744,7 @@ label.label--light,
 /* line 48, app/assets/stylesheets/vendor/_chosen.scss */
 .chosen-container-single .chosen-single {
   background-color: white;
-  background-image: url(/assets/agrilysticons/black/chevron-down-9c64004baf5c7db2b276cf9f20dbaf630c0f68f18f007cbde54ddd6ec7158b4e.svg);
+  background-image: url(/assets/chevron-down.svg);
   background-position: calc(100% - 0.5rem) center;
   background-repeat: no-repeat;
   border: 1px solid #dadada;
@@ -5801,7 +5801,7 @@ label.label--light,
   background-color: #ececec;
   border: 0;
   box-shadow: none;
-  background-image: url(/assets/agrilysticons/black/search-de912df290b6e4f376962e2292bca60792f20c79e17a0352dddac8f29bb59615.svg);
+  background-image: url(/assets/search.svg);
   background-position: calc(100% - 0.5rem) center;
   background-repeat: no-repeat;
   background-size: 1.5em;
@@ -5961,7 +5961,7 @@ label.label--light,
   bottom: 0;
   opacity: .5;
   width: 1.25rem;
-  background-image: url(/assets/agrilysticons/white/close-9939ccb919233f3dcf283e684c3de274d236c82152dd749ef29e019c07ae06da.svg);
+  background-image: url(/assets/close.svg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: 1.25em;
@@ -6003,7 +6003,7 @@ label.label--light,
 /* @group Active  */
 /* line 280, app/assets/stylesheets/vendor/_chosen.scss */
 .chosen-container-active .chosen-single {
-  background-image: url(/assets/agrilysticons/black/chevron-up-320e3174afee6156cf3adc47834928eadb7e6413fc28eede8df6e7af3768458b.svg);
+  background-image: url(/assets/chevron-up.svg);
   border: 1px solid #3B82F4;
   box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.25);
 }
@@ -6374,7 +6374,7 @@ label.label--light,
 /* line 51, app/assets/stylesheets/vendor/_flatpickr.scss */
 .flatpickr-input {
   background-color: white !important;
-  background-image: url(/assets/agrilysticons/blue/calendar-8247afbde19121bb6f679d4d253ae6e6dd8169d5164e8b2012a92ee1cc239238.svg);
+  background-image: url(/assets/calendar.svg);
   background-position: calc(100% - 0.5rem) center;
   background-repeat: no-repeat;
   background-size: 1.5rem;
@@ -10783,7 +10783,7 @@ button,
 /* line 3, app/assets/stylesheets/objects/_tooltips.scss */
 .tooltip {
   background-color: #014D86;
-  background-image: url(/assets/agrilysticons/white/help-238847c96d13bc6cea9849b88b6535ba6bb65557bba26b28a7e5fc79ff7d0cc9.svg);
+  background-image: url(/assets/help.svg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: 80%;
@@ -10876,7 +10876,7 @@ button,
 
 /* line 7, app/assets/stylesheets/objects/_popovers.scss */
 .popover__arrow::after {
-  background-image: url(/assets/agrilysticons/black/caret-down-03f1e1c5c4cda576265a2806473c3568b6d915a70162e88c87eefce38f0b46a5.svg);
+  background-image: url(/assets/caret-down.svg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -10889,7 +10889,7 @@ button,
 
 /* line 19, app/assets/stylesheets/objects/_popovers.scss */
 .popover__arrow--white::after {
-  background-image: url(/assets/agrilysticons/white/caret-down-27e1798d0f91182f20686cad556d1e3d4cdae712065ed00ce0df90597a3e19ed.svg);
+  background-image: url(/assets/caret-down.svg);
 }
 
 /* line 24, app/assets/stylesheets/objects/_popovers.scss */
@@ -11566,7 +11566,7 @@ button,
 
 /* line 145, app/assets/stylesheets/objects/_modals.scss */
 .modal__close {
-  background-image: url(/assets/agrilysticons/black/close-fd3a309aa609d9e7021b179c15e6c75c04e33509c2f4e84db5bb2f25b44929d5.svg);
+  background-image: url(/assets/close.svg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: 1.75rem;
@@ -11585,47 +11585,47 @@ button,
 
 /* line 163, app/assets/stylesheets/objects/_modals.scss */
 .modal__header--green .modal__close {
-  background-image: url(/assets/agrilysticons/white/close-9939ccb919233f3dcf283e684c3de274d236c82152dd749ef29e019c07ae06da.svg);
+  background-image: url(/assets/close.svg);
 }
 
 /* line 163, app/assets/stylesheets/objects/_modals.scss */
 .modal__header--light-green .modal__close {
-  background-image: url(/assets/agrilysticons/black/close-fd3a309aa609d9e7021b179c15e6c75c04e33509c2f4e84db5bb2f25b44929d5.svg);
+  background-image: url(/assets/close.svg);
 }
 
 /* line 163, app/assets/stylesheets/objects/_modals.scss */
 .modal__header--light-blue .modal__close {
-  background-image: url(/assets/agrilysticons/white/close-9939ccb919233f3dcf283e684c3de274d236c82152dd749ef29e019c07ae06da.svg);
+  background-image: url(/assets/close.svg);
 }
 
 /* line 163, app/assets/stylesheets/objects/_modals.scss */
 .modal__header--medium-blue .modal__close {
-  background-image: url(/assets/agrilysticons/white/close-9939ccb919233f3dcf283e684c3de274d236c82152dd749ef29e019c07ae06da.svg);
+  background-image: url(/assets/close.svg);
 }
 
 /* line 163, app/assets/stylesheets/objects/_modals.scss */
 .modal__header--purple .modal__close {
-  background-image: url(/assets/agrilysticons/white/close-9939ccb919233f3dcf283e684c3de274d236c82152dd749ef29e019c07ae06da.svg);
+  background-image: url(/assets/close.svg);
 }
 
 /* line 163, app/assets/stylesheets/objects/_modals.scss */
 .modal__header--light-purple .modal__close {
-  background-image: url(/assets/agrilysticons/white/close-9939ccb919233f3dcf283e684c3de274d236c82152dd749ef29e019c07ae06da.svg);
+  background-image: url(/assets/close.svg);
 }
 
 /* line 163, app/assets/stylesheets/objects/_modals.scss */
 .modal__header--gray .modal__close {
-  background-image: url(/assets/agrilysticons/black/close-fd3a309aa609d9e7021b179c15e6c75c04e33509c2f4e84db5bb2f25b44929d5.svg);
+  background-image: url(/assets/close.svg);
 }
 
 /* line 163, app/assets/stylesheets/objects/_modals.scss */
 .modal__header--dark-gray .modal__close {
-  background-image: url(/assets/agrilysticons/white/close-9939ccb919233f3dcf283e684c3de274d236c82152dd749ef29e019c07ae06da.svg);
+  background-image: url(/assets/close.svg);
 }
 
 /* line 163, app/assets/stylesheets/objects/_modals.scss */
 .modal__header--red .modal__close {
-  background-image: url(/assets/agrilysticons/white/close-9939ccb919233f3dcf283e684c3de274d236c82152dd749ef29e019c07ae06da.svg);
+  background-image: url(/assets/close.svg);
 }
 
 /* line 173, app/assets/stylesheets/objects/_modals.scss */
@@ -11737,7 +11737,7 @@ button,
 
 /* line 265, app/assets/stylesheets/objects/_modals.scss */
 .side-modal__close {
-  background-image: url(/assets/agrilysticons/black/close-fd3a309aa609d9e7021b179c15e6c75c04e33509c2f4e84db5bb2f25b44929d5.svg);
+  background-image: url(/assets/close.svg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: 2rem;
@@ -12040,7 +12040,7 @@ span.tab.is-current,
 
 /* line 92, app/assets/stylesheets/objects/_forms.scss */
 input[type='password'] {
-  background-image: url(/assets/agrilysticons/gray/lock-f2e76b2e9d09029dbec5e51a6da05e0dfdfdc154b2917f1e85bf486aa576b052.svg);
+  background-image: url(/assets/lock.svg);
   background-position: calc(100% - 0.5rem);
   background-repeat: no-repeat;
   background-size: 1rem;
@@ -12049,7 +12049,7 @@ input[type='password'] {
 
 /* line 99, app/assets/stylesheets/objects/_forms.scss */
 input[type='password'].is-strong {
-  background-image: url(/assets/agrilysticons/green/circle-check-043757d5c79a7e54a8ca6dfa8f083ee9a05caa8da31fc596459f1856a9521950.svg);
+  background-image: url(/assets/circle-check.svg);
 }
 
 /* line 104, app/assets/stylesheets/objects/_forms.scss */
@@ -12122,12 +12122,12 @@ input[type='password'].is-strong {
 
 /* line 1, app/assets/stylesheets/objects/_search.scss */
 .search__go {
-  background-image: url(/assets/agrilysticons/darkGray/search-aab1512c0a59554b4686ca496031fcd55f192325592dd4897401b268dff678d1.svg);
+  background-image: url(/assets/search.svg);
 }
 
 /* line 5, app/assets/stylesheets/objects/_search.scss */
 .search__clear {
-  background-image: url(/assets/agrilysticons/darkGray/close-ac41cea1079279b46ac076554ad5b8d4eee998621ff45bfbe0604240638057bb.svg);
+  background-image: url(/assets/close.svg);
   cursor: pointer;
   display: none;
   opacity: .75;
@@ -12531,7 +12531,7 @@ ag-progress-bars {
 /* line 36, app/assets/stylesheets/objects/_flash.scss */
 .flash__close {
   background-color: transparent;
-  background-image: url(/assets/agrilysticons/white/close-9939ccb919233f3dcf283e684c3de274d236c82152dd749ef29e019c07ae06da.svg);
+  background-image: url(/assets/close.svg);
   background-position: center;
   background-repeat: no-repeat;
   border: 0;
@@ -12650,7 +12650,7 @@ ag-progress-bars {
 
 /* line 28, app/assets/stylesheets/objects/_empty.scss */
 .empty--fretboard::before {
-  background-image: url(/assets/fretboard-blank-1592637484f28d2adf01d050805df3103ea7dbbbe59d4a6f403ef93f187dd792.png);
+  background-image: url(/assets/fretboard-blank.png);
   background-size: 100%;
   left: -0.75rem;
   right: -0.75rem;
@@ -12658,19 +12658,19 @@ ag-progress-bars {
 
 /* line 37, app/assets/stylesheets/objects/_empty.scss */
 .empty--yield::before {
-  background-image: url(/assets/yield-this-week-blank-1a8b93790eff51d3d2422fc4463631404ad23d8a568f4159ed78972f3e1f103e.png);
+  background-image: url(/assets/yield-this-week-blank.png);
   background-size: auto 90%;
 }
 
 /* line 44, app/assets/stylesheets/objects/_empty.scss */
 .empty--sensors::before {
-  background-image: url(/assets/sensors-blank-bc3de06858ea74bb4ac67ed1fbe6713bb6eca40b750ad5074e1e804a6e10a0cd.png);
+  background-image: url(/assets/sensors-blank.png);
   background-size: auto 80%;
 }
 
 /* line 51, app/assets/stylesheets/objects/_empty.scss */
 .empty--daily-yield-average::before {
-  background-image: url(/assets/daily-yield-average-blank-653401263ab04b323cdcc665dddffeb436dc04efdff8b108ff2702f784faeefe.png);
+  background-image: url(/assets/daily-yield-average-blank.png);
   background-size: auto 80%;
 }
 
@@ -12875,7 +12875,7 @@ ag-sensor-graph.is-empty::after {
 
 /* line 20, app/assets/stylesheets/objects/_repeater.scss */
 .repeater.has-handle .handle {
-  background-image: url(/assets/agrilysticons/darkGray/handle-0a23593202c10a889de9b087bf319e361f993b0358a61a99f8e4d79c88ccc18a.svg);
+  background-image: url(/assets/handle.svg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: 14px;
@@ -13050,7 +13050,7 @@ ag-sensor-graph.is-empty::after {
 .activity-icon {
   background-color: #dadada;
   background-size: 1.25rem;
-  background-image: url(/assets/agrilysticons/black/check-24acf23e9040aee000da9c24e3406b635a7352d61bf08188acf4d1390e6fcd9d.svg);
+  background-image: url(/assets/check.svg);
   background-position: center;
   background-repeat: no-repeat;
   border-radius: 50% !important;
@@ -13065,161 +13065,161 @@ ag-sensor-graph.is-empty::after {
 .activity-icon.sprayed {
   background-color: #dadada;
   background-size: 1.25rem;
-  background-image: url(/assets/agrilysticons/black/check-24acf23e9040aee000da9c24e3406b635a7352d61bf08188acf4d1390e6fcd9d.svg);
+  background-image: url(/assets/check.svg);
 }
 
 /* line 72, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.seeded {
   background-color: #3DB86E;
   background-size: 1.25rem;
-  background-image: url(/assets/agrilysticons/white/seed-5879d5878dd9029fb51ac25946b375d69a80eee82087dffcda98b5387892fe74.svg);
+  background-image: url(/assets/seed.svg);
 }
 
 /* line 76, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.completed {
   background-color: #3DB86E;
   background-size: 1.25rem;
-  background-image: url(/assets/agrilysticons/white/check-7034bde074983de733741b4671791ac94ee74d89507ae88a23e15f1cd773544d.svg);
+  background-image: url(/assets/check.svg);
 }
 
 /* line 80, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.harvested {
   background-color: #3DB86E;
   background-size: 1rem;
-  background-image: url(/assets/agrilysticons/white/harvest-31422b6f76721d0d28a1afd192388c086539d7ee80cdf77effbf01f870d69d4a.svg);
+  background-image: url(/assets/harvest.svg);
 }
 
 /* line 84, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.crop_batch_updated {
   background-color: #f6ae2d;
   background-size: 1rem;
-  background-image: url(/assets/agrilysticons/white/harvest-31422b6f76721d0d28a1afd192388c086539d7ee80cdf77effbf01f870d69d4a.svg);
+  background-image: url(/assets/harvest.svg);
 }
 
 /* line 88, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.crop_batch_complete {
   background-color: #3DB86E;
   background-size: 1rem;
-  background-image: url(/assets/agrilysticons/white/harvest-31422b6f76721d0d28a1afd192388c086539d7ee80cdf77effbf01f870d69d4a.svg);
+  background-image: url(/assets/harvest.svg);
 }
 
 /* line 92, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.crop_batch_quantity_created {
   background-color: #3DB86E;
   background-size: 1.25rem;
-  background-image: url(/assets/agrilysticons/white/seed-5879d5878dd9029fb51ac25946b375d69a80eee82087dffcda98b5387892fe74.svg);
+  background-image: url(/assets/seed.svg);
 }
 
 /* line 96, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.kpi_created {
   background-color: #3DB86E;
   background-size: 1.25rem;
-  background-image: url(/assets/agrilysticons/white/feature-kpis-42b9e2c9ae916a8625e772f21ddc8b0065f1b60047f7c2f320387339c5467a93.svg);
+  background-image: url(/assets/feature-kpis.svg);
 }
 
 /* line 100, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.kpi_updated {
   background-color: #f6ae2d;
   background-size: 1.25rem;
-  background-image: url(/assets/agrilysticons/white/feature-kpis-42b9e2c9ae916a8625e772f21ddc8b0065f1b60047f7c2f320387339c5467a93.svg);
+  background-image: url(/assets/feature-kpis.svg);
 }
 
 /* line 104, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.kpi_removed {
   background-color: #f53d3d;
   background-size: 1.25rem;
-  background-image: url(/assets/agrilysticons/white/feature-kpis-42b9e2c9ae916a8625e772f21ddc8b0065f1b60047f7c2f320387339c5467a93.svg);
+  background-image: url(/assets/feature-kpis.svg);
 }
 
 /* line 108, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.report_updated {
   background-color: #f6ae2d;
   background-size: 1.25rem;
-  background-image: url(/assets/agrilysticons/white/feature-reports-fa82578e2f3d8a07d451b5588a6adb75c5001eebb4463bc1a35613b81dba10ca.svg);
+  background-image: url(/assets/feature-reports.svg);
 }
 
 /* line 112, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.photo_created {
   background-color: #3DB86E;
   background-size: 1.25rem;
-  background-image: url(/assets/agrilysticons/white/camera-7c858f015516bfbb36a14d761add2defad27dd612065b177ffbe56c228c20bf4.svg);
+  background-image: url(/assets/camera.svg);
 }
 
 /* line 116, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.photo_removed {
   background-color: #f53d3d;
   background-size: 1.25rem;
-  background-image: url(/assets/agrilysticons/white/camera-7c858f015516bfbb36a14d761add2defad27dd612065b177ffbe56c228c20bf4.svg);
+  background-image: url(/assets/camera.svg);
 }
 
 /* line 120, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.note {
   background-color: #dadada;
   background-size: 1.25rem;
-  background-image: url(/assets/agrilysticons/black/note-e6ae97056d0ab091ded98e229d7439969fcdc4434026fec9758aeb15cf07d839.svg);
+  background-image: url(/assets/note.svg);
 }
 
 /* line 124, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.note_created {
   background-color: #3DB86E;
   background-size: 1.25rem;
-  background-image: url(/assets/agrilysticons/white/note-e6be0d757616d9b2cc233f01aa09f184f31ccf8a3711d638bf08aee6a2916b21.svg);
+  background-image: url(/assets/note.svg);
 }
 
 /* line 128, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.note_removed {
   background-color: #f53d3d;
   background-size: 1.25rem;
-  background-image: url(/assets/agrilysticons/white/note-e6be0d757616d9b2cc233f01aa09f184f31ccf8a3711d638bf08aee6a2916b21.svg);
+  background-image: url(/assets/note.svg);
 }
 
 /* line 132, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.tank_created {
   background-color: #3DB86E;
   background-size: 1.25rem;
-  background-image: url(/assets/agrilysticons/white/feature-nutrients-5f3bdf152beea20379bbc212cc3b98811b8004e0b2d48268dfd0eaaaf5bec11e.svg);
+  background-image: url(/assets/feature-nutrients.svg);
 }
 
 /* line 136, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.tank_updated {
   background-color: #f6ae2d;
   background-size: 1.25rem;
-  background-image: url(/assets/agrilysticons/white/feature-nutrients-5f3bdf152beea20379bbc212cc3b98811b8004e0b2d48268dfd0eaaaf5bec11e.svg);
+  background-image: url(/assets/feature-nutrients.svg);
 }
 
 /* line 140, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.tank_removed {
   background-color: #f53d3d;
   background-size: 1.25rem;
-  background-image: url(/assets/agrilysticons/white/feature-nutrients-5f3bdf152beea20379bbc212cc3b98811b8004e0b2d48268dfd0eaaaf5bec11e.svg);
+  background-image: url(/assets/feature-nutrients.svg);
 }
 
 /* line 144, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.harvest_removed {
   background-color: #f53d3d;
   background-size: 1rem;
-  background-image: url(/assets/agrilysticons/white/harvest-31422b6f76721d0d28a1afd192388c086539d7ee80cdf77effbf01f870d69d4a.svg);
+  background-image: url(/assets/harvest.svg);
 }
 
 /* line 148, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.split {
   background-color: #3B82F4;
   background-size: 1.25rem;
-  background-image: url(/assets/agrilysticons/white/split-ce68138f98f87b0e8f3c33ab92b5cf15ddff4fb83ff50afcd50e30cfeb4a56a3.svg);
+  background-image: url(/assets/split.svg);
 }
 
 /* line 152, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.moved {
   background-color: #3B82F4;
   background-size: 1.25rem;
-  background-image: url(/assets/agrilysticons/white/arrow-right-623ec3a2f0de61a6d72bce2bb652cd675070aa5fa3c9ac70fba01edd3b6efbfa.svg);
+  background-image: url(/assets/arrow-right.svg);
 }
 
 /* line 156, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.discarded {
   background-color: #f53d3d;
   background-size: 1.25rem;
-  background-image: url(/assets/agrilysticons/white/trash-087b9f6633cca73c9d0eb4f89a3a534913d5214c3d797d5b3795b8ba2957de3f.svg);
+  background-image: url(/assets/trash.svg);
 }
 
 /* line 161, app/assets/stylesheets/objects/_activities.scss */
@@ -13727,7 +13727,7 @@ ag-fancy-table.no-scrollers .scroller {
 /* line 94, app/assets/stylesheets/objects/_timeline.scss */
 .crop-timeline.is-complete .crop-timeline__bar::after {
   background-color: #014D86;
-  background-image: url(/assets/agrilysticons/white/check-7034bde074983de733741b4671791ac94ee74d89507ae88a23e15f1cd773544d.svg);
+  background-image: url(/assets/check.svg);
   display: inline-block;
 }
 
@@ -13761,7 +13761,7 @@ ag-fancy-table.no-scrollers .scroller {
 /* line 122, app/assets/stylesheets/objects/_timeline.scss */
 .crop-timeline.is-harvested .crop-timeline__bar::after {
   background-color: #3DB86E;
-  background-image: url(/assets/agrilysticons/white/check-7034bde074983de733741b4671791ac94ee74d89507ae88a23e15f1cd773544d.svg);
+  background-image: url(/assets/check.svg);
   display: inline-block;
 }
 
@@ -13795,7 +13795,7 @@ ag-fancy-table.no-scrollers .scroller {
 /* line 150, app/assets/stylesheets/objects/_timeline.scss */
 .crop-timeline.is-overdue .crop-timeline__bar::after {
   background-color: #f53d3d;
-  background-image: url(/assets/agrilysticons/white/alert-3c0488703a1bfd201fa20a5bcd56799178c4cc054e98a1dde93b7511ba9f86a4.svg);
+  background-image: url(/assets/alert.svg);
   background-size: 1rem;
   display: inline-block;
 }
@@ -14130,14 +14130,14 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
 
 /* line 102, app/assets/stylesheets/objects/_scroller.scss */
 .scroller__arrow--left {
-  background-image: url(/assets/agrilysticons/white/arrow-left-065ac6304db2c5eeffda2b0f08c9594ed4aabe51a5339e5a80e32db17fb318a4.svg);
+  background-image: url(/assets/arrow-left.svg);
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
 }
 
 /* line 108, app/assets/stylesheets/objects/_scroller.scss */
 .scroller__arrow--right {
-  background-image: url(/assets/agrilysticons/white/arrow-right-623ec3a2f0de61a6d72bce2bb652cd675070aa5fa3c9ac70fba01edd3b6efbfa.svg);
+  background-image: url(/assets/arrow-right.svg);
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
 }
@@ -14213,7 +14213,7 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
 
 /* line 63, app/assets/stylesheets/objects/_spreadsheet.scss */
 .react-grid-HeaderCell-sortable {
-  background-image: url(/assets/sort-arrow-both-1c2dc1fb33b6b5101b41eb6d1e086a3d03928df8f081c4fa7af2536880844285.png);
+  background-image: url(/assets/sort-arrow-both.png);
   background-position: right center;
   background-repeat: no-repeat;
   background-size: 8px;
@@ -14224,12 +14224,12 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
 
 /* line 73, app/assets/stylesheets/objects/_spreadsheet.scss */
 .react-grid-HeaderCell-sortable--ascending {
-  background-image: url(/assets/sort-arrow-up-b5b87b7cbbdd482659e9572c7b48333007b75cb0cb7a78c87a65c545d62f03b5.png);
+  background-image: url(/assets/sort-arrow-up.png);
 }
 
 /* line 77, app/assets/stylesheets/objects/_spreadsheet.scss */
 .react-grid-HeaderCell-sortable--descending {
-  background-image: url(/assets/sort-arrow-down-eb7366c87e8cea5914dcccb82472c510cd5c0629fdcbbcc61b83577c3a58f49e.png);
+  background-image: url(/assets/sort-arrow-down.png);
 }
 
 /* line 81, app/assets/stylesheets/objects/_spreadsheet.scss */
@@ -14305,7 +14305,7 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
 
 /* line 140, app/assets/stylesheets/objects/_spreadsheet.scss */
 .react-grid-Cell select.editor-main {
-  background-image: url(/assets/agrilysticons/black/chevron-down-9c64004baf5c7db2b276cf9f20dbaf630c0f68f18f007cbde54ddd6ec7158b4e.svg) !important;
+  background-image: url(/assets/chevron-down.svg) !important;
   background-position: calc(100% - 0.5rem) center !important;
   background-repeat: no-repeat !important;
   background-size: 18px !important;
@@ -14564,7 +14564,7 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
 
 /* line 32, app/assets/stylesheets/components/_announcements.scss */
 .announcement__close::before {
-  background-image: url(/assets/agrilysticons/blue/close-4044c1a05519c3226c621b6250285279ebd28e119c4174ff195f5d66fdf214b4.svg);
+  background-image: url(/assets/close.svg);
   background-position: center;
   background-repeat: no-repeat;
   content: '';
@@ -14601,7 +14601,7 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
 
 /* line 65, app/assets/stylesheets/components/_announcements.scss */
 .google-play-badge {
-  background-image: url(/assets/google-play-badge-424ea6b438494f1d2825a94ca9479f4ae415536127f2db4f5d8a04c4264ce46e.svg);
+  background-image: url(/assets/google-play-badge.svg);
   background-repeat: no-repeat;
   height: 40px;
   width: 135px;
@@ -14855,7 +14855,7 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
 
 /* line 1, app/assets/stylesheets/components/_header-user.scss */
 .header__user {
-  background-image: url(/assets/agrilysticons/white/profile-c5ee5c80311e43beae98764da5d2a6a413917f01251903292575031ebbcba944.svg);
+  background-image: url(/assets/profile.svg);
   cursor: default;
   padding-right: 0;
 }
@@ -14917,7 +14917,7 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
 
 /* line 1, app/assets/stylesheets/components/_header-nav.scss */
 .header__nav-toggle {
-  background-image: url(/assets/agrilysticons/white/menu-f6b96aad827d27f6e743a119ed9d830682e9129412bdc55a27475c0dd57f0a3c.svg);
+  background-image: url(/assets/menu.svg);
   left: 0;
 }
 
@@ -15082,7 +15082,7 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
 
 /* line 1, app/assets/stylesheets/components/_header-search.scss */
 .header__search-toggle {
-  background-image: url(/assets/agrilysticons/white/search-0f478ea0a64a2a554a4b4bb1a91ea1d19834ff1b03d4994e780fcb7786836bb9.svg);
+  background-image: url(/assets/search.svg);
   background-size: 1.65rem;
 }
 
@@ -15160,14 +15160,14 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
 
 /* line 51, app/assets/stylesheets/components/_header-search.scss */
 .header__search .search__go {
-  background-image: url(/assets/agrilysticons/darkGray/search-aab1512c0a59554b4686ca496031fcd55f192325592dd4897401b268dff678d1.svg);
+  background-image: url(/assets/search.svg);
   width: 2rem;
   z-index: 1;
 }
 
 /* line 57, app/assets/stylesheets/components/_header-search.scss */
 .header__search .search__clear {
-  background-image: url(/assets/agrilysticons/white/close-9939ccb919233f3dcf283e684c3de274d236c82152dd749ef29e019c07ae06da.svg);
+  background-image: url(/assets/close.svg);
   z-index: 1;
 }
 
@@ -15212,7 +15212,7 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
   /* line 99, app/assets/stylesheets/components/_header-search.scss */
   .header__search-close {
     background-color: transparent;
-    background-image: url(/assets/agrilysticons/white/close-9939ccb919233f3dcf283e684c3de274d236c82152dd749ef29e019c07ae06da.svg);
+    background-image: url(/assets/close.svg);
     background-position: center;
     background-repeat: no-repeat;
     background-size: 2rem;
@@ -15325,7 +15325,7 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
 
 /* line 82, app/assets/stylesheets/components/_header-alerts.scss */
 .header__alerts-icon {
-  background-image: url(/assets/agrilysticons/white/notification-0b81f781406ec3182fbfb9305fd09e62b5aec327d321665ecaca6a18bbb3fd8b.svg);
+  background-image: url(/assets/notification.svg);
 }
 
 /* line 86, app/assets/stylesheets/components/_header-alerts.scss */
@@ -15702,7 +15702,7 @@ ag-fretboard::after {
 /* line 181, app/assets/stylesheets/components/_fretboard.scss */
 .fret__cell-icon {
   background-color: #3DB86E;
-  background-image: url(/assets/agrilysticons/white/harvest-31422b6f76721d0d28a1afd192388c086539d7ee80cdf77effbf01f870d69d4a.svg);
+  background-image: url(/assets/harvest.svg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: 1rem;
@@ -15716,7 +15716,7 @@ ag-fretboard::after {
 /* line 193, app/assets/stylesheets/components/_fretboard.scss */
 .is-partial .fret__cell-icon {
   background-color: #dadada;
-  background-image: url(/assets/agrilysticons/green/harvest-f9ee292c299b2b4df38e5c206e8094e1da7b6fb6dc7e632520271490d532e281.svg);
+  background-image: url(/assets/harvest.svg);
 }
 
 /* line 199, app/assets/stylesheets/components/_fretboard.scss */
@@ -15816,7 +15816,7 @@ button.task__checkbox.is-checked:hover {
 
 /* line 73, app/assets/stylesheets/components/_task.scss */
 .is-repeating .task__text {
-  background-image: url(/assets/agrilysticons/black/repeat-8cf1d2f2bfceb475b90e13165eab4f7113f2c40a985dfcb74a0c5a24aca71d3a.svg);
+  background-image: url(/assets/repeat.svg);
   background-position: left 3px;
   background-repeat: no-repeat;
   background-size: 1rem;
@@ -15860,7 +15860,7 @@ button.task__checkbox.is-checked:hover {
   overflow: hidden;
   text-indent: 200%;
   white-space: nowrap;
-  background-image: url(/assets/agrilysticons/darkGray/edit-5df0f924e84b632896a72b79869176059aaf9d3c6e96ffd9d5bd9ad00085178d.svg);
+  background-image: url(/assets/edit.svg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: 1.5rem;
@@ -15883,7 +15883,7 @@ button.task__checkbox.is-checked:hover {
 
 /* line 133, app/assets/stylesheets/components/_task.scss */
 .task__edit--close {
-  background-image: url(/assets/agrilysticons/red/close-8b6fb60d9d4c0ee10769391d9ad10bf69716c584b432ebca1eb78abb03dc327c.svg);
+  background-image: url(/assets/close.svg);
 }
 
 /* line 137, app/assets/stylesheets/components/_task.scss */
@@ -17300,7 +17300,7 @@ body[dir='rtl'] .timeline-sidepanel {
 
 /* line 349, app/assets/stylesheets/components/_timeline.scss */
 .timeline-section__title .collapse {
-  background-image: url(/assets/agrilysticons/gray/chevron-down-7ab87f27cfd6d7b028b98046d96b07d0eaeef2374b204d0accdd43c34b8f871f.svg);
+  background-image: url(/assets/chevron-down.svg);
   background-position: center;
   background-repeat: no-repeat;
   flex-shrink: 0;
@@ -17318,7 +17318,7 @@ body[dir='rtl'] .timeline-sidepanel {
 
 /* line 367, app/assets/stylesheets/components/_timeline.scss */
 .timeline-section__title:hover .collapse, .timeline-section__title:focus .collapse {
-  background-image: url(/assets/agrilysticons/darkGray/chevron-down-98d3aafb0f07b64860bfbd89d5060abdbcac28086a82df4fed84933924ed26bf.svg);
+  background-image: url(/assets/chevron-down.svg);
 }
 
 /* line 376, app/assets/stylesheets/components/_timeline.scss */
@@ -17429,7 +17429,7 @@ body[dir='rtl'] .timeline-sidepanel {
 .auth {
   align-items: center;
   background-color: #001D41;
-  background-image: url(/assets/auth-bgr-8bb744c03ea61f87e9e817fb73b2b8973347e6960c17750adb4de998dde4cdb6.png);
+  background-image: url(/assets/auth-bgr.png);
   background-position: center bottom;
   background-repeat: no-repeat;
   background-size: cover;
@@ -17553,7 +17553,7 @@ body[class^='reports'] .l-sidebar.is_stuck {
 
 /* line 59, app/assets/stylesheets/pages/_reports.scss */
 .reports__save-popover > .btn {
-  background-image: url(/assets/agrilysticons/white/caret-down-27e1798d0f91182f20686cad556d1e3d4cdae712065ed00ce0df90597a3e19ed.svg);
+  background-image: url(/assets/caret-down.svg);
   background-position: calc(100% - 0.5rem);
   background-repeat: no-repeat;
   cursor: default;
@@ -17577,7 +17577,7 @@ body[class^='reports'] .l-sidebar.is_stuck {
 
 /* line 81, app/assets/stylesheets/pages/_reports.scss */
 .reports__title {
-  background-image: url(/assets/agrilysticons/darkGray/archive-69eae8cc938b78e806a27889bcefa7ae93eb6e6076e06faa979a36b7135fea70.svg);
+  background-image: url(/assets/archive.svg);
   background-position: left center;
   background-repeat: no-repeat;
   background-size: 1.5rem;
@@ -17618,7 +17618,7 @@ body[class^='reports'] .l-sidebar.is_stuck {
 
 /* line 115, app/assets/stylesheets/pages/_reports.scss */
 .report__date-window::before {
-  background-image: url(/assets/agrilysticons/blue/arrow-right-7668ed169e1306941d296a6450cd4212031501ad3a0ed319e4bd3cd1252ccf96.svg);
+  background-image: url(/assets/arrow-right.svg);
   background-size: 1em;
   content: '';
   display: inline-block;
@@ -17685,7 +17685,7 @@ body[class^='reports'] .l-sidebar.is_stuck {
 
 /* line 172, app/assets/stylesheets/pages/_reports.scss */
 .facility__widget--empty {
-  background-image: url(/assets/agrilysticons/darkGray/plus-d6dcda11b0890d01cbbee77a1245c356f0660afb6edbb00c1248a5e339685816.svg);
+  background-image: url(/assets/plus.svg);
   background-position: center;
   background-repeat: no-repeat;
   background-size: 2rem;
@@ -17766,7 +17766,7 @@ body.is-editing .facility__widget .tooltip .tooltip__text::after {
 
 /* line 230, app/assets/stylesheets/pages/_reports.scss */
 .reports__clear {
-  background-image: url(/assets/agrilysticons/blue/close-4044c1a05519c3226c621b6250285279ebd28e119c4174ff195f5d66fdf214b4.svg);
+  background-image: url(/assets/close.svg);
   background-position: left center;
   background-repeat: no-repeat;
   background-size: 1.25rem;
@@ -17778,7 +17778,7 @@ body.is-editing .facility__widget .tooltip .tooltip__text::after {
 
 /* line 241, app/assets/stylesheets/pages/_reports.scss */
 .report__edit__remove {
-  background-image: url(/assets/agrilysticons/red/close-8b6fb60d9d4c0ee10769391d9ad10bf69716c584b432ebca1eb78abb03dc327c.svg);
+  background-image: url(/assets/close.svg);
   background-position: left center;
   background-repeat: no-repeat;
   background-size: 1.25rem;
@@ -18763,7 +18763,7 @@ ag-production-map {
 
 /* line 28, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__save-status {
-  background-image: url(/assets/unsaved-2c3235857a28ba0cd9c1c7e9b8e97909b1af9ac42661a72127ed8a86144fa4b7.png);
+  background-image: url(/assets/unsaved.png);
   background-position: right center;
   background-repeat: no-repeat;
   background-size: 1rem;
@@ -18794,43 +18794,43 @@ ag-production-map {
 
 /* line 56, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__icon--start {
-  background-image: url(/assets/gc-start-8071b7b4b37abe1fa7435657a895b1ee0f12f4b49844c83852e2489d8ed09f91.svg);
+  background-image: url(/assets/gc-start.svg);
 }
 
 /* line 60, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__icon--harvest {
-  background-image: url(/assets/gc-harvest-5e96ab13802e763d9d31b468d1feec177f87a545ffd6942c9bf48f5bdc757508.svg);
+  background-image: url(/assets/gc-harvest.svg);
 }
 
 /* line 64, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__icon--discard {
-  background-image: url(/assets/gc-discard-95f357ea6c4ddf52e0d090b811352459b380fa083c1c8f50d273348bebc0e9f6.svg);
+  background-image: url(/assets/gc-discard.svg);
 }
 
 /* line 68, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__icon--move {
-  background-image: url(/assets/gc-move-b34171dd55030bb8ddf90ca87a4a9c02b01a8d1351727a92e7952bdc55c1518d.svg);
+  background-image: url(/assets/gc-move.svg);
 }
 
 /* line 72, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__icon--manual_task {
-  background-image: url(/assets/gc-manual_task-78acabcdae02d3824592e66add034faec9d0a68fbe4e9125bf5cb3a9f7088b11.svg);
+  background-image: url(/assets/gc-manual_task.svg);
   background-size: 55%;
 }
 
 /* line 77, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__icon--wait {
-  background-image: url(/assets/gc-wait-7eb5c8b4aee6b20137dfb8d3d9700cadcc8b9f7bbcaebf1879f54bec2ff39c9a.svg);
+  background-image: url(/assets/gc-wait.svg);
 }
 
 /* line 81, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__icon--kpi {
-  background-image: url(/assets/agrilysticons/feature-reports-114de0a7c67de95b909fbedca394809fb829232d065fd1391fb40d59e16ef34a.svg);
+  background-image: url(/assets/agrilysticons/feature-reports.svg);
 }
 
 /* line 85, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__icon--seeding_schedule {
-  background-image: url(/assets/agrilysticons/darkGray/calendar-4ff15e1b32e10ae344e2abe89b1e9f46564f690b99d345d4283592c85b3aad38.svg);
+  background-image: url(/assets/calendar.svg);
 }
 
 /* line 91, app/assets/stylesheets/pages/_growth-cycles.scss */
@@ -18999,7 +18999,7 @@ ag-production-map {
 
 /* line 153, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__action.is-repeating .gc__action__repeat {
-  background-image: url(/assets/agrilysticons/blue/repeat-1c84d3b5af5b67a5c9de3252a768c3a1e9b35d82e6afa07ecaa70e183d8dd3ef.svg);
+  background-image: url(/assets/repeat.svg);
   background-position: center 0.5rem;
   background-repeat: no-repeat;
   background-size: 1.5rem;
@@ -19073,7 +19073,7 @@ ag-production-map {
 
 /* line 219, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__action__repeat-text {
-  background-image: url(/assets/agrilysticons/black/repeat-8cf1d2f2bfceb475b90e13165eab4f7113f2c40a985dfcb74a0c5a24aca71d3a.svg);
+  background-image: url(/assets/repeat.svg);
   background-position: left center;
   background-repeat: no-repeat;
   background-size: 1rem;
@@ -19283,7 +19283,7 @@ ag-production-map {
 
 /* line 408, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__edit-line {
-  background-image: url(/assets/stripe-da67c076b05be12849bcec5bce38cf7fb777e7687bfd54da94338994052a5ef2.png);
+  background-image: url(/assets/stripe.png);
   background-size: 6px;
   border-bottom: 2px #f53d3d dashed;
   display: inline-block;
@@ -19581,7 +19581,7 @@ ag-production-map {
 
 /* line 14, app/assets/stylesheets/pages/_food-safety.scss */
 .file-upload__link {
-  background-image: url(/assets/agrilysticons/blue/documents-doc-6e690c88decd143dcb566d66ef1df4daef063f0558ec3f97fe333d5e036650f8.svg);
+  background-image: url(/assets/documents-doc.svg);
   background-position: left center;
   background-repeat: no-repeat;
   background-size: 1.125rem;
@@ -19596,7 +19596,7 @@ ag-production-map {
 
 /* line 27, app/assets/stylesheets/pages/_food-safety.scss */
 .file-upload__link.documents-image {
-  background-image: url(/assets/agrilysticons/blue/documents-image-efcf6eae5c63ce5335885b1c92151b2b098c8c8c8f5bfe956f7dbd9ff837cf56.svg);
+  background-image: url(/assets/documents-image.svg);
 }
 
 /* line 33, app/assets/stylesheets/pages/_food-safety.scss */
@@ -19937,7 +19937,7 @@ td.print-table__write-in {
 
 /* line 9, app/assets/stylesheets/print/tasks.scss */
 .print-task-checkbox[checked] {
-  background-image: url(/assets/agrilysticons/black/check-24acf23e9040aee000da9c24e3406b635a7352d61bf08188acf4d1390e6fcd9d.svg) !important;
+  background-image: url(/assets/check.svg) !important;
   background-position: center;
   background-repeat: no-repeat;
   background-size: 75%;
@@ -19946,7 +19946,7 @@ td.print-table__write-in {
 @media print {
   /* line 9, app/assets/stylesheets/print/tasks.scss */
   .print-task-checkbox[checked] {
-    content: url(/assets/agrilysticons/black/check-24acf23e9040aee000da9c24e3406b635a7352d61bf08188acf4d1390e6fcd9d.svg);
+    content: url(/assets/check.svg);
   }
 }
 

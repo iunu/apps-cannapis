@@ -46,6 +46,7 @@ gem 'jsonapi-rails', '~> 0.4.0' # JSONAPI serialization
 
 gem 'pry'
 gem 'sidekiq', '~> 5.2', '>= 5.2.7'
+gem 'sidekiq-scheduler', '~> 3.0'
 
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
