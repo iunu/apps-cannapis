@@ -83,6 +83,7 @@ group :test do
   gem 'simplecov-console', '~> 0.5.0'
   # Easy installation and use of web drivers to run system tests with browsers
   gem 'webdrivers'
+  gem 'webmock'
 end
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
