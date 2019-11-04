@@ -4,6 +4,7 @@ class Integration < ApplicationRecord
   has_many :schedulers # rubocop:disable Rails/HasManyOrHasOneDependent
   validates :account_id, :state, :vendor, :vendor_id, :key, presence: true
   validates :facility_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
+  validates :vendor, presence: true
 
   before_save { self.vendor.downcase! } # rubocop:disable Style/RedundantSelf
 
