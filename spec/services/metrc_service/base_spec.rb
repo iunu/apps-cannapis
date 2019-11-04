@@ -7,16 +7,20 @@ RSpec.describe MetrcService::Base do
   context 'holds the basic attributes' do
     subject { MetrcService::Base.new({}, integration) }
 
-    it 'has .integration' do
+    it 'has @integration' do
       expect(subject.instance_variable_get(:@integration)).to eq integration
     end
 
-    it 'has .logger' do
+    it 'has @logger' do
       expect(subject.instance_variable_get(:@logger)).to eq Rails.logger
     end
 
-    it 'has .client' do
+    it 'has @client' do
       expect(subject.instance_variable_get(:@client)).to be_a Metrc::Client
+    end
+
+    it 'does not have a @batch' do
+      expect(subject.instance_variable_get(:@batch)).to be_nil
     end
   end
 
@@ -62,9 +66,13 @@ RSpec.describe MetrcService::Base do
     it 'has .facility_id' do
       expect(subject.instance_variable_get(:@facility_id)).to eq 1568
     end
+
+    it 'does not have a @batch' do
+      expect(subject.instance_variable_get(:@batch)).to be_nil
+    end
   end
 
-  context 'getting a transaction' do
+  context '#get_transaction' do
     it 'creates a new transaction' do
       ctx = {
         'id': 3000,
@@ -100,7 +108,7 @@ RSpec.describe MetrcService::Base do
                                     batch_id: 3002,
                                     completion_id: 4000,
                                     type: name,
-                                    metadata: {}.to_json,
+                                    metadata: {},
                                     success: true)
       ctx = {
         'id': 4000,
@@ -123,6 +131,7 @@ RSpec.describe MetrcService::Base do
       transaction = instance.send :get_transaction, name
 
       expect(transaction).to_not be_nil
+      expect(transaction).to be_a Transaction
       expect(transaction.id).to eq existing.id
       expect(transaction.type).to eq existing.type
       expect(transaction.batch_id).to eq existing.batch_id
@@ -130,6 +139,117 @@ RSpec.describe MetrcService::Base do
       expect(transaction.success).to eq existing.success
       expect(transaction.account_id).to eq existing.account_id
       expect(transaction.integration_id).to eq existing.integration_id
+    end
+  end
+
+  context '#get_batch' do
+    before :all do
+      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
+        .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
+
+      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,barcodes,items,custom_data,seeding_unit,harvest_unit,sub_zone')
+        .to_return(body: { data: { id: '2002', type: 'batches', attributes: { id: 2002, arbitrary_id: 'Jun19-Bok-Cho' } } }.to_json)
+    end
+
+    it 'gets a batch' do
+      ctx = {
+        'id': 3000,
+        'relationships': {
+          'batch': {
+            'data': {
+              'id': 2002
+            }
+          },
+          'facility': {
+            'data': {
+              'id': 1568
+            }
+          }
+        },
+        'attributes': {},
+        'completion_id': 3000
+      }
+      instance = MetrcService::Base.new(ctx, integration)
+      batch = instance.send :get_batch
+      expect(batch).to_not be_nil
+      expect(batch.id).to eq 2002
+      expect(batch.arbitrary_id).to eq 'Jun19-Bok-Cho'
+    end
+  end
+
+  context '#get_items' do
+    before :all do
+      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
+        .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
+
+      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002')
+        .to_return(body: { data: { id: '2002', type: 'batches', attributes: { id: 2002, arbitrary_id: 'Jun19-Bok-Cho' } } }.to_json)
+
+      stub_request(:get, 'https://portal.artemisag.com/api/v3/items?filter[seeding_unit_id]=100&include=barcodes,seeding_unit')
+        .to_return(body: { data: [{ id: '326515', type: 'items', attributes: { id: 326515, status: 'active' }, relationships: { barcode: { data: { id: '1A4FF0200000022000000207', type: 'barcodes' } }, seeding_unit: { data: { id: '100', type: 'seeding_units' } } } }] }.to_json)
+    end
+
+    it 'gets batch items' do
+      ctx = {
+        'id': 3000,
+        'relationships': {
+          'batch': {
+            'data': {
+              'id': 2002
+            }
+          },
+          'facility': {
+            'data': {
+              'id': 1568
+            }
+          }
+        },
+        'attributes': {},
+        'completion_id': 3000
+      }
+      seeding_unit_id = 100
+      instance = MetrcService::Base.new(ctx, integration)
+      items = instance.send :get_items, seeding_unit_id
+      expect(items).to_not be_nil
+      expect(items.first.id).to eq 326_515
+      expect(items.first.relationships.dig('barcode', 'data', 'id')).to eq '1A4FF0200000022000000207'
+      expect(items.first.relationships.dig('seeding_unit', 'data', 'id')).to eq seeding_unit_id.to_s
+    end
+  end
+
+  context '#get_zone' do
+    before :all do
+      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
+        .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
+
+      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/zones/2')
+        .to_return(body: { data: { id: '2', type: 'zones', attributes: { id: 2, name: 'Propagation' } } }.to_json)
+    end
+
+    it 'gets zone' do
+      ctx = {
+        'id': 3000,
+        'relationships': {
+          'batch': {
+            'data': {
+              'id': 2002
+            }
+          },
+          'facility': {
+            'data': {
+              'id': 1568
+            }
+          }
+        },
+        'attributes': {},
+        'completion_id': 3000
+      }
+      zone_id = 2
+      instance = MetrcService::Base.new(ctx, integration)
+      zone = instance.send :get_zone, zone_id
+      expect(zone).to_not be_nil
+      expect(zone.id).to eq zone_id
+      expect(zone.name).to eq 'Propagation'
     end
   end
 end
