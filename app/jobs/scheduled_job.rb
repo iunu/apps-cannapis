@@ -1,4 +1,6 @@
 class ScheduledJob < ApplicationJob
+  queue_as :default
+
   def perform
     now = DateTime.now
     beginning_of_hour = now.beginning_of_hour
