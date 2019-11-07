@@ -1,4 +1,4 @@
-FROM ruby:2.6.0
+FROM ruby:2.6.5
 
 # Install Node. Although I'm pretty sure there's an easier way...
 RUN apt-get update && apt-get install -y curl
