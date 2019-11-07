@@ -18,6 +18,11 @@ class IntegrationService < ApplicationService
       else
         batch_id = @ctx.dig('relationships', 'batch', 'data', 'id')
         later = now.at_beginning_of_day + integration.eod.hour.hours
+
+        exists = Scheduler.where(facility_id: facility_id, batch_id: batch_id, run_on: now.at_beginning_of_day..now.at_end_of_day)
+
+        next unless exists.nil?
+
         Scheduler.create(integration: integration,
                          facility_id: facility_id,
                          batch_id: batch_id,
