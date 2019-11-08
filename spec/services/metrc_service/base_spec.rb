@@ -1,8 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe MetrcService::Base do
-  let(:account) { Account.create(artemis_id: 'ohai', name: 'Jon Snow') }
-  let(:integration) { Integration.create(secret: 'jonisdany\'snephew', key: 'jonsnow', state: :cb, account: account, facility_id: 1568, vendor: :metrc, vendor_id: 'LIC-0001') }
+  let(:integration) { create(:integration) }
 
   context 'holds the basic attributes' do
     subject { MetrcService::Base.new({}, integration) }
@@ -102,7 +101,7 @@ RSpec.describe MetrcService::Base do
 
     it 'returns an existing transaction' do
       name = :start_batch
-      existing = Transaction.create(account_id: account.id,
+      existing = Transaction.create(account_id: integration.account.id,
                                     integration_id: integration.id,
                                     vendor: :metrc,
                                     batch_id: 3002,

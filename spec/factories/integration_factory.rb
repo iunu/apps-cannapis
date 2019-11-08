@@ -1,5 +1,3 @@
-require 'securerandom'
-
 FactoryBot.define do
   factory :integration do
     account
