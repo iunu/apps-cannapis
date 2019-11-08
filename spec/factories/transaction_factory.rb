@@ -7,5 +7,6 @@ FactoryBot.define do
     completion_id { Faker::Number.number(digits: 4) }
     type { :start_batch }
     success { true }
+    metadata { {  } }
   end
 end
