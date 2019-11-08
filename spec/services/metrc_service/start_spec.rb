@@ -2,8 +2,7 @@ require 'rails_helper'
 require 'ostruct'
 
 RSpec.describe MetrcService::Start do
-  let(:account) { Account.create(artemis_id: 'ohai', name: 'Jon Snow') }
-  let(:integration) { Integration.create(secret: 'jonisdany\'snephew', key: 'jonsnow', state: :cb, account: account, facility_id: 1568, vendor: :metrc, vendor_id: 'LIC-0001') }
+  let(:integration) { create(:integration) }
   let(:ctx) do
     {
       'id': 3000,

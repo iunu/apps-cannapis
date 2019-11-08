@@ -4,8 +4,7 @@ RSpec.describe ScheduledJob, type: :job do
   include ActiveJob::TestHelper
 
   subject { described_class.perform_later }
-  let(:account) { Account.create(artemis_id: 'ohai', name: 'Jon Snow') }
-  let(:integration) { Integration.create(secret: 'jonisdany\'snephew', key: 'jonsnow', state: :cb, account: account, facility_id: 1568, vendor: :metrc, vendor_id: 'LIC-0001') }
+  let(:integration) { create(:integration) }
   let(:now) { DateTime.now.utc }
 
   before :all do
