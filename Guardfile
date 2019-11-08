@@ -50,6 +50,8 @@ guard :rspec, cmd: 'bundle exec rspec' do
   watch(rails.controllers) { |m| rspec.spec.call("controllers/#{m[1]}_controller") }
   # Models
   watch(%r{^app/models/(.+)\.rb$}) { |m| "spec/models/#{m[1]}_spec.rb" }
+  watch(%r{^app/services/(.+)\.rb$}) { |m| "spec/services/#{m[1]}_spec.rb" }
+  watch(%r{^app/jobs/(.+)\.rb$}) { |m| "spec/jobs/#{m[1]}_spec.rb" }
 
   # Rails config changes
   watch(rails.spec_helper)     { rspec.spec_dir }
