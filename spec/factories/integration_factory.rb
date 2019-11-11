@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :integration do
-    association :account, factory: :account
+    account
 
     secret { Faker::Alphanumeric.unique.alphanumeric(number: 10) }
     key { Faker::Alphanumeric.unique.alphanumeric(number: 7) }

@@ -1,9 +1,7 @@
 FactoryBot.define do
   factory :transaction do
-    association :account, factory: :account
-    association :integration, factory: :integration
-    # account
-    # integration
+    account
+    integration
 
     batch_id { Faker::Number.number(digits: 4) }
     completion_id { Faker::Number.number(digits: 4) }
