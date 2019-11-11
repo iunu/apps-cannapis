@@ -64,14 +64,21 @@ RSpec.configure do |config|
 
   config.before :suite do
     DatabaseCleaner.strategy = :truncation
-  end
-
-  config.before [:each, :all] do
+    DatabaseCleaner.clean_with(:truncation)
     DatabaseCleaner.start
+    DatabaseCleaner.clean
   end
 
-  config.after [:each, :all] do
+  config.before :each do
     DatabaseCleaner.clean
+  end
+
+  config.after :each do
+    DatabaseCleaner.clean
+  end
+
+  config.after :suite do
+    DatabaseCleaner.clean_with(:truncation)
   end
 end
 

@@ -1,10 +1,9 @@
 FactoryBot.define do
   factory :integration do
-    account
+    association :account, factory: :account
 
-    id { SecureRandom.uuid }
-    secret { Faker::Alphanumeric.alphanumeric(number: 10) }
-    key { Faker::Alphanumeric.alphanumeric(number: 7) }
+    secret { Faker::Alphanumeric.unique.alphanumeric(number: 10) }
+    key { Faker::Alphanumeric.unique.alphanumeric(number: 7) }
     state { Faker::Address.state_abbr.downcase }
     facility_id { Faker::Number.number(digits: 4) }
     vendor { :metrc }

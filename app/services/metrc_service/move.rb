@@ -18,7 +18,7 @@ module MetrcService
 
         if transaction.success
           @logger.error "[MOVE] Success: transaction previously performed. #{transaction.inspect}"
-          return
+          return transaction
         end
 
         unless batch.crop == MetrcService::CROP

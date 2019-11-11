@@ -1,9 +1,9 @@
 FactoryBot.define do
   factory :account do
-    artemis_id { Faker::Alphanumeric.alphanumeric }
+    artemis_id { SecureRandom.uuid }
     name { Faker::Name.name }
-    access_token { Faker::Alphanumeric.alphanumeric(number: 10) }
-    refresh_token { Faker::Alphanumeric.alphanumeric(number: 10) }
+    access_token { Faker::Alphanumeric.unique.alphanumeric(number: 10) }
+    refresh_token { Faker::Alphanumeric.unique.alphanumeric(number: 10) }
     access_token_expires_in { Time.now + 1.day }
     access_token_created_at { Time.now }
   end

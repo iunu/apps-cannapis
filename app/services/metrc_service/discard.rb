@@ -6,7 +6,7 @@ module MetrcService
 
       if transaction.success
         @logger.error "[BATCH_DISCARD] Success: transaction previously performed. #{transaction.inspect}"
-        return
+        return transaction
       end
 
       begin

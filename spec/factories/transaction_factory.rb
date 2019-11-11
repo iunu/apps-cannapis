@@ -1,17 +1,22 @@
 FactoryBot.define do
   factory :transaction do
-    account
-    integration
+    association :account, factory: :account
+    association :integration, factory: :integration
+    # account
+    # integration
 
     batch_id { Faker::Number.number(digits: 4) }
     completion_id { Faker::Number.number(digits: 4) }
+    vendor { :metrc }
     metadata { {  } }
+    created_at { Time.now - 1.day }
+    updated_at { Time.now - 1.day }
 
-    trait :succeed do
+    trait :successful do
       success { true }
     end
 
-    trait :unsucceed do
+    trait :unsuccessful do
       success { false }
     end
 

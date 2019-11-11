@@ -49,7 +49,7 @@ RSpec.describe MetrcService::Start do
           'completion_id': 1001
         }
       end
-      subject { MetrcService::Start.new(ctx, integration) }
+      subject { described_class.new(ctx, integration) }
 
       it 'returns the old transaction' do
         allow(subject).to receive(:get_transaction).and_return transaction
@@ -60,7 +60,7 @@ RSpec.describe MetrcService::Start do
     describe 'with corn crop' do
       let(:transaction) { stub_model Transaction, type: :start_batch, success: false }
       let(:batch) { OpenStruct.new(crop: 'Corn') }
-      subject { MetrcService::Start.new(ctx, integration) }
+      subject { described_class.new(ctx, integration) }
 
       it 'returns nil' do
         allow(subject).to receive(:get_transaction).and_return transaction
@@ -70,7 +70,7 @@ RSpec.describe MetrcService::Start do
     end
 
     describe 'metrc#create_plant_batches' do
-      subject { MetrcService::Start.new(ctx, integration) }
+      subject { described_class.new(ctx, integration) }
       now = Time.zone.now
       let(:transaction) { stub_model Transaction, type: :start_batch, success: false }
 
@@ -150,7 +150,7 @@ RSpec.describe MetrcService::Start do
     end
 
     it 'returns a valid payload' do
-      instance = MetrcService::Start.new(ctx, integration)
+      instance = described_class.new(ctx, integration)
       payload = instance.send :build_start_payload, batch
 
       expect(payload).not_to be_nil
