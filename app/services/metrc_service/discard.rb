@@ -96,7 +96,7 @@ module MetrcService
       reason_description = discard.attributes['reason_description']
       reason_type = discard.attributes['reason_type']
       reason_note = 'Does not meet internal QC'
-      reason_note = "#{reason_type.capitalize}: #{reason_description}. #{@attributes.dig('options', 'note_content')}" if type && description
+      reason_note = "#{reason_type.capitalize}: #{reason_description}. #{@attributes.dig('options', 'note_content')}" if reason_type && reason_description
 
       reason_note
     end
