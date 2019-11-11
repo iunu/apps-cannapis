@@ -13,7 +13,7 @@ module MetrcService
       begin
         @integration.account.refresh_token_if_needed
         batch       = @batch || get_batch
-        zone        = batch.zone.attributes
+        zone        = batch&.zone&.attributes
         transaction = get_transaction :move_batch, @attributes.merge(zone: zone)
 
         if transaction.success
