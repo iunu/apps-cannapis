@@ -14,7 +14,6 @@ module MetrcService
         end
 
         actions = batch.client.objects['completions']
-        # pp batch.client.objects
         completion_ids = actions.keys
         completions = []
         performed_transactions = Transaction.succeed.where(batch_id: batch.id,
@@ -45,6 +44,7 @@ module MetrcService
         end
 
         task.delete
+        return
       rescue => exception # rubocop:disable Style/RescueStandardError
         @logger.error "[METRC_BATCH] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{exception.inspect}"
       end
