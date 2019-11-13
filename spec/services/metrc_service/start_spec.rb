@@ -59,7 +59,7 @@ RSpec.describe MetrcService::Start do
 
     describe 'with corn crop' do
       let(:transaction) { stub_model Transaction, type: :start_batch, success: false }
-      let(:batch) { OpenStruct.new(crop: 'Corn') }
+      let(:batch) { double(:batch, crop: 'Corn') }
       subject { described_class.new(ctx, integration) }
 
       it 'returns nil' do
@@ -134,13 +134,13 @@ RSpec.describe MetrcService::Start do
 
   context '#build_start_payload' do
     let(:batch) do
-      zone = OpenStruct.new(attributes: {
-                              seeding_unit: {
-                                name: 'Clone'
-                              }.with_indifferent_access
-                            })
+      zone = double(:zone, attributes: {
+                                        seeding_unit: {
+                                          name: 'Clone'
+                                        }.with_indifferent_access
+                                      })
 
-      OpenStruct.new(zone: zone,
+      double(:batch, zone: zone,
                      attributes: {
                        quantity: '100',
                        crop_variety: 'Banana Split',

@@ -51,7 +51,7 @@ RSpec.describe MetrcService::Batch do
     subject { described_class.new(ctx, integration) }
 
     describe 'with corn crop' do
-      let(:batch) { OpenStruct.new(crop: 'Corn') }
+      let(:batch) { double(:batch, crop: 'Corn') }
 
       it 'returns nil' do
         allow(subject).to receive(:get_batch).and_return batch

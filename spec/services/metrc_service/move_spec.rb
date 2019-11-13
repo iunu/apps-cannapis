@@ -46,14 +46,15 @@ RSpec.describe MetrcService::Move do
         },
         attributes: {},
         completion_id: 1001
-      }
+      }.with_indifferent_access
     end
     subject { described_class.new(ctx, integration) }
 
 
     describe 'on an old successful transaction' do
       let(:transaction) { create(:transaction, :successful, :move, account: account, integration: integration) }
-      let(:batch) { OpenStruct.new() }
+      let(:zone) { double(:zone, attributes: { name: nil }) }
+      let(:batch) { double(:batch, crop: 'Cannabis', zone: zone) }
 
       it 'returns the transaction' do
         allow(subject).to receive(:get_transaction).and_return transaction
@@ -64,7 +65,8 @@ RSpec.describe MetrcService::Move do
 
     describe 'with corn crop' do
       let(:transaction) { create(:transaction, :unsuccessful, :move, account: account, integration: integration) }
-      let(:batch) { OpenStruct.new(crop: 'Corn') }
+      let(:zone) { double(:zone, attributes: { name: nil }) }
+      let(:batch) { double(:batch, crop: 'Corn', zone: zone) }
 
       it 'returns nil' do
         allow(subject).to receive(:get_transaction).and_return transaction

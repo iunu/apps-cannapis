@@ -62,7 +62,7 @@ RSpec.describe MetrcService::Discard do
 
     describe 'with corn crop' do
       let(:transaction) { create(:transaction, :unsuccessful, :discard, account: account, integration: integration) }
-      let(:batch) { OpenStruct.new(crop: 'Corn') }
+      let(:batch) { double(:batch, crop: 'Corn', seeding_unit: nil) }
 
       it 'returns nil' do
         allow(subject).to receive(:get_transaction).and_return transaction
@@ -136,11 +136,11 @@ RSpec.describe MetrcService::Discard do
   context '#build_immature_payload' do
     it 'returns a valid payload' do
       now = DateTime.now
-      discard = OpenStruct.new(attributes: {
+      discard = double(:discard, attributes: {
         quantity: '1',
         discarded_at: now
       }.with_indifferent_access)
-      batch = OpenStruct.new(arbitrary_id: 'Oct1-Ban-Spl-Can')
+      batch = double(:batch, arbitrary_id: 'Oct1-Ban-Spl-Can')
 
       instance = described_class.new(ctx, integration)
       payload = instance.send :build_immature_payload, discard, batch
@@ -186,7 +186,7 @@ RSpec.describe MetrcService::Discard do
 
       it 'returns a valid payload' do
         now = DateTime.now
-        discard = OpenStruct.new(attributes: {
+        discard = double(:discard, attributes: {
           discarded_at: now
         }.with_indifferent_access)
         instance = described_class.new(ctx, integration)
@@ -206,7 +206,7 @@ RSpec.describe MetrcService::Discard do
   context '#reason_note' do
     describe 'with no type nor description' do
       it 'returns the expected text' do
-        discard = OpenStruct.new(attributes: {})
+        discard = double(:discard, attributes: {})
         instance = described_class.new(ctx, integration)
         note = instance.send :reason_note, discard
 
@@ -216,7 +216,7 @@ RSpec.describe MetrcService::Discard do
 
     describe 'with type but no description' do
       it 'returns the expected text' do
-        discard = OpenStruct.new(attributes: {
+        discard = double(:discard, attributes: {
           reason_type: 'Other'
         }.with_indifferent_access)
         instance = described_class.new(ctx, integration)
@@ -228,7 +228,7 @@ RSpec.describe MetrcService::Discard do
 
     describe 'with type and description' do
       it 'returns the expected text' do
-        discard = OpenStruct.new(attributes: {
+        discard = double(:discard, attributes: {
           reason_type: 'other',
           reason_description: 'I got a fever'
         }.with_indifferent_access)
