@@ -27,7 +27,7 @@ class ScheduledJob < ApplicationJob
             }
           }
         }
-      }
+      }.with_indifferent_access
       vendor_module.new(ctx, task.integration).call(task)
     end
   end

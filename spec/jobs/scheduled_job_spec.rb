@@ -5,7 +5,7 @@ RSpec.describe ScheduledJob, type: :job do
 
   subject { described_class.perform_later }
   let(:integration) { create(:integration) }
-  let(:now) { DateTime.now.utc }
+  let(:now) { Time.now }
 
   before :all do
     ActiveJob::Base.queue_adapter = :test
@@ -32,21 +32,17 @@ RSpec.describe ScheduledJob, type: :job do
     end
   end
 
-  context 'with a scheduled task', skip: 'Check why the vendor module returns nil' do
-    it 'calls the vendor module' do
-      Scheduler.create(integration: integration,
-                       facility_id: integration.facility_id,
-                       batch_id: 3000,
-                       run_on: now)
+  context 'with a scheduled task', skip: true do
+    let(:task) { create(:task, integration: integration, facility_id: integration.facility_id, batch_id: 3000, run_on: now) }
 
+    it 'calls the vendor module' do
       beginning_of_hour = now.beginning_of_hour
       end_of_hour       = now.end_of_hour
-      tasks = Scheduler.all
 
-      # allow(MetrcService::Batch).to receive(:call) { nil }
-
+      # allow(MetrcService::Batch).to receive(:new)
+      allow_any_instance_of(MetrcService::Batch).to receive(:call)
       expect(Scheduler).to receive(:where).with(hash_including(run_on: beginning_of_hour..end_of_hour))
-                                          .and_return(tasks)
+                                          .and_return([task])
       expect(MetrcService::Batch).to receive(:new)
 
       perform_enqueued_jobs { subject }
