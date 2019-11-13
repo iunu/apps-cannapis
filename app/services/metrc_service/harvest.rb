@@ -43,40 +43,38 @@ module MetrcService
 
     def build_manicure_plants_payload(items, batch) # rubocop:disable Lint/UnusedMethodArgument
       average_weight = calculate_average_weight(items)
-      payload = items.map do |item|
-        base.merge(Plant: item.relationships.dig('barcode', 'data', 'id'),
-                   Weight: average_weight,
-                   UnitOfWeight: item.attributes['secondary_harvest_unit'],
-                   DryingRoom: room_name)
-      end
 
-      payload
+      items.map do |item|
+        {
+          DryingRoom: @attributes.dig(:options, :zone_name),
+          PatientLicenseNumber: nil,
+          ActualDate: @attributes.dig(:start_time),
+          Plant: item.relationships.dig('barcode', 'data', 'id'),
+          Weight: average_weight,
+          UnitOfWeight: item.attributes['secondary_harvest_unit']
+        }
+      end
     end
 
     def build_harvest_plants_payload(items, batch)
+      harvest_name = batch.arbitrary_id
       average_weight = calculate_average_weight(items)
-      harvest_name   = batch.arbitrary_id
-      payload = items.map do |item|
-        base.merge(Plant: item.relationships.dig('barcode', 'data', 'id'),
-                   Weight: average_weight,
-                   UnitOfWeight: item.attributes['harvest_unit'],
-                   DryingRoom: room_name,
-                   HarvestName: harvest_name)
+
+      items.map do |item|
+        {
+          DryingRoom: @attributes.dig(:options, :zone_name),
+          PatientLicenseNumber: nil,
+          ActualDate: @attributes.dig(:start_time),
+          Plant: item.relationships.dig('barcode', 'data', 'id'),
+          Weight: average_weight,
+          UnitOfWeight: item.attributes['harvest_unit'],
+          HarvestName: harvest_name
+        }
       end
-
-      payload
-    end
-
-    def build_base_payload
-      {
-        DryingRoom: @attributes.dig(:options, :zone_name),
-        PatientLicenseNumber: nil,
-        ActualDate: @attributes.dig(:start_time)
-      }
     end
 
     def calculate_average_weight(items)
-      items.inject { |sum, item| sum + item.attributes['secondary_harvest_quantity'].to_f }.to_f / items.size
+      items.inject(0.0) { |sum, item| sum + item.attributes['secondary_harvest_quantity'].to_f }.to_f / items.size
     end
   end
 end
