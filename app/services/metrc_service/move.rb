@@ -66,7 +66,7 @@ module MetrcService
 
     private
 
-    def next_step(previous_zone, new_zone)
+    def next_step(previous_zone = nil, new_zone = nil)
       return DEFAULT_MOVE_STEP if previous_zone.nil? || new_zone.nil?
 
       new_zone.downcase!
@@ -75,7 +75,9 @@ module MetrcService
 
       return :move_plant_batches if previous_zone.include?('clone') && new_zone.include?('clone')
 
-      return :move_plants if previous_zone.include?('veg') && %w[flow veg].any? { |room| new_zone.include? room }
+      return :move_plants if previous_zone.include?('veg') && new_zone.include?('veg')
+
+      return :move_plants if previous_zone.include?('flow') && new_zone.include?('flow')
 
       return :change_growth_phases if previous_zone.include?('veg') && new_zone.include?('flow')
 
@@ -148,7 +150,7 @@ module MetrcService
       @client.change_growth_phases(@integration.vendor_id, payload)
     end
 
-    def normalize_growth_phase(zone_name)
+    def normalize_growth_phase(zone_name = nil)
       return 'clone' if zone_name.nil?
 
       return 'vegetative' if zone_name.downcase&.include?('veg')
