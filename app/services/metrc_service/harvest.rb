@@ -51,7 +51,8 @@ module MetrcService
           ActualDate: @attributes.dig(:start_time),
           Plant: item.relationships.dig('barcode', 'data', 'id'),
           Weight: average_weight,
-          UnitOfWeight: item.attributes['secondary_harvest_unit']
+          UnitOfWeight: item.attributes['secondary_harvest_unit'],
+          HarvestName: nil
         }
       end
     end

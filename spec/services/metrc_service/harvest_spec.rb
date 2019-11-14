@@ -116,7 +116,7 @@ RSpec.describe MetrcService::Harvest do
 
         stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/manicureplants?licenseNumber=LIC-0001')
           .with(
-            body: [{ DryingRoom: 'Clone', PatientLicenseNumber: nil, ActualDate: '2019-11-13T18:44:45', Plant: '1A4FF010000002200000105', Weight: 10.0, UnitOfWeight: 'Grams' }, { DryingRoom: 'Clone', PatientLicenseNumber: nil, ActualDate: '2019-11-13T18:44:45', Plant: '1A4FF010000002200000104', Weight: 10.0, UnitOfWeight: 'Grams' }, { DryingRoom: 'Clone', PatientLicenseNumber: nil, ActualDate: '2019-11-13T18:44:45', Plant: '1A4FF010000002200000103', Weight: 10.0, UnitOfWeight: 'Grams' }].to_json,
+            body: [{ DryingRoom: 'Clone', PatientLicenseNumber: nil, ActualDate: '2019-11-13T18:44:45', Plant: '1A4FF010000002200000105', Weight: 10.0, UnitOfWeight: 'Grams', HarvestName: nil }, { DryingRoom: 'Clone', PatientLicenseNumber: nil, ActualDate: '2019-11-13T18:44:45', Plant: '1A4FF010000002200000104', Weight: 10.0, UnitOfWeight: 'Grams', HarvestName: nil }, { DryingRoom: 'Clone', PatientLicenseNumber: nil, ActualDate: '2019-11-13T18:44:45', Plant: '1A4FF010000002200000103', Weight: 10.0, UnitOfWeight: 'Grams', HarvestName: nil }].to_json,
             basic_auth: [integration.key, integration.secret]
           )
           .to_return(status: 200, body: '', headers: {})
@@ -349,6 +349,7 @@ RSpec.describe MetrcService::Harvest do
         expect(item[:DryingRoom]).to eq 'The Red Keep'
         expect(item[:ActualDate]).to be start_time
         expect(item[:Plant]).not_to be_nil
+        expect(item[:HarvestName]).to be_nil
         expect(item[:Weight]).to eq 10.0
         expect(item[:UnitOfWeight]).to eq 'Grams'
       end
