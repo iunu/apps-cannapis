@@ -38,8 +38,11 @@ module MetrcService
     private
 
     def build_start_payload(batch)
+      barcode = batch.relationships.dig('barcodes', 'data', 0, 'id')
+      tracking_code = @attributes.dig('options', 'tracking_barcode')
+
       {
-        Name: @attributes.dig('options', 'tracking_barcode'),
+        Name: tracking_code || barcode,
         Type: batch.zone.attributes.dig('seeding_unit', 'name') || 'Clone',
         Count: batch.attributes['quantity']&.to_i || 1,
         Strain: batch.attributes['crop_variety'],

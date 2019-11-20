@@ -5,25 +5,25 @@ RSpec.describe MetrcService::Start do
   let(:integration) { create(:integration) }
   let(:ctx) do
     {
-      'id': 3000,
-      'relationships': {
-        'batch': {
-          'data': {
-            'id': 2002
+      id: 3000,
+      relationships: {
+        batch: {
+          data: {
+            id: 2002
           }
         },
-        'facility': {
-          'data': {
-            'id': 1568
+        facility: {
+          data: {
+            id: 1568
           }
         }
       },
-      'attributes': {
-        'options': {
-          'tracking_barcode': '1A4FF01000000220000010'
+      attributes: {
+        options: {
+          tracking_barcode: '1A4FF01000000220000010'
         }
       },
-      'completion_id': 1001
+      completion_id: 1001
     }.with_indifferent_access
   end
 
@@ -32,21 +32,21 @@ RSpec.describe MetrcService::Start do
       let(:transaction) { stub_model Transaction, type: :start_batch, success: true }
       let(:ctx) do
         {
-          'id': 3000,
-          'relationships': {
-            'batch': {
-              'data': {
-                'id': 2002
+          id: 3000,
+          relationships: {
+            batch: {
+              data: {
+                id: 2002
               }
             },
-            'facility': {
-              'data': {
-                'id': 1568
+            facility: {
+              data: {
+                id: 1568
               }
             }
           },
-          'attributes': {},
-          'completion_id': 1001
+          attributes: {},
+          completion_id: 1001
         }
       end
       subject { described_class.new(ctx, integration) }
@@ -133,39 +133,111 @@ RSpec.describe MetrcService::Start do
   end
 
   context '#build_start_payload' do
-    let(:batch) do
-      zone = double(:zone, attributes: {
-                                        seeding_unit: {
-                                          name: 'Clone'
-                                        }.with_indifferent_access
-                                      })
+    describe 'with tracking barcode' do
+      let(:batch) do
+        zone_attributes = {
+          seeding_unit: {
+            name: 'Clone'
+          }
+        }.with_indifferent_access
+        zone = double(:zone, attributes: zone_attributes)
 
-      double(:batch, zone: zone,
-                     attributes: {
-                       quantity: '100',
-                       crop_variety: 'Banana Split',
-                       seeded_at: Time.zone.now,
-                       zone_name: 'Germination'
-                     }.with_indifferent_access)
+        double(:batch, zone: zone,
+                       relationships: {},
+                       attributes: {
+                         quantity: '100',
+                         crop_variety: 'Banana Split',
+                         seeded_at: Time.zone.now,
+                         zone_name: 'Germination'
+                       }.with_indifferent_access)
+      end
+      subject { described_class.new(ctx, integration) }
+
+      it 'returns a valid payload' do
+        payload = subject.send :build_start_payload, batch
+
+        expect(payload).not_to be_nil
+        expect(payload[:Name]).not_to be_nil
+        expect(payload[:Name]).to eq '1A4FF01000000220000010'
+        expect(payload[:Type]).not_to be_nil
+        expect(payload[:Type]).to eq 'Clone'
+        expect(payload[:Count]).not_to be_nil
+        expect(payload[:Count]).to eq 100
+        expect(payload[:Strain]).not_to be_nil
+        expect(payload[:Strain]).to eq 'Banana Split'
+        expect(payload[:Room]).not_to be_nil
+        expect(payload[:Room]).to eq 'Germination'
+        expect(payload[:PatientLicenseNumber]).to be_nil
+        expect(payload[:ActualDate]).not_to be_nil
+      end
     end
 
-    it 'returns a valid payload' do
-      instance = described_class.new(ctx, integration)
-      payload = instance.send :build_start_payload, batch
+    describe 'with no tracking barcode' do
+      let(:ctx) do
+        {
+          id: 3000,
+          relationships: {
+            batch: {
+              data: {
+                id: 2002
+              }
+            },
+            facility: {
+              data: {
+                id: 1568
+              }
+            }
+          },
+          attributes: {},
+          completion_id: 1001
+        }.with_indifferent_access
+      end
 
-      expect(payload).not_to be_nil
-      expect(payload[:Name]).not_to be_nil
-      expect(payload[:Name]).to eq '1A4FF01000000220000010'
-      expect(payload[:Type]).not_to be_nil
-      expect(payload[:Type]).to eq 'Clone'
-      expect(payload[:Count]).not_to be_nil
-      expect(payload[:Count]).to eq 100
-      expect(payload[:Strain]).not_to be_nil
-      expect(payload[:Strain]).to eq 'Banana Split'
-      expect(payload[:Room]).not_to be_nil
-      expect(payload[:Room]).to eq 'Germination'
-      expect(payload[:PatientLicenseNumber]).to be_nil
-      expect(payload[:ActualDate]).not_to be_nil
+      let(:batch) do
+        zone_attributes = {
+          seeding_unit: {
+            name: 'Clone'
+          }
+        }.with_indifferent_access
+        zone = double(:zone, attributes: zone_attributes)
+
+        double(:batch, zone: zone,
+                       relationships: {
+                         barcodes: {
+                           data: [
+                             {
+                               type: :barcodes,
+                               id: '1A4FF01000000220000011'
+                             }
+                           ]
+                         }
+                       }.with_indifferent_access,
+                       attributes: {
+                         quantity: '100',
+                         crop_variety: 'Banana Split',
+                         seeded_at: Time.zone.now,
+                         zone_name: 'Germination'
+                       }.with_indifferent_access)
+      end
+      subject { described_class.new(ctx, integration) }
+
+      it 'returns a valid payload using the batch barcode' do
+        payload = subject.send :build_start_payload, batch
+
+        expect(payload).not_to be_nil
+        expect(payload[:Name]).not_to be_nil
+        expect(payload[:Name]).to eq '1A4FF01000000220000011'
+        expect(payload[:Type]).not_to be_nil
+        expect(payload[:Type]).to eq 'Clone'
+        expect(payload[:Count]).not_to be_nil
+        expect(payload[:Count]).to eq 100
+        expect(payload[:Strain]).not_to be_nil
+        expect(payload[:Strain]).to eq 'Banana Split'
+        expect(payload[:Room]).not_to be_nil
+        expect(payload[:Room]).to eq 'Germination'
+        expect(payload[:PatientLicenseNumber]).to be_nil
+        expect(payload[:ActualDate]).not_to be_nil
+      end
     end
   end
 end
