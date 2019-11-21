@@ -20,7 +20,8 @@ RSpec.describe MetrcService::Start do
       },
       attributes: {
         options: {
-          tracking_barcode: '1A4FF01000000220000010'
+          tracking_barcode: '1A4FF01000000220000010',
+          zone_name: 'Germination'
         }
       },
       completion_id: 1001
@@ -157,15 +158,10 @@ RSpec.describe MetrcService::Start do
         payload = subject.send :build_start_payload, batch
 
         expect(payload).not_to be_nil
-        expect(payload[:Name]).not_to be_nil
         expect(payload[:Name]).to eq '1A4FF01000000220000010'
-        expect(payload[:Type]).not_to be_nil
         expect(payload[:Type]).to eq 'Clone'
-        expect(payload[:Count]).not_to be_nil
         expect(payload[:Count]).to eq 100
-        expect(payload[:Strain]).not_to be_nil
         expect(payload[:Strain]).to eq 'Banana Split'
-        expect(payload[:Room]).not_to be_nil
         expect(payload[:Room]).to eq 'Germination'
         expect(payload[:PatientLicenseNumber]).to be_nil
         expect(payload[:ActualDate]).not_to be_nil
@@ -188,7 +184,11 @@ RSpec.describe MetrcService::Start do
               }
             }
           },
-          attributes: {},
+          attributes: {
+            options: {
+              zone_name: 'Germination'
+            }
+          },
           completion_id: 1001
         }.with_indifferent_access
       end
@@ -225,15 +225,10 @@ RSpec.describe MetrcService::Start do
         payload = subject.send :build_start_payload, batch
 
         expect(payload).not_to be_nil
-        expect(payload[:Name]).not_to be_nil
         expect(payload[:Name]).to eq '1A4FF01000000220000011'
-        expect(payload[:Type]).not_to be_nil
         expect(payload[:Type]).to eq 'Clone'
-        expect(payload[:Count]).not_to be_nil
         expect(payload[:Count]).to eq 100
-        expect(payload[:Strain]).not_to be_nil
         expect(payload[:Strain]).to eq 'Banana Split'
-        expect(payload[:Room]).not_to be_nil
         expect(payload[:Room]).to eq 'Germination'
         expect(payload[:PatientLicenseNumber]).to be_nil
         expect(payload[:ActualDate]).not_to be_nil

@@ -42,10 +42,11 @@ module MetrcService
       tracking_code = @attributes.dig('options', 'tracking_barcode')
       batch_quantity = batch.attributes['quantity']&.to_i
       quantity = batch_quantity.positive? ? batch_quantity : @attributes.dig('options', 'quantity')&.to_i
+      type = %w[clone seed].include?(batch.zone.attributes.dig('seeding_unit', 'name').downcase) ? batch.zone.attributes.dig('seeding_unit', 'name') : 'Clone'
 
       {
         Name: tracking_code || barcode,
-        Type: batch.zone.attributes.dig('seeding_unit', 'name') || 'Clone',
+        Type: type,
         Count: quantity,
         Strain: batch.attributes['crop_variety'],
         Room: @attributes.dig('options', 'zone_name'),
