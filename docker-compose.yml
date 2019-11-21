@@ -44,7 +44,7 @@ services:
     image: cannapi-app
     container_name: cannapi-app-migration
     env_file: .env
-    entrypoint: bash -c "/wait && bundle exec rake db:migrate"
+    entrypoint: bash -c "/wait && bundle exec rake db:prepare"
     environment:
       WAIT_HOSTS: db:5432
     depends_on:
