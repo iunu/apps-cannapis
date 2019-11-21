@@ -40,13 +40,15 @@ module MetrcService
     def build_start_payload(batch)
       barcode = batch.relationships.dig('barcodes', 'data', 0, 'id')
       tracking_code = @attributes.dig('options', 'tracking_barcode')
+      batch_quantity = batch.attributes['quantity']&.to_i
+      quantity = batch_quantity.positive? ? batch_quantity : @attributes.dig('options', 'quantity')&.to_i
 
       {
         Name: tracking_code || barcode,
         Type: batch.zone.attributes.dig('seeding_unit', 'name') || 'Clone',
-        Count: batch.attributes['quantity']&.to_i || 1,
+        Count: quantity,
         Strain: batch.attributes['crop_variety'],
-        Room: batch.attributes['zone_name'] || 'Germination',
+        Room: @attributes.dig('options', 'zone_name'),
         PatientLicenseNumber: nil,
         ActualDate: batch.attributes['seeded_at']
       }

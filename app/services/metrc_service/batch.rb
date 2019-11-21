@@ -35,8 +35,9 @@ module MetrcService
         completions.each do |completion|
           ctx = {
             id: completion.id,
-            relationships: @relationships,
-            attributes: completion.attributes
+            type: :completions,
+            attributes: completion.attributes,
+            relationships: @relationships
           }.with_indifferent_access
           module_for_completion = "MetrcService::#{completion.action_type.camelize}".constantize
 

@@ -21,7 +21,7 @@ class IntegrationService < ApplicationService
 
         exists = Scheduler.where(facility_id: facility_id, batch_id: batch_id, run_on: now.at_beginning_of_day..now.at_end_of_day)
 
-        next unless exists.nil?
+        next if exists.size.positive?
 
         Scheduler.create(integration: integration,
                          facility_id: facility_id,
