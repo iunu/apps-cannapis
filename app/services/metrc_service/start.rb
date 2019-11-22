@@ -22,7 +22,7 @@ module MetrcService
 
         @logger.debug "[METRC_START] Metrc API request. URI #{@client.uri}, payload #{payload}"
 
-        @client.create_plant_batches(@integration.vendor_id, [payload])
+        @client.create_plant_batches(@integration.vendor_id, payload)
         transaction.success = true
         @logger.info "[METRC_START] Success: batch ID #{@batch_id}, completion ID #{@completion_id}; #{payload}"
       rescue => exception # rubocop:disable Style/RescueStandardError
@@ -44,15 +44,15 @@ module MetrcService
       quantity = batch_quantity.positive? ? batch_quantity : @attributes.dig('options', 'quantity')&.to_i
       type = %w[clone seed].include?(batch.zone.attributes.dig('seeding_unit', 'name').downcase) ? batch.zone.attributes.dig('seeding_unit', 'name') : 'Clone'
 
-      {
+      [{
         Name: tracking_code || barcode,
         Type: type,
         Count: quantity,
         Strain: batch.attributes['crop_variety'],
-        Room: @attributes.dig('options', 'zone_name'),
+        Room: @attributes.dig('options', 'zone_name') || 'Mothers',
         PatientLicenseNumber: nil,
         ActualDate: batch.attributes['seeded_at']
-      }
+      }]
     end
   end
 end
