@@ -8,63 +8,62 @@ module MetrcService
     DEFAULT_MOVE_STEP = :change_growth_phase
 
     def call
-      @logger.info "[MOVE] Started: batch ID #{@batch_id}, completion ID #{@completion_id}"
+      zone_name = normalize_growth_phase(zone['name'])
+      next_step_name = determine_next_step_name(zone_name)
 
-      begin
-        @integration.account.refresh_token_if_needed
-        batch       = @batch || get_batch
-        zone        = batch&.zone&.attributes
-        transaction = get_transaction :move_batch, @attributes.merge(zone: zone)
+      log("Next step: #{next_step_name}. Batch ID #{@batch_id}, completion ID #{@completion_id}")
 
-        if transaction.success
-          @logger.error "[MOVE] Success: transaction previously performed. #{transaction.inspect}"
-          return transaction
-        end
+      options = {
+        seeding_unit_id: @attributes.dig('options', 'seeding_unit_id'),
+        batch: batch,
+        zone_name: zone['name']
+      }
 
-        unless batch.crop == MetrcService::CROP
-          @logger.error "[MOVE] Failed: Crop is not #{CROP} but #{batch.crop}. Batch ID #{@batch_id}, completion ID #{@completion_id}"
-          return
-        end
-
-        zone_name       = normalize_growth_phase(zone['name'])
-        seeding_unit_id = @attributes.dig('options', 'seeding_unit_id')
-        transactions    = Transaction.where('batch_id = ? AND type = ? AND vendor = ? AND id NOT IN (?)', @batch_id, :move_batch, :metrc, transaction.id)
-        next_step_name  = DEFAULT_MOVE_STEP
-
-        if transactions.size.positive?
-          previous_zone = normalize_growth_phase(transactions.last.metadata.dig('zone', 'name'))
-          # Does last move includes new move?
-          is_included = GROWTH_CYCLES[previous_zone.to_sym]&.include?(zone_name.to_sym)
-          @logger.info "[MOVE] Transactions: #{transactions.size}, Previous zone: #{previous_zone}, Zone is included: #{is_included}, Batch ID #{@batch_id}, completion ID #{@completion_id}"
-
-          unless is_included
-            @logger.error "[MOVE] Failed: Zone #{zone_name} is not a valid next zone for #{previous_zone}. Batch ID #{@batch_id}, completion ID #{@completion_id}"
-            return
-          end
-
-          next_step_name = next_step(previous_zone, zone_name)
-        end
-
-        @logger.info "[MOVE] Next step: #{next_step_name}. Batch ID #{@batch_id}, completion ID #{@completion_id}"
-        options = {
-          seeding_unit_id: seeding_unit_id,
-          batch: batch,
-          zone_name: zone['name']
-        }
-
-        send next_step_name, options
-        transaction.success = true
-      rescue => exception # rubocop:disable Style/RescueStandardError
-        @logger.error "[MOVE] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{exception}"
-      ensure
-        transaction.save
-        @logger.debug "[MOVE] Transaction: #{transaction.inspect}"
-      end
+      send(next_step_name, options)
+      transaction.success = true
 
       transaction
     end
 
+    def transaction
+      @transaction ||= get_transaction(:move_batch, @attributes.merge(zone: zone))
+    end
+
+    def prior_move_transactions
+      Transaction.where(
+        'batch_id = ? AND type = ? AND vendor = ? AND id NOT IN (?)',
+        @batch_id,
+        :move_batch,
+        :metrc,
+        transaction.id
+      )
+    end
+
+    def zone
+      @zone ||= batch&.zone&.attributes
+    end
+
     private
+
+    def determine_next_step_name(transactions)
+      return DEFAULT_MOVE_STEP if transactions.count.zero?
+
+      transactions = prior_move_transactions
+      previous_zone = normalize_growth_phase(transactions.last.metadata.dig('zone', 'name'))
+
+      # Does last move includes new move?
+      is_included = is_included?(previous_zone, zone_name)
+      log("Transactions: #{transactions.size}, Previous zone: #{previous_zone}, Zone is included: #{is_included}, Batch ID #{@batch_id}, completion ID #{@completion_id}")
+
+      raise InvalidOperation, "Failed: Zone #{zone_name} is not a valid next zone for #{previous_zone}. Batch ID #{@batch_id}, completion ID #{@completion_id}" \
+        unless is_included
+
+      next_step(previous_zone, zone_name)
+    end
+
+    def is_included?(previous_zone, zone_name)
+      GROWTH_CYCLES[previous_zone.to_sym]&.include?(zone_name.to_sym)
+    end
 
     def next_step(previous_zone = nil, new_zone = nil)
       return DEFAULT_MOVE_STEP if previous_zone.nil? || new_zone.nil?
@@ -151,13 +150,14 @@ module MetrcService
     end
 
     def normalize_growth_phase(zone_name = nil)
-      return 'clone' if zone_name.nil?
-
-      return 'vegetative' if zone_name.downcase&.include?('veg')
-
-      return 'flowering' if zone_name.downcase&.include?('flow')
-
-      'clone'
+      case zone_name
+      when /veg/i
+        'vegetative'
+      when /flow/i
+        'flowering'
+      else
+        'clone'
+      end
     end
   end
 end
