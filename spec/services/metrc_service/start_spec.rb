@@ -124,7 +124,7 @@ RSpec.describe MetrcService::Start do
           }
         ]
 
-        allow(subject).to receive(:build_start_payload).and_return(expected_payload.first)
+        allow(subject).to receive(:build_start_payload).and_return(expected_payload)
         allow(subject.instance_variable_get(:@client)).to receive(:create_plant_batches).with(integration.vendor_id, expected_payload).and_return(nil)
 
         transaction = subject.call
@@ -155,7 +155,7 @@ RSpec.describe MetrcService::Start do
       subject { described_class.new(ctx, integration) }
 
       it 'returns a valid payload' do
-        payload = subject.send :build_start_payload, batch
+        payload = subject.send(:build_start_payload, batch).first
 
         expect(payload).not_to be_nil
         expect(payload[:Name]).to eq '1A4FF01000000220000010'
@@ -222,7 +222,7 @@ RSpec.describe MetrcService::Start do
       subject { described_class.new(ctx, integration) }
 
       it 'returns a valid payload using the batch barcode' do
-        payload = subject.send :build_start_payload, batch
+        payload = subject.send(:build_start_payload, batch).first
 
         expect(payload).not_to be_nil
         expect(payload[:Name]).to eq '1A4FF01000000220000011'
