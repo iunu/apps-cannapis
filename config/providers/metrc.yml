@@ -1,0 +1,11 @@
+default: &default
+  state_map:
+    MT: CO 
+    MA: CO 
+
+development:
+  <<: *default
+production:
+  <<: *default
+test:
+  <<: *default
