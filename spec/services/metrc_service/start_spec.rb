@@ -50,28 +50,38 @@ RSpec.describe MetrcService::Start do
           completion_id: 1001
         }
       end
-      subject { described_class.new(ctx, integration) }
 
-      it 'returns the old transaction' do
-        allow(subject).to receive(:get_transaction).and_return transaction
-        expect(subject.call).to eq transaction
+      before do
+        allow_any_instance_of(described_class)
+          .to receive(:get_transaction)
+          .and_return(transaction)
       end
+
+      subject { described_class.call(ctx, integration) }
+
+      it { is_expected.to eq(transaction) }
     end
 
     describe 'with corn crop' do
       let(:transaction) { stub_model Transaction, type: :start_batch, success: false }
       let(:batch) { double(:batch, crop: 'Corn') }
-      subject { described_class.new(ctx, integration) }
+      subject { described_class.call(ctx, integration) }
 
-      it 'returns nil' do
-        allow(subject).to receive(:get_transaction).and_return transaction
-        allow(subject).to receive(:get_batch).and_return batch
-        expect(subject.call).to be_nil
+      before do
+        allow_any_instance_of(described_class)
+          .to receive(:get_transaction)
+          .and_return transaction
+
+        allow_any_instance_of(described_class)
+          .to receive(:get_batch)
+          .and_return batch
       end
+
+      it { is_expected.to be_nil }
     end
 
     describe 'metrc#create_plant_batches' do
-      subject { described_class.new(ctx, integration) }
+      subject { described_class.call(ctx, integration) }
       now = Time.zone.now
       let(:transaction) { stub_model Transaction, type: :start_batch, success: false }
 
@@ -109,10 +119,8 @@ RSpec.describe MetrcService::Start do
           }.to_json)
       end
 
-      it 'calls metrc#create_plant_batches method' do
-        allow(subject).to receive(:get_transaction).and_return transaction
-
-        expected_payload = [
+      let(:expected_payload) do
+        [
           {
             Name: '1A4FF01000000220000010',
             Type: 'Clone',
@@ -123,13 +131,24 @@ RSpec.describe MetrcService::Start do
             ActualDate: now
           }
         ]
-
-        allow(subject).to receive(:build_start_payload).and_return(expected_payload)
-        allow(subject.instance_variable_get(:@client)).to receive(:create_plant_batches).with(integration.vendor_id, expected_payload).and_return(nil)
-
-        transaction = subject.call
-        expect(transaction.success).to eq true
       end
+
+      before do
+        expect_any_instance_of(described_class)
+          .to receive(:get_transaction)
+          .and_return transaction
+
+        expect_any_instance_of(described_class)
+          .to receive(:build_start_payload)
+          .and_return(expected_payload)
+
+        expect_any_instance_of(Metrc::Client)
+          .to receive(:create_plant_batches)
+          .with(integration.vendor_id, expected_payload)
+          .and_return(nil)
+      end
+
+      it { is_expected.to be_success }
     end
   end
 
