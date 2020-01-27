@@ -1,5 +1,13 @@
+require_relative '../common/base_service_action'
+
 module MetrcService
-  class Base
+  class Base < Common::BaseServiceAction
+    class InvalidBatch < StandardError; end
+    class BatchCropInvalid < StandardError; end
+    class InvalidOperation < StandardError; end
+
+    attr_reader :transaction
+
     def initialize(ctx, integration, batch = nil)
       @relationships = ctx[:relationships]
       @completion_id = ctx[:id]
@@ -8,20 +16,30 @@ module MetrcService
       @facility_id = @relationships&.dig(:facility, :data, :id)
       @batch_id = @relationships&.dig(:batch, :data, :id)
       @artemis  = @integration.account.client
-      @logger = Rails.logger
-      @client = client
+      @client = build_client
       @batch  = batch if batch
+
+      super
     end
 
-    def self.call(*args, &block)
-      new(*args, &block).call
+    def run(*)
+      super
+    rescue BatchCropInvalid
+      log("Failed: Crop is not #{CROP} but #{batch.crop}. Batch ID #{@batch_id}, completion ID #{@completion_id}")
+      fail!
+    rescue InvalidBatch, InvalidOperation => e
+      log(e.message)
+      fail!
+    rescue StandardError => e
+      log("Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{e.inspect}", :error)
+      fail!(transaction)
     end
 
     private
 
-    def client
-      return @client if @client
+    attr_reader :client
 
+    def build_client
       debug = !ENV['DEMO'].nil? || Rails.env.development? || Rails.env.test?
 
       Metrc.configure do |config|
@@ -30,11 +48,25 @@ module MetrcService
         config.sandbox  = debug
       end
 
-      @client = Metrc::Client.new(user_key: @integration.secret, debug: debug)
-      @client
+      Metrc::Client.new(user_key: @integration.secret, debug: debug)
     end
 
     protected
+
+    def before
+      log("Started: batch ID #{@batch_id}, completion ID #{@completion_id}")
+
+      super
+
+      validate_batch! unless @batch_id.nil?
+    end
+
+    def call
+      super
+    ensure
+      transaction.save
+      log("Transaction: #{transaction.inspect}", :debug)
+    end
 
     def state
       config[:state_map].fetch(@integration.state.upcase.to_sym, @integration.state)
@@ -53,6 +85,14 @@ module MetrcService
                          completion_id: @completion_id,
                          type: name,
                          metadata: metadata)
+    end
+
+    def batch
+      @batch ||= get_batch
+    end
+
+    def validate_batch!
+      raise BatchCropInvalid unless batch.crop == MetrcService::CROP
     end
 
     def get_batch(include = 'zone,barcodes,items,custom_data,seeding_unit,harvest_unit,sub_zone')
