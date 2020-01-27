@@ -26,7 +26,7 @@ module MetrcService
 
       Metrc.configure do |config|
         config.api_key  = @integration.key
-        config.state    = @integration.state
+        config.state    = state
         config.sandbox  = debug
       end
 
@@ -35,6 +35,10 @@ module MetrcService
     end
 
     protected
+
+    def state
+      config[:state_map].fetch(@integration.state.upcase.to_sym, @integration.state)
+    end
 
     def get_transaction(name, metadata = @attributes)
       transaction = Transaction.where('(vendor = ? AND account_id = ?) AND (integration_id = ? AND batch_id = ?) AND (completion_id = ? AND type = ?)',
@@ -65,6 +69,10 @@ module MetrcService
     def get_zone(zone_id, include: nil)
       @artemis.facility(@facility_id)
               .zone(zone_id, include: include)
+    end
+
+    def config
+      @config ||= Rails.application.config_for('providers/metrc')
     end
   end
 end

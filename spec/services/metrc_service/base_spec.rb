@@ -251,4 +251,33 @@ RSpec.describe MetrcService::Base do
       expect(zone.name).to eq 'Propagation'
     end
   end
+
+  context 'state' do
+    let(:state) { 'NY' }
+    let(:integration) { create(:integration, state: state) }
+    let(:service) { MetrcService::Base.new({}, integration) }
+    subject { service.send(:state) }
+
+    it { is_expected.to eq(integration.state) }
+
+    context 'when CO' do
+      let(:state) { 'CO' }
+      it { is_expected.to eq('CO') }
+    end
+
+    context 'when MA' do
+      let(:state) { 'MA' }
+      it { is_expected.to eq('CO') }
+    end
+
+    context 'when MT' do
+      let(:state) { 'MT' }
+      it { is_expected.to eq('CO') }
+
+      context 'when lower case' do
+        let(:state) { 'mt' }
+        it { is_expected.to eq('CO') }
+      end
+    end
+  end
 end
