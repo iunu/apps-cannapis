@@ -1,45 +1,25 @@
 module MetrcService
   class Harvest < MetrcService::Base
     def call
-      @logger.info "[HARVEST] Started: batch ID #{@batch_id}, completion ID #{@completion_id}"
-      transaction = get_transaction :harvest_batch
+      type            = @attributes.dig(:options, :harvest_type)
+      seeding_unit_id = @attributes.dig(:options, :seeding_unit_id)
+      items           = get_items(seeding_unit_id)
+      next_step       = type == 'complete' ? :harvest_plants : :manicure_plants
+      payload         = send "build_#{next_step}_payload", items, batch
 
-      if transaction.success
-        @logger.error "[HARVEST] Success: transaction previously performed. #{transaction.inspect}"
-        return transaction
-      end
+      @logger.debug "[HARVEST] Metrc API request. URI #{@client.uri}, payload #{payload}"
 
-      begin
-        @integration.account.refresh_token_if_needed
-        batch = @batch || get_batch
-
-        unless batch.crop == MetrcService::CROP
-          @logger.error "[HARVEST] Failed: Crop is not #{CROP} but #{batch.crop}. Batch ID #{@batch_id}, completion ID #{@completion_id}"
-          return
-        end
-
-        type            = @attributes.dig(:options, :harvest_type)
-        seeding_unit_id = @attributes.dig(:options, :seeding_unit_id)
-        items           = get_items(seeding_unit_id)
-        next_step       = type == 'complete' ? :harvest_plants : :manicure_plants
-        payload         = send "build_#{next_step}_payload", items, batch
-
-        @logger.debug "[HARVEST] Metrc API request. URI #{@client.uri}, payload #{payload}"
-
-        @client.send next_step, @integration.vendor_id, payload
-        transaction.success = true
-        @logger.info "[HARVEST] Success: batch ID #{@batch_id}, completion ID #{@completion_id}; #{payload}"
-      rescue => exception # rubocop:disable Style/RescueStandardError
-        @logger.error "[HARVEST] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{exception.inspect}"
-      ensure
-        transaction.save
-        @logger.debug "[HARVEST] Transaction: #{transaction.inspect}"
-      end
+      @client.send next_step, @integration.vendor_id, payload
+      transaction.success = true
 
       transaction
     end
 
     private
+
+    def transaction
+      @transaction ||= get_transaction(:harvest_batch)
+    end
 
     def build_manicure_plants_payload(items, batch) # rubocop:disable Lint/UnusedMethodArgument
       average_weight = calculate_average_weight(items)
