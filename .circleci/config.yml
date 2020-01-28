@@ -1,0 +1,191 @@
+version: 2
+jobs:
+  yarn_install:
+    docker:
+      - image: circleci/node:10.15.0
+
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore node_modules from cache
+          key: node_modules-v1-{{ checksum "yarn.lock" }}
+      - add_ssh_keys:
+            fingerprints:
+              - '94:83:95:15:e6:c9:0b:53:7f:a7:a2:47:9e:dc:55:70'
+      - run: yarn install --check-files
+
+      - save_cache:
+          paths:
+            - node_modules
+          name: Cache node_modules
+          key: node_modules-v1-{{ checksum "yarn.lock" }}
+
+  bundle_install:
+    docker:
+      - image: circleci/ruby:2.6.5
+
+    steps:
+      - checkout
+      - restore_cache:
+          key: cannapi-bundle-v1-{{ checksum "Gemfile.lock" }}
+
+      - run: bundle install --path vendor/bundle
+
+      - save_cache:
+          key: cannapi-bundle-v1-{{ checksum "Gemfile.lock" }}
+          paths:
+            - vendor/bundle
+
+  precompile_assets:
+    docker:
+      - image: circleci/ruby:2.6.5-node
+
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore bundled gems from cache
+          key: cannapi-bundle-v1-{{ checksum "Gemfile.lock" }}
+      - restore_cache:
+          name: Restore node_modules from cache
+          key: node_modules-v1-{{ checksum "yarn.lock" }}
+
+      - run:
+          name: Install any missing gems / dependencies / extensions
+          command: bundle install --path vendor/bundle
+
+      - run:
+          name: Install any missing node_modules
+          command: yarn install --check-files
+
+      - run:
+          name: Precompile assets
+          command: RAILS_ENV=production ./bin/rails assets:precompile
+
+      - save_cache:
+          name: Cache precompiled assets
+          key: precompiled-assets-v1-{{ .Branch }}-{{ .Revision }}
+          paths:
+            - public/assets
+            - public/javascripts
+            - public/packs
+            - tmp/cache/assets/sprockets
+
+  rails_unit_tests: &rails_tests
+    docker:
+      - image: circleci/ruby:2.6.5-node-browsers
+        environment:
+          AGRILYST_URL: 'test.com'
+          DATABASE_URL: postgres://postgres@localhost/cannapi_test
+          RAILS_ENV: test
+          BULLET: true
+      - image: circleci/postgres:9.5-alpine
+        environment:
+          POSTGRES_USER: postgres
+          POSTGRES_DB: cannapi_test
+          POSTGRES_PASSWORD: postgres
+
+    steps:
+      - checkout
+
+      - restore_cache:
+          name: Restore bundled gems from cache
+          key: cannapi-bundle-v1-{{ checksum "Gemfile.lock" }}
+
+      - restore_cache:
+          name: Restore precompiled assets from cache
+          key: precompiled-assets-v1-{{ .Branch }}-{{ .Revision }}
+
+      - run:
+          name: Install any missing gems / dependencies / extensions
+          command: bundle install --path vendor/bundle
+
+      - run:
+          name: Install PG
+          command: sudo apt-get update -qq && sudo apt-get install postgresql
+
+      - run:
+          name: Wait for DB
+          command: dockerize -wait tcp://localhost:5432 -timeout 1m
+
+      - run:
+          name: Database setup
+          command: bin/rails db:migrate --trace
+
+      - run:
+          name: Maybe Run Other Unit Tests
+          command: bin/bundle rspec --verbose --ci-dir=/tmp/test-results
+
+      - store_test_results:
+          path: /tmp/test-results
+
+      - store_artifacts:
+          path: /tmp/test-results
+          destination: test_results
+
+  rubocop:
+    docker:
+      - image: circleci/ruby:2.6.5
+    steps:
+      - checkout
+      - run:
+          name: Install Rubocop
+          command: sudo gem install rubocop:0.49.1
+      - run: rubocop
+
+  sasslint:
+    docker:
+      - image: circleci/node:10.15.0
+
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore node_modules from cache
+          key: node_modules-v1-{{ checksum "yarn.lock" }}
+      - run:
+          name: Run SassLint
+          command: node_modules/.bin/sass-lint -c .sass-lint.yml 'app/assets/**/*.scss' -v
+
+  prod_deploy:
+    machine:
+      enabled: true
+    steps:
+      - checkout
+      - run:
+          name: Deploy Production to Heroku
+          command: |
+            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/apps-cannapis.git $CIRCLE_TAG:master --force
+
+workflows:
+  version: 2
+  run_tests:
+    jobs:
+      - yarn_install
+      - bundle_install
+      - rubocop
+      - precompile_assets:
+          requires:
+            - yarn_install
+            - bundle_install
+      - precompile_translations:
+          requires:
+            - yarn_install
+            - bundle_install
+      - sasslint:
+          requires:
+            - yarn_install
+      - eslint:
+          requires:
+            - yarn_install
+      - rails_unit_tests:
+          requires:
+            - yarn_install
+            - bundle_install
+            - precompile_assets
+            - precompile_translations
+      - prod_deploy:
+          context: production
+          filters:
+            branches:
+              ignore: /.*/
+            tags:
+              only: /^v.+/
