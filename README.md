@@ -1,6 +1,6 @@
-# CannAPIs
+# Artemis / Metrc Integration
 
-Artemis' integration service for third-party compliance vendors.
+Artemis' integration service for [Metrc](https://api-co.metrc.com/Documentation/).
 
 Things you may want to cover:
 * Ruby version: `v2.6.5`
