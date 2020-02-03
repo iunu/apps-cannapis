@@ -9,6 +9,7 @@ module MetrcService
     attr_reader :transaction
 
     def initialize(ctx, integration, batch = nil)
+      @ctx = ctx
       @relationships = ctx[:relationships]
       @completion_id = ctx[:id]
       @integration = integration
