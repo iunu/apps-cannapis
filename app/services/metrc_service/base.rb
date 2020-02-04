@@ -96,7 +96,7 @@ module MetrcService
       raise BatchCropInvalid unless batch.crop == MetrcService::CROP
     end
 
-    def get_batch(include = 'zone,barcodes,items,custom_data,seeding_unit,harvest_unit,sub_zone')
+    def get_batch(include = 'zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
       @artemis.facility(@facility_id)
               .batch(@batch_id, include: include)
     end

@@ -40,7 +40,7 @@ module MetrcService
     end
 
     def batch
-      @batch ||= get_batch 'zone,barcodes,harvests,completions,custom_data,seeding_unit,harvest_unit,sub_zone,items,discard'
+      @batch ||= get_batch 'zone,barcodes,harvests,completions,custom_data,seeding_unit,harvest_unit,sub_zone,discard'
     end
 
     def validate_batch!
