@@ -45,10 +45,10 @@ module MetrcService
 
     private
 
-    def determine_next_step_name(transactions)
+    def determine_next_step_name(zone_name)
+      transactions = prior_move_transactions
       return DEFAULT_MOVE_STEP if transactions.count.zero?
 
-      transactions = prior_move_transactions
       previous_zone = normalize_growth_phase(transactions.last.metadata.dig('zone', 'name'))
 
       # Does last move includes new move?
@@ -113,7 +113,7 @@ module MetrcService
     def change_growth_phase(options)
       batch        = options[:batch]
       seeding_unit = batch.seeding_unit.attributes
-      items        = batch.client.objects['items']
+      items        = get_items(options[:seeding_unit_id])
       first_tag_id = items.keys.last
       barcode      = items[first_tag_id].relationships.dig('barcode', 'data', 'id')
       payload      = {
