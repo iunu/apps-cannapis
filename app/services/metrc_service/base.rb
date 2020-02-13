@@ -42,9 +42,14 @@ module MetrcService
 
     def build_client
       debug = !ENV['DEMO'].nil? || Rails.env.development? || Rails.env.test?
+      secret_key = ENV["METRC_SECRET_#{@integration.key.upcase}"]
+
+      if !secret
+        throw "No Metrc key is available for #{@integration.key.upcase}"
+      end
 
       Metrc.configure do |config|
-        config.api_key  = @integration.key
+        config.api_key  = secret_key
         config.state    = state
         config.sandbox  = debug
       end
