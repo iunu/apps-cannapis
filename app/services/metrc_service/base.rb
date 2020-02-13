@@ -44,7 +44,7 @@ module MetrcService
       debug = !ENV['DEMO'].nil? || Rails.env.development? || Rails.env.test?
       secret_key = ENV["METRC_SECRET_#{@integration.key.upcase}"]
 
-      if !secret
+      unless secret
         throw "No Metrc key is available for #{@integration.key.upcase}"
       end
 
