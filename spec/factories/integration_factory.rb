@@ -8,7 +8,15 @@ FactoryBot.define do
     facility_id { Faker::Number.number(digits: 4) }
     vendor { :metrc }
     vendor_id { 'LIC-0001' }
-    eod { "#{Time.now.hour}:00" }
+    eod { "#{Time.now.utc.hour}:00" }
     timezone { '+00:00' }
+
+    factory :integration_with_metrc_creds do
+      secret { ENV['METRC_API_SECRET'] }
+      key { ENV['METRC_API_KEY'] }
+      state { ENV['METRC_API_STATE'] }
+      vendor { :metrc }
+      vendor_id { ENV['METRC_API_LICENSE'] }
+    end
   end
 end
