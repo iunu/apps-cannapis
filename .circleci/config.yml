@@ -173,9 +173,6 @@ workflows:
       - sasslint:
           requires:
             - yarn_install
-      - eslint:
-          requires:
-            - yarn_install
       - rails_unit_tests:
           requires:
             - yarn_install
