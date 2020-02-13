@@ -178,7 +178,6 @@ workflows:
             - yarn_install
             - bundle_install
             - precompile_assets
-            - precompile_translations
       - prod_deploy:
           context: production
           filters:
