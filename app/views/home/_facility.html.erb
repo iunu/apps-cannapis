@@ -25,12 +25,7 @@
     </div>
 
     <div class="my">
-      <%= label_tag('facility[api_key]', 'Metrc API Key') %>
-      <%= text_field_tag('facility[api_key]', integrations[facility.id]&.key, class: 'text--mono') %>
-    </div>
-
-    <div class="my">
-      <%= label_tag('facility[api_secret]', 'Metrc API Secret') %>
+      <%= label_tag('facility[api_key]', 'Metrc User API Key') %>
       <%= text_field_tag('facility[api_secret]', integrations[facility.id]&.secret, class: 'text--mono') %>
     </div>
 

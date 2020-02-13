@@ -8,7 +8,6 @@ module V1
 
       integration.update(vendor: params.dig(:facility, :vendor),
                          vendor_id: params.dig(:facility, :license_number),
-                         key: params.dig(:facility, :api_key),
                          secret: params.dig(:facility, :api_secret),
                          state: params.dig(:facility, :state)&.downcase,
                          eod: "#{params.dig(:facility, :eod)}:00",
