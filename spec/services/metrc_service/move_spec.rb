@@ -48,19 +48,25 @@ RSpec.describe MetrcService::Move do
         completion_id: 1001
       }.with_indifferent_access
     end
-    subject { described_class.new(ctx, integration) }
 
+    subject { described_class.call(ctx, integration) }
+
+    before do
+      expect_any_instance_of(described_class)
+        .to receive(:get_transaction)
+        .and_return(transaction)
+
+      expect_any_instance_of(described_class)
+        .to receive(:get_batch)
+        .and_return(batch)
+    end
 
     describe 'on an old successful transaction' do
       let(:transaction) { create(:transaction, :successful, :move, account: account, integration: integration) }
       let(:zone) { double(:zone, attributes: { name: nil }) }
       let(:batch) { double(:batch, crop: 'Cannabis', zone: zone) }
 
-      it 'returns the transaction' do
-        allow(subject).to receive(:get_transaction).and_return transaction
-        allow(subject).to receive(:get_batch).and_return batch
-        expect(subject.call).to eq transaction
-      end
+      it { is_expected.to eq(transaction) }
     end
 
     describe 'with corn crop' do
@@ -68,11 +74,7 @@ RSpec.describe MetrcService::Move do
       let(:zone) { double(:zone, attributes: { name: nil }) }
       let(:batch) { double(:batch, crop: 'Corn', zone: zone) }
 
-      it 'returns nil' do
-        allow(subject).to receive(:get_transaction).and_return transaction
-        allow(subject).to receive(:get_batch).and_return batch
-        expect(subject.call).to be_nil
-      end
+      it { is_expected.to be_nil }
     end
   end
 

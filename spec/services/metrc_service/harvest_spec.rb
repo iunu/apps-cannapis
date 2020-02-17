@@ -48,26 +48,29 @@ RSpec.describe MetrcService::Harvest do
         completion_id: 1001
       }
     end
-    subject { described_class.new(ctx, integration) }
+    subject { described_class.call(ctx, integration) }
+
+    before do
+      expect_any_instance_of(described_class)
+        .to receive(:get_transaction)
+        .and_return(transaction)
+    end
 
     describe 'on an old successful transaction' do
       let(:transaction) { create(:transaction, :successful, :harvest, account: account, integration: integration) }
-
-      it 'returns the transaction' do
-        allow(subject).to receive(:get_transaction).and_return transaction
-        expect(subject.call).to eq transaction
-      end
+      it { is_expected.to eq(transaction) }
     end
 
     describe 'with corn crop', focus: true do
       let(:transaction) { create(:transaction, :unsuccessful, :harvest, account: account, integration: integration) }
       let(:batch) { double(:batch, crop: 'Corn') }
-
-      it 'returns nil' do
-        allow(subject).to receive(:get_transaction).and_return transaction
-        allow(subject).to receive(:get_batch).and_return batch
-        expect(subject.call).to be_nil
+      before do
+        expect_any_instance_of(described_class)
+          .to receive(:get_batch)
+          .and_return(batch)
       end
+
+      it { is_expected.to be_nil }
     end
 
     describe 'on a partial harvest' do

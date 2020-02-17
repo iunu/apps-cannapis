@@ -1,56 +1,48 @@
 module MetrcService
   class Discard < MetrcService::Base
+    delegate :seeding_unit, to: :batch
+
+    def before
+      super
+
+      validate_seeding_unit!
+    end
+
     def call
-      @logger.info "[BATCH_DISCARD] Started: batch ID #{@batch_id}, completion ID #{@completion_id}"
-      transaction = get_transaction :discard_batch
+      plant_type = seeding_unit.item_tracking_method.nil? ? 'immature' : 'mature'
 
-      if transaction.success
-        @logger.error "[BATCH_DISCARD] Success: transaction previously performed. #{transaction.inspect}"
-        return transaction
+      payload = send("build_#{plant_type}_payload", discard, batch)
+      log("Metrc API request. URI #{@client.uri}, payload #{payload}", :debug)
+
+      if plant_type == 'immature'
+        @client.destroy_plant_batches(@integration.vendor_id, payload)
+      else
+        @client.destroy_plants(@integration.vendor_id, payload)
       end
 
-      begin
-        @integration.account.refresh_token_if_needed
-        batch        = @batch || get_batch
-        seeding_unit = batch.seeding_unit
-
-        unless batch.crop == MetrcService::CROP
-          @logger.warn "[MOVE] Failed: Crop is not #{CROP} but #{batch.crop}. Batch ID #{@batch_id}, completion ID #{@completion_id}"
-          return
-        end
-
-        unless seeding_unit.item_tracking_method == 'preprinted' || seeding_unit.item_tracking_method.nil?
-          @logger.warn "[MOVE] Failed: Seeding unit is not valid for Metrc #{seeding_unit.item_tracking_method}. Batch ID #{@batch_id}, completion ID #{@completion_id}"
-          return
-        end
-
-        plant_type = seeding_unit.item_tracking_method.nil? ? 'immature' : 'mature'
-        discard = @artemis.facility(@facility_id)
-                          .batch(batch.id)
-                          .discard(@relationships.dig('action_result', 'data', 'id'))
-
-        payload = send "build_#{plant_type}_payload", discard, batch
-        @logger.debug "[BATCH_DISCARD] Metrc API request. URI #{@client.uri}, payload #{payload}"
-
-        if plant_type == 'immature'
-          @client.destroy_plant_batches(@integration.vendor_id, payload)
-        else
-          @client.destroy_plants(@integration.vendor_id, payload)
-        end
-
-        transaction.success = true
-        @logger.info "[BATCH_DISCARD] Success: batch ID #{@batch_id}, completion ID #{@completion_id}; #{payload}"
-      rescue => exception # rubocop:disable Style/RescueStandardError
-        @logger.error "[BATCH_DISCARD] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{exception.inspect}"
-      ensure
-        transaction.save
-        @logger.debug "[BATCH_DISCARD] Transaction: #{transaction.inspect}"
-      end
+      transaction.success = true
 
       transaction
     end
 
     private
+
+    def validate_seeding_unit!
+      unless ['preprinted', nil].include?(seeding_unit.item_tracking_method)
+        raise InvalidBatch, "Failed: Seeding unit is not valid for Metrc #{seeding_unit.item_tracking_method}. " \
+          "Batch ID #{@batch_id}, completion ID #{@completion_id}"
+      end
+    end
+
+    def transaction
+      @transaction ||= get_transaction(:discard_batch)
+    end
+
+    def discard
+      @artemis.facility(@facility_id)
+        .batch(batch.id)
+        .discard(@relationships.dig('action_result', 'data', 'id'))
+    end
 
     def build_immature_payload(discard, batch)
       quantity = discard.attributes['quantity']&.to_i

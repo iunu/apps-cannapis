@@ -48,27 +48,30 @@ RSpec.describe MetrcService::Discard do
         completion_id: 1001
       }
     end
-    subject { described_class.new(ctx, integration) }
+    subject { described_class.call(ctx, integration) }
 
+    before do
+      expect_any_instance_of(described_class)
+        .to receive(:get_transaction)
+        .and_return transaction
+    end
 
     describe 'on an old successful transaction' do
       let(:transaction) { create(:transaction, :successful, :discard, account: account, integration: integration) }
-
-      it 'returns the transaction' do
-        allow(subject).to receive(:get_transaction).and_return transaction
-        expect(subject.call).to eq transaction
-      end
+      it { is_expected.to eq(transaction) }
     end
 
     describe 'with corn crop' do
       let(:transaction) { create(:transaction, :unsuccessful, :discard, account: account, integration: integration) }
       let(:batch) { double(:batch, crop: 'Corn', seeding_unit: nil) }
 
-      it 'returns nil' do
-        allow(subject).to receive(:get_transaction).and_return transaction
-        allow(subject).to receive(:get_batch).and_return batch
-        expect(subject.call).to be_nil
+      before do
+        expect_any_instance_of(described_class)
+          .to receive(:get_batch)
+          .and_return(batch)
       end
+
+      it { is_expected.to be_nil }
     end
 
     describe 'on a different tracking method' do
@@ -103,23 +106,18 @@ RSpec.describe MetrcService::Discard do
       end
       let(:transaction) { create(:transaction, :unsuccessful, :discard, account: account, integration: integration) }
 
-      it 'returns nil' do
+      before do
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
           .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
-        stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,barcodes,items,custom_data,seeding_unit,harvest_unit,sub_zone')
+        stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
           .to_return(body: { data: { id: '96182', type: 'batches', attributes: { id: 96182, arbitrary_id: 'Oct1-Ban-Spl-Can', start_type: 'seed', quantity: 0, harvest_quantity: nil, expected_harvest_at: '2019-10-04', harvested_at: nil, seeded_at: '2019-10-01', completed_at: '2019-10-04T16:00:00.000Z', facility_id: 1568, zone_name: 'Flowering', crop_variety: 'Banana Split', crop: 'Cannabis' }, relationships: { harvests: { meta: { included: false } }, completions: { meta: { included: false } }, items: { meta: { included: false } }, custom_data: { meta: { included: false } }, barcodes: { meta: { included: false } }, discards: { meta: { included: false } }, seeding_unit: { data: { type: 'seeding_units', id: '3479' } }, harvest_unit: { meta: { included: false } }, zone: { data: { id: 6425, type: 'zones' } }, sub_zone: { meta: { included: false } } } }, included: [{ id: '3479', type: 'seeding_units', attributes: { id: 3479, name: 'Plants (barcoded)', secondary_display_active: nil, secondary_display_capacity: nil, item_tracking_method: 'custom_prefix' } }] }.to_json)
 
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002')
           .to_return(body: { data: { id: '96182', type: 'batches', attributes: { id: 96182, arbitrary_id: 'Oct1-Ban-Spl-Can', start_type: 'seed', quantity: 0, harvest_quantity: nil, expected_harvest_at: '2019-10-04', harvested_at: nil, seeded_at: '2019-10-01', completed_at: '2019-10-04T16:00:00.000Z', facility_id: 1568, zone_name: 'Flowering', crop_variety: 'Banana Split', crop: 'Cannabis' }, relationships: { harvests: { meta: { included: false } }, completions: { meta: { included: false } }, items: { meta: { included: false } }, custom_data: { meta: { included: false } }, barcodes: { meta: { included: false } }, discards: { meta: { included: false } }, seeding_unit: { data: { type: 'seeding_units', id: '3479' } }, harvest_unit: { meta: { included: false } }, zone: { data: { id: 6425, type: 'zones' } }, sub_zone: { meta: { included: false } } } }, included: [{ id: '3479', type: 'seeding_units', attributes: { id: 3479, name: 'Plants (barcoded)', secondary_display_active: nil, secondary_display_capacity: nil, item_tracking_method: 'custom_prefix' } }] }.to_json)
-
-        allow(subject).to receive(:get_transaction).and_return transaction
-
-        result = subject.call
-
-        expect(subject).to have_received(:get_transaction)
-        expect(result).to be_nil
       end
+
+      it { is_expected.to be_nil }
     end
 
     describe 'on a complete discard' do
@@ -154,11 +152,11 @@ RSpec.describe MetrcService::Discard do
       end
       let(:transaction) { create(:transaction, :unsuccessful, :discard, account: account, integration: integration) }
 
-      it 'calls metrc\'s destroy_plants method' do
+      before do
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
           .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
-        stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,barcodes,items,custom_data,seeding_unit,harvest_unit,sub_zone')
+        stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
           .to_return(body: { data: { id: '96182', type: 'batches', attributes: { id: 96182, arbitrary_id: 'Oct1-Ban-Spl-Can', start_type: 'seed', quantity: 0, harvest_quantity: nil, expected_harvest_at: '2019-10-04', harvested_at: nil, seeded_at: '2019-10-01', completed_at: '2019-10-04T16:00:00.000Z', facility_id: 1568, zone_name: 'Flowering', crop_variety: 'Banana Split', crop: 'Cannabis' }, relationships: { harvests: { meta: { included: false } }, completions: { meta: { included: false } }, items: { meta: { included: false } }, custom_data: { meta: { included: false } }, barcodes: { meta: { included: false } }, discards: { meta: { included: false } }, seeding_unit: { data: { type: 'seeding_units', id: '3479' } }, harvest_unit: { meta: { included: false } }, zone: { data: { id: 6425, type: 'zones' } }, sub_zone: { meta: { included: false } } } }, included: [{ id: '3479', type: 'seeding_units', attributes: { id: 3479, name: 'Plants (barcoded)', secondary_display_active: nil, secondary_display_capacity: nil, item_tracking_method: 'preprinted' } }] }.to_json)
 
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002')
@@ -180,15 +178,12 @@ RSpec.describe MetrcService::Discard do
           )
           .to_return(status: 200, body: '', headers: {})
 
-
-        allow(subject).to receive(:get_transaction).and_return transaction
-
-        final_transaction = subject.call
-
-        expect(subject).to have_received(:get_transaction)
-        expect(final_transaction).not_to be_nil
-        expect(final_transaction.success).to eq true
+        expect_any_instance_of(described_class)
+          .not_to receive(:get_transaction)
       end
+
+      it { is_expected.to be_a(Transaction) }
+      it { is_expected.to be_success }
     end
 
     describe 'on a partial discard' do
@@ -223,11 +218,11 @@ RSpec.describe MetrcService::Discard do
       end
       let(:transaction) { create(:transaction, :unsuccessful, :discard, account: account, integration: integration) }
 
-      it 'calls metrc\'s destroy_plant_batches method', focus: true do
+      before do
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
           .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
-        stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,barcodes,items,custom_data,seeding_unit,harvest_unit,sub_zone')
+        stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
           .to_return(body: { data: { id: '96182', type: 'batches', attributes: { id: 96182, arbitrary_id: 'Oct1-Ban-Spl-Can', start_type: 'seed', quantity: 0, harvest_quantity: nil, expected_harvest_at: '2019-10-04', harvested_at: nil, seeded_at: '2019-10-01', completed_at: '2019-10-04T16:00:00.000Z', facility_id: 1568, zone_name: 'Flowering', crop_variety: 'Banana Split', crop: 'Cannabis' }, relationships: { harvests: { meta: { included: false } }, completions: { meta: { included: false } }, items: { meta: { included: false } }, custom_data: { meta: { included: false } }, barcodes: { meta: { included: false } }, discards: { meta: { included: false } }, seeding_unit: { data: { type: 'seeding_units', id: '3479' } }, harvest_unit: { meta: { included: false } }, zone: { data: { id: 6425, type: 'zones' } }, sub_zone: { meta: { included: false } } } }, included: [{ id: '3479', type: 'seeding_units', attributes: { id: 3479, name: 'Plants (barcoded)', secondary_display_active: nil, secondary_display_capacity: nil, item_tracking_method: nil } }] }.to_json)
 
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002')
@@ -248,16 +243,10 @@ RSpec.describe MetrcService::Discard do
             basic_auth: [integration.key, integration.secret]
           )
           .to_return(status: 200, body: '', headers: {})
-
-
-        allow(subject).to receive(:get_transaction).and_return transaction
-
-        final_transaction = subject.call
-
-        expect(subject).to have_received(:get_transaction)
-        expect(final_transaction).not_to be_nil
-        expect(final_transaction.success).to eq true
       end
+
+      it { is_expected.to be_a(Transaction) }
+      it { is_expected.to be_success }
     end
   end
 

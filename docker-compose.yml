@@ -25,6 +25,8 @@ services:
       - 'traefik.port=3000'
       - 'traefik.frontend.entryPoints=http'
       - 'traefik.frontend.rule=PathPrefix:/'
+    stdin_open: true
+    tty: true
 
   sidekiq:
     build: .

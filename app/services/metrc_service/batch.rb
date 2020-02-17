@@ -1,54 +1,91 @@
 module MetrcService
   class Batch < MetrcService::Base
-    def call(task)
-      @logger.info "[METRC_BATCH] Started: batch ID #{@batch_id}"
+    def initialize(ctx, integration, batch = nil, task = nil)
+      @task = task
+      super(ctx, integration, batch)
+    end
 
-      begin
-        @integration.account.refresh_token_if_needed
-        batch = get_batch 'zone,barcodes,harvests,completions,custom_data,seeding_unit,harvest_unit,sub_zone,items,discard'
+    def before
+      validate_batch!
+    end
 
-        unless batch.crop == MetrcService::CROP
-          @logger.warn "[METRC_BATCH] Failed: Crop is not #{CROP} but #{batch.crop}. Batch ID #{@batch_id}"
-          task.delete
-          return
-        end
+    def after; end
 
-        actions = batch.client.objects['completions']
-        completion_ids = actions.keys
-        completions = []
-        performed_transactions = Transaction.succeed.where(batch_id: batch.id,
-                                                           completion_id: completion_ids,
-                                                           integration: @integration)&.pluck(:completion_id)
+    def call
+      completions.each do |completion|
+        ctx = {
+          id: completion.id,
+          type: :completions,
+          attributes: completion.attributes,
+          relationships: @relationships
+        }.with_indifferent_access
 
+        perform_action(completion, ctx)
+      end
+
+      @task.delete
+
+      # explicitly return nil
+      nil
+    end
+
+    protected
+
+    def perform_action(completion, ctx)
+      module_for_completion(completion).call(ctx, @integration, batch)
+    end
+
+    def module_for_completion(completion)
+      "MetrcService::#{completion.action_type.camelize}".constantize
+    end
+
+    def batch
+      @batch ||= get_batch 'zone,barcodes,harvests,completions,custom_data,seeding_unit,harvest_unit,sub_zone,discard'
+    end
+
+    def validate_batch!
+      super
+    rescue
+      task.delete
+      raise
+    end
+
+    def validate_completions!(completions)
+      unless completions.size.positive?
+        raise InvalidOperation, "Completions where already performed. Batch ID #{@batch_id}"
+        task.delete
+      end
+    end
+
+    def completions
+      @completions ||= filter_and_validate_completions
+
+    end
+
+    def filter_and_validate_completions
+      [].tap do |arr|
         # Filter the completions we curently support
         actions.select do |id|
           completion = actions[id]
-          completions << completion if V1::WebhookController::COMPLETION_TYPES.include?(completion.action_type) && !performed_transactions.include?(id)
+          arr << completion if completion_supported?(completion) && !performed_transactions.include?(id)
         end
 
-        unless completions.size.positive?
-          @logger.warn "[METRC_BATCH] Completions where already performed. Batch ID #{@batch_id}"
-          task.delete
-          return
-        end
-
-        completions.each do |completion|
-          ctx = {
-            id: completion.id,
-            type: :completions,
-            attributes: completion.attributes,
-            relationships: @relationships
-          }.with_indifferent_access
-          module_for_completion = "MetrcService::#{completion.action_type.camelize}".constantize
-
-          module_for_completion.call(ctx, @integration, batch)
-        end
-
-        task.delete
-        return
-      rescue => exception # rubocop:disable Style/RescueStandardError
-        @logger.error "[METRC_BATCH] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{exception.inspect}"
+        validate_completions!(arr)
       end
+    end
+
+    def completion_supported?(completion)
+      V1::WebhookController::COMPLETION_TYPES.include?(completion.action_type)
+    end
+
+    def performed_transactions
+      Transaction.succeed.where(batch_id: batch.id,
+                                completion_id: actions.keys,
+                                integration: @integration)&.pluck(:completion_id)
+    end
+
+    def actions
+      @actions ||= batch.client.objects['completions']
     end
   end
 end
