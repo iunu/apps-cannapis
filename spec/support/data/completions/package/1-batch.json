@@ -1,0 +1,62 @@
+{
+  "data": {
+    "attributes": {
+      "action_type": "batch",
+      "content": null,
+      "end_time": "2020-02-17T19:08:03.703Z",
+      "id": 2234,
+      "occurrence": null,
+      "options": {
+        "arbitrary_id": "Feb17-5th-Ele-Can",
+        "arbitrary_id_base": "5th-Ele-Can",
+        "growth_cycle_id": 21,
+        "quantity": 1,
+        "resources": [
+          {
+            "batch_resource_id": 144,
+            "consumed_quantity": 46.3125,
+            "requested_quantity": 100,
+            "resource_unit_id": 55
+          }
+        ],
+        "seeding_unit_id": 17,
+        "sub_zone_id": null,
+        "zone_id": 45,
+        "zone_name": "Warehouse"
+      },
+      "start_time": "2020-02-17T08:00:00.000Z",
+      "user_id": 2
+    },
+    "id": "2234",
+    "relationships": {
+      "action_result": {
+        "data": {
+          "id": 352,
+          "type": "CropBatch"
+        }
+      },
+      "batch": {
+        "data": {
+          "id": "352",
+          "type": "batches"
+        }
+      },
+      "facility": {
+        "data": {
+          "id": 3,
+          "type": "facilities"
+        }
+      },
+      "user": {
+        "data": {
+          "id": 2,
+          "type": "users"
+        }
+      }
+    },
+    "type": "completions"
+  },
+  "meta": {
+    "event_type": "creation"
+  }
+}
