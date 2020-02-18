@@ -171,10 +171,6 @@ workflows:
           requires:
             - yarn_install
             - bundle_install
-      - precompile_translations:
-          requires:
-            - yarn_install
-            - bundle_install
       - sasslint:
           requires:
             - yarn_install
