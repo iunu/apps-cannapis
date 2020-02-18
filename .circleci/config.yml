@@ -130,7 +130,7 @@ jobs:
       - run:
           name: Install Rubocop
           command: sudo gem install rubocop:0.49.1
-      - run: rubocop
+      - run: bin/rubocop
 
   sasslint:
     docker:
