@@ -280,4 +280,29 @@ RSpec.describe MetrcService::Base do
       end
     end
   end
+
+  context '#call_metrc error handling' do
+    let(:payload) do
+      { Something: 'went wrong' }
+    end
+
+    let(:integration) { create(:integration, state: :md) }
+    let(:instance) { described_class.new({}, integration) }
+    let(:call) { instance.send(:call_metrc, :create_plant_batches, payload) }
+
+    context 'when retryable' do
+      before do
+        stub_request(:post, 'https://sandbox-api-md.metrc.com/harvests/v1/finish?licenseNumber=LIC-0001')
+          .with(
+            body: [payload].to_json,
+            basic_auth: [integration.key, integration.secret]
+          )
+          .to_return(status: 500, body: '', headers: {})
+      end
+
+      it 'should raise an error' do
+        expect { call }.to raise_error(ScheduledJob::RetryableError)
+      end
+    end
+  end
 end
