@@ -94,18 +94,12 @@ module MetrcService
     end
 
     def get_transaction(name, metadata = @attributes)
-      transaction = Transaction.where('(vendor = ? AND account_id = ?) AND (integration_id = ? AND batch_id = ?) AND (completion_id = ? AND type = ?)',
-                                      :metrc, @integration.account.id, @integration.id, @batch_id, @completion_id, name)&.first
-
-      return transaction unless transaction.nil?
-
-      Transaction.create(account: @integration.account,
-                         vendor: :metrc,
-                         integration: @integration,
-                         batch_id: @batch_id,
-                         completion_id: @completion_id,
-                         type: name,
-                         metadata: metadata)
+      Transaction.find_or_create_by(
+        vendor: :metrc, account: @integration.account, integration: @integration,
+        batch_id: @batch_id, completion_id: @completion_id, type: name
+      ) do |transaction|
+        transaction.metadata = metadata
+      end
     end
 
     def batch
