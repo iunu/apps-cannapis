@@ -9,11 +9,10 @@ module Common
 
       instance.result
     rescue ServiceActionFailure => e
-      instance.notify_failure(e)
       instance.result
     end
 
-    attr_accessor :result
+    attr_accessor :result, :integration
 
     def initialize(*)
       @logger = Rails.logger
@@ -28,12 +27,8 @@ module Common
       fail!(transaction)
     end
 
-    def notify_failure(error)
-      NotificationMailer.with(
-        integration: @integration,
-        error: error,
-        action: action_label
-      ).report_failure_email.deliver_now
+    def action_label
+      self.class.name.underscore.split('/').last.upcase
     end
 
     protected
@@ -52,11 +47,11 @@ module Common
 
     def fail!(result = nil, exception: nil)
       @result = result
-      raise ServiceActionFailure, exception&.inspect
+      raise ServiceActionFailure.new(exception&.message, original: exception)
     end
 
-    def requeue!
-      raise ScheduledJob::RetryableError
+    def requeue!(exception: nil)
+      raise ScheduledJob::RetryableError.new(exception&.message, original: exception)
     end
 
     def transaction
@@ -65,10 +60,6 @@ module Common
 
     def provider_label
       self.class.name.underscore.split('_').first.upcase
-    end
-
-    def action_label
-      self.class.name.underscore.split('/').last.upcase
     end
 
     def log(msg, level = :info)

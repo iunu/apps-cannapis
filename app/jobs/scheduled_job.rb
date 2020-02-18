@@ -1,6 +1,15 @@
 class ScheduledJob < ApplicationJob
-  class RetryableError < StandardError; end
-  class TooManyRetriesError < StandardError; end
+  class SchedulerError < StandardError
+    attr_reader :original
+
+    def initialize(message = nil, original: nil)
+      @original = original
+      super(message)
+    end
+  end
+
+  class RetryableError < SchedulerError; end
+  class TooManyRetriesError < SchedulerError; end
 
   queue_as :default
 
@@ -10,12 +19,13 @@ class ScheduledJob < ApplicationJob
     tasks.each do |task|
       run_task(task)
 
-    rescue RetryableError
+    rescue RetryableError => e
       Rails.logger.warn("Task #{task.id} failed (attempt ##{task.attempts + 1}) with retryable error, rescheduling...")
+      report_rescheduled(task, e.original)
       task.reschedule!
 
-    rescue TooManyRetriesError
-      report_error
+    rescue TooManyRetriesError => e
+      report_failed(task, e.original)
     end
   end
 
@@ -59,7 +69,15 @@ class ScheduledJob < ApplicationJob
     "#{task.integration.vendor.camelize}Service::Batch".constantize
   end
 
-  def report_error(task)
-    # trigger mailer
+  def report_rescheduled(task, error)
+    mailer(task, error).report_reschedule_email.deliver_now
+  end
+
+  def report_failed(task, error)
+    mailer(task, error).report_failure_email.deliver_now
+  end
+
+  def mailer(task, error)
+    NotificationMailer.with(task: task, error: error)
   end
 end

@@ -80,7 +80,7 @@ module MetrcService
 
     rescue *RETRYABLE_ERRORS => e
       log("METRC: Retryable error: #{e.inspect}", :warn)
-      requeue!
+      requeue!(exception: e)
     rescue Metrc::MissingConfiguration, Metrc::MissingParameter => e
       log("METRC: Configuration error: #{e.inspect}", :error)
       fail!(exception: e)

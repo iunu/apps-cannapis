@@ -1,9 +1,10 @@
 class NotificationMailer < ApplicationMailer
   def setup
-    @integration = params[:integration]
+    task = params[:task]
+    @integration = task
     @account = @integration.account.client.current_user
     @error = params[:error]
-    @action = params[:action]
+    @action = task.action_name
   end
 
   def report_failure_email
