@@ -12,7 +12,7 @@ module Common
       instance.result
     end
 
-    attr_accessor :result, :integration
+    attr_accessor :result, :integration, :transaction
 
     def initialize(*)
       @logger = Rails.logger
@@ -47,15 +47,11 @@ module Common
 
     def fail!(result = nil, exception: nil)
       @result = result
-      raise ServiceActionFailure.new(exception&.message, original: exception)
+      raise ServiceActionFailure.new(exception&.inspect)
     end
 
     def requeue!(exception: nil)
       raise ScheduledJob::RetryableError.new(exception&.message, original: exception)
-    end
-
-    def transaction
-      raise 'You must implemented +transaction+ in your service class'
     end
 
     def provider_label
