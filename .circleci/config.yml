@@ -29,6 +29,10 @@ jobs:
       - restore_cache:
           key: cannapi-bundle-v1-{{ checksum "Gemfile.lock" }}
 
+      - run:
+          name: Install bundle
+          command: sudo gem install bundler:2.0.2
+
       - run: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
 
       - save_cache:
@@ -127,6 +131,10 @@ jobs:
       - image: circleci/ruby:2.6.5
     steps:
       - checkout
+
+      - run:
+          name: Install bundle
+          command: sudo gem install bundler:2.0.2
 
       - run:
           name: Install dependencies
