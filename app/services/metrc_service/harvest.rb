@@ -9,7 +9,8 @@ module MetrcService
 
       @logger.debug "[HARVEST] Metrc API request. URI #{@client.uri}, payload #{payload}"
 
-      @client.send next_step, @integration.vendor_id, payload
+      call_metrc(next_step, payload)
+
       transaction.success = true
 
       transaction

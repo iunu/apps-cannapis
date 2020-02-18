@@ -6,6 +6,11 @@ module MetrcService
     class BatchCropInvalid < StandardError; end
     class InvalidOperation < StandardError; end
 
+    RETRYABLE_ERRORS = [
+      Net::HTTPRetriableError,
+      Metrc::RequestError
+    ]
+
     attr_reader :transaction
 
     def initialize(ctx, integration, batch = nil)
@@ -70,6 +75,20 @@ module MetrcService
     ensure
       transaction.save
       log("Transaction: #{transaction.inspect}", :debug)
+    end
+
+    def call_metrc(method, *args)
+      @client.send(method, @integration.vendor_id, *args)
+
+    rescue *RETRYABLE_ERRORS => e
+      log("METRC: Retryable error: #{e.inspect}", :warn)
+      requeue!
+    rescue Metrc::MissingConfiguration, Metrc::MissingParameter => e
+      log("METRC: Configuration error: #{e.inspect}", :error)
+      fail!(exception: e)
+    rescue StandardError => e
+      log("METRC: #{e.inspect}", :error)
+      fail!(exception: e)
     end
 
     def state

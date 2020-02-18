@@ -14,11 +14,8 @@ module MetrcService
       payload = send("build_#{plant_type}_payload", discard, batch)
       log("Metrc API request. URI #{@client.uri}, payload #{payload}", :debug)
 
-      if plant_type == 'immature'
-        @client.destroy_plant_batches(@integration.vendor_id, payload)
-      else
-        @client.destroy_plants(@integration.vendor_id, payload)
-      end
+      action = plant_type == 'immature' ? :destroy_plant_batches : :destroy_plants
+      call_metrc(action, payload)
 
       transaction.success = true
 

@@ -5,7 +5,8 @@ module MetrcService
 
       log("Metrc API request. URI #{@client.uri}, payload #{payload}", :debug)
 
-      @client.create_plant_batches(@integration.vendor_id, payload)
+      call_metrc(:create_plant_batches, payload)
+
       transaction.success = true
       log("Success: batch ID #{@batch_id}, completion ID #{@completion_id}; #{payload}")
 

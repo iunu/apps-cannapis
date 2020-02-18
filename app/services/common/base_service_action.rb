@@ -8,7 +8,8 @@ module Common
       instance.run
 
       instance.result
-    rescue ServiceActionFailure
+    rescue ServiceActionFailure => e
+      instance.notify_failure(e)
       instance.result
     end
 
@@ -41,9 +42,13 @@ module Common
 
     def after; end
 
-    def fail!(result = nil)
+    def fail!(result = nil, exception: nil)
       @result = result
-      raise ServiceActionFailure
+      raise ServiceActionFailure, exception&.inspect
+    end
+
+    def requeue!
+      raise ScheduledJob::RetryableError
     end
 
     def transaction
@@ -60,6 +65,14 @@ module Common
 
     def log(msg, level = :info)
       @logger.send(level, "[#{provider_label}_#{action_label}] #{msg}")
+    end
+
+    def notify_failure(error)
+      NotificationMailer.with(
+        integration: @integration
+        error: error,
+        action: action_label
+      ).report_failure_email.deliver_now
     end
   end
 end
