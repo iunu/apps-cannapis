@@ -104,6 +104,10 @@ jobs:
           key: precompiled-assets-v1-{{ .Branch }}-{{ .Revision }}
 
       - run:
+          name: Install bundle
+          command: sudo gem install bundler:2.0.2
+
+      - run:
           name: Install any missing gems / dependencies / extensions
           command: bundle install --path vendor/bundle
 
