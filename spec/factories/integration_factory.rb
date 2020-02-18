@@ -3,7 +3,6 @@ FactoryBot.define do
     account
 
     secret { Faker::Alphanumeric.unique.alphanumeric(number: 10) }
-    key { Faker::Alphanumeric.unique.alphanumeric(number: 7) }
     state { Faker::Address.state_abbr.downcase }
     facility_id { Faker::Number.number(digits: 4) }
     vendor { :metrc }
@@ -13,7 +12,6 @@ FactoryBot.define do
 
     factory :integration_with_metrc_creds do
       secret { ENV['METRC_API_SECRET'] }
-      key { ENV['METRC_API_KEY'] }
       state { ENV['METRC_API_STATE'] }
       vendor { :metrc }
       vendor_id { ENV['METRC_API_LICENSE'] }
