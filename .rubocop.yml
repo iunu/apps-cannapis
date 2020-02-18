@@ -3,6 +3,7 @@ require: rubocop-rails
 AllCops:
   Exclude:
     - db/schema.rb
+    - vendor/bundle/**/*
 
 Style/Documentation:
   Enabled: false
