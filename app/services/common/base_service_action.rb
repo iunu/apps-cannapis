@@ -13,7 +13,6 @@ module Common
     end
 
     attr_accessor :result
-    attr_reader :transaction
 
     def initialize(*)
       @logger = Rails.logger

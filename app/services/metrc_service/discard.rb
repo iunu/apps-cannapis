@@ -28,10 +28,10 @@ module MetrcService
     private
 
     def validate_seeding_unit!
-      unless ['preprinted', nil].include?(seeding_unit.item_tracking_method)
-        raise InvalidBatch, "Failed: Seeding unit is not valid for Metrc #{seeding_unit.item_tracking_method}. " \
-          "Batch ID #{@batch_id}, completion ID #{@completion_id}"
-      end
+      return unless ['preprinted', nil].include?(seeding_unit.item_tracking_method)
+
+      raise InvalidBatch, "Failed: Seeding unit is not valid for Metrc #{seeding_unit.item_tracking_method}. " \
+        "Batch ID #{@batch_id}, completion ID #{@completion_id}"
     end
 
     def transaction

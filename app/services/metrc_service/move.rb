@@ -61,11 +61,11 @@ module MetrcService
       next_step(previous_zone, zone_name)
     end
 
-    def is_included?(previous_zone, zone_name)
+    def is_included?(previous_zone, zone_name) # rubocop:disable Naming/PredicateName
       GROWTH_CYCLES[previous_zone.to_sym]&.include?(zone_name.to_sym)
     end
 
-    def next_step(previous_zone = nil, new_zone = nil)
+    def next_step(previous_zone = nil, new_zone = nil) # rubocop:disable Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
       return DEFAULT_MOVE_STEP if previous_zone.nil? || new_zone.nil?
 
       new_zone.downcase!
