@@ -40,8 +40,8 @@ module MetrcService
 
     def discard
       @artemis.facility(@facility_id)
-        .batch(batch.id)
-        .discard(@relationships.dig('action_result', 'data', 'id'))
+              .batch(batch.id)
+              .discard(@relationships.dig('action_result', 'data', 'id'))
     end
 
     def build_immature_payload(discard, batch)

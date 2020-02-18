@@ -5,7 +5,7 @@ RSpec.describe ScheduledJob, type: :job do
 
   subject { described_class.perform_later }
   let(:integration) { create(:integration) }
-  let(:now) { Time.now }
+  let(:now) { Time.now.utc }
 
   before :all do
     ActiveJob::Base.queue_adapter = :test

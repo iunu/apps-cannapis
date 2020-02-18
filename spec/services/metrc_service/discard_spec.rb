@@ -169,7 +169,7 @@ RSpec.describe MetrcService::Discard do
           .to_return(body: { data: { id: '111436', type: 'discards', attributes: { id: 111436, quantity: 5, reason_type: 'disease', reason_description: nil, discarded_at: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96258', type: 'batches' } }, completion: { meta: { included: false } } } } }.to_json)
 
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/96182/items?filter[seeding_unit_id]=3479&include=barcodes,seeding_unit')
-          .to_return(body: { data: [{ id: '969664', type: 'items', attributes: { id: 969664, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams'}, relationships: {  barcode: { data: { id: '1A4FF010000002200000105', type: 'barcodes'}}}}, { id: '969663', type: 'items', attributes: { id: 969663, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams'}, relationships: { barcode: { data: { id: '1A4FF010000002200000104', type: 'barcodes'}}}}, { id: '969662', type: 'items', attributes: { id: 969662, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams'}, relationships: { barcode: { data: { id: '1A4FF010000002200000103', type: 'barcodes' } } } }] }.to_json)
+          .to_return(body: { data: [{ id: '969664', type: 'items', attributes: { id: 969664, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams' }, relationships: { barcode: { data: { id: '1A4FF010000002200000105', type: 'barcodes' } } } }, { id: '969663', type: 'items', attributes: { id: 969663, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams' }, relationships: { barcode: { data: { id: '1A4FF010000002200000104', type: 'barcodes' } } } }, { id: '969662', type: 'items', attributes: { id: 969662, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams' }, relationships: { barcode: { data: { id: '1A4FF010000002200000103', type: 'barcodes' } } } }] }.to_json)
 
         stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/destroyplants?licenseNumber=LIC-0001')
           .with(
@@ -235,7 +235,7 @@ RSpec.describe MetrcService::Discard do
           .to_return(body: { data: { id: '111436', type: 'discards', attributes: { id: 111436, quantity: 5, reason_type: 'disease', reason_description: nil, discarded_at: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96258', type: 'batches' } }, completion: { meta: { included: false } } } } }.to_json)
 
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/96182/items?filter[seeding_unit_id]=3479&include=barcodes,seeding_unit')
-          .to_return(body: { data: [{ id: '969664', type: 'items', attributes: { id: 969664, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams'}, relationships: {  barcode: { data: { id: '1A4FF010000002200000105', type: 'barcodes'}}}}, { id: '969663', type: 'items', attributes: { id: 969663, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams'}, relationships: { barcode: { data: { id: '1A4FF010000002200000104', type: 'barcodes'}}}}, { id: '969662', type: 'items', attributes: { id: 969662, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams'}, relationships: { barcode: { data: { id: '1A4FF010000002200000103', type: 'barcodes' } } } }] }.to_json)
+          .to_return(body: { data: [{ id: '969664', type: 'items', attributes: { id: 969664, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams' }, relationships: { barcode: { data: { id: '1A4FF010000002200000105', type: 'barcodes' } } } }, { id: '969663', type: 'items', attributes: { id: 969663, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams' }, relationships: { barcode: { data: { id: '1A4FF010000002200000104', type: 'barcodes' } } } }, { id: '969662', type: 'items', attributes: { id: 969662, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams' }, relationships: { barcode: { data: { id: '1A4FF010000002200000103', type: 'barcodes' } } } }] }.to_json)
 
         stub_request(:post, 'https://sandbox-api-md.metrc.com/plantbatches/v1/destroy?licenseNumber=LIC-0001')
           .with(
@@ -263,12 +263,12 @@ RSpec.describe MetrcService::Discard do
       payload = instance.send :build_immature_payload, discard, batch
 
       expect(payload.size).to eq 1
-      expect(payload.first).to eq({
+      expect(payload.first).to eq(
         PlantBatch: 'Oct1-Ban-Spl-Can',
         Count: 1,
         ReasonNote: 'Does not meet internal QC',
         ActualDate: now
-      })
+      )
     end
   end
 
@@ -310,12 +310,12 @@ RSpec.describe MetrcService::Discard do
         payload = instance.send :build_mature_payload, discard, nil
 
         expect(payload.size).to eq 1
-        expect(payload.first).to eq({
+        expect(payload.first).to eq(
           Id: nil,
           Label: '1A4FF01000000220000010',
           ReasonNote: 'Does not meet internal QC',
           ActualDate: now
-        })
+        )
       end
     end
   end

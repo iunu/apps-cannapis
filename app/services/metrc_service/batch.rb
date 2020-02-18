@@ -45,7 +45,7 @@ module MetrcService
 
     def validate_batch!
       super
-    rescue
+    rescue StandardError
       task.delete
       raise
     end
@@ -59,7 +59,6 @@ module MetrcService
 
     def completions
       @completions ||= filter_and_validate_completions
-
     end
 
     def filter_and_validate_completions
