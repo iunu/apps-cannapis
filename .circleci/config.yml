@@ -54,6 +54,10 @@ jobs:
           key: node_modules-v1-{{ checksum "yarn.lock" }}
 
       - run:
+          name: Install dependencies
+          command: sudo gem install bundler:2.0.2
+
+      - run:
           name: Install any missing gems / dependencies / extensions
           command: bundle install --path vendor/bundle
 
@@ -179,9 +183,9 @@ workflows:
           requires:
             - yarn_install
             - bundle_install
-      - sasslint:
-          requires:
-            - yarn_install
+      # - sasslint:
+      #     requires:
+      #       - yarn_install
       - rails_unit_tests:
           requires:
             - yarn_install

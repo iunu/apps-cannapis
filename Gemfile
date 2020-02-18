@@ -80,6 +80,7 @@ group :test do
   gem 'database_cleaner'
   gem 'rspec-activemodel-mocks'
   gem 'rspec-html-matchers', '~> 0.9.1'
+  gem 'rubocop-rspec'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers'
   gem 'simplecov'
