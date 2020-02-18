@@ -197,13 +197,13 @@ RSpec.describe MetrcService::Harvest do
 
   describe '#calculate_average_weight' do
     let(:non_zero_items) do
-      _items = []
+      _items = [] # rubocop:disable Lint/UnderscorePrefixedVariableName
       10.times { _items << double(:item, attributes: { secondary_harvest_quantity: rand(1.0..10.0) }.with_indifferent_access) }
       _items
     end
 
     let(:zeroed_items) do
-      _items = []
+      _items = [] # rubocop:disable Lint/UnderscorePrefixedVariableName
       10.times { _items << double(:item, attributes: { secondary_harvest_quantity: 0 }.with_indifferent_access) }
       _items
     end
@@ -227,7 +227,7 @@ RSpec.describe MetrcService::Harvest do
 
   describe '#build_harvest_plants_payload' do
     let(:items) do
-      _items = []
+      _items = [] # rubocop:disable Lint/UnderscorePrefixedVariableName
       10.times do
         _items << double(:item, attributes: {
           secondary_harvest_quantity: 10.0,
@@ -294,7 +294,7 @@ RSpec.describe MetrcService::Harvest do
 
   describe '#build_manicure_plants_payload' do
     let(:items) do
-      _items = []
+      _items = [] # rubocop:disable Lint/UnderscorePrefixedVariableName
       10.times do
         _items << double(:item, attributes: {
           secondary_harvest_quantity: 10.0,
