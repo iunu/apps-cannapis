@@ -1,4 +1,4 @@
-version: 2
+version: 2.1
 jobs:
   yarn_install:
     docker:
@@ -29,7 +29,7 @@ jobs:
       - restore_cache:
           key: cannapi-bundle-v1-{{ checksum "Gemfile.lock" }}
 
-      - run: bundle install --path vendor/bundle
+      - run: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
 
       - save_cache:
           key: cannapi-bundle-v1-{{ checksum "Gemfile.lock" }}
@@ -127,6 +127,9 @@ jobs:
       - image: circleci/ruby:2.6.5
     steps:
       - checkout
+      - run:
+        name: Install dependencies
+        command: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
       - run:
           name: Install Rubocop
           command: sudo gem install rubocop:0.49.1
