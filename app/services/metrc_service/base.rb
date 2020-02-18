@@ -9,9 +9,7 @@ module MetrcService
     RETRYABLE_ERRORS = [
       Net::HTTPRetriableError,
       Metrc::RequestError
-    ]
-
-    attr_reader :transaction
+    ].freeze
 
     def initialize(ctx, integration, batch = nil)
       @ctx = ctx
