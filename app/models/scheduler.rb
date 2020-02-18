@@ -1,6 +1,6 @@
 class Scheduler < ApplicationRecord
   MAX_ATTEMPTS = 4
-  BACK_OFF = ->(n) { n**4 }
+  RESCHEDULE_DELAY = 3600
 
   belongs_to :integration
   validates :facility_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
@@ -12,10 +12,11 @@ class Scheduler < ApplicationRecord
   def reschedule!
     update!(
       attempts: attempts + 1,
-      run_on: Time.now.utc + BACK_OFF.call(attempts)
+      run_on: Time.now.utc + RESCHEDULE_DELAY
     )
   rescue ActiveRecord::RecordInvalid
     raise ScheduledJob::TooManyRetriesError if errors[:attempts].any?
+
     raise
   end
 end
