@@ -6,9 +6,9 @@ FactoryBot.define do
     batch_id { Faker::Number.number(digits: 4) }
     completion_id { Faker::Number.number(digits: 4) }
     vendor { :metrc }
-    metadata { {  } }
-    created_at { Time.now - 1.day }
-    updated_at { Time.now - 1.day }
+    metadata { {} }
+    created_at { Time.now.utc - 1.day }
+    updated_at { Time.now.utc - 1.day }
 
     trait :successful do
       success { true }

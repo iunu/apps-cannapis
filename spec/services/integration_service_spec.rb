@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe IntegrationService, sidekiq: :fake do
+  ENV['METRC_SECRET_CA'] = 'ABC-123'
+
   describe 'when there is no integration' do
     let(:subject) do
       params = ActionController::Parameters.new(relationships: {
@@ -15,9 +17,9 @@ RSpec.describe IntegrationService, sidekiq: :fake do
     end
 
     it 'raises an exception' do
-      expect {
+      expect do
         subject.call
-      }.to raise_error 'No integrations for this facility'
+      end.to raise_error 'No integrations for this facility'
     end
   end
 
@@ -34,7 +36,6 @@ RSpec.describe IntegrationService, sidekiq: :fake do
                          state: :ca,
                          vendor: :metrc,
                          vendor_id: '123-ABC',
-                         key: 'ABC-123',
                          secret: 'DEF-456',
                          deleted_at: Time.current)
       params = ActionController::Parameters.new(relationships: {
@@ -49,9 +50,9 @@ RSpec.describe IntegrationService, sidekiq: :fake do
     end
 
     it 'raises an exception' do
-      expect {
+      expect do
         subject.call
-      }.to raise_error 'No integrations for this facility'
+      end.to raise_error 'No integrations for this facility'
     end
   end
 
@@ -68,7 +69,6 @@ RSpec.describe IntegrationService, sidekiq: :fake do
                          state: :ca,
                          vendor: :metrc,
                          vendor_id: '123-ABC',
-                         key: 'ABC-123',
                          secret: 'DEF-456')
       params = ActionController::Parameters.new(relationships: {
                                                   facility: {
@@ -82,9 +82,9 @@ RSpec.describe IntegrationService, sidekiq: :fake do
     end
 
     it 'enques the job and does not raises an exception' do
-      expect {
+      expect do
         subject.call
-      }.not_to raise_error
+      end.not_to raise_error
     end
   end
 end
