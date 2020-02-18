@@ -1,10 +1,10 @@
 class NotificationMailer < ApplicationMailer
   def setup
-    task = params[:task]
-    @integration = task
+    @task = params[:task]
+    @integration = @task.integration
     @account = @integration.account.client.current_user
     @error = params[:error]
-    @action = task.action_name
+    @action = @task.action_name
   end
 
   def report_failure_email
@@ -19,7 +19,7 @@ class NotificationMailer < ApplicationMailer
   def report_reschedule_email
     setup
 
-    @attempt = params[:attempt]
+    @attempt = @task.attempt
 
     mail(
       to: recipient,
