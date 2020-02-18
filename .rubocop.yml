@@ -4,13 +4,13 @@ AllCops:
   Exclude:
     - db/schema.rb
 
-Documentation:
+Style/Documentation:
   Enabled: false
 
-Encoding:
+Style/Encoding:
   Enabled: false
 
-NumericLiterals:
+Style/NumericLiterals:
   Enabled: false
 
 Metrics/AbcSize:
