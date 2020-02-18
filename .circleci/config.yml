@@ -149,19 +149,6 @@ jobs:
           command: sudo gem install rubocop:0.49.1
       - run: bin/rubocop
 
-  sasslint:
-    docker:
-      - image: circleci/node:10.15.0
-
-    steps:
-      - checkout
-      - restore_cache:
-          name: Restore node_modules from cache
-          key: node_modules-v1-{{ checksum "yarn.lock" }}
-      - run:
-          name: Run SassLint
-          command: node_modules/.bin/sass-lint -c .sass-lint.yml 'app/assets/**/*.scss' -v
-
   prod_deploy:
     machine:
       enabled: true
@@ -183,9 +170,6 @@ workflows:
           requires:
             - yarn_install
             - bundle_install
-      # - sasslint:
-      #     requires:
-      #       - yarn_install
       - rails_unit_tests:
           requires:
             - yarn_install
