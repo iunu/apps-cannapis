@@ -28,6 +28,14 @@ module Common
       fail!(transaction)
     end
 
+    def notify_failure(error)
+      NotificationMailer.with(
+        integration: @integration,
+        error: error,
+        action: action_label
+      ).report_failure_email.deliver_now
+    end
+
     protected
 
     def before
@@ -65,14 +73,6 @@ module Common
 
     def log(msg, level = :info)
       @logger.send(level, "[#{provider_label}_#{action_label}] #{msg}")
-    end
-
-    def notify_failure(error)
-      NotificationMailer.with(
-        integration: @integration
-        error: error,
-        action: action_label
-      ).report_failure_email.deliver_now
     end
   end
 end
