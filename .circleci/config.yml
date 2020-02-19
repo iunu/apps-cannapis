@@ -125,7 +125,7 @@ jobs:
 
       - run:
           name: Maybe Run Other Unit Tests
-          command: bin/bundle exec rspec -ci-dir=/tmp/test-results
+          command: bin/bundle exec rspec --ci-dir=/tmp/test-results
 
       - store_test_results:
           path: /tmp/test-results
