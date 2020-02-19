@@ -2,7 +2,6 @@ require 'rails_helper'
 
 RSpec.describe 'home/_facility', type: :view do
   include RSpecHtmlMatchers
-  ENV['METRC_SECRET_NY'] = 'ABC'
 
   # Since factory is an object created from the response of a request
   # to the Artemis API, we use an OpenStruct object to stub it
@@ -31,7 +30,6 @@ RSpec.describe 'home/_facility', type: :view do
 
       #   with_tag 'div.my', count: 3 do
       #     with_text_field 'facility[license_number]', integration&.vendor_id
-      #     with_text_field 'facility[api_key]', integration&.key
       #     with_text_field 'facility[api_secret]', integration&.secret
       #   end
       # end
