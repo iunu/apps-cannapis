@@ -1,6 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe MetrcService::Harvest do
+  METRC_API_KEY = ENV['METRC_SECRET_MD']
+
   let(:account) { create(:account) }
   let(:integration) { create(:integration, account: account, state: :md) }
   let(:ctx) do
@@ -120,7 +122,7 @@ RSpec.describe MetrcService::Harvest do
         stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/manicureplants?licenseNumber=LIC-0001')
           .with(
             body: [{ DryingRoom: 'Clone', PatientLicenseNumber: nil, ActualDate: '2019-11-13T18:44:45', Plant: '1A4FF010000002200000105', Weight: 10.0, UnitOfWeight: 'Grams', HarvestName: nil }, { DryingRoom: 'Clone', PatientLicenseNumber: nil, ActualDate: '2019-11-13T18:44:45', Plant: '1A4FF010000002200000104', Weight: 10.0, UnitOfWeight: 'Grams', HarvestName: nil }, { DryingRoom: 'Clone', PatientLicenseNumber: nil, ActualDate: '2019-11-13T18:44:45', Plant: '1A4FF010000002200000103', Weight: 10.0, UnitOfWeight: 'Grams', HarvestName: nil }].to_json,
-            basic_auth: [integration.key, integration.secret]
+            basic_auth: [METRC_API_KEY, integration.secret]
           )
           .to_return(status: 200, body: '', headers: {})
 
@@ -181,7 +183,7 @@ RSpec.describe MetrcService::Harvest do
         stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/harvestplants?licenseNumber=LIC-0001')
           .with(
             body: [{ DryingRoom: 'Clone', PatientLicenseNumber: nil, ActualDate: '2019-11-13T18:44:45', Plant: '1A4FF010000002200000105', Weight: 10.0, UnitOfWeight: 'Grams', HarvestName: 'Oct1-Ban-Spl-Can' }, { DryingRoom: 'Clone', PatientLicenseNumber: nil, ActualDate: '2019-11-13T18:44:45', Plant: '1A4FF010000002200000104', Weight: 10.0, UnitOfWeight: 'Grams', HarvestName: 'Oct1-Ban-Spl-Can' }, { DryingRoom: 'Clone', PatientLicenseNumber: nil, ActualDate: '2019-11-13T18:44:45', Plant: '1A4FF010000002200000103', Weight: 10.0, UnitOfWeight: 'Grams', HarvestName: 'Oct1-Ban-Spl-Can' }].to_json,
-            basic_auth: [integration.key, integration.secret]
+            basic_auth: [METRC_API_KEY, integration.secret]
           )
           .to_return(status: 200, body: '', headers: {})
 

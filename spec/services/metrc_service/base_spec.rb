@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe MetrcService::Base do
-  let(:integration) { create(:integration) }
+  let(:integration) { create(:integration, state: :ca) }
 
   context 'holds the basic attributes' do
     subject { MetrcService::Base.new({}, integration) }
