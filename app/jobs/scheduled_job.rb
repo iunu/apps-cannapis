@@ -26,6 +26,9 @@ class ScheduledJob < ApplicationJob
 
     rescue TooManyRetriesError => e
       report_failed(task, e.original)
+
+    rescue StandardError => e
+      report_failed(task, e)
     end
   end
 
