@@ -22,7 +22,7 @@ RSpec.describe NotificationMailer, type: :mailer do
 
     it 'renders the headers' do
       expect(mail.subject).to match(/\[Artemis -> Metrc\] Task failed: test for user 123/)
-      expect(mail.to).to eq(['customersuccess@artemisag.com'])
+      expect(mail.to).to eq([ENV['NOTIFICATION_RECIPIENT']])
       expect(mail.from).to eq(['support@artemisag.com'])
     end
 
@@ -40,7 +40,7 @@ RSpec.describe NotificationMailer, type: :mailer do
 
     it 'renders the headers' do
       expect(mail.subject).to match(/\[Artemis -> Metrc\] Task rescheduled \(attempt 2\): test for user 123/)
-      expect(mail.to).to eq(['customersuccess@artemisag.com'])
+      expect(mail.to).to eq([ENV['NOTIFICATION_RECIPIENT']])
       expect(mail.from).to eq(['support@artemisag.com'])
     end
 
