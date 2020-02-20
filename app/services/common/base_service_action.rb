@@ -8,7 +8,7 @@ module Common
       instance.run
 
       instance.result
-    rescue ServiceActionFailure => e
+    rescue ServiceActionFailure
       instance.result
     end
 
@@ -47,7 +47,7 @@ module Common
 
     def fail!(result = nil, exception: nil)
       @result = result
-      raise ServiceActionFailure.new(exception&.inspect)
+      raise ServiceActionFailure, exception&.inspect
     end
 
     def requeue!(exception: nil)

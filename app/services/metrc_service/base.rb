@@ -77,7 +77,6 @@ module MetrcService
 
     def call_metrc(method, *args)
       @client.send(method, @integration.vendor_id, *args)
-
     rescue *RETRYABLE_ERRORS => e
       log("METRC: Retryable error: #{e.inspect}", :warn)
       requeue!(exception: e)
