@@ -295,7 +295,7 @@ RSpec.describe MetrcService::Base do
         stub_request(:post, 'https://sandbox-api-md.metrc.com/harvests/v1/finish?licenseNumber=LIC-0001')
           .with(
             body: [payload].to_json,
-            basic_auth: [integration.key, integration.secret]
+            basic_auth: [ENV["METRC_SECRET_#{integration.state.upcase}"], integration.secret]
           )
           .to_return(status: 500, body: '', headers: {})
       end
