@@ -1,7 +1,7 @@
 require 'rails_helper'
 
 RSpec.describe MetrcService::Harvest do
-  METRC_API_KEY = ENV['METRC_SECRET_MD']
+  METRC_API_KEY = ENV['METRC_SECRET_MD'] unless defined?(METRC_API_KEY)
 
   let(:account) { create(:account) }
   let(:integration) { create(:integration, account: account, state: :md) }
