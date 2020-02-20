@@ -82,7 +82,7 @@ RSpec.describe MetrcService::Batch do
       it { is_expected.to be_nil }
     end
 
-    describe 'with completions', skip: 'FIXME' do
+    describe 'with completions' do
       before do
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
           .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)

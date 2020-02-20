@@ -46,14 +46,14 @@ module MetrcService
     def validate_batch!
       super
     rescue StandardError
-      task.delete
+      @task.delete
       raise
     end
 
     def validate_completions!(completions)
-      return unless completions.size.positive?
+      return if completions.size.positive?
 
-      task.delete
+      @task.delete
       raise InvalidOperation, "Completions where already performed. Batch ID #{@batch_id}"
     end
 
