@@ -57,7 +57,7 @@ ActiveRecord::Schema.define(version: 2020_02_18_080141) do
     t.integer "batch_id", null: false
     t.datetime "run_on", null: false
     t.datetime "received_at", default: -> { "CURRENT_TIMESTAMP" }, null: false
-    t.integer "attempts", default: 0
+    t.integer "attempts", default: 0, null: false
     t.index ["batch_id", "facility_id"], name: "index_schedulers_on_batch_id_and_facility_id"
     t.index ["facility_id"], name: "index_schedulers_on_facility_id"
     t.index ["integration_id"], name: "index_schedulers_on_integration_id"
