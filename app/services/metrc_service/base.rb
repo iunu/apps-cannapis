@@ -6,7 +6,10 @@ module MetrcService
     class BatchCropInvalid < StandardError; end
     class InvalidOperation < StandardError; end
 
-    attr_reader :transaction
+    RETRYABLE_ERRORS = [
+      Net::HTTPRetriableError,
+      Metrc::RequestError
+    ].freeze
 
     def initialize(ctx, integration, batch = nil)
       @ctx = ctx
@@ -72,23 +75,30 @@ module MetrcService
       log("Transaction: #{transaction.inspect}", :debug)
     end
 
+    def call_metrc(method, *args)
+      @client.send(method, @integration.vendor_id, *args)
+    rescue *RETRYABLE_ERRORS => e
+      log("METRC: Retryable error: #{e.inspect}", :warn)
+      requeue!(exception: e)
+    rescue Metrc::MissingConfiguration, Metrc::MissingParameter => e
+      log("METRC: Configuration error: #{e.inspect}", :error)
+      fail!(exception: e)
+    rescue StandardError => e
+      log("METRC: #{e.inspect}", :error)
+      fail!(exception: e)
+    end
+
     def state
       config[:state_map].fetch(@integration.state.upcase.to_sym, @integration.state)
     end
 
     def get_transaction(name, metadata = @attributes)
-      transaction = Transaction.where('(vendor = ? AND account_id = ?) AND (integration_id = ? AND batch_id = ?) AND (completion_id = ? AND type = ?)',
-                                      :metrc, @integration.account.id, @integration.id, @batch_id, @completion_id, name)&.first
-
-      return transaction unless transaction.nil?
-
-      Transaction.create(account: @integration.account,
-                         vendor: :metrc,
-                         integration: @integration,
-                         batch_id: @batch_id,
-                         completion_id: @completion_id,
-                         type: name,
-                         metadata: metadata)
+      Transaction.find_or_create_by(
+        vendor: :metrc, account: @integration.account, integration: @integration,
+        batch_id: @batch_id, completion_id: @completion_id, type: name
+      ) do |transaction|
+        transaction.metadata = metadata
+      end
     end
 
     def batch

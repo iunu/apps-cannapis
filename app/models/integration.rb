@@ -13,4 +13,8 @@ class Integration < ApplicationRecord
   # acts_as_paranoid
   scope :active, -> { where(deleted_at: nil) }
   scope :inactive, -> { where.not(deleted_at: nil) }
+
+  def vendor_name
+    vendor.capitalize
+  end
 end

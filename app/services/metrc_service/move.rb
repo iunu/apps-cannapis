@@ -95,7 +95,7 @@ module MetrcService
       end
 
       @logger.debug "[MOVE_PLANTS] Metrc API request. URI #{@client.uri}, payload #{payload}"
-      @client.move_plants(@integration.vendor_id, [payload])
+      call_metrc(:move_plants, [payload])
     end
 
     def move_plant_batches(options)
@@ -107,7 +107,7 @@ module MetrcService
       }
 
       @logger.debug "[MOVE_PLANT_BATCHES] Metrc API request. URI #{@client.uri}, payload #{payload}"
-      @client.move_plant_batches(@integration.vendor_id, [payload])
+      call_metrc(:move_plant_batches, [payload])
     end
 
     def change_growth_phase(options)
@@ -127,7 +127,7 @@ module MetrcService
       }
 
       @logger.debug "[CHANGE_GROWTH_PHASE] Metrc API request. URI #{@client.uri}, payload #{payload}"
-      @client.change_growth_phase(@integration.vendor_id, [payload])
+      call_metrc(:change_growth_phase, [payload])
     end
 
     def change_growth_phases(options)
@@ -146,7 +146,7 @@ module MetrcService
       end
 
       @logger.debug "[CHANGE_GROWTH_PHASES] Metrc API request. URI #{@client.uri}, payload #{payload}"
-      @client.change_growth_phases(@integration.vendor_id, payload)
+      call_metrc(:change_growth_phases, payload)
     end
 
     def normalize_growth_phase(zone_name = nil)

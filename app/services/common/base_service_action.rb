@@ -12,7 +12,7 @@ module Common
       instance.result
     end
 
-    attr_accessor :result
+    attr_accessor :result, :integration, :transaction
 
     def initialize(*)
       @logger = Rails.logger
@@ -25,6 +25,10 @@ module Common
     rescue TransactionAlreadyExecuted
       log("Success: transaction previously performed. #{transaction.inspect}", :error)
       fail!(transaction)
+    end
+
+    def action_label
+      self.class.name.underscore.split('/').last.upcase
     end
 
     protected
@@ -41,21 +45,17 @@ module Common
 
     def after; end
 
-    def fail!(result = nil)
+    def fail!(result = nil, exception: nil)
       @result = result
-      raise ServiceActionFailure
+      raise ServiceActionFailure, exception&.inspect
     end
 
-    def transaction
-      raise 'You must implemented +transaction+ in your service class'
+    def requeue!(exception: nil)
+      raise ScheduledJob::RetryableError.new(exception&.message, original: exception)
     end
 
     def provider_label
       self.class.name.underscore.split('_').first.upcase
-    end
-
-    def action_label
-      self.class.name.underscore.split('/').last.upcase
     end
 
     def log(msg, level = :info)

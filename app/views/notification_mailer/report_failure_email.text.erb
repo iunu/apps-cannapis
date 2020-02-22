@@ -1,0 +1,11 @@
+An error occurred while attempting to process a completion:
+
+This task has either reached the maximum number of attempts, or is not suitable for rescheduling.
+
+Vendor: <%=@integration.vendor_name %>
+Completion Type: <%=@action %>
+Artemis account ID: <%=@account.id %>
+User contact: <%=@account.full_name %> <<%=@account.email%>>
+
+Error:
+<%=@error.message %>
