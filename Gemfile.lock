@@ -9,10 +9,11 @@ GIT
       rspec
 
 GIT
-  remote: https://github.com/artemis-ag/artemis_api
-  revision: 3ad71d70ff3c82abaf945298b1767009fcfbbd8a
+  remote: https://github.com/dandehavilland/artemis_api
+  revision: 180d9d2122429f3a5f1e1cea6bf2eb639b27337f
+  branch: feature/resource_units
   specs:
-    artemis_api (0.3.0)
+    artemis_api (0.5.0)
 
 GEM
   remote: https://rubygems.org/
