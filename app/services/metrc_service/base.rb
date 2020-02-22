@@ -125,6 +125,11 @@ module MetrcService
               .zone(zone_id, include: include)
     end
 
+    def get_resource_unit(resource_unit_id, include: nil)
+      @artemis.facility(@facility_id)
+              .resource_unit(resource_unit_id, include: include)
+    end
+
     def config
       @config ||= Rails.application.config_for('providers/metrc')
     end
