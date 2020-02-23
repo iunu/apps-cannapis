@@ -11,6 +11,8 @@ module MetrcService
       Metrc::RequestError
     ].freeze
 
+    delegate :seeding_unit, to: :batch
+
     def initialize(ctx, integration, batch = nil)
       @ctx = ctx
       @relationships = ctx[:relationships]
@@ -65,7 +67,10 @@ module MetrcService
 
       super
 
-      validate_batch! unless @batch_id.nil?
+      return if @batch_id.nil?
+
+      validate_batch!
+      validate_seeding_unit!
     end
 
     def call
@@ -107,6 +112,13 @@ module MetrcService
 
     def validate_batch!
       raise BatchCropInvalid unless batch.crop == MetrcService::CROP
+    end
+
+    def validate_seeding_unit!
+      return unless ['preprinted', nil].include?(seeding_unit.item_tracking_method)
+
+      raise InvalidBatch, "Failed: Seeding unit is not valid for Metrc #{seeding_unit.item_tracking_method}. " \
+        "Batch ID #{@batch_id}, completion ID #{@completion_id}"
     end
 
     def get_batch(include = 'zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
