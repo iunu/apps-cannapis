@@ -36,7 +36,12 @@ module MetrcService
     end
 
     def module_for_completion(completion)
-      "MetrcService::#{completion.action_type.camelize}".constantize
+      action_type = completion.action_type.camelize
+      seeding_unit_name = seeding_unit.name.parameterize(separator: '_').camelize
+
+      "MetrcService::#{seeding_unit_name}::#{action_type}".constantize
+    rescue NameError
+      "MetrcService::#{action_type}".constantize
     end
 
     def batch
