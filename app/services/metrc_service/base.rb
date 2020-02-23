@@ -81,6 +81,7 @@ module MetrcService
     end
 
     def call_metrc(method, *args)
+      log("[#{method.to_s.upcase}] Metrc API request. URI #{@client.uri}, args #{args}", :debug)
       @client.send(method, @integration.vendor_id, *args)
     rescue *RETRYABLE_ERRORS => e
       log("METRC: Retryable error: #{e.inspect}", :warn)
