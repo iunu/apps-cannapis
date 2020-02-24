@@ -29,27 +29,19 @@ RSpec.describe MetrcService::Move do
   end
 
   context '#call' do
+    subject { described_class.call(ctx, integration) }
+
     let(:ctx) do
       {
         id: 3000,
         relationships: {
-          batch: {
-            data: {
-              id: 2002
-            }
-          },
-          facility: {
-            data: {
-              id: 1568
-            }
-          }
+          batch: { data: { id: 2002 } },
+          facility: { data: { id: 1568 } }
         },
         attributes: {},
         completion_id: 1001
       }.with_indifferent_access
     end
-
-    subject { described_class.call(ctx, integration) }
 
     before do
       expect_any_instance_of(described_class)
@@ -70,11 +62,7 @@ RSpec.describe MetrcService::Move do
     end
 
     describe 'with corn crop' do
-      let(:transaction) { create(:transaction, :unsuccessful, :move, account: account, integration: integration) }
-      let(:zone) { double(:zone, attributes: { name: nil }) }
-      let(:batch) { double(:batch, crop: 'Corn', zone: zone) }
-
-      it { is_expected.to be_nil }
+      include_examples 'with corn crop'
     end
   end
 
