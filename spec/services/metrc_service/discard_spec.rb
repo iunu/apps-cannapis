@@ -64,16 +64,7 @@ RSpec.describe MetrcService::Discard do
     end
 
     describe 'with corn crop' do
-      let(:transaction) { create(:transaction, :unsuccessful, :discard, account: account, integration: integration) }
-      let(:batch) { double(:batch, crop: 'Corn', seeding_unit: nil) }
-
-      before do
-        expect_any_instance_of(described_class)
-          .to receive(:get_batch)
-          .and_return(batch)
-      end
-
-      it { is_expected.to be_nil }
+      include_examples 'with corn crop'
     end
 
     describe 'on a different tracking method' do

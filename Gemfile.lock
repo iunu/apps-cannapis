@@ -10,9 +10,9 @@ GIT
 
 GIT
   remote: https://github.com/artemis-ag/artemis_api
-  revision: 3ad71d70ff3c82abaf945298b1767009fcfbbd8a
+  revision: 6d53c822d5197343329e143ed87754148e9ddeeb
   specs:
-    artemis_api (0.3.0)
+    artemis_api (0.5.0)
 
 GEM
   remote: https://rubygems.org/

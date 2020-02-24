@@ -252,6 +252,46 @@ RSpec.describe MetrcService::Base do
     end
   end
 
+  context '#get_resource_unit' do
+    before do
+      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
+        .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
+
+      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/resource_units/1')
+        .to_return(body: { data: { id: '1', type: 'resource_units', attributes: { id: 1, name: 'grams', kind: 'weight', conversion_si: 1.0 } } }.to_json)
+    end
+
+    let(:ctx) do
+      {
+        id: 3000,
+        relationships: {
+          batch: { data: { id: 2002 } },
+          facility: { data: { id: 1568 } }
+        },
+        attributes: {},
+        completion_id: 3000
+      }
+    end
+
+    let(:instance) { MetrcService::Base.new(ctx, integration) }
+    let(:resource_unit) { instance.send(:get_resource_unit, 1) }
+    subject { resource_unit }
+
+    it { is_expected.to be_a(ArtemisApi::ResourceUnit) }
+
+    context '#attributes' do
+      subject { resource_unit.attributes.with_indifferent_access }
+      it do
+        is_expected.to include(
+          id: 1,
+          name: 'grams',
+          kind: 'weight',
+          conversion_si: 1.0
+        )
+      end
+    end
+  end
+
   context 'state' do
     let(:state) { 'NY' }
     let(:integration) { create(:integration, state: state) }

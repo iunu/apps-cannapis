@@ -53,16 +53,7 @@ RSpec.describe MetrcService::Batch do
     subject { described_class.call(ctx, integration, nil, task) }
 
     describe 'with corn crop' do
-      let(:batch) { double(:batch, crop: 'Corn') }
-
-      before do
-        expect_any_instance_of(described_class)
-          .to receive(:get_batch)
-          .with(any_args)
-          .and_return(batch)
-      end
-
-      it { is_expected.to be_nil }
+      include_examples 'with corn crop'
     end
 
     describe 'with no completions' do

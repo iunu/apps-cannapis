@@ -1,0 +1,50 @@
+{
+  "data": {
+    "attributes": {
+      "action_type": "consume",
+      "content": null,
+      "end_time": "2020-02-17T19:08:03.703Z",
+      "id": 2236,
+      "occurrence": 0,
+      "options": {
+        "batch_resource_id": 144,
+        "consumed_quantity": 46.3125,
+        "requested_quantity": 100,
+        "resource_unit_id": 55
+      },
+      "start_time": "2020-02-17T08:00:00.000Z",
+      "user_id": 2
+    },
+    "id": "2236",
+    "relationships": {
+      "action_result": {
+        "data": {
+          "id": 53,
+          "type": "ResourceTransfer"
+        }
+      },
+      "batch": {
+        "data": {
+          "id": "352",
+          "type": "batches"
+        }
+      },
+      "facility": {
+        "data": {
+          "id": 3,
+          "type": "facilities"
+        }
+      },
+      "user": {
+        "data": {
+          "id": 2,
+          "type": "users"
+        }
+      }
+    },
+    "type": "completions"
+  },
+  "meta": {
+    "event_type": "creation"
+  }
+}

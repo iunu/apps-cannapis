@@ -63,16 +63,8 @@ RSpec.describe MetrcService::Harvest do
       it { is_expected.to eq(transaction) }
     end
 
-    describe 'with corn crop', focus: true do
-      let(:transaction) { create(:transaction, :unsuccessful, :harvest, account: account, integration: integration) }
-      let(:batch) { double(:batch, crop: 'Corn') }
-      before do
-        expect_any_instance_of(described_class)
-          .to receive(:get_batch)
-          .and_return(batch)
-      end
-
-      it { is_expected.to be_nil }
+    describe 'with corn crop' do
+      include_examples 'with corn crop'
     end
 
     describe 'on a partial harvest' do

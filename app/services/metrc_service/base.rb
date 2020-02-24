@@ -5,11 +5,14 @@ module MetrcService
     class InvalidBatch < StandardError; end
     class BatchCropInvalid < StandardError; end
     class InvalidOperation < StandardError; end
+    class InvalidAttributes < StandardError; end
 
     RETRYABLE_ERRORS = [
       Net::HTTPRetriableError,
       Metrc::RequestError
     ].freeze
+
+    delegate :seeding_unit, to: :batch
 
     def initialize(ctx, integration, batch = nil)
       @ctx = ctx
@@ -65,7 +68,10 @@ module MetrcService
 
       super
 
-      validate_batch! unless @batch_id.nil?
+      return if @batch_id.nil?
+
+      validate_batch!
+      validate_seeding_unit!
     end
 
     def call
@@ -76,6 +82,7 @@ module MetrcService
     end
 
     def call_metrc(method, *args)
+      log("[#{method.to_s.upcase}] Metrc API request. URI #{@client.uri}, args #{args}", :debug)
       @client.send(method, @integration.vendor_id, *args)
     rescue *RETRYABLE_ERRORS => e
       log("METRC: Retryable error: #{e.inspect}", :warn)
@@ -109,6 +116,13 @@ module MetrcService
       raise BatchCropInvalid unless batch.crop == MetrcService::CROP
     end
 
+    def validate_seeding_unit!
+      return unless ['preprinted', nil].include?(seeding_unit.item_tracking_method)
+
+      raise InvalidBatch, "Failed: Seeding unit is not valid for Metrc #{seeding_unit.item_tracking_method}. " \
+        "Batch ID #{@batch_id}, completion ID #{@completion_id}"
+    end
+
     def get_batch(include = 'zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
       @artemis.facility(@facility_id)
               .batch(@batch_id, include: include)
@@ -123,6 +137,11 @@ module MetrcService
     def get_zone(zone_id, include: nil)
       @artemis.facility(@facility_id)
               .zone(zone_id, include: include)
+    end
+
+    def get_resource_unit(resource_unit_id, include: nil)
+      @artemis.facility(@facility_id)
+              .resource_unit(resource_unit_id, include: include)
     end
 
     def config
