@@ -3,8 +3,6 @@ module MetrcService
     def call
       payload = build_start_payload(batch)
 
-      log("Metrc API request. URI #{@client.uri}, payload #{payload}", :debug)
-
       call_metrc(:create_plant_batches, payload)
 
       transaction.success = true

@@ -1,0 +1,56 @@
+{
+  "data": {
+    "attributes": {
+      "action_type": "harvest",
+      "content": null,
+      "end_time": "2020-02-17T08:00:00.000Z",
+      "id": 2238,
+      "occurrence": 0,
+      "options": {
+        "calculated_quantity": 1.0,
+        "harvest_type": "complete",
+        "harvest_unit_id": 17,
+        "quantity_remaining": 1,
+        "resources": [
+          {
+            "generated_quantity": 100,
+            "resource_unit_id": 56
+          }
+        ],
+        "seeding_unit_id": 17
+      },
+      "start_time": "2020-02-17T08:00:00.000Z",
+      "user_id": 2
+    },
+    "id": "2238",
+    "relationships": {
+      "action_result": {
+        "meta": {
+          "included": false
+        }
+      },
+      "batch": {
+        "data": {
+          "id": "352",
+          "type": "batches"
+        }
+      },
+      "facility": {
+        "data": {
+          "id": 3,
+          "type": "facilities"
+        }
+      },
+      "user": {
+        "data": {
+          "id": 2,
+          "type": "users"
+        }
+      }
+    },
+    "type": "completions"
+  },
+  "meta": {
+    "event_type": "creation"
+  }
+}
