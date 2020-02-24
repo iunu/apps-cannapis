@@ -5,6 +5,7 @@ module MetrcService
     class InvalidBatch < StandardError; end
     class BatchCropInvalid < StandardError; end
     class InvalidOperation < StandardError; end
+    class InvalidAttributes < StandardError; end
 
     RETRYABLE_ERRORS = [
       Net::HTTPRetriableError,

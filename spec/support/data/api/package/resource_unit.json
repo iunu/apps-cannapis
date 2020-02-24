@@ -1,0 +1,22 @@
+{
+  "data": {
+    "attributes": {
+      "conversion_si": 1.0,
+      "id": 26,
+      "kind": "weight",
+      "name": "g of Bulk Flower - 5th Element"
+    },
+    "id": "26",
+    "relationships": {
+      "crop_variety": {
+        "meta": {
+          "included": false
+        }
+      }
+    },
+    "type": "resource_units"
+  },
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

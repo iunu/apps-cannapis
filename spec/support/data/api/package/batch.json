@@ -1,0 +1,151 @@
+{
+  "data": {
+    "attributes": {
+      "arbitrary_id": "Feb24-5th-Ele-Can-2",
+      "completed_at": null,
+      "crop": "Cannabis",
+      "crop_variety": "5th Element",
+      "expected_harvest_at": "2020-02-24",
+      "facility_id": 2,
+      "harvest_quantity": null,
+      "harvested_at": null,
+      "id": 374,
+      "quantity": 1.0,
+      "seeded_at": "2020-02-24",
+      "start_type": "seed",
+      "zone_name": "Warehouse"
+    },
+    "id": "374",
+    "relationships": {
+      "barcodes": {
+        "data": [
+          {
+            "id": "asdfasdfasdfasdf123123123",
+            "type": "barcodes"
+          }
+        ]
+      },
+      "completions": {
+        "meta": {
+          "included": false
+        }
+      },
+      "custom_data": {
+        "data": []
+      },
+      "discards": {
+        "meta": {
+          "included": false
+        }
+      },
+      "harvest_unit": {
+        "data": null
+      },
+      "harvests": {
+        "meta": {
+          "included": false
+        }
+      },
+      "items": {
+        "meta": {
+          "included": false
+        }
+      },
+      "seeding_unit": {
+        "data": {
+          "id": "11",
+          "type": "seeding_units"
+        }
+      },
+      "sub_zone": {
+        "data": {
+          "id": null,
+          "type": "sub_zones"
+        }
+      },
+      "zone": {
+        "data": {
+          "id": 25,
+          "type": "zones"
+        }
+      }
+    },
+    "type": "batches"
+  },
+  "included": [
+    {
+      "attributes": {
+        "id": "asdfasdfasdfasdf123123123"
+      },
+      "id": "asdfasdfasdfasdf123123123",
+      "relationships": {
+        "target": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "barcodes"
+    },
+    {
+      "attributes": {
+        "id": 11,
+        "item_tracking_method": "none",
+        "name": "Package",
+        "secondary_display_active": false,
+        "secondary_display_capacity": 0
+      },
+      "id": "11",
+      "type": "seeding_units"
+    },
+    {
+      "attributes": {
+        "created_at": "2020-02-07T20:52:33.732Z",
+        "facility_id": 2,
+        "id": 25,
+        "name": "Warehouse",
+        "position": null,
+        "seeding_unit": {
+          "id": 11,
+          "name": "Package",
+          "secondary_display_active": null,
+          "secondary_display_capacity": 0,
+          "zones": [
+            {
+              "id": 25,
+              "name": "Warehouse",
+              "seeding_unit_id": 11,
+              "slug": "warehouse",
+              "sub_zones": [],
+              "zone_type": null
+            }
+          ]
+        },
+        "seeding_unit_capacity": 1200,
+        "size": 64.0,
+        "slug": "warehouse",
+        "status": "active",
+        "system": null,
+        "updated_at": "2020-02-07T20:52:33.732Z",
+        "zone_type": null
+      },
+      "id": "25",
+      "relationships": {
+        "seeding_unit": {
+          "meta": {
+            "included": false
+          }
+        },
+        "sub_zones": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "zones"
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}
