@@ -9,9 +9,8 @@ GIT
       rspec
 
 GIT
-  remote: https://github.com/dandehavilland/artemis_api
-  revision: 180d9d2122429f3a5f1e1cea6bf2eb639b27337f
-  branch: feature/resource_units
+  remote: https://github.com/artemis-ag/artemis_api
+  revision: 6d53c822d5197343329e143ed87754148e9ddeeb
   specs:
     artemis_api (0.5.0)
 
