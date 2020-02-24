@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/artemis-ag/Metrc.git
-  revision: 2493008b1e67bb21fde8e152249b1c49728a865e
+  revision: e860433743e06eaeba826a6d7beeded4926829a0
   specs:
-    Metrc (0.2.2)
+    Metrc (0.2.4)
       bundler
       httparty
       rake
@@ -157,7 +157,7 @@ GEM
     http-form_data (2.1.1)
     http-parser (1.2.1)
       ffi-compiler (>= 1.0, < 2.0)
-    httparty (0.17.3)
+    httparty (0.18.0)
       mime-types (~> 3.0)
       multi_xml (>= 0.5.2)
     i18n (1.7.0)
