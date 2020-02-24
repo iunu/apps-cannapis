@@ -7,8 +7,6 @@ module MetrcService
       next_step       = type == 'complete' ? :harvest_plants : :manicure_plants
       payload         = send "build_#{next_step}_payload", items, batch
 
-      @logger.debug "[HARVEST] Metrc API request. URI #{@client.uri}, payload #{payload}"
-
       call_metrc(next_step, payload)
 
       transaction.success = true

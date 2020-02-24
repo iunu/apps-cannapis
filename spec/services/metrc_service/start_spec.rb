@@ -29,6 +29,8 @@ RSpec.describe MetrcService::Start do
   end
 
   context '#call' do
+    subject { described_class.call(ctx, integration) }
+
     describe 'on an old successful transaction' do
       let(:transaction) { stub_model Transaction, type: :start_batch, success: true }
       let(:ctx) do
@@ -57,27 +59,11 @@ RSpec.describe MetrcService::Start do
           .and_return(transaction)
       end
 
-      subject { described_class.call(ctx, integration) }
-
       it { is_expected.to eq(transaction) }
     end
 
     describe 'with corn crop' do
-      let(:transaction) { stub_model Transaction, type: :start_batch, success: false }
-      let(:batch) { double(:batch, crop: 'Corn') }
-      subject { described_class.call(ctx, integration) }
-
-      before do
-        allow_any_instance_of(described_class)
-          .to receive(:get_transaction)
-          .and_return transaction
-
-        allow_any_instance_of(described_class)
-          .to receive(:get_batch)
-          .and_return batch
-      end
-
-      it { is_expected.to be_nil }
+      include_examples 'with corn crop'
     end
 
     describe 'metrc#create_plant_batches' do

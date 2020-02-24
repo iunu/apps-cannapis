@@ -1,13 +1,5 @@
 module MetrcService
   class Discard < MetrcService::Base
-    delegate :seeding_unit, to: :batch
-
-    def before
-      super
-
-      validate_seeding_unit!
-    end
-
     def call
       plant_type = seeding_unit.item_tracking_method.nil? ? 'immature' : 'mature'
 
@@ -23,13 +15,6 @@ module MetrcService
     end
 
     private
-
-    def validate_seeding_unit!
-      return unless ['preprinted', nil].include?(seeding_unit.item_tracking_method)
-
-      raise InvalidBatch, "Failed: Seeding unit is not valid for Metrc #{seeding_unit.item_tracking_method}. " \
-        "Batch ID #{@batch_id}, completion ID #{@completion_id}"
-    end
 
     def transaction
       @transaction ||= get_transaction(:discard_batch)
