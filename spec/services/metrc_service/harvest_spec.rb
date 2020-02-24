@@ -98,7 +98,7 @@ RSpec.describe MetrcService::Harvest do
       end
       subject { described_class.new(ctx, integration) }
 
-      it 'calls metrc\'s manicure_plants method', skip: 'FIXME' do
+      it 'calls metrc\'s manicure_plants method' do
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
           .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
@@ -159,7 +159,7 @@ RSpec.describe MetrcService::Harvest do
       end
       subject { described_class.new(ctx, integration) }
 
-      it 'calls metrc\'s harvest_plants method', skip: 'FIXME' do
+      it 'calls metrc\'s harvest_plants method' do
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
           .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
@@ -179,11 +179,17 @@ RSpec.describe MetrcService::Harvest do
           )
           .to_return(status: 200, body: '', headers: {})
 
-        allow(subject).to receive(:get_transaction).and_return transaction
+        stub_request(:post, 'https://sandbox-api-md.metrc.com/harvests/v1/finish?licenseNumber=LIC-0001')
+          .with(
+            body: [{ Id: 'Oct1-Ban-Spl-Can', ActualDate: '2019-11-13T18:44:45' }].to_json,
+            basic_auth: [METRC_API_KEY, integration.secret]
+          )
+          .to_return(status: 200, body: '', headers: {})
+
+        expect(subject).to receive(:get_transaction).and_return transaction
 
         final_transaction = subject.call
 
-        expect(subject).to have_received(:get_transaction)
         expect(final_transaction.success).to eq true
       end
     end
@@ -349,6 +355,48 @@ RSpec.describe MetrcService::Harvest do
         expect(item[:HarvestName]).to be_nil
         expect(item[:Weight]).to eq 10.0
         expect(item[:UnitOfWeight]).to eq 'Grams'
+      end
+    end
+  end
+
+  describe '#harvest_complete_payload' do
+    let(:start_time) { Time.now.utc - 1.hour }
+    let(:ctx) do
+      {
+        id: 3000,
+        relationships: {
+          batch: {
+            data: {
+              id: 2002
+            }
+          },
+          facility: {
+            data: {
+              id: 1568
+            }
+          }
+        },
+        attributes: { start_time: start_time },
+        completion_id: 1001
+      }
+    end
+    let(:batch_id) { 'Oct1-Ban-Spl-Can' }
+    let(:batch) { double(:batch, arbitrary_id: batch_id) }
+    let(:action_handler) { described_class.new(ctx, integration) }
+
+    before do
+      expect(action_handler)
+        .to receive(:batch)
+        .and_return(batch)
+    end
+
+    context 'the payload' do
+      subject { action_handler.send(:harvest_complete_payload) }
+      it do
+        is_expected.to include(
+          Id: batch_id,
+          ActualDate: start_time
+        )
       end
     end
   end

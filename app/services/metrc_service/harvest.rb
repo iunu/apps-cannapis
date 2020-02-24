@@ -1,13 +1,14 @@
 module MetrcService
   class Harvest < MetrcService::Base
     def call
-      type            = @attributes.dig(:options, :harvest_type)
       seeding_unit_id = @attributes.dig(:options, :seeding_unit_id)
       items           = get_items(seeding_unit_id)
-      next_step       = type == 'complete' ? :harvest_plants : :manicure_plants
+      next_step       = complete? ? :harvest_plants : :manicure_plants
       payload         = send "build_#{next_step}_payload", items, batch
 
       call_metrc(next_step, payload)
+
+      call_metrc(:finish_harvest, harvest_complete_payload) if complete?
 
       transaction.success = true
 
@@ -27,7 +28,7 @@ module MetrcService
         {
           DryingRoom: @attributes.dig(:options, :zone_name),
           PatientLicenseNumber: nil,
-          ActualDate: @attributes.dig(:start_time),
+          ActualDate: harvest_date,
           Plant: item.relationships.dig('barcode', 'data', 'id'),
           Weight: average_weight,
           UnitOfWeight: item.attributes['secondary_harvest_unit'],
@@ -44,7 +45,7 @@ module MetrcService
         {
           DryingRoom: @attributes.dig(:options, :zone_name),
           PatientLicenseNumber: nil,
-          ActualDate: @attributes.dig(:start_time),
+          ActualDate: harvest_date,
           Plant: item.relationships.dig('barcode', 'data', 'id'),
           Weight: average_weight,
           UnitOfWeight: item.attributes['harvest_unit'],
@@ -53,8 +54,23 @@ module MetrcService
       end
     end
 
+    def harvest_complete_payload
+      [{
+        Id: batch.arbitrary_id,
+        ActualDate: harvest_date
+      }]
+    end
+
+    def harvest_date
+      @attributes.dig(:start_time)
+    end
+
     def calculate_average_weight(items)
       items.inject(0.0) { |sum, item| sum + item.attributes['secondary_harvest_quantity'].to_f }.to_f / items.size
+    end
+
+    def complete?
+      @attributes.dig(:options, :harvest_type) == 'complete'
     end
   end
 end
