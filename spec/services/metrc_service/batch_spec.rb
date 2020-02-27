@@ -103,4 +103,53 @@ RSpec.describe MetrcService::Batch do
       it { is_expected.to be_nil }
     end
   end
+
+  context 'module lookup' do
+    let(:task) { create(:task, integration: integration) }
+    let(:instance) { described_class.new(ctx, integration, nil, task) }
+    let(:seeding_unit) { double(:seeding_unit, name: seeding_unit_name) }
+    before do
+      allow(instance)
+        .to receive(:seeding_unit)
+        .and_return(seeding_unit)
+    end
+
+    context '#module_name_for_seeding_unit' do
+      subject { instance.send(:module_name_for_seeding_unit) }
+      context 'crop' do
+        let(:seeding_unit_name) { 'Crop' }
+        it { is_expected.to eq('crop') }
+      end
+
+      context 'package' do
+        let(:seeding_unit_name) { 'Package' }
+        it { is_expected.to eq('package') }
+      end
+
+      context 'testing_package' do
+        let(:seeding_unit_name) { 'Testing Package' }
+        it { is_expected.to eq('package') }
+      end
+    end
+
+    context '#module_for_completion' do
+      let(:completion) { double(:completion, action_type: 'start') }
+      subject { instance.send(:module_for_completion, completion) }
+
+      context 'crop' do
+        let(:seeding_unit_name) { 'Crop' }
+        it { is_expected.to eq(MetrcService::Start) }
+      end
+
+      context 'package' do
+        let(:seeding_unit_name) { 'Package' }
+        it { is_expected.to eq(MetrcService::Package::Start) }
+      end
+
+      context 'testing_package' do
+        let(:seeding_unit_name) { 'Testing Package' }
+        it { is_expected.to eq(MetrcService::Package::Start) }
+      end
+    end
+  end
 end
