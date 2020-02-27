@@ -1,0 +1,7 @@
+#!/bin/bash
+
+set -e
+
+/wait && bundle exec rails db:prepare
+
+exec "$@"

@@ -6,7 +6,7 @@ services:
     container_name: cannapi-app
     env_file: .env
     build: .
-    command: bash -c "/wait && bundle exec puma -t 5:5 -p 3000 -e development"
+    command: bin/dev
     volumes:
       - .:/var/artemis/app
     ports:
@@ -33,7 +33,7 @@ services:
     image: cannapi-app
     container_name: cannapi-sidekiq
     env_file: .env
-    entrypoint: bash -c "/wait && bundle exec sidekiq"
+    entrypoint: bin/dev-sidekiq
     volumes:
       - .:/var/artemis/app
     environment:
@@ -46,7 +46,9 @@ services:
     image: cannapi-app
     container_name: cannapi-app-migration
     env_file: .env
-    entrypoint: bash -c "/wait && bundle exec rake db:prepare"
+    entrypoint: bin/dev-migrate
+    volumes:
+      - .:/var/artemis/app
     environment:
       WAIT_HOSTS: db:5432
     depends_on:
