@@ -117,17 +117,17 @@ RSpec.describe MetrcService::Batch do
     context '#module_name_for_seeding_unit' do
       subject { instance.send(:module_name_for_seeding_unit) }
       context 'crop' do
-        let(:seeding_unit_name) { 'crop' }
+        let(:seeding_unit_name) { 'Crop' }
         it { is_expected.to eq('crop') }
       end
 
       context 'package' do
-        let(:seeding_unit_name) { 'package' }
+        let(:seeding_unit_name) { 'Package' }
         it { is_expected.to eq('package') }
       end
 
       context 'testing_package' do
-        let(:seeding_unit_name) { 'testing_package' }
+        let(:seeding_unit_name) { 'Testing Package' }
         it { is_expected.to eq('package') }
       end
     end
@@ -137,17 +137,17 @@ RSpec.describe MetrcService::Batch do
       subject { instance.send(:module_for_completion, completion) }
 
       context 'crop' do
-        let(:seeding_unit_name) { 'crop' }
+        let(:seeding_unit_name) { 'Crop' }
         it { is_expected.to eq(MetrcService::Start) }
       end
 
       context 'package' do
-        let(:seeding_unit_name) { 'package' }
+        let(:seeding_unit_name) { 'Package' }
         it { is_expected.to eq(MetrcService::Package::Start) }
       end
 
       context 'testing_package' do
-        let(:seeding_unit_name) { 'testing_package' }
+        let(:seeding_unit_name) { 'Testing Package' }
         it { is_expected.to eq(MetrcService::Package::Start) }
       end
     end
