@@ -1,5 +1,7 @@
 module MetrcService
   class Batch < MetrcService::Base
+    SEEDING_UNIT_MAP = { 'testing_package' => 'package' }.freeze
+
     def initialize(ctx, integration, batch = nil, task = nil)
       @task = task
       super(ctx, integration, batch)
@@ -37,11 +39,16 @@ module MetrcService
 
     def module_for_completion(completion)
       action_type = completion.action_type.camelize
-      seeding_unit_name = seeding_unit.name.parameterize(separator: '_').camelize
+      seeding_unit_name = module_name_for_seeding_unit.camelize
 
       "MetrcService::#{seeding_unit_name}::#{action_type}".constantize
     rescue NameError
       "MetrcService::#{action_type}".constantize
+    end
+
+    def module_name_for_seeding_unit
+      name = seeding_unit.name.parameterize(separator: '_')
+      SEEDING_UNIT_MAP.fetch(name, name)
     end
 
     def batch

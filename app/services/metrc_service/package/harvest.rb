@@ -47,7 +47,7 @@ module MetrcService
       end
 
       def testing?
-        # TODO: determine whether package is for testing
+        seeding_unit.name =~ /Testing Package/
       end
 
       def tag
