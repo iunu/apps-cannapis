@@ -144,6 +144,19 @@ module MetrcService
               .resource_unit(resource_unit_id, include: include)
     end
 
+    def get_resource_units(include: nil)
+      @artemis.facility(@facility_id)
+              .resource_units(include: include)
+    end
+
+    def get_child_completions(parent_id, filter: {})
+      ArtemisApi::Completion.find_all(
+        facility_id: @facility_id,
+        client: @artemis,
+        filters: { parent_id: parent_id }.merge(filter)
+      )
+    end
+
     def config
       @config ||= Rails.application.config_for('providers/metrc')
     end

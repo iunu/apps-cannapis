@@ -1,0 +1,1274 @@
+{
+  "data": {
+    "attributes": {
+      "arbitrary_id": "Feb27-5th-Ele-Can-10",
+      "completed_at": "2020-06-27T04:00:00.000Z",
+      "crop": "Cannabis",
+      "crop_variety": "5th Element",
+      "expected_harvest_at": "2020-06-27",
+      "facility_id": 1,
+      "harvest_quantity": null,
+      "harvested_at": "2020-02-27",
+      "id": 39,
+      "quantity": 0.0,
+      "seeded_at": "2020-02-27",
+      "start_type": "seed",
+      "zone_name": "Mother Room Prop"
+    },
+    "id": "39",
+    "relationships": {
+      "barcodes": {
+        "meta": {
+          "included": false
+        }
+      },
+      "completions": {
+        "data": [
+          {
+            "id": "202",
+            "type": "completions"
+          },
+          {
+            "id": "203",
+            "type": "completions"
+          },
+          {
+            "id": "204",
+            "type": "completions"
+          },
+          {
+            "id": "205",
+            "type": "completions"
+          },
+          {
+            "id": "206",
+            "type": "completions"
+          },
+          {
+            "id": "207",
+            "type": "completions"
+          },
+          {
+            "id": "208",
+            "type": "completions"
+          },
+          {
+            "id": "209",
+            "type": "completions"
+          },
+          {
+            "id": "210",
+            "type": "completions"
+          },
+          {
+            "id": "216",
+            "type": "completions"
+          },
+          {
+            "id": "217",
+            "type": "completions"
+          },
+          {
+            "id": "218",
+            "type": "completions"
+          },
+          {
+            "id": "219",
+            "type": "completions"
+          },
+          {
+            "id": "220",
+            "type": "completions"
+          },
+          {
+            "id": "221",
+            "type": "completions"
+          },
+          {
+            "id": "224",
+            "type": "completions"
+          },
+          {
+            "id": "225",
+            "type": "completions"
+          },
+          {
+            "id": "226",
+            "type": "completions"
+          },
+          {
+            "id": "227",
+            "type": "completions"
+          },
+          {
+            "id": "228",
+            "type": "completions"
+          },
+          {
+            "id": "229",
+            "type": "completions"
+          },
+          {
+            "id": "230",
+            "type": "completions"
+          },
+          {
+            "id": "231",
+            "type": "completions"
+          }
+        ]
+      },
+      "custom_data": {
+        "meta": {
+          "included": false
+        }
+      },
+      "discards": {
+        "meta": {
+          "included": false
+        }
+      },
+      "harvest_unit": {
+        "meta": {
+          "included": false
+        }
+      },
+      "harvests": {
+        "meta": {
+          "included": false
+        }
+      },
+      "items": {
+        "meta": {
+          "included": false
+        }
+      },
+      "seeding_unit": {
+        "meta": {
+          "included": false
+        }
+      },
+      "sub_zone": {
+        "meta": {
+          "included": false
+        }
+      },
+      "zone": {
+        "data": {
+          "id": 2,
+          "type": "zones"
+        }
+      }
+    },
+    "type": "batches"
+  },
+  "included": [
+    {
+      "attributes": {
+        "action_type": "batch",
+        "content": null,
+        "end_time": "2020-02-27T14:13:13.519Z",
+        "id": 202,
+        "occurrence": null,
+        "options": {
+          "arbitrary_id": "Feb27-5th-Ele-Can",
+          "arbitrary_id_base": "5th-Ele-Can",
+          "growth_cycle_id": 6,
+          "quantity": 40,
+          "resources": [],
+          "seeding_unit_id": 7,
+          "sub_zone_id": null,
+          "tracking_barcode": "kljhkjhgvhgdfsgdhfjkfds2345",
+          "zone_id": 4,
+          "zone_name": "Mother Room"
+        },
+        "parent_id": null,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "202",
+      "relationships": {
+        "action_result": {
+          "data": {
+            "id": 39,
+            "type": "CropBatch"
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "start",
+        "content": {
+          "crop_batch_item_ids": [
+            435,
+            436,
+            437,
+            438,
+            439,
+            440,
+            441,
+            442,
+            443,
+            444,
+            445,
+            446,
+            447,
+            448,
+            449,
+            450,
+            451,
+            452,
+            453,
+            454,
+            455,
+            456,
+            457,
+            458,
+            459,
+            460,
+            461,
+            462,
+            463,
+            464,
+            465,
+            466,
+            467,
+            468,
+            469,
+            470,
+            471,
+            472,
+            473,
+            474
+          ]
+        },
+        "end_time": "2020-02-27T14:13:13.519Z",
+        "id": 203,
+        "occurrence": 0,
+        "options": {
+          "arbitrary_id": "Feb27-5th-Ele-Can",
+          "arbitrary_id_base": "5th-Ele-Can",
+          "quantity": 40,
+          "seeding_unit_id": 7,
+          "sub_zone_id": null,
+          "tracking_barcode": "kljhkjhgvhgdfsgdhfjkfds2345",
+          "zone_id": 4,
+          "zone_name": "Mother Room"
+        },
+        "parent_id": 202,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "203",
+      "relationships": {
+        "action_result": {
+          "meta": {
+            "included": false
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "manual_task",
+        "content": null,
+        "end_time": "2020-02-27T05:00:00.000Z",
+        "id": 204,
+        "occurrence": 0,
+        "options": {
+          "category_id": 2,
+          "content": "Cut Clones"
+        },
+        "parent_id": null,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "204",
+      "relationships": {
+        "action_result": {
+          "meta": {
+            "included": false
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "manual_task",
+        "content": null,
+        "end_time": "2020-02-27T05:00:00.000Z",
+        "id": 205,
+        "occurrence": 0,
+        "options": {
+          "category_id": 2,
+          "content": "Strip Leaves"
+        },
+        "parent_id": null,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "205",
+      "relationships": {
+        "action_result": {
+          "meta": {
+            "included": false
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "manual_task",
+        "content": null,
+        "end_time": "2020-02-27T05:00:00.000Z",
+        "id": 206,
+        "occurrence": 0,
+        "options": {
+          "category_id": 2,
+          "content": "Dip Into Rooting Gel"
+        },
+        "parent_id": null,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "206",
+      "relationships": {
+        "action_result": {
+          "meta": {
+            "included": false
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "manual_task",
+        "content": null,
+        "end_time": "2020-02-27T05:00:00.000Z",
+        "id": 207,
+        "occurrence": 0,
+        "options": {
+          "category_id": 2,
+          "content": "Stick in Plug"
+        },
+        "parent_id": null,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "207",
+      "relationships": {
+        "action_result": {
+          "meta": {
+            "included": false
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "manual_task",
+        "content": null,
+        "end_time": "2020-02-27T05:00:00.000Z",
+        "id": 208,
+        "occurrence": 0,
+        "options": {
+          "category_id": 2,
+          "content": "Apply 250ml of clone fluid solution"
+        },
+        "parent_id": null,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "208",
+      "relationships": {
+        "action_result": {
+          "meta": {
+            "included": false
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "manual_task",
+        "content": null,
+        "end_time": "2020-02-27T05:00:00.000Z",
+        "id": 209,
+        "occurrence": 0,
+        "options": {
+          "category_id": 2,
+          "content": "Dome"
+        },
+        "parent_id": null,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "209",
+      "relationships": {
+        "action_result": {
+          "meta": {
+            "included": false
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "move",
+        "content": null,
+        "end_time": "2020-03-19T04:00:00.000Z",
+        "id": 210,
+        "occurrence": 0,
+        "options": {
+          "quantity": 40,
+          "seeding_unit_id": 7,
+          "sub_stage_id": 2,
+          "sub_zone_id": null,
+          "tracking_barcode": "Feb27-5th-Ele-Can-10-",
+          "zone_id": 8,
+          "zone_name": "F4 - Outside"
+        },
+        "parent_id": null,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "210",
+      "relationships": {
+        "action_result": {
+          "meta": {
+            "included": false
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "move",
+        "content": null,
+        "end_time": "2020-04-16T04:00:00.000Z",
+        "id": 216,
+        "occurrence": 0,
+        "options": {
+          "quantity": 40,
+          "seeding_unit_id": 7,
+          "sub_stage_id": 3,
+          "sub_zone_id": null,
+          "tracking_barcode": "Feb27-5th-Ele-Can-10-",
+          "zone_id": 7,
+          "zone_name": "F3 - Inside"
+        },
+        "parent_id": null,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "216",
+      "relationships": {
+        "action_result": {
+          "meta": {
+            "included": false
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "manual_task",
+        "content": null,
+        "end_time": "2020-04-16T04:00:00.000Z",
+        "id": 217,
+        "occurrence": 0,
+        "options": {
+          "category_id": 2,
+          "content": "Set Irrigation",
+          "trackable_id": 446
+        },
+        "parent_id": null,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "217",
+      "relationships": {
+        "action_result": {
+          "meta": {
+            "included": false
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "manual_task",
+        "content": null,
+        "end_time": "2020-04-16T04:00:00.000Z",
+        "id": 218,
+        "occurrence": 0,
+        "options": {
+          "category_id": 2,
+          "content": "Trellis",
+          "trackable_id": 447
+        },
+        "parent_id": null,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "218",
+      "relationships": {
+        "action_result": {
+          "meta": {
+            "included": false
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "manual_task",
+        "content": null,
+        "end_time": "2020-04-23T04:00:00.000Z",
+        "id": 219,
+        "occurrence": 0,
+        "options": {
+          "category_id": 2,
+          "content": "Thin Bottoms",
+          "trackable_id": 448
+        },
+        "parent_id": null,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "219",
+      "relationships": {
+        "action_result": {
+          "meta": {
+            "included": false
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "manual_task",
+        "content": null,
+        "end_time": "2020-04-30T04:00:00.000Z",
+        "id": 220,
+        "occurrence": 0,
+        "options": {
+          "category_id": 2,
+          "content": "Thin Tops",
+          "trackable_id": 449
+        },
+        "parent_id": null,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "220",
+      "relationships": {
+        "action_result": {
+          "meta": {
+            "included": false
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "manual_task",
+        "content": null,
+        "end_time": "2020-06-11T04:00:00.000Z",
+        "id": 221,
+        "occurrence": 0,
+        "options": {
+          "category_id": 1,
+          "content": "Remove Irrigation",
+          "trackable_id": 450
+        },
+        "parent_id": null,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "221",
+      "relationships": {
+        "action_result": {
+          "meta": {
+            "included": false
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "move",
+        "content": null,
+        "end_time": "2020-06-11T04:00:00.000Z",
+        "id": 224,
+        "occurrence": 0,
+        "options": {
+          "quantity": 1.3333333333333333,
+          "resources": [
+            {
+              "processed_quantity": 4000,
+              "resource_unit_id": 17
+            },
+            {
+              "processed_quantity": 50,
+              "resource_unit_id": 18
+            }
+          ],
+          "seeding_unit_id": 6,
+          "sub_stage_id": 4,
+          "sub_zone_id": null,
+          "tracking_barcode": "Feb27-5th-Ele-Can-10-",
+          "zone_id": 2,
+          "zone_name": "Mother Room Prop"
+        },
+        "parent_id": null,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "224",
+      "relationships": {
+        "action_result": {
+          "meta": {
+            "included": false
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "process",
+        "content": null,
+        "end_time": "2020-06-11T04:00:00.000Z",
+        "id": 225,
+        "occurrence": 0,
+        "options": {
+          "processed_quantity": 4000,
+          "resource_unit_id": 17
+        },
+        "parent_id": 224,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "225",
+      "relationships": {
+        "action_result": {
+          "data": {
+            "id": 23,
+            "type": "ResourceTransfer"
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "process",
+        "content": null,
+        "end_time": "2020-06-11T04:00:00.000Z",
+        "id": 226,
+        "occurrence": 0,
+        "options": {
+          "processed_quantity": 50,
+          "resource_unit_id": 18
+        },
+        "parent_id": 224,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "226",
+      "relationships": {
+        "action_result": {
+          "data": {
+            "id": 24,
+            "type": "ResourceTransfer"
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "harvest",
+        "content": null,
+        "end_time": "2020-06-27T04:00:00.000Z",
+        "id": 227,
+        "occurrence": 0,
+        "options": {
+          "calculated_quantity": 1.3333333333333333,
+          "harvest_type": "complete",
+          "harvest_unit_id": 6,
+          "quantity_remaining": 1.3333333333333333,
+          "resources": [
+            {
+              "generated_quantity": 370.5,
+              "resource_unit_id": 26
+            },
+            {
+              "generated_quantity": 247,
+              "resource_unit_id": 25
+            },
+            {
+              "generated_quantity": 40,
+              "resource_unit_id": 21
+            },
+            {
+              "generated_quantity": 10,
+              "resource_unit_id": 22
+            }
+          ],
+          "seeding_unit_id": 6
+        },
+        "parent_id": null,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "227",
+      "relationships": {
+        "action_result": {
+          "meta": {
+            "included": false
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "generate",
+        "content": null,
+        "end_time": "2020-06-27T04:00:00.000Z",
+        "id": 228,
+        "occurrence": 0,
+        "options": {
+          "generated_quantity": 370.5,
+          "resource_unit_id": 26
+        },
+        "parent_id": 227,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "228",
+      "relationships": {
+        "action_result": {
+          "data": {
+            "id": 28,
+            "type": "BatchResource"
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "generate",
+        "content": null,
+        "end_time": "2020-06-27T04:00:00.000Z",
+        "id": 229,
+        "occurrence": 0,
+        "options": {
+          "generated_quantity": 247,
+          "resource_unit_id": 25
+        },
+        "parent_id": 227,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "229",
+      "relationships": {
+        "action_result": {
+          "data": {
+            "id": 29,
+            "type": "BatchResource"
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "generate",
+        "content": null,
+        "end_time": "2020-06-27T04:00:00.000Z",
+        "id": 230,
+        "occurrence": 0,
+        "options": {
+          "generated_quantity": 40,
+          "resource_unit_id": 21
+        },
+        "parent_id": 227,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "230",
+      "relationships": {
+        "action_result": {
+          "data": {
+            "id": 30,
+            "type": "BatchResource"
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "generate",
+        "content": null,
+        "end_time": "2020-06-27T04:00:00.000Z",
+        "id": 231,
+        "occurrence": 0,
+        "options": {
+          "generated_quantity": 10,
+          "resource_unit_id": 22
+        },
+        "parent_id": 227,
+        "start_time": "2020-02-27T05:00:00.000Z",
+        "user_id": 11
+      },
+      "id": "231",
+      "relationships": {
+        "action_result": {
+          "data": {
+            "id": 31,
+            "type": "BatchResource"
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "39",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

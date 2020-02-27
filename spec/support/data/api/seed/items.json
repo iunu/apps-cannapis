@@ -1,0 +1,347 @@
+{
+  "data": [
+    {
+      "attributes": {
+        "harvest_quantity": 0.0,
+        "id": 2083,
+        "secondary_harvest_quantity": 0.0,
+        "secondary_harvest_unit": null,
+        "status": "active"
+      },
+      "id": "2083",
+      "relationships": {
+        "barcode": {
+          "data": {
+            "id": "asdfasdf123",
+            "type": "barcodes"
+          }
+        },
+        "batch": {
+          "meta": {
+            "included": false
+          }
+        },
+        "harvest_unit": {
+          "meta": {
+            "included": false
+          }
+        },
+        "seeding_unit": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "items"
+    },
+    {
+      "attributes": {
+        "harvest_quantity": 0.0,
+        "id": 2084,
+        "secondary_harvest_quantity": 0.0,
+        "secondary_harvest_unit": null,
+        "status": "active"
+      },
+      "id": "2084",
+      "relationships": {
+        "barcode": {
+          "data": {
+            "id": "asdfasdf124",
+            "type": "barcodes"
+          }
+        },
+        "batch": {
+          "meta": {
+            "included": false
+          }
+        },
+        "harvest_unit": {
+          "meta": {
+            "included": false
+          }
+        },
+        "seeding_unit": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "items"
+    },
+    {
+      "attributes": {
+        "harvest_quantity": 0.0,
+        "id": 2085,
+        "secondary_harvest_quantity": 0.0,
+        "secondary_harvest_unit": null,
+        "status": "active"
+      },
+      "id": "2085",
+      "relationships": {
+        "barcode": {
+          "data": {
+            "id": "asdfasdf125",
+            "type": "barcodes"
+          }
+        },
+        "batch": {
+          "meta": {
+            "included": false
+          }
+        },
+        "harvest_unit": {
+          "meta": {
+            "included": false
+          }
+        },
+        "seeding_unit": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "items"
+    },
+    {
+      "attributes": {
+        "harvest_quantity": 0.0,
+        "id": 2086,
+        "secondary_harvest_quantity": 0.0,
+        "secondary_harvest_unit": null,
+        "status": "active"
+      },
+      "id": "2086",
+      "relationships": {
+        "barcode": {
+          "data": {
+            "id": "asdfasdf126",
+            "type": "barcodes"
+          }
+        },
+        "batch": {
+          "meta": {
+            "included": false
+          }
+        },
+        "harvest_unit": {
+          "meta": {
+            "included": false
+          }
+        },
+        "seeding_unit": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "items"
+    },
+    {
+      "attributes": {
+        "harvest_quantity": 0.0,
+        "id": 2087,
+        "secondary_harvest_quantity": 0.0,
+        "secondary_harvest_unit": null,
+        "status": "active"
+      },
+      "id": "2087",
+      "relationships": {
+        "barcode": {
+          "data": {
+            "id": "asdfasdf127",
+            "type": "barcodes"
+          }
+        },
+        "batch": {
+          "meta": {
+            "included": false
+          }
+        },
+        "harvest_unit": {
+          "meta": {
+            "included": false
+          }
+        },
+        "seeding_unit": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "items"
+    },
+    {
+      "attributes": {
+        "harvest_quantity": 0.0,
+        "id": 2088,
+        "secondary_harvest_quantity": 0.0,
+        "secondary_harvest_unit": null,
+        "status": "active"
+      },
+      "id": "2088",
+      "relationships": {
+        "barcode": {
+          "data": {
+            "id": "asdfasdf128",
+            "type": "barcodes"
+          }
+        },
+        "batch": {
+          "meta": {
+            "included": false
+          }
+        },
+        "harvest_unit": {
+          "meta": {
+            "included": false
+          }
+        },
+        "seeding_unit": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "items"
+    },
+    {
+      "attributes": {
+        "harvest_quantity": 0.0,
+        "id": 2089,
+        "secondary_harvest_quantity": 0.0,
+        "secondary_harvest_unit": null,
+        "status": "active"
+      },
+      "id": "2089",
+      "relationships": {
+        "barcode": {
+          "data": {
+            "id": "asdfasdf129",
+            "type": "barcodes"
+          }
+        },
+        "batch": {
+          "meta": {
+            "included": false
+          }
+        },
+        "harvest_unit": {
+          "meta": {
+            "included": false
+          }
+        },
+        "seeding_unit": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "items"
+    },
+    {
+      "attributes": {
+        "harvest_quantity": 0.0,
+        "id": 2090,
+        "secondary_harvest_quantity": 0.0,
+        "secondary_harvest_unit": null,
+        "status": "active"
+      },
+      "id": "2090",
+      "relationships": {
+        "barcode": {
+          "data": {
+            "id": "asdfasdf130",
+            "type": "barcodes"
+          }
+        },
+        "batch": {
+          "meta": {
+            "included": false
+          }
+        },
+        "harvest_unit": {
+          "meta": {
+            "included": false
+          }
+        },
+        "seeding_unit": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "items"
+    },
+    {
+      "attributes": {
+        "harvest_quantity": 0.0,
+        "id": 2091,
+        "secondary_harvest_quantity": 0.0,
+        "secondary_harvest_unit": null,
+        "status": "active"
+      },
+      "id": "2091",
+      "relationships": {
+        "barcode": {
+          "data": {
+            "id": "asdfasdf131",
+            "type": "barcodes"
+          }
+        },
+        "batch": {
+          "meta": {
+            "included": false
+          }
+        },
+        "harvest_unit": {
+          "meta": {
+            "included": false
+          }
+        },
+        "seeding_unit": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "items"
+    },
+    {
+      "attributes": {
+        "harvest_quantity": 0.0,
+        "id": 2092,
+        "secondary_harvest_quantity": 0.0,
+        "secondary_harvest_unit": null,
+        "status": "active"
+      },
+      "id": "2092",
+      "relationships": {
+        "barcode": {
+          "data": {
+            "id": "asdfasdf132",
+            "type": "barcodes"
+          }
+        },
+        "batch": {
+          "meta": {
+            "included": false
+          }
+        },
+        "harvest_unit": {
+          "meta": {
+            "included": false
+          }
+        },
+        "seeding_unit": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "items"
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}
