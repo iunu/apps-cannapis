@@ -48,7 +48,7 @@ module MetrcService
           ActualDate: harvest_date,
           Plant: item.relationships.dig('barcode', 'data', 'id'),
           Weight: average_weight,
-          UnitOfWeight: item.attributes['harvest_unit'],
+          UnitOfWeight: unit_of_weight(item),
           HarvestName: harvest_name
         }
       end
@@ -65,8 +65,47 @@ module MetrcService
       @attributes.dig(:start_time)
     end
 
+    def unit_of_weight(_item)
+      # TODO: apply per-item resource lookup when available on Artemis API
+      # resource_unit = get_resource_unit(item.resource_unit_id)
+      # resource_unit.name
+
+      wet_weight_resource_unit.name
+    end
+
+    def total_wet_weight
+      wet_weight_process_completions.sum do |completion|
+        completion.options['processed_quantity']
+      end
+    end
+
+    def wet_weight_process_completions
+      process_completions = move_completions.map do |move_completion|
+        get_child_completions(move_completion.id, filter: { action_type: 'process' })
+      end
+
+      process_completions.flatten.select do |nested_completion|
+        nested_completion.options['resource_unit_id'] && wet_weight_resource_unit.id
+      end
+    end
+
+    def wet_weight_resource_unit
+      resource_units = get_resource_units.select do |resource_unit|
+        resource_unit.name =~ /Wet Material/
+      end
+
+      raise InvalidAttributes, "Ambiguous resource unit for wet weight calculation. Expected 1 resource_unit, found #{resource_units.count}" if resource_units.count > 1
+      raise InvalidAttributes, 'Wet weight resource unit not found' if resource_units.count.zero?
+
+      resource_units.first
+    end
+
+    def move_completions
+      @batch.completions.select { |completion| completion.action_type == 'move' }
+    end
+
     def calculate_average_weight(items)
-      items.inject(0.0) { |sum, item| sum + item.attributes['secondary_harvest_quantity'].to_f }.to_f / items.size
+      (total_wet_weight.to_f / items.size).round(2)
     end
 
     def complete?

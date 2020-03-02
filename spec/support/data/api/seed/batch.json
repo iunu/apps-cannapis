@@ -1,0 +1,627 @@
+{
+  "data": {
+    "attributes": {
+      "arbitrary_id": "Feb23-5th-Ele-Can-8",
+      "completed_at": "2020-06-23T04:00:00.000Z",
+      "crop": "Cannabis",
+      "crop_variety": "5th Element",
+      "expected_harvest_at": "2020-06-23",
+      "facility_id": 2,
+      "harvest_quantity": null,
+      "harvested_at": "2020-02-23",
+      "id": 371,
+      "quantity": 0.0,
+      "seeded_at": "2020-02-23",
+      "start_type": "seed",
+      "zone_name": "Mother Room Prop"
+    },
+    "id": "371",
+    "relationships": {
+      "barcodes": {
+        "data": []
+      },
+      "completions": {
+        "data": [
+          {
+            "id": "2349",
+            "type": "completions"
+          },
+          {
+            "id": "2350",
+            "type": "completions"
+          },
+          {
+            "id": "2351",
+            "type": "completions"
+          },
+          {
+            "id": "2352",
+            "type": "completions"
+          },
+          {
+            "id": "2353",
+            "type": "completions"
+          },
+          {
+            "id": "2354",
+            "type": "completions"
+          },
+          {
+            "id": "2355",
+            "type": "completions"
+          }
+        ]
+      },
+      "custom_data": {
+        "data": []
+      },
+      "discards": {
+        "meta": {
+          "included": false
+        }
+      },
+      "harvest_unit": {
+        "data": null
+      },
+      "harvests": {
+        "meta": {
+          "included": false
+        }
+      },
+      "items": {
+        "meta": {
+          "included": false
+        }
+      },
+      "seeding_unit": {
+        "data": {
+          "id": "8",
+          "type": "seeding_units"
+        }
+      },
+      "sub_zone": {
+        "data": {
+          "id": null,
+          "type": "sub_zones"
+        }
+      },
+      "zone": {
+        "data": {
+          "id": 20,
+          "type": "zones"
+        }
+      }
+    },
+    "type": "batches"
+  },
+  "included": [
+    {
+      "attributes": {
+        "action_type": "batch",
+        "content": null,
+        "end_time": "2020-02-23T19:20:58.405Z",
+        "id": 2349,
+        "occurrence": null,
+        "options": {
+          "arbitrary_id": "Feb23-5th-Ele-Can",
+          "arbitrary_id_base": "5th-Ele-Can",
+          "growth_cycle_id": 10,
+          "quantity": 10,
+          "resources": [],
+          "seeding_unit_id": 8,
+          "tracking_barcode": "asdfasdf123",
+          "zone_id": 20
+        },
+        "start_time": "2020-02-23T05:00:00.000Z",
+        "user_id": 20
+      },
+      "id": "2349",
+      "relationships": {
+        "action_result": {
+          "data": {
+            "id": 371,
+            "type": "CropBatch"
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "371",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 2,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 20,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "start",
+        "content": {
+          "crop_batch_item_ids": [
+            2083,
+            2084,
+            2085,
+            2086,
+            2087,
+            2088,
+            2089,
+            2090,
+            2091,
+            2092
+          ]
+        },
+        "end_time": "2020-02-23T19:20:58.405Z",
+        "id": 2350,
+        "occurrence": 0,
+        "options": {
+          "arbitrary_id": "Feb23-5th-Ele-Can",
+          "arbitrary_id_base": "5th-Ele-Can",
+          "quantity": 10,
+          "seeding_unit_id": 8,
+          "tracking_barcode": "asdfasdf123",
+          "zone_id": 20
+        },
+        "start_time": "2020-02-23T05:00:00.000Z",
+        "user_id": 20
+      },
+      "id": "2350",
+      "relationships": {
+        "action_result": {
+          "meta": {
+            "included": false
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "371",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 2,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 20,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "harvest",
+        "content": {
+          "crop_batch_item_ids": [
+            2083,
+            2084,
+            2085,
+            2086,
+            2087,
+            2088,
+            2089,
+            2090,
+            2091,
+            2092
+          ]
+        },
+        "end_time": "2020-06-23T04:00:00.000Z",
+        "id": 2351,
+        "occurrence": 0,
+        "options": {
+          "calculated_quantity": 10.0,
+          "harvest_type": "complete",
+          "harvest_unit_id": 12,
+          "quantity_remaining": 10,
+          "resources": [
+            {
+              "generated_quantity": 46.3125,
+              "resource_unit_id": 25
+            },
+            {
+              "generated_quantity": 46.3125,
+              "resource_unit_id": 24
+            },
+            {
+              "processed_quantity": 7.5,
+              "resource_unit_id": 19
+            },
+            {
+              "processed_quantity": 1.875,
+              "resource_unit_id": 20
+            }
+          ],
+          "seeding_unit_id": 8
+        },
+        "start_time": "2020-02-23T05:00:00.000Z",
+        "user_id": 20
+      },
+      "id": "2351",
+      "relationships": {
+        "action_result": {
+          "meta": {
+            "included": false
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "371",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 2,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 20,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "generate",
+        "content": null,
+        "end_time": "2020-06-23T04:00:00.000Z",
+        "id": 2352,
+        "occurrence": 0,
+        "options": {
+          "generated_quantity": 46.3125,
+          "resource_unit_id": 25
+        },
+        "start_time": "2020-02-23T05:00:00.000Z",
+        "user_id": 20
+      },
+      "id": "2352",
+      "relationships": {
+        "action_result": {
+          "data": {
+            "id": 318,
+            "type": "BatchResource"
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "371",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 2,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 20,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "generate",
+        "content": null,
+        "end_time": "2020-06-23T04:00:00.000Z",
+        "id": 2353,
+        "occurrence": 0,
+        "options": {
+          "generated_quantity": 46.3125,
+          "resource_unit_id": 24
+        },
+        "start_time": "2020-02-23T05:00:00.000Z",
+        "user_id": 20
+      },
+      "id": "2353",
+      "relationships": {
+        "action_result": {
+          "data": {
+            "id": 319,
+            "type": "BatchResource"
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "371",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 2,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 20,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "process",
+        "content": null,
+        "end_time": "2020-06-23T04:00:00.000Z",
+        "id": 2354,
+        "occurrence": 0,
+        "options": {
+          "processed_quantity": 7.5,
+          "resource_unit_id": 19
+        },
+        "start_time": "2020-02-23T05:00:00.000Z",
+        "user_id": 20
+      },
+      "id": "2354",
+      "relationships": {
+        "action_result": {
+          "data": {
+            "id": 79,
+            "type": "ResourceTransfer"
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "371",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 2,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 20,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "action_type": "process",
+        "content": null,
+        "end_time": "2020-06-23T04:00:00.000Z",
+        "id": 2355,
+        "occurrence": 0,
+        "options": {
+          "processed_quantity": 1.875,
+          "resource_unit_id": 20
+        },
+        "start_time": "2020-02-23T05:00:00.000Z",
+        "user_id": 20
+      },
+      "id": "2355",
+      "relationships": {
+        "action_result": {
+          "data": {
+            "id": 80,
+            "type": "ResourceTransfer"
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "371",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 2,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 20,
+            "type": "users"
+          }
+        }
+      },
+      "type": "completions"
+    },
+    {
+      "attributes": {
+        "id": 8,
+        "item_tracking_method": "preprinted",
+        "name": "Plant (Barcoded)",
+        "secondary_display_active": false,
+        "secondary_display_capacity": 0
+      },
+      "id": "8",
+      "type": "seeding_units"
+    },
+    {
+      "attributes": {
+        "created_at": "2020-02-07T20:52:32.610Z",
+        "facility_id": 2,
+        "id": 20,
+        "name": "Mother Room Prop",
+        "position": null,
+        "seeding_unit": {
+          "id": 8,
+          "name": "Plant (Barcoded)",
+          "secondary_display_active": null,
+          "secondary_display_capacity": 0,
+          "zones": [
+            {
+              "id": 16,
+              "name": "F3 - Inside",
+              "seeding_unit_id": 8,
+              "slug": "f3---inside",
+              "sub_zones": [],
+              "zone_type": null
+            },
+            {
+              "id": 13,
+              "name": "F4 - Outside",
+              "seeding_unit_id": 8,
+              "slug": "f4---outside",
+              "sub_zones": [],
+              "zone_type": null
+            },
+            {
+              "id": 12,
+              "name": "F5 - Zone 1",
+              "seeding_unit_id": 8,
+              "slug": "f5---zone-1",
+              "sub_zones": [],
+              "zone_type": null
+            },
+            {
+              "id": 11,
+              "name": "F5 - Zone 2",
+              "seeding_unit_id": 8,
+              "slug": "f5---zone-2",
+              "sub_zones": [],
+              "zone_type": null
+            },
+            {
+              "id": 10,
+              "name": "F5 - Zone 3",
+              "seeding_unit_id": 8,
+              "slug": "f5---zone-3",
+              "sub_zones": [],
+              "zone_type": null
+            },
+            {
+              "id": 9,
+              "name": "F5 - Zone 4",
+              "seeding_unit_id": 8,
+              "slug": "f5---zone-4",
+              "sub_zones": [],
+              "zone_type": null
+            },
+            {
+              "id": 8,
+              "name": "F5 - Zone 5",
+              "seeding_unit_id": 8,
+              "slug": "f5---zone-5",
+              "sub_zones": [],
+              "zone_type": null
+            },
+            {
+              "id": 15,
+              "name": "F6 - Zone 1",
+              "seeding_unit_id": 8,
+              "slug": "f6---zone-1",
+              "sub_zones": [],
+              "zone_type": null
+            },
+            {
+              "id": 14,
+              "name": "F6 - Zone 4",
+              "seeding_unit_id": 8,
+              "slug": "f6---zone-4",
+              "sub_zones": [],
+              "zone_type": null
+            },
+            {
+              "id": 7,
+              "name": "F7 - L",
+              "seeding_unit_id": 8,
+              "slug": "f7---l",
+              "sub_zones": [],
+              "zone_type": null
+            },
+            {
+              "id": 22,
+              "name": "Mother Room",
+              "seeding_unit_id": 8,
+              "slug": "mother-room",
+              "sub_zones": [],
+              "zone_type": null
+            },
+            {
+              "id": 20,
+              "name": "Mother Room Prop",
+              "seeding_unit_id": 8,
+              "slug": "mother-room-prop",
+              "sub_zones": [],
+              "zone_type": null
+            },
+            {
+              "id": 21,
+              "name": "Propagation",
+              "seeding_unit_id": 8,
+              "slug": "propagation",
+              "sub_zones": [],
+              "zone_type": null
+            },
+            {
+              "id": 23,
+              "name": "VA - Zone 1",
+              "seeding_unit_id": 8,
+              "slug": "va---zone-1",
+              "sub_zones": [],
+              "zone_type": null
+            },
+            {
+              "id": 24,
+              "name": "VD - Top",
+              "seeding_unit_id": 8,
+              "slug": "vd---top",
+              "sub_zones": [],
+              "zone_type": null
+            }
+          ]
+        },
+        "seeding_unit_capacity": 150,
+        "size": 91.0,
+        "slug": "mother-room-prop",
+        "status": "active",
+        "system": null,
+        "updated_at": "2020-02-07T20:52:32.610Z",
+        "zone_type": null
+      },
+      "id": "20",
+      "relationships": {
+        "seeding_unit": {
+          "meta": {
+            "included": false
+          }
+        },
+        "sub_zones": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "zones"
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

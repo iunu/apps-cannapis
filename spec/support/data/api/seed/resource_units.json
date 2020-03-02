@@ -1,0 +1,483 @@
+{
+  "data": [
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 1,
+        "kind": "count",
+        "name": "Planting Tub"
+      },
+      "id": "1",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 2,
+        "kind": "count",
+        "name": "CloneEx Rooting Gel Bottle"
+      },
+      "id": "2",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 3,
+        "kind": "count",
+        "name": "Boss Hog Plant"
+      },
+      "id": "3",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 4,
+        "kind": "weight",
+        "name": "g of Wet Material - Boss Hog"
+      },
+      "id": "4",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 5,
+        "kind": "weight",
+        "name": "g of Waste - Boss Hog"
+      },
+      "id": "5",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 6,
+        "kind": "weight",
+        "name": "g of Dry Material - Boss Hog"
+      },
+      "id": "6",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 7,
+        "kind": "weight",
+        "name": "g of Bud - Boss Hog"
+      },
+      "id": "7",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 8,
+        "kind": "weight",
+        "name": "g of Shake - Boss Hog"
+      },
+      "id": "8",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 9,
+        "kind": "weight",
+        "name": "g of Kief - Boss Hog"
+      },
+      "id": "9",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 10,
+        "kind": "weight",
+        "name": "g of Stem - Boss Hog"
+      },
+      "id": "10",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 11,
+        "kind": "weight",
+        "name": "g of Trim - Boss Hog"
+      },
+      "id": "11",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 12,
+        "kind": "weight",
+        "name": "g of Grade B Flower - Boss Hog"
+      },
+      "id": "12",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 13,
+        "kind": "weight",
+        "name": "g of Grade A Flower - Boss Hog"
+      },
+      "id": "13",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 14,
+        "kind": "count",
+        "name": "Flower Package (10g) - Boss Hog"
+      },
+      "id": "14",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 15,
+        "kind": "count",
+        "name": "Flower Package (50g) - Boss Hog"
+      },
+      "id": "15",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 16,
+        "kind": "count",
+        "name": "5th Element Plant"
+      },
+      "id": "16",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 17,
+        "kind": "weight",
+        "name": "g of Wet Material - 5th Element"
+      },
+      "id": "17",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 18,
+        "kind": "weight",
+        "name": "g of Waste - 5th Element"
+      },
+      "id": "18",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 19,
+        "kind": "weight",
+        "name": "g of Dry Material - 5th Element"
+      },
+      "id": "19",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 20,
+        "kind": "weight",
+        "name": "g of Bud - 5th Element"
+      },
+      "id": "20",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 21,
+        "kind": "weight",
+        "name": "g of Shake - 5th Element"
+      },
+      "id": "21",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 22,
+        "kind": "weight",
+        "name": "g of Kief - 5th Element"
+      },
+      "id": "22",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 23,
+        "kind": "weight",
+        "name": "g of Stem - 5th Element"
+      },
+      "id": "23",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 24,
+        "kind": "weight",
+        "name": "g of Trim - 5th Element"
+      },
+      "id": "24",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 25,
+        "kind": "weight",
+        "name": "g of Grade B Flower - 5th Element"
+      },
+      "id": "25",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 26,
+        "kind": "weight",
+        "name": "g of Grade A Flower - 5th Element"
+      },
+      "id": "26",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 27,
+        "kind": "count",
+        "name": "Flower Package (10g) - 5th Element"
+      },
+      "id": "27",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    },
+    {
+      "attributes": {
+        "conversion_si": 1.0,
+        "id": 28,
+        "kind": "count",
+        "name": "Flower Package (50g) - 5th Element"
+      },
+      "id": "28",
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      },
+      "type": "resource_units"
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}
