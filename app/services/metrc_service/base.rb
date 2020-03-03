@@ -157,6 +157,13 @@ module MetrcService
       )
     end
 
+    def get_related_completions(action_type = nil)
+      completions = @batch.completions
+      completions = completions.select { |c| c.action_type == action_type.to_s } if action_type.present?
+
+      completions
+    end
+
     def config
       @config ||= Rails.application.config_for('providers/metrc')
     end
