@@ -48,6 +48,11 @@ gem 'pry'
 gem 'sidekiq', '~> 5.2', '>= 5.2.7'
 gem 'sidekiq-scheduler', '~> 3.0'
 
+# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
+gem 'tzinfo-data', platforms: %w[mingw mswin x64_mingw jruby]
+
+gem 'bugsnag', '~> 6.13'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: %w[mri mingw x64_mingw]
@@ -90,6 +95,3 @@ group :test do
   gem 'webdrivers'
   gem 'webmock'
 end
-
-# Windows does not include zoneinfo files, so bundle the tzinfo-data gem
-gem 'tzinfo-data', platforms: %w[mingw mswin x64_mingw jruby]
