@@ -130,10 +130,16 @@ RSpec.describe MetrcService::Batch do
         let(:seeding_unit_name) { 'Testing Package' }
         it { is_expected.to eq('package') }
       end
+
+      context 'sales_order' do
+        let(:seeding_unit_name) { 'Sales Order' }
+        it { is_expected.to eq('sales_order') }
+      end
     end
 
     context '#module_for_completion' do
-      let(:completion) { double(:completion, action_type: 'start') }
+      let(:action_type) { 'start' }
+      let(:completion) { double(:completion, action_type: action_type) }
       subject { instance.send(:module_for_completion, completion) }
 
       context 'crop' do
@@ -149,6 +155,12 @@ RSpec.describe MetrcService::Batch do
       context 'testing_package' do
         let(:seeding_unit_name) { 'Testing Package' }
         it { is_expected.to eq(MetrcService::Package::Start) }
+      end
+
+      context 'sales_order' do
+        let(:action_type) { 'discard' }
+        let(:seeding_unit_name) { 'Sales Order' }
+        it { is_expected.to eq(MetrcService::SalesOrder::Discard) }
       end
     end
   end
