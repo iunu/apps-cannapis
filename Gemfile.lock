@@ -1,7 +1,6 @@
 GIT
   remote: https://github.com/artemis-ag/Metrc.git
-  revision: a24e3238f19806dd5144e7a18d32e68743f1f0aa
-  branch: feature/remove_waste
+  revision: 995ce80814599922229d79bc25f9ca995efba78d
   specs:
     Metrc (0.2.5)
       bundler
