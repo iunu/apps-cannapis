@@ -25,8 +25,8 @@ module MetrcService
     end
 
     def finalize_harvest
-      call_metrc(:finish_harvest, build_harvest_complete_payload)
       call_metrc(:remove_waste, build_remove_waste_payload)
+      call_metrc(:finish_harvest, build_harvest_complete_payload)
     end
 
     def build_manicure_plants_payload(items, _batch)
