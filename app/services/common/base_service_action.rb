@@ -45,6 +45,13 @@ module Common
 
     def after; end
 
+    def success!
+      log("Success: batch ID #{@batch_id}, completion ID #{@completion_id}")
+
+      transaction.success = true
+      transaction
+    end
+
     def fail!(result = nil, exception: nil)
       @result = result
       raise ServiceActionFailure, exception&.inspect

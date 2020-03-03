@@ -9,9 +9,7 @@ module MetrcService
       action = plant_type == 'immature' ? :destroy_plant_batches : :destroy_plants
       call_metrc(action, payload)
 
-      transaction.success = true
-
-      transaction
+      success!
     end
 
     private
