@@ -1,5 +1,7 @@
 module MetrcService
   class Harvest < MetrcService::Base
+    WET_WEIGHT = /Wet Material/.freeze
+
     def call
       seeding_unit_id = @attributes.dig(:options, :seeding_unit_id)
       items           = get_items(seeding_unit_id)
@@ -48,7 +50,7 @@ module MetrcService
           ActualDate: harvest_date,
           Plant: item.relationships.dig('barcode', 'data', 'id'),
           Weight: average_weight,
-          UnitOfWeight: unit_of_weight(item),
+          UnitOfWeight: unit_of_weight(item, WET_WEIGHT),
           HarvestName: harvest_name
         }
       end
@@ -65,47 +67,45 @@ module MetrcService
       @attributes.dig(:start_time)
     end
 
-    def unit_of_weight(_item)
+    def unit_of_weight(_item, matcher)
       # TODO: apply per-item resource lookup when available on Artemis API
       # resource_unit = get_resource_unit(item.resource_unit_id)
       # resource_unit.name
 
-      wet_weight_resource_unit.name
+      weight_resource_unit(matcher).name
     end
 
-    def total_wet_weight
-      wet_weight_process_completions.sum do |completion|
+    def total_weight(matcher)
+      weight_process_completions(matcher).sum do |completion|
         completion.options['processed_quantity']
       end
     end
 
-    def wet_weight_process_completions
-      process_completions = move_completions.map do |move_completion|
-        get_child_completions(move_completion.id, filter: { action_type: 'process' })
-      end
-
-      process_completions.flatten.select do |nested_completion|
-        nested_completion.options['resource_unit_id'] && wet_weight_resource_unit.id
+    def weight_process_completions(matcher)
+      move_process_completions.select do |nested_completion|
+        nested_completion.options['resource_unit_id'] == weight_resource_unit(matcher).id
       end
     end
 
-    def wet_weight_resource_unit
+    def weight_resource_unit(matcher)
       resource_units = get_resource_units.select do |resource_unit|
-        resource_unit.name =~ /Wet Material/
+        resource_unit.name =~ matcher
       end
 
-      raise InvalidAttributes, "Ambiguous resource unit for wet weight calculation. Expected 1 resource_unit, found #{resource_units.count}" if resource_units.count > 1
-      raise InvalidAttributes, 'Wet weight resource unit not found' if resource_units.count.zero?
+      raise InvalidAttributes, "Ambiguous resource unit for #{matcher} calculation. Expected 1 resource_unit, found #{resource_units.count}" if resource_units.count > 1
+      raise InvalidAttributes, "#{matcher} resource unit not found" if resource_units.count.zero?
 
       resource_units.first
     end
 
-    def move_completions
-      @batch.completions.select { |completion| completion.action_type == 'move' }
+    def calculate_average_weight(items)
+      (total_weight(WET_WEIGHT).to_f / items.size).round(2)
     end
 
-    def calculate_average_weight(items)
-      (total_wet_weight.to_f / items.size).round(2)
+    def move_process_completions
+      get_related_completions(:move).map do |move_completion|
+        get_child_completions(move_completion.id, filter: { action_type: 'process' })
+      end.flatten
     end
 
     def complete?
