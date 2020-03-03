@@ -40,7 +40,7 @@ module Common
     end
 
     def call
-      raise 'You must implemented +call+ in your service class'
+      raise 'You must implement +call+ in your service class'
     end
 
     def after; end
