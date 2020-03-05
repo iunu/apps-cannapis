@@ -1,8 +1,9 @@
 GIT
   remote: https://github.com/artemis-ag/Metrc.git
-  revision: 995ce80814599922229d79bc25f9ca995efba78d
+  revision: dcd4ef264a5cb872a4971bf3bd8eea21d1ec823f
+  branch: feature/list_transfer_templates
   specs:
-    Metrc (0.2.5)
+    Metrc (0.2.6)
       bundler
       httparty
       rake
