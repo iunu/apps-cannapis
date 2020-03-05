@@ -60,7 +60,6 @@ group :development, :test do
   gem 'faker'
   gem 'rails-controller-testing'
   gem 'rspec-rails', '~> 4.0.0.beta2'
-  gem 'vcr', '~> 5'
 end
 
 group :development do

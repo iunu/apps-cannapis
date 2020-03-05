@@ -381,7 +381,6 @@ GEM
       unf_ext
     unf_ext (0.0.7.6)
     unicode-display_width (1.6.0)
-    vcr (5.0.0)
     web-console (4.0.1)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -453,7 +452,6 @@ DEPENDENCIES
   terminal-notifier-guard
   turbolinks (~> 5)
   tzinfo-data
-  vcr (~> 5)
   web-console (>= 3.3.0)
   webdrivers
   webmock
