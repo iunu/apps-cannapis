@@ -15,7 +15,7 @@ Things you may want to cover:
 
 * Database creation: docker compose takes care of creating the database and performing migrations for you.
 
-* How to run the test suite: `bundle exec rake test` or `bundle exec guard`.
+* How to run the test suite: `bundle exec rspec` or `bundle exec guard`.
 
 * Services: the application uses Sidekiw, along with Redis, in order to run background jobs. Locally, docker-compose takes care of creating and running these instances for you.
 
