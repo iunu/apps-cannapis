@@ -1,7 +1,6 @@
 GIT
   remote: https://github.com/artemis-ag/Metrc.git
-  revision: dcd4ef264a5cb872a4971bf3bd8eea21d1ec823f
-  branch: feature/list_transfer_templates
+  revision: 63f23041ef468ca269a53bbd19b7ab836bd1f8a5
   specs:
     Metrc (0.2.6)
       bundler

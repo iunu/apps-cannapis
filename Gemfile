@@ -36,9 +36,7 @@ gem 'http'
 if ENV['LOCAL_METRC_GEM_DEV']
   gem 'Metrc', path: ENV['LOCAL_METRC_GEM_DEV']
 else
-  gem 'Metrc', # rubocop:disable Bundler/DuplicatedGem
-      git: 'https://github.com/artemis-ag/Metrc.git',
-      branch: 'feature/list_transfer_templates'
+  gem 'Metrc', git: 'https://github.com/artemis-ag/Metrc.git' # rubocop:disable Bundler/DuplicatedGem
 end
 
 gem 'artemis_api', git: 'https://github.com/artemis-ag/artemis_api'
