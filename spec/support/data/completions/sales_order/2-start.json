@@ -1,0 +1,51 @@
+{
+  "data": {
+    "attributes": {
+      "action_type": "start",
+      "content": null,
+      "end_time": "2020-03-03T12:09:44.060Z",
+      "id": 233,
+      "occurrence": 0,
+      "options": {
+        "arbitrary_id": "Mar3-5th-Ele-Can",
+        "arbitrary_id_base": "5th-Ele-Can",
+        "quantity": 1,
+        "seeding_unit_id": 11,
+        "zone_id": 21
+      },
+      "parent_id": 232,
+      "start_time": "2020-03-03T05:00:00.000Z",
+      "user_id": 11
+    },
+    "id": "233",
+    "relationships": {
+      "action_result": {
+        "meta": {
+          "included": false
+        }
+      },
+      "batch": {
+        "data": {
+          "id": "40",
+          "type": "batches"
+        }
+      },
+      "facility": {
+        "data": {
+          "id": 1,
+          "type": "facilities"
+        }
+      },
+      "user": {
+        "data": {
+          "id": 11,
+          "type": "users"
+        }
+      }
+    },
+    "type": "completions"
+  },
+  "meta": {
+    "event_type": "creation"
+  }
+}

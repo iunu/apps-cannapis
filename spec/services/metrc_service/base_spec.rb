@@ -332,9 +332,9 @@ RSpec.describe MetrcService::Base do
 
     context 'when retryable' do
       before do
-        stub_request(:post, 'https://sandbox-api-md.metrc.com/harvests/v1/finish?licenseNumber=LIC-0001')
+        stub_request(:post, 'https://sandbox-api-md.metrc.com/plantbatches/v1/createplantings?licenseNumber=LIC-0001')
           .with(
-            body: [payload].to_json,
+            body: '{"Something":"went wrong"}',
             basic_auth: [ENV["METRC_SECRET_#{integration.state.upcase}"], integration.secret]
           )
           .to_return(status: 500, body: '', headers: {})

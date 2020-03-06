@@ -1,20 +1,19 @@
 module MetrcService
   class Discard < MetrcService::Base
     def call
-      plant_type = seeding_unit.item_tracking_method.nil? ? 'immature' : 'mature'
-
       payload = send("build_#{plant_type}_payload", discard, batch)
-      log("Metrc API request. URI #{@client.uri}, payload #{payload}", :debug)
 
       action = plant_type == 'immature' ? :destroy_plant_batches : :destroy_plants
       call_metrc(action, payload)
 
-      transaction.success = true
-
-      transaction
+      success!
     end
 
     private
+
+    def plant_state
+      @plant_state ||= seeding_unit.item_tracking_method.nil? ? 'immature' : 'mature'
+    end
 
     def transaction
       @transaction ||= get_transaction(:discard_batch)

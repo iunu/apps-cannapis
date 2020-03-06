@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/artemis-ag/Metrc.git
-  revision: 995ce80814599922229d79bc25f9ca995efba78d
+  revision: 63f23041ef468ca269a53bbd19b7ab836bd1f8a5
   specs:
-    Metrc (0.2.5)
+    Metrc (0.2.6)
       bundler
       httparty
       rake
@@ -381,7 +381,6 @@ GEM
       unf_ext
     unf_ext (0.0.7.6)
     unicode-display_width (1.6.0)
-    vcr (5.0.0)
     web-console (4.0.1)
       actionview (>= 6.0.0)
       activemodel (>= 6.0.0)
@@ -453,7 +452,6 @@ DEPENDENCIES
   terminal-notifier-guard
   turbolinks (~> 5)
   tzinfo-data
-  vcr (~> 5)
   web-console (>= 3.3.0)
   webdrivers
   webmock

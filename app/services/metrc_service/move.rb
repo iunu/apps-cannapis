@@ -20,9 +20,8 @@ module MetrcService
       }
 
       send(next_step_name, options)
-      transaction.success = true
 
-      transaction
+      success!
     end
 
     def transaction

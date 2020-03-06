@@ -13,9 +13,7 @@ module MetrcService
 
       finalize_harvest if complete?
 
-      transaction.success = true
-
-      transaction
+      success!
     end
 
     private

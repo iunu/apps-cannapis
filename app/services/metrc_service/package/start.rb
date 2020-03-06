@@ -4,10 +4,7 @@ module MetrcService
       def call
         # do nothing?
 
-        transaction.success = true
-        log("Success: batch ID #{@batch_id}, completion ID #{@completion_id}; #{payload}")
-
-        transaction
+        success!
       end
 
       private

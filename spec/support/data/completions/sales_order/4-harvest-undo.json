@@ -1,0 +1,53 @@
+{
+  "data": {
+    "attributes": {
+      "action_type": "harvest",
+      "content": null,
+      "end_time": "2020-03-03T05:00:00.000Z",
+      "id": 236,
+      "occurrence": 0,
+      "options": {
+        "calculated_quantity": 1.0,
+        "harvest_quantity": "1",
+        "harvest_type": "complete",
+        "harvest_unit_id": 6,
+        "quantity_remaining": 1,
+        "seeding_unit_id": 11
+      },
+      "parent_id": null,
+      "start_time": "2020-03-03T05:00:00.000Z",
+      "user_id": 11
+    },
+    "id": "236",
+    "relationships": {
+      "action_result": {
+        "data": {
+          "id": 1,
+          "type": "CropBatchHarvest"
+        }
+      },
+      "batch": {
+        "data": {
+          "id": "40",
+          "type": "batches"
+        }
+      },
+      "facility": {
+        "data": {
+          "id": 1,
+          "type": "facilities"
+        }
+      },
+      "user": {
+        "data": {
+          "id": 11,
+          "type": "users"
+        }
+      }
+    },
+    "type": "completions"
+  },
+  "meta": {
+    "event_type": "update"
+  }
+}

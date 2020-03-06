@@ -5,10 +5,7 @@ module MetrcService
 
       call_metrc(:create_plant_batches, payload)
 
-      transaction.success = true
-      log("Success: batch ID #{@batch_id}, completion ID #{@completion_id}; #{payload}")
-
-      transaction
+      success!
     end
 
     private

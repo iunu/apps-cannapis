@@ -9,16 +9,8 @@ RSpec.describe MetrcService::Discard do
     {
       id: 3000,
       relationships: {
-        batch: {
-          data: {
-            id: 2002
-          }
-        },
-        facility: {
-          data: {
-            id: 1568
-          }
-        }
+        batch: { data: { id: 2002 } },
+        facility: { data: { id: 1568 } }
       },
       attributes: {
         options: {
@@ -35,16 +27,8 @@ RSpec.describe MetrcService::Discard do
       {
         id: 3000,
         relationships: {
-          batch: {
-            data: {
-              id: 2002
-            }
-          },
-          facility: {
-            data: {
-              id: 1568
-            }
-          }
+          batch: { data: { id: 2002 } },
+          facility: { data: { id: 1568 } }
         },
         attributes: {},
         completion_id: 1001
@@ -72,21 +56,9 @@ RSpec.describe MetrcService::Discard do
         {
           id: 3000,
           relationships: {
-            batch: {
-              data: {
-                id: 2002
-              }
-            },
-            facility: {
-              data: {
-                id: 1568
-              }
-            },
-            action_result: {
-              data: {
-                id: 111436
-              }
-            }
+            batch: { data: { id: 2002 } },
+            facility: { data: { id: 1568 } },
+            action_result: { data: { id: 111436 } }
           },
           attributes: {
             options: {
@@ -119,21 +91,9 @@ RSpec.describe MetrcService::Discard do
         {
           id: 3000,
           relationships: {
-            batch: {
-              data: {
-                id: 2002
-              }
-            },
-            facility: {
-              data: {
-                id: 1568
-              }
-            },
-            action_result: {
-              data: {
-                id: 111436
-              }
-            }
+            batch: { data: { id: 2002 } },
+            facility: { data: { id: 1568 } },
+            action_result: { data: { id: 111436 } }
           },
           attributes: {
             options: {
@@ -186,21 +146,9 @@ RSpec.describe MetrcService::Discard do
         {
           id: 3000,
           relationships: {
-            batch: {
-              data: {
-                id: 2002
-              }
-            },
-            facility: {
-              data: {
-                id: 1568
-              }
-            },
-            action_result: {
-              data: {
-                id: 111436
-              }
-            }
+            batch: { data: { id: 2002 } },
+            facility: { data: { id: 1568 } },
+            action_result: { data: { id: 111436 } }
           },
           attributes: {
             options: {
@@ -274,16 +222,8 @@ RSpec.describe MetrcService::Discard do
         {
           id: 3000,
           relationships: {
-            batch: {
-              data: {
-                id: 2002
-              }
-            },
-            facility: {
-              data: {
-                id: 1568
-              }
-            }
+            batch: { data: { id: 2002 } },
+            facility: { data: { id: 1568 } }
           },
           attributes: {
             options: {

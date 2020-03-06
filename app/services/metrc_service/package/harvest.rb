@@ -5,11 +5,7 @@ module MetrcService
     class Harvest < MetrcService::Package::Base
       def call
         call_metric(:create_package, @integration.vendor_id, payload, testing?)
-
-        transaction.success = true
-        log("Success: batch ID #{@batch_id}, completion ID #{@completion_id}; #{payload}")
-
-        transaction
+        success!
       end
 
       private
