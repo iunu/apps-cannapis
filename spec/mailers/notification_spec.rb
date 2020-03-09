@@ -4,7 +4,7 @@ RSpec.describe NotificationMailer, type: :mailer do
   let(:account) { create(:account) }
   let(:artemis_user) { double(:artemis_user, id: 123, full_name: 'Joey Ramone', email: 'jr@somedomain.com') }
   let(:integration) { create(:integration, account: account) }
-  let(:task) { double(:task, integration: integration, action_name: 'test', attempt: 2) }
+  let(:task) { double(:task, integration: integration, action_name: 'test', attempt: 2, batch_id: 420) }
   let(:error) { StandardError.new('something went wrong') }
 
   before do
@@ -27,7 +27,7 @@ RSpec.describe NotificationMailer, type: :mailer do
     end
 
     it 'renders the body' do
-      expect(mail.body.encoded).to match(/An error occurred.*maximum number of attempts.*Metrc.*test.*123.*Joey Ramone <jr@somedomain.com>.*something went wrong/im)
+      expect(mail.body.encoded).to match(/An error occurred.*maximum number of attempts.*Metrc.*420.*test.*123.*Joey Ramone <jr@somedomain.com>.*something went wrong/im)
     end
   end
 
@@ -45,7 +45,7 @@ RSpec.describe NotificationMailer, type: :mailer do
     end
 
     it 'renders the body' do
-      expect(mail.body.encoded).to match(/An error occurred.*Attempt number 2 has been rescheduled.*Metrc.*test.*123.*Joey Ramone <jr@somedomain.com>.*something went wrong/im)
+      expect(mail.body.encoded).to match(/An error occurred.*Attempt number 2 has been rescheduled.*Metrc.*420.*test.*123.*Joey Ramone <jr@somedomain.com>.*something went wrong/im)
     end
   end
 end
