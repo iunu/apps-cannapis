@@ -31,13 +31,8 @@ module MetrcService
           RemediationDate: nil,
           RemediationSteps: nil,
           ActualDate: package_date,
-          Ingredients: resources.map do |resource|
-            {
-              HarvestId: batch.id,
-              HarvestName: harvest_name,
-              Weight: resource.generated_quantity,
-              UnitOfWeight: resource.resource_unit.name
-            }
+          Ingredients: start_consume_completions.map do |consume|
+            harvest_ingredient(consume)
           end
         }]
       end
@@ -65,8 +60,23 @@ module MetrcService
         # TODO: retrieve note from completion
       end
 
-      def harvest_name
-        batch.arbitrary_id
+      def harvest_ingredient(consume)
+        crop_batch = @artemis.facility(@facility_id).batch(consume.options['batch_resource_id'])
+        resource_unit = get_resource_unit(consume.options['resource_unit_id'])
+        metrc_harvest = lookup_metrc_harvest(crop_batch.arbitrary_id)
+
+        {
+          HarvestId: metrc_harvest['Id'],
+          HarvestName: crop_batch.arbitrary_id,
+          Weight: consume.options['consumed_quantity'],
+          UnitOfWeight: resource_unit.name
+        }
+      end
+
+      def lookup_metrc_harvest(name)
+        # TODO: consider date range for lookup - harvest create/finish dates?
+        harvests = call_metrc(:list_harvests)
+        harvests.find { |harvest| harvest['Name'] == name }
       end
 
       def package_date
@@ -78,6 +88,12 @@ module MetrcService
           resource[:resource_unit] = get_resource_unit(resource['resource_unit_id'])
           OpenStruct.new(resource)
         end
+      end
+
+      def start_consume_completions
+        get_related_completions(:start).map do |start_completion|
+          get_child_completions(start_completion.id, filter: { action_type: 'consume' })
+        end.flatten
       end
 
       def validate_resource_units!

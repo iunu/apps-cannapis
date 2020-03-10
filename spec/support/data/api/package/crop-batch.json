@@ -1,0 +1,77 @@
+{
+  "data": {
+    "attributes": {
+      "arbitrary_id": "Feb6-Bos-Hog-Can",
+      "completed_at": "2020-02-06T05:00:00.000Z",
+      "crop": "Cannabis",
+      "crop_variety": "Boss Hog",
+      "expected_harvest_at": "2020-02-06",
+      "facility_id": 1,
+      "harvest_quantity": null,
+      "harvested_at": "2020-02-06",
+      "id": 15,
+      "quantity": 0.0,
+      "seeded_at": "2020-02-06",
+      "start_type": "seed",
+      "zone_name": "Warehouse"
+    },
+    "id": "15",
+    "relationships": {
+      "barcodes": {
+        "meta": {
+          "included": false
+        }
+      },
+      "completions": {
+        "meta": {
+          "included": false
+        }
+      },
+      "custom_data": {
+        "meta": {
+          "included": false
+        }
+      },
+      "discards": {
+        "meta": {
+          "included": false
+        }
+      },
+      "harvest_unit": {
+        "meta": {
+          "included": false
+        }
+      },
+      "harvests": {
+        "meta": {
+          "included": false
+        }
+      },
+      "items": {
+        "meta": {
+          "included": false
+        }
+      },
+      "seeding_unit": {
+        "meta": {
+          "included": false
+        }
+      },
+      "sub_zone": {
+        "meta": {
+          "included": false
+        }
+      },
+      "zone": {
+        "data": {
+          "id": 20,
+          "type": "zones"
+        }
+      }
+    },
+    "type": "batches"
+  },
+  "jsonapi": {
+    "version": "1.0"
+  }
+}
