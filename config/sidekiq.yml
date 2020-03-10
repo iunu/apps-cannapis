@@ -1,4 +1,4 @@
 :schedule:
   ScheduledJob:
     description: 'This job queues vendor tasks received through the day and send then to each facility EOD'
-    cron: '0 * * * *'
+    cron: <%= ENV.fetch('JOB_SCHEDULE') { '0 * * * *' } %>
