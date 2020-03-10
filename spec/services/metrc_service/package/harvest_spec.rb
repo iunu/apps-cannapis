@@ -2,11 +2,13 @@ require 'rails_helper'
 require 'ostruct'
 
 RSpec.describe MetrcService::Package::Harvest do
+  METRC_API_KEY = ENV['METRC_SECRET_CA'] unless defined?(METRC_API_KEY)
+
   def load_response_json(path)
     File.read("spec/support/data/#{path}.json")
   end
 
-  let(:integration) { create(:integration) }
+  let(:integration) { create(:integration, state: 'ca') }
   let(:facility_id) { 2 }
   let(:batch_id) { 374 }
 
@@ -67,15 +69,18 @@ RSpec.describe MetrcService::Package::Harvest do
 
   let(:transaction) { stub_model Transaction, type: :harvest_package_batch, success: false }
 
+  before do
+    allow_any_instance_of(described_class)
+      .to receive(:get_transaction)
+      .and_return(transaction)
+  end
+
   context '#call' do
     subject { described_class.call(ctx, integration) }
 
     describe 'on an old successful transaction' do
       before do
         transaction.success = true
-        allow_any_instance_of(described_class)
-          .to receive(:get_transaction)
-          .and_return(transaction)
       end
 
       it { is_expected.to eq(transaction) }
@@ -84,27 +89,10 @@ RSpec.describe MetrcService::Package::Harvest do
     describe 'with corn crop' do
       include_examples 'with corn crop'
     end
-  end
 
-  context '#payload' do
-    let(:action) { described_class.new(ctx, integration) }
-
-    before do
-      stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}")
-        .to_return(body: load_response_json('api/package/facility'))
-
-      stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone")
-        .to_return(body: load_response_json('api/package/batch'))
-
-      stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/resource_units/26")
-        .to_return(body: load_response_json('api/package/resource_unit'))
-    end
-
-    context 'payload' do
-      subject { action.send(:payload).first }
-
-      it do
-        is_expected.to include(
+    describe 'on a complete harvest' do
+      let(:expected_payload) do
+        [
           Tag: 'asdfasdfasdfasdf123123123',
           Room: 'Warehouse',
           Item: 'Buds',
@@ -128,7 +116,35 @@ RSpec.describe MetrcService::Package::Harvest do
               UnitOfWeight: 'g of Bulk Flower - 5th Element'
             }
           ]
-        )
+        ]
+      end
+
+      let(:testing) { true }
+
+      before do
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}")
+          .to_return(body: load_response_json('api/package/facility'))
+
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone")
+          .to_return(body: load_response_json("api/package/batch#{testing ? '-testing' : ''}"))
+
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/resource_units/26")
+          .to_return(body: load_response_json('api/package/resource_unit'))
+
+        stub_request(:post, "https://sandbox-api-ca.metrc.com/packages/v1/create#{testing ? '/testing' : ''}?licenseNumber=LIC-0001")
+          .with(body: expected_payload.to_json, basic_auth: [METRC_API_KEY, integration.secret])
+          .to_return(status: 200, body: '', headers: {})
+      end
+
+      context 'standard package' do
+        it { is_expected.to eq(transaction) }
+        it { is_expected.to be_success }
+      end
+
+      context 'testing package' do
+        let(:testing) { true }
+        it { is_expected.to eq(transaction) }
+        it { is_expected.to be_success }
       end
     end
   end

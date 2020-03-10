@@ -4,7 +4,7 @@ module MetrcService
   module Package
     class Harvest < MetrcService::Package::Base
       def call
-        call_metric(:create_package, @integration.vendor_id, payload, testing?)
+        call_metrc(:create_package, payload, testing?)
         success!
       end
 
@@ -43,7 +43,7 @@ module MetrcService
       end
 
       def testing?
-        seeding_unit.name =~ /Testing Package/
+        seeding_unit.name == 'Testing Package'
       end
 
       def tag
