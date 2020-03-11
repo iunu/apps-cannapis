@@ -66,7 +66,7 @@ module Common
     end
 
     def log(msg, level = :info)
-      @logger.send(level, "[#{provider_label}_#{action_label}] #{msg}")
+      @logger.send(level, "[#{provider_label}:#{action_label}] #{msg}")
     end
   end
 end

@@ -111,7 +111,7 @@ RSpec.describe MetrcService::Harvest do
       end
     end
 
-    describe 'on a complete harvest', focus: true do
+    describe 'on a complete harvest' do
       let(:transaction) { create(:transaction, :unsuccessful, :harvest, account: account, integration: integration) }
       let(:ctx) do
         {
