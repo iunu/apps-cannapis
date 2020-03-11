@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe MetrcService::Discard do
+RSpec.describe MetrcService::Plant::Discard do
   METRC_API_KEY = ENV['METRC_SECRET_MD'] unless defined?(METRC_API_KEY)
 
   let(:account) { create(:account) }

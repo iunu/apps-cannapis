@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe MetrcService::Harvest do
+RSpec.describe MetrcService::Plant::Harvest do
   def load_response_json(path)
     File.read("spec/support/data/#{path}.json")
   end

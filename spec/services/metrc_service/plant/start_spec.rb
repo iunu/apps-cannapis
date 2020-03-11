@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'ostruct'
 
-RSpec.describe MetrcService::Start do
+RSpec.describe MetrcService::Plant::Start do
   let(:integration) { create(:integration, state: 'ca') }
   let(:ctx) do
     {

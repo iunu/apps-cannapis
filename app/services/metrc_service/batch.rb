@@ -1,6 +1,9 @@
 module MetrcService
   class Batch < MetrcService::Base
-    SEEDING_UNIT_MAP = { 'testing_package' => 'package' }.freeze
+    SEEDING_UNIT_MAP = {
+      'testing_package' => 'package',
+      'plants_barcoded' => 'plant'
+    }.freeze
 
     def initialize(ctx, integration, batch = nil, task = nil)
       @task = task
@@ -35,14 +38,10 @@ module MetrcService
       action_type = completion.action_type.camelize
       seeding_unit_name = module_name_for_seeding_unit.camelize
 
-      klass = "MetrcService::#{seeding_unit_name}::#{action_type}".constantize
+      "MetrcService::#{seeding_unit_name}::#{action_type}".constantize
     rescue NameError
-      klass = "MetrcService::#{action_type}".constantize
-    ensure
-      log("EXECUTING: #{klass.name}", :info)
+      raise InvalidOperation, "Processing not supported for #{seeding_unit.name} #{action_type} completions"
     end
-
-    protected
 
     def perform_action(completion, ctx)
       module_for_completion(completion).call(ctx, @integration, batch)

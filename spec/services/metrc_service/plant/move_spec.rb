@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe MetrcService::Move do
+RSpec.describe MetrcService::Plant::Move do
   let(:account) { create(:account) }
   let(:integration) { create(:integration, account: account) }
   let(:ctx) do
