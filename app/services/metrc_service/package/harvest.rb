@@ -46,8 +46,14 @@ module MetrcService
       end
 
       def item_type
-        # TODO: determine item type
-        'Buds'
+        resource_unit_name = resources.first.resource_unit.name
+        matches = resource_unit_name.match(/^[\w]+ of ([\w\s]+) - [\w\s]+$/)
+
+        return matches[1] unless matches.nil?
+
+        raise InvalidAttributes,
+              "Item type could not be extracted from the resource unit name: #{resource_unit_name}. " \
+              "Expected the format '[unit] of [type] - [strain]'"
       end
 
       def unit_of_weight
@@ -97,7 +103,7 @@ module MetrcService
       end
 
       def validate_resource_units!
-        raise InvalidAttributes, 'UnitOfWeight is not the same for all resources in this package' \
+        raise InvalidAttributes, 'The package contains resources of multiple types or units. Expected all resources in the package to be the same' \
           unless resources.map(&:resource_unit).uniq(&:name).count == 1
       end
     end

@@ -92,7 +92,7 @@ RSpec.describe MetrcService::Package::Harvest do
         [
           Tag: 'asdfasdfasdfasdf123123123',
           Room: 'Warehouse',
-          Item: 'Buds',
+          Item: 'Bulk Flower',
           UnitOfWeight: 'g of Bulk Flower - 5th Element',
           PatientLicenseNumber: nil,
           Note: nil,
