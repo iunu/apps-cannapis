@@ -91,7 +91,7 @@ RSpec.describe MetrcService::Package::Harvest do
       let(:expected_payload) do
         [
           Tag: 'asdfasdfasdfasdf123123123',
-          Room: 'Warehouse',
+          Location: 'Warehouse',
           Item: 'Bulk Flower',
           UnitOfWeight: 'g of Bulk Flower - 5th Element',
           PatientLicenseNumber: nil,

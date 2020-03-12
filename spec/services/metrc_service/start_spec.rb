@@ -112,7 +112,7 @@ RSpec.describe MetrcService::Start do
             Type: 'Clone',
             Count: 100,
             Strain: 'Banana Split',
-            Room: 'Germination',
+            Location: 'Germination',
             PatientLicenseNumber: nil,
             ActualDate: now
           }
@@ -168,7 +168,7 @@ RSpec.describe MetrcService::Start do
         expect(payload[:Type]).to eq 'Clone'
         expect(payload[:Count]).to eq 100
         expect(payload[:Strain]).to eq 'Banana Split'
-        expect(payload[:Room]).to eq 'Germination'
+        expect(payload[:Location]).to eq 'Germination'
         expect(payload[:PatientLicenseNumber]).to be_nil
         expect(payload[:ActualDate]).not_to be_nil
       end
@@ -235,7 +235,7 @@ RSpec.describe MetrcService::Start do
         expect(payload[:Type]).to eq 'Clone'
         expect(payload[:Count]).to eq 100
         expect(payload[:Strain]).to eq 'Banana Split'
-        expect(payload[:Room]).to eq 'Germination'
+        expect(payload[:Location]).to eq 'Germination'
         expect(payload[:PatientLicenseNumber]).to be_nil
         expect(payload[:ActualDate]).not_to be_nil
       end
