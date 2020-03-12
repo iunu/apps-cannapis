@@ -88,7 +88,7 @@ module MetrcService
         {
           Id: nil,
           Label: item.relationships.dig('barcode', 'data', 'id'),
-          Room: options[:zone_name],
+          Location: options[:zone_name],
           ActualDate: @attributes.dig('start_time')
         }
       end
@@ -100,7 +100,7 @@ module MetrcService
       batch = options[:batch]
       payload = {
         Name: batch.arbitrary_id,
-        Room: options[:zone_name],
+        Location: options[:zone_name],
         MoveDate: @attributes.dig('start_time')
       }
 
@@ -118,7 +118,7 @@ module MetrcService
         Count: batch.quantity.to_i,
         StartingTag: barcode,
         GrowthPhase: seeding_unit['name'],
-        NewRoom: options[:zone_name],
+        NewLocation: options[:zone_name],
         GrowthDate: @attributes.dig('start_time'),
         PatientLicenseNumber: nil
       }
@@ -136,7 +136,7 @@ module MetrcService
           Label: item.relationships.dig('barcode', 'data', 'id'),
           NewTag: seeding_unit['name'], # TODO: Fix me
           GrowthPhase: seeding_unit['name'], # TODO: Fix me
-          NewRoom: options[:zone_name],
+          NewLocation: options[:zone_name],
           GrowthDate: @attributes.dig('start_time')
         }
       end

@@ -17,7 +17,7 @@ module MetrcService
       def payload
         [{
           Tag: tag,
-          Room: batch.zone.name,
+          Location: batch.zone.name,
           Item: item_type,
           UnitOfWeight: unit_of_weight,
           PatientLicenseNumber: nil,

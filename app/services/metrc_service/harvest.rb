@@ -32,7 +32,7 @@ module MetrcService
 
       items.map do |item|
         {
-          DryingRoom: @attributes.dig(:options, :zone_name),
+          DryingLocation: @attributes.dig(:options, :zone_name),
           PatientLicenseNumber: nil,
           ActualDate: harvest_date,
           Plant: item.relationships.dig('barcode', 'data', 'id'),
@@ -49,7 +49,7 @@ module MetrcService
 
       items.map do |item|
         {
-          DryingRoom: @attributes.dig(:options, :zone_name),
+          DryingLocation: @attributes.dig(:options, :zone_name),
           PatientLicenseNumber: nil,
           ActualDate: harvest_date,
           Plant: item.relationships.dig('barcode', 'data', 'id'),
