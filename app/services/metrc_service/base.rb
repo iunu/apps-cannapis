@@ -118,7 +118,7 @@ module MetrcService
     end
 
     def validate_seeding_unit!
-      return unless ['preprinted', nil].include?(seeding_unit.item_tracking_method)
+      return if ['preprinted', nil].include?(seeding_unit.item_tracking_method)
 
       raise InvalidBatch, "Failed: Seeding unit is not valid for Metrc #{seeding_unit.item_tracking_method}. " \
         "Batch ID #{@batch_id}, completion ID #{@completion_id}"
