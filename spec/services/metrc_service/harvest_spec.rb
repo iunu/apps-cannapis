@@ -152,14 +152,14 @@ RSpec.describe MetrcService::Harvest do
           .to_return(body: { data: [{ id: '12346', type: 'completions', attributes: { id: 12346, action_type: 'process', options: { resource_unit_id: 99, processed_quantity: 4000 } } }, { id: '12347', type: 'completions', attributes: { id: 12346, action_type: 'process', options: { resource_unit_id: 100, processed_quantity: 50 } } }] }.to_json)
 
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/resource_units')
-          .to_return(body: { data: [{ id: '99', type: 'resource_units', attributes: { id: 99, conversion_si: 1.0, kind: 'weight', name: 'g Wet Material - Boss Hog' } }, { id: '100', type: 'resource_units', attributes: { id: 100, conversion_si: 1.0, kind: 'weight', name: 'g Waste - Boss Hog' } }] }.to_json)
+          .to_return(body: { data: [{ id: '99', type: 'resource_units', attributes: { id: 99, conversion_si: 1.0, kind: 'weight', name: 'g Wet Material - Banana Split' } }, { id: '100', type: 'resource_units', attributes: { id: 100, conversion_si: 1.0, kind: 'weight', name: 'g Waste - Banana Split' } }] }.to_json)
 
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/96182/items?filter[seeding_unit_id]=3479&include=barcodes,seeding_unit')
           .to_return(body: { data: [{ id: '969664', type: 'items', attributes: { id: 969664, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams' }, relationships: { barcode: { data: { id: '1A4FF010000002200000105', type: 'barcodes' } } } }, { id: '969663', type: 'items', attributes: { id: 969663, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams' }, relationships: { barcode: { data: { id: '1A4FF010000002200000104', type: 'barcodes' } } } }, { id: '969662', type: 'items', attributes: { id: 969662, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams' }, relationships: { barcode: { data: { id: '1A4FF010000002200000103', type: 'barcodes' } } } }] }.to_json)
 
         stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/harvestplants?licenseNumber=LIC-0001')
           .with(
-            body: [{ DryingLocation: 'Clone', PatientLicenseNumber: nil, ActualDate: '2019-11-13T18:44:45', Plant: '1A4FF010000002200000105', Weight: 1333.33, UnitOfWeight: 'g Wet Material - Boss Hog', HarvestName: 'Oct1-Ban-Spl-Can' }, { DryingLocation: 'Clone', PatientLicenseNumber: nil, ActualDate: '2019-11-13T18:44:45', Plant: '1A4FF010000002200000104', Weight: 1333.33, UnitOfWeight: 'g Wet Material - Boss Hog', HarvestName: 'Oct1-Ban-Spl-Can' }, { DryingLocation: 'Clone', PatientLicenseNumber: nil, ActualDate: '2019-11-13T18:44:45', Plant: '1A4FF010000002200000103', Weight: 1333.33, UnitOfWeight: 'g Wet Material - Boss Hog', HarvestName: 'Oct1-Ban-Spl-Can' }].to_json,
+            body: [{ DryingLocation: 'Clone', PatientLicenseNumber: nil, ActualDate: '2019-11-13T18:44:45', Plant: '1A4FF010000002200000105', Weight: 1333.33, UnitOfWeight: 'g Wet Material - Banana Split', HarvestName: 'Oct1-Ban-Spl-Can' }, { DryingLocation: 'Clone', PatientLicenseNumber: nil, ActualDate: '2019-11-13T18:44:45', Plant: '1A4FF010000002200000104', Weight: 1333.33, UnitOfWeight: 'g Wet Material - Banana Split', HarvestName: 'Oct1-Ban-Spl-Can' }, { DryingLocation: 'Clone', PatientLicenseNumber: nil, ActualDate: '2019-11-13T18:44:45', Plant: '1A4FF010000002200000103', Weight: 1333.33, UnitOfWeight: 'g Wet Material - Banana Split', HarvestName: 'Oct1-Ban-Spl-Can' }].to_json,
             basic_auth: [METRC_API_KEY, integration.secret]
           )
           .to_return(status: 200, body: '', headers: {})
@@ -173,7 +173,7 @@ RSpec.describe MetrcService::Harvest do
 
         stub_request(:post, 'https://sandbox-api-md.metrc.com/harvests/v1/removewaste?licenseNumber=LIC-0001')
           .with(
-            body: [{ Id: 'Oct1-Ban-Spl-Can', WasteType: nil, UnitOfWeight: 'g Waste - Boss Hog', WasteWeight: 50, ActualDate: '2019-11-13T18:44:45' }].to_json,
+            body: [{ Id: 'Oct1-Ban-Spl-Can', WasteType: nil, UnitOfWeight: 'g Waste - Banana Split', WasteWeight: 50, ActualDate: '2019-11-13T18:44:45' }].to_json,
             basic_auth: [METRC_API_KEY, integration.secret]
           )
           .to_return(status: 200, body: '', headers: {})

@@ -2,7 +2,7 @@ require 'rails_helper'
 require 'ostruct'
 
 RSpec.describe MetrcService::Start do
-  let(:integration) { create(:integration) }
+  let(:integration) { create(:integration, state: 'ca') }
   let(:ctx) do
     {
       id: 3000,
@@ -68,7 +68,7 @@ RSpec.describe MetrcService::Start do
 
     describe 'metrc#create_plant_batches' do
       subject { described_class.call(ctx, integration) }
-      now = Time.zone.now
+      now = Time.zone.now.strftime('%Y-%m-%d')
       let(:transaction) { stub_model Transaction, type: :start_batch, success: false }
 
       before :all do
@@ -88,6 +88,14 @@ RSpec.describe MetrcService::Start do
                 seeded_at: now,
                 zone_name: 'Germination',
                 crop: 'Cannabis'
+              },
+              relationships: {
+                'seeding_unit': {
+                  'data': {
+                    'id': '1235',
+                    'type': 'seeding_units'
+                  }
+                }
               }
             },
             included: [
@@ -100,9 +108,22 @@ RSpec.describe MetrcService::Start do
                     name: 'Clone'
                   }
                 }
-              }
+              },
+              {
+                id: '1235',
+                type: 'seeding_units',
+                attributes: {
+                  id: 1235,
+                  item_tracking_method: 'preprinted',
+                  name: 'Clone'
+                }
+              },
             ]
           }.to_json)
+
+        stub_request(:post, 'https://sandbox-api-ca.metrc.com/plantbatches/v1/createplantings?licenseNumber=LIC-0001')
+          .with(body: "[{\"Name\":\"1A4FF01000000220000010\",\"Type\":\"Clone\",\"Count\":100,\"Strain\":\"Banana Split\",\"Location\":\"Germination\",\"PatientLicenseNumber\":null,\"ActualDate\":\"#{now}\"}]")
+          .to_return(status: 200, body: "", headers: {})
       end
 
       let(:expected_payload) do
@@ -127,15 +148,9 @@ RSpec.describe MetrcService::Start do
         expect_any_instance_of(described_class)
           .to receive(:build_start_payload)
           .and_return(expected_payload)
-
-        expect_any_instance_of(Metrc::Client)
-          .to receive(:create_plant_batches)
-          .with(integration.vendor_id, expected_payload)
-          .and_return(nil)
       end
 
-      # FIXME
-      # it { is_expected.to be_success }
+      it { is_expected.to be_success }
     end
   end
 

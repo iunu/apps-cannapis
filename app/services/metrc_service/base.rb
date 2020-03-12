@@ -1,4 +1,5 @@
 require_relative '../common/base_service_action'
+require 'pp'
 
 module MetrcService
   class Base < Common::BaseServiceAction
@@ -82,9 +83,11 @@ module MetrcService
     end
 
     def call_metrc(method, *args)
-      log("[#{method.to_s.upcase}] Metrc API request. URI #{@client.uri}, args #{args}", :debug)
+      log("[#{method.to_s.upcase}] Metrc API request. URI #{@client.uri}", :debug)
+      pp args
+
       response = @client.send(method, @integration.vendor_id, *args)
-      JSON.parse(response.body) if response.body.present?
+      JSON.parse(response.body) if response&.body&.present?
     rescue *RETRYABLE_ERRORS => e
       log("METRC: Retryable error: #{e.inspect}", :warn)
       requeue!(exception: e)
@@ -118,7 +121,7 @@ module MetrcService
     end
 
     def validate_seeding_unit!
-      return if ['preprinted', nil].include?(seeding_unit.item_tracking_method)
+      return if ['preprinted', 'none', nil].include?(seeding_unit.item_tracking_method)
 
       raise InvalidBatch, "Failed: Seeding unit is not valid for Metrc #{seeding_unit.item_tracking_method}. " \
         "Batch ID #{@batch_id}, completion ID #{@completion_id}"

@@ -108,7 +108,7 @@ RSpec.describe MetrcService::Package::Harvest do
           Ingredients: [
             {
               HarvestId: 2,
-              HarvestName: 'Feb6-Bos-Hog-Can',
+              HarvestName: 'Feb6-5th-Ele-Can',
               Weight: 50,
               UnitOfWeight: 'g of Bulk Flower - 5th Element'
             }
@@ -138,7 +138,7 @@ RSpec.describe MetrcService::Package::Harvest do
           .to_return(body: load_response_json('api/package/resource_unit'))
 
         stub_request(:get, 'https://sandbox-api-ca.metrc.com/harvests/v1/active?licenseNumber=LIC-0001')
-          .to_return(status: 200, body: '[{"Id":1,"Name":"Some-Other-Harvest","HarvestType":"Product","SourceStrainCount":0},{"Id":2,"Name":"Feb6-Bos-Hog-Can","HarvestType":"WholePlant","SourceStrainCount":0}]')
+          .to_return(status: 200, body: '[{"Id":1,"Name":"Some-Other-Harvest","HarvestType":"Product","SourceStrainCount":0},{"Id":2,"Name":"Feb6-5th-Ele-Can","HarvestType":"WholePlant","SourceStrainCount":0}]')
 
         stub_request(:post, "https://sandbox-api-ca.metrc.com/packages/v1/create#{testing ? '/testing' : ''}?licenseNumber=LIC-0001")
           .with(body: expected_payload.to_json, basic_auth: [METRC_API_KEY, integration.secret])

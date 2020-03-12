@@ -22,9 +22,9 @@ module Common
       before
       @result = call(*args)
       after
-    rescue TransactionAlreadyExecuted
+    rescue TransactionAlreadyExecuted => e
       log("Success: transaction previously performed. #{transaction.inspect}", :error)
-      fail!(transaction)
+      fail!(transaction, exception: e)
     end
 
     def action_label
