@@ -1,6 +1,6 @@
 require 'rails_helper'
 
-RSpec.describe MetrcService::SalesOrder::Discard do
+RSpec.xdescribe MetrcService::SalesOrder::Discard do
   METRC_API_KEY = ENV['METRC_SECRET_CA'] unless defined?(METRC_API_KEY)
 
   def load_response_json(path)
