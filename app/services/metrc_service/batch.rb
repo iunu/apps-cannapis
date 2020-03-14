@@ -31,19 +31,21 @@ module MetrcService
       nil
     end
 
-    protected
-
-    def perform_action(completion, ctx)
-      module_for_completion(completion).call(ctx, @integration, batch)
-    end
-
     def module_for_completion(completion)
       action_type = completion.action_type.camelize
       seeding_unit_name = module_name_for_seeding_unit.camelize
 
-      "MetrcService::#{seeding_unit_name}::#{action_type}".constantize
+      klass = "MetrcService::#{seeding_unit_name}::#{action_type}".constantize
     rescue NameError
-      "MetrcService::#{action_type}".constantize
+      klass = "MetrcService::#{action_type}".constantize
+    ensure
+      log("EXECUTING: #{klass.name}", :info)
+    end
+
+    protected
+
+    def perform_action(completion, ctx)
+      module_for_completion(completion).call(ctx, @integration, batch)
     end
 
     def module_name_for_seeding_unit

@@ -27,10 +27,6 @@ module Common
       fail!(transaction, exception: e)
     end
 
-    def action_label
-      self.class.name.underscore.split('/').last.upcase
-    end
-
     protected
 
     def before
@@ -61,12 +57,8 @@ module Common
       raise ScheduledJob::RetryableError.new(exception&.message, original: exception)
     end
 
-    def provider_label
-      self.class.name.underscore.split('_').first.upcase
-    end
-
     def log(msg, level = :info)
-      @logger.send(level, "[#{provider_label}:#{action_label}] #{msg}")
+      @logger.send(level, "[#{self.class.name}] #{msg}")
     end
   end
 end
