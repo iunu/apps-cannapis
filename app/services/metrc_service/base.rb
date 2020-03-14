@@ -7,6 +7,7 @@ module MetrcService
     class BatchCropInvalid < StandardError; end
     class InvalidOperation < StandardError; end
     class InvalidAttributes < StandardError; end
+    class DataMismatch < StandardError; end
 
     RETRYABLE_ERRORS = [
       Net::HTTPRetriableError,
@@ -84,7 +85,7 @@ module MetrcService
 
     def call_metrc(method, *args)
       log("[#{method.to_s.upcase}] Metrc API request. URI #{@client.uri}", :debug)
-      pp args
+      log(args.to_yaml, :debug)
 
       response = @client.send(method, @integration.vendor_id, *args)
       JSON.parse(response.body) if response&.body&.present?

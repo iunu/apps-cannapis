@@ -7,16 +7,8 @@ RSpec.describe MetrcService::Move do
     {
       id: 3000,
       relationships: {
-        batch: {
-          data: {
-            id: 2002
-          }
-        },
-        facility: {
-          data: {
-            id: 1568
-          }
-        }
+        batch: { data: { id: 2002 } },
+        facility: { data: { id: 1568 } }
       },
       attributes: {
         options: {

@@ -111,7 +111,7 @@ module MetrcService
       batch        = options[:batch]
       seeding_unit = batch.seeding_unit.attributes
       items        = get_items(options[:seeding_unit_id])
-      first_tag_id = items.keys.last
+      first_tag_id = items.last.id
       barcode      = items[first_tag_id].relationships.dig('barcode', 'data', 'id')
       payload      = {
         Name: batch.arbitrary_id,

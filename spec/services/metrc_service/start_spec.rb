@@ -117,13 +117,13 @@ RSpec.describe MetrcService::Start do
                   item_tracking_method: 'preprinted',
                   name: 'Clone'
                 }
-              },
+              }
             ]
           }.to_json)
 
         stub_request(:post, 'https://sandbox-api-ca.metrc.com/plantbatches/v1/createplantings?licenseNumber=LIC-0001')
           .with(body: "[{\"Name\":\"1A4FF01000000220000010\",\"Type\":\"Clone\",\"Count\":100,\"Strain\":\"Banana Split\",\"Location\":\"Germination\",\"PatientLicenseNumber\":null,\"ActualDate\":\"#{now}\"}]")
-          .to_return(status: 200, body: "", headers: {})
+          .to_return(status: 200, body: '', headers: {})
       end
 
       let(:expected_payload) do
