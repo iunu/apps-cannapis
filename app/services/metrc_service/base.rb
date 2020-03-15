@@ -1,14 +1,7 @@
 require_relative '../common/base_service_action'
-require 'pp'
 
 module MetrcService
   class Base < Common::BaseServiceAction
-    class InvalidBatch < StandardError; end
-    class BatchCropInvalid < StandardError; end
-    class InvalidOperation < StandardError; end
-    class InvalidAttributes < StandardError; end
-    class DataMismatch < StandardError; end
-
     RETRYABLE_ERRORS = [
       Net::HTTPRetriableError,
       Metrc::RequestError
@@ -17,7 +10,10 @@ module MetrcService
     attr_reader :artemis
 
     delegate :seeding_unit, to: :batch
-    delegate :get_batch, :get_items, :get_zone, :get_resource_unit, :get_resource_units, :get_child_completions, to: :artemis
+    delegate :get_batch, :get_items, :get_zone, :get_resource_unit,
+             :get_resource_units, :get_child_completions,
+             :get_related_completions,
+             to: :artemis
 
     def initialize(ctx, integration, batch = nil)
       @ctx = ctx

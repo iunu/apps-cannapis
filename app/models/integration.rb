@@ -17,4 +17,8 @@ class Integration < ApplicationRecord
   def vendor_name
     vendor.capitalize
   end
+
+  def vendor_module
+    "#{vendor.camelize}Service".constantize
+  end
 end
