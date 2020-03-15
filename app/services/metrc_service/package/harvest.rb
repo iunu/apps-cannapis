@@ -76,7 +76,7 @@ module MetrcService
       end
 
       def harvest_ingredient(consume)
-        crop_batch = @artemis.facility(@facility_id).batch(consume.options['batch_resource_id'])
+        crop_batch = @artemis.get_facility.batch(consume.options['batch_resource_id'])
         resource_unit = get_resource_unit(consume.options['resource_unit_id'])
         metrc_harvest = lookup_metrc_harvest(crop_batch.arbitrary_id)
 
@@ -109,7 +109,10 @@ module MetrcService
 
       def start_consume_completions
         get_related_completions(:start).map do |start_completion|
-          get_child_completions(start_completion.id, filter: { action_type: 'consume' })
+          completions = get_child_completions(start_completion.parent_id, filter: { action_type: 'consume' })
+
+          # workaround: API not filtering by parent_id so we do that here
+          completions.select { |completion| completion.parent_id == start_completion.parent_id }
         end.flatten
       end
 

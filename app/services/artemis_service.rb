@@ -7,6 +7,10 @@ class ArtemisService
     @facility_id = facility_id
   end
 
+  def get_facility(id = nil)
+    @artemis.facility(id || @facility_id)
+  end
+
   def get_batch(include = 'zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
     @artemis.facility(@facility_id)
             .batch(@batch_id, include: include)
@@ -42,7 +46,7 @@ class ArtemisService
   end
 
   def get_related_completions(action_type = nil)
-    completions = @batch.completions
+    completions = get_batch.completions
     completions = completions.select { |c| c.action_type == action_type.to_s } if action_type.present?
 
     completions
