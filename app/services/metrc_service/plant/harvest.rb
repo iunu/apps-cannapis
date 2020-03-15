@@ -112,7 +112,7 @@ module MetrcService
 
       def resource_unit(unit_type)
         resource_units = get_resource_units.select do |resource_unit|
-          resource_unit.name =~ /#{unit_type}/
+          resource_unit.name =~ /#{unit_type} - #{batch.crop_variety}/
         end
 
         raise InvalidAttributes, "Ambiguous resource unit for #{unit_type} calculation. Expected 1 resource_unit, found #{resource_units.count}" if resource_units.count > 1

@@ -126,10 +126,10 @@ RSpec.describe MetrcService::Package::Harvest do
           .to_return(body: load_response_json("api/package/batch#{testing ? '-testing' : ''}"))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
-          .to_return(body: { data: [{ id: '90210', type: 'completions', attributes: { id: 90210, action_type: 'start' } }] }.to_json)
+          .to_return(body: { data: [{ id: '90210', type: 'completions', attributes: { id: 90210, action_type: 'start', parent_id: 90209 } }] }.to_json)
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter%5Bparent_id%5D=90210&filter%5Baction_type%5D=consume")
-          .to_return(body: { data: [{ id: '90211', type: 'completions', attributes: { id: 90211, action_type: 'consume', options: { resource_unit_id: 26, batch_resource_id: 15, consumed_quantity: 50, requested_quantity: 10 } } }] }.to_json)
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter%5Bparent_id%5D=90209&filter%5Baction_type%5D=consume")
+          .to_return(body: { data: [{ id: '90211', type: 'completions', attributes: { id: 90211, action_type: 'consume', parent_id: 90209, options: { resource_unit_id: 26, batch_resource_id: 15, consumed_quantity: 50, requested_quantity: 10 } } }] }.to_json)
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/15")
           .to_return(body: load_response_json('api/package/crop-batch'))
