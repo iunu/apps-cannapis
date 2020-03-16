@@ -30,8 +30,4 @@ class IntegrationService < ApplicationService
       end
     end
   end
-
-  def self.vendor_module(integration)
-    "#{integration.vendor.camelize}Service::Batch".constantize
-  end
 end
