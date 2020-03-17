@@ -95,7 +95,7 @@ module MetrcService
         # resource_unit = get_resource_unit(item.resource_unit_id)
         # resource_unit.name
 
-        resource_unit(unit_type).name
+        resource_unit(unit_type).unit
       end
 
       def total_weight(unit_type)
@@ -108,17 +108,6 @@ module MetrcService
         move_process_completions.select do |nested_completion|
           nested_completion.options['resource_unit_id'] == resource_unit(unit_type).id
         end
-      end
-
-      def resource_unit(unit_type)
-        resource_units = get_resource_units.select do |resource_unit|
-          resource_unit.name =~ /#{unit_type} - #{batch.crop_variety}/
-        end
-
-        raise InvalidAttributes, "Ambiguous resource unit for #{unit_type} calculation. Expected 1 resource_unit, found #{resource_units.count}" if resource_units.count > 1
-        raise InvalidAttributes, "#{unit_type} resource unit not found" if resource_units.count.zero?
-
-        resource_units.first
       end
 
       def calculate_average_weight(items)

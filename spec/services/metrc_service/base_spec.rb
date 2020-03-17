@@ -257,8 +257,11 @@ RSpec.describe MetrcService::Base do
       stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
         .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
+      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
+        .to_return(body: { data: { id: '2002', type: 'batches', attributes: { id: 2002, crop_variety: '5th Element' } } }.to_json)
+
       stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/resource_units/1')
-        .to_return(body: { data: { id: '1', type: 'resource_units', attributes: { id: 1, name: 'grams', kind: 'weight', conversion_si: 1.0 } } }.to_json)
+        .to_return(body: { data: { id: '1', type: 'resource_units', attributes: { id: 1, name: 'g of Something - 5th Element', kind: 'weight', conversion_si: 1.0 } } }.to_json)
     end
 
     let(:ctx) do
@@ -277,18 +280,17 @@ RSpec.describe MetrcService::Base do
     let(:resource_unit) { instance.send(:get_resource_unit, 1) }
     subject { resource_unit }
 
-    it { is_expected.to be_a(ArtemisApi::ResourceUnit) }
-
-    context '#attributes' do
-      subject { resource_unit.attributes.with_indifferent_access }
-      it do
-        is_expected.to include(
-          id: 1,
-          name: 'grams',
-          kind: 'weight',
-          conversion_si: 1.0
-        )
-      end
+    it { is_expected.to be_a(OpenStruct) }
+    it do
+      is_expected.to have_attributes(
+        id: 1,
+        name: 'g of Something - 5th Element',
+        unit: 'Grams',
+        label: 'g of Something',
+        strain: '5th Element',
+        kind: 'weight',
+        conversion_si: 1.0
+      )
     end
   end
 

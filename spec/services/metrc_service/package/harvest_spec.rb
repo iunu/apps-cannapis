@@ -93,7 +93,7 @@ RSpec.describe MetrcService::Package::Harvest do
           Tag: 'asdfasdfasdfasdf123123123',
           Location: 'Warehouse',
           Item: 'Bulk Flower',
-          UnitOfWeight: 'g of Bulk Flower - 5th Element',
+          UnitOfWeight: 'Grams',
           PatientLicenseNumber: nil,
           Note: nil,
           IsProductionBatch: false,
@@ -110,7 +110,7 @@ RSpec.describe MetrcService::Package::Harvest do
               HarvestId: 2,
               HarvestName: 'Feb6-5th-Ele-Can',
               Weight: 50,
-              UnitOfWeight: 'g of Bulk Flower - 5th Element'
+              UnitOfWeight: 'Grams'
             }
           ]
         ]

@@ -68,7 +68,7 @@ module MetrcService
       def unit_of_weight
         validate_resource_units!
 
-        resources.first.resource_unit.name
+        resources.first.resource_unit.unit
       end
 
       def note
@@ -86,7 +86,7 @@ module MetrcService
           HarvestId: metrc_harvest['Id'],
           HarvestName: crop_batch.arbitrary_id,
           Weight: consume.options['consumed_quantity'],
-          UnitOfWeight: resource_unit.name
+          UnitOfWeight: resource_unit.unit
         }
       end
 

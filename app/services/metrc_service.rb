@@ -12,6 +12,14 @@ module MetrcService
     'plant_barcoded' => 'plant'
   }.freeze
 
+  WEIGHT_UNIT_MAP = {
+    'mg' => 'Milligrams',
+    'g' => 'Grams',
+    'kg' => 'Kilograms',
+    'oz' => 'Ounces',
+    'lb' => 'Pounds'
+  }.freeze
+
   module_function
 
   def perform_action(ctx, integration)
