@@ -4,7 +4,7 @@ RSpec.describe NotificationMailer, type: :mailer do
   let(:account) { create(:account) }
   let(:artemis_user) { double(:artemis_user, id: 123, full_name: 'Joey Ramone', email: 'jr@somedomain.com') }
   let(:integration) { create(:integration, account: account) }
-  let(:task) { double(:task, integration: integration, action_name: 'test', attempt: 2, batch_id: 420) }
+  let(:task) { double(:task, integration: integration, attempts: 2, batch_id: 420) }
   let(:error) { StandardError.new('something went wrong') }
 
   before do
@@ -21,13 +21,13 @@ RSpec.describe NotificationMailer, type: :mailer do
     end
 
     it 'renders the headers' do
-      expect(mail.subject).to match(/\[Artemis -> Metrc\] Task failed: test for user 123/)
+      expect(mail.subject).to match(/\[Artemis -> Metrc\] Failed for user 123/)
       expect(mail.to).to eq([ENV['NOTIFICATION_RECIPIENT']])
       expect(mail.from).to eq(['support@artemisag.com'])
     end
 
     it 'renders the body' do
-      expect(mail.body.encoded).to match(/An error occurred.*maximum number of attempts.*Metrc.*420.*test.*123.*Joey Ramone <jr@somedomain.com>.*something went wrong/im)
+      expect(mail.body.encoded).to match(/An error occurred.*maximum number of attempts.*Metrc.*420.*123.*Joey Ramone <jr@somedomain.com>.*something went wrong/im)
     end
   end
 
@@ -39,13 +39,13 @@ RSpec.describe NotificationMailer, type: :mailer do
     end
 
     it 'renders the headers' do
-      expect(mail.subject).to match(/\[Artemis -> Metrc\] Task rescheduled \(attempt 2\): test for user 123/)
+      expect(mail.subject).to match(/\[Artemis -> Metrc\] Task rescheduled \(attempts 2\) for user 123/)
       expect(mail.to).to eq([ENV['NOTIFICATION_RECIPIENT']])
       expect(mail.from).to eq(['support@artemisag.com'])
     end
 
     it 'renders the body' do
-      expect(mail.body.encoded).to match(/An error occurred.*Attempt number 2 has been rescheduled.*Metrc.*420.*test.*123.*Joey Ramone <jr@somedomain.com>.*something went wrong/im)
+      expect(mail.body.encoded).to match(/An error occurred.*Attempt number 2 has been rescheduled.*Metrc.*420.*123.*Joey Ramone <jr@somedomain.com>.*something went wrong/im)
     end
   end
 end

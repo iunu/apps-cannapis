@@ -4,7 +4,6 @@ class NotificationMailer < ApplicationMailer
     @integration = @task.integration
     @account = @integration.account.client.current_user
     @error = params[:error]
-    @action = @task.action_name
   end
 
   def report_failure_email
@@ -12,18 +11,18 @@ class NotificationMailer < ApplicationMailer
 
     mail(
       to: recipient,
-      subject: "[Artemis -> #{@integration.vendor_name}] Task failed: #{@action} for user #{@account.id}"
+      subject: "[Artemis -> #{@integration.vendor_name}] Failed for user #{@account.id}"
     )
   end
 
   def report_reschedule_email
     setup
 
-    @attempt = @task.attempt
+    @attempts = @task.attempts
 
     mail(
       to: recipient,
-      subject: "[Artemis -> #{@integration.vendor_name}] Task rescheduled (attempt #{@attempt}): #{@action} for user #{@account.id}"
+      subject: "[Artemis -> #{@integration.vendor_name}] Task rescheduled (attempts #{@attempts}) for user #{@account.id}"
     )
   end
 
