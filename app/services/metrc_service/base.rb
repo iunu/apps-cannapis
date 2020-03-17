@@ -2,17 +2,18 @@ require_relative '../common/base_service_action'
 
 module MetrcService
   class Base < Common::BaseServiceAction
-    class InvalidBatch < StandardError; end
-    class BatchCropInvalid < StandardError; end
-    class InvalidOperation < StandardError; end
-    class InvalidAttributes < StandardError; end
-
     RETRYABLE_ERRORS = [
       Net::HTTPRetriableError,
       Metrc::RequestError
     ].freeze
 
+    attr_reader :artemis
+
     delegate :seeding_unit, to: :batch
+    delegate :get_batch, :get_items, :get_zone, :get_resource_unit,
+             :get_resource_units, :get_child_completions,
+             :get_related_completions,
+             to: :artemis
 
     def initialize(ctx, integration, batch = nil)
       @ctx = ctx
@@ -22,7 +23,7 @@ module MetrcService
       @attributes  = ctx[:attributes]
       @facility_id = @relationships&.dig(:facility, :data, :id)
       @batch_id = @relationships&.dig(:batch, :data, :id)
-      @artemis  = @integration.account.client
+      @artemis  = ArtemisService.new(@integration.account, @batch_id, @facility_id)
       @client = build_client
       @batch  = batch if batch
 
@@ -82,9 +83,11 @@ module MetrcService
     end
 
     def call_metrc(method, *args)
-      log("[#{method.to_s.upcase}] Metrc API request. URI #{@client.uri}, args #{args}", :debug)
+      log("[#{method.to_s.upcase}] Metrc API request. URI #{@client.uri}", :debug)
+      log(args.to_yaml, :debug)
+
       response = @client.send(method, @integration.vendor_id, *args)
-      JSON.parse(response.body) if response.body.present?
+      JSON.parse(response.body) if response&.body&.present?
     rescue *RETRYABLE_ERRORS => e
       log("METRC: Retryable error: #{e.inspect}", :warn)
       requeue!(exception: e)
@@ -118,51 +121,10 @@ module MetrcService
     end
 
     def validate_seeding_unit!
-      return unless ['preprinted', nil].include?(seeding_unit.item_tracking_method)
+      return if ['preprinted', 'none', nil].include?(seeding_unit.item_tracking_method)
 
       raise InvalidBatch, "Failed: Seeding unit is not valid for Metrc #{seeding_unit.item_tracking_method}. " \
         "Batch ID #{@batch_id}, completion ID #{@completion_id}"
-    end
-
-    def get_batch(include = 'zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
-      @artemis.facility(@facility_id)
-              .batch(@batch_id, include: include)
-    end
-
-    def get_items(seeding_unit_id, include: 'barcodes,seeding_unit')
-      @artemis.facility(@facility_id)
-              .batch(@batch_id)
-              .items(seeding_unit_id: seeding_unit_id, include: include)
-    end
-
-    def get_zone(zone_id, include: nil)
-      @artemis.facility(@facility_id)
-              .zone(zone_id, include: include)
-    end
-
-    def get_resource_unit(resource_unit_id, include: nil)
-      @artemis.facility(@facility_id)
-              .resource_unit(resource_unit_id, include: include)
-    end
-
-    def get_resource_units(include: nil)
-      @artemis.facility(@facility_id)
-              .resource_units(include: include)
-    end
-
-    def get_child_completions(parent_id, filter: {})
-      ArtemisApi::Completion.find_all(
-        facility_id: @facility_id,
-        client: @artemis,
-        filters: { parent_id: parent_id }.merge(filter)
-      )
-    end
-
-    def get_related_completions(action_type = nil)
-      completions = @batch.completions
-      completions = completions.select { |c| c.action_type == action_type.to_s } if action_type.present?
-
-      completions
     end
 
     def config

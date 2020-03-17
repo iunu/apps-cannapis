@@ -1,7 +1,5 @@
 module MetrcService
   class Batch < MetrcService::Base
-    SEEDING_UNIT_MAP = { 'testing_package' => 'package' }.freeze
-
     def initialize(ctx, integration, batch = nil, task = nil)
       @task = task
       super(ctx, integration, batch)
@@ -22,7 +20,7 @@ module MetrcService
           relationships: @relationships
         }.with_indifferent_access
 
-        perform_action(completion, ctx)
+        MetrcService.perform_action(ctx, @integration)
       end
 
       @task.delete
@@ -31,28 +29,8 @@ module MetrcService
       nil
     end
 
-    protected
-
-    def perform_action(completion, ctx)
-      module_for_completion(completion).call(ctx, @integration, batch)
-    end
-
-    def module_for_completion(completion)
-      action_type = completion.action_type.camelize
-      seeding_unit_name = module_name_for_seeding_unit.camelize
-
-      "MetrcService::#{seeding_unit_name}::#{action_type}".constantize
-    rescue NameError
-      "MetrcService::#{action_type}".constantize
-    end
-
-    def module_name_for_seeding_unit
-      name = seeding_unit.name.parameterize(separator: '_')
-      SEEDING_UNIT_MAP.fetch(name, name)
-    end
-
     def batch
-      @batch ||= get_batch 'zone,barcodes,harvests,completions,custom_data,seeding_unit,harvest_unit,sub_zone,discard'
+      @batch ||= get_batch 'zone,barcodes,completions,custom_data,seeding_unit,harvest_unit,sub_zone'
     end
 
     def validate_batch!

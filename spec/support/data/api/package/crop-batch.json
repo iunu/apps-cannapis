@@ -1,10 +1,10 @@
 {
   "data": {
     "attributes": {
-      "arbitrary_id": "Feb6-Bos-Hog-Can",
+      "arbitrary_id": "Feb6-5th-Ele-Can",
       "completed_at": "2020-02-06T05:00:00.000Z",
       "crop": "Cannabis",
-      "crop_variety": "Boss Hog",
+      "crop_variety": "5th Element",
       "expected_harvest_at": "2020-02-06",
       "facility_id": 1,
       "harvest_quantity": null,

@@ -17,7 +17,7 @@ module MetrcService
       def payload
         [{
           Tag: tag,
-          Room: batch.zone.name,
+          Location: zone_name,
           Item: item_type,
           UnitOfWeight: unit_of_weight,
           PatientLicenseNumber: nil,
@@ -47,13 +47,22 @@ module MetrcService
 
       def item_type
         resource_unit_name = resources.first.resource_unit.name
+
+        # try the format: [unit] of [type] - [strain]
         matches = resource_unit_name.match(/^[\w]+ of ([\w\s]+) - [\w\s]+$/)
+
+        # then try the format: [type] - [strain]
+        matches = resource_unit_name.match(/^([^\-]+) - [\w\s]+$/) if matches.nil?
 
         return matches[1] unless matches.nil?
 
         raise InvalidAttributes,
               "Item type could not be extracted from the resource unit name: #{resource_unit_name}. " \
-              "Expected the format '[unit] of [type] - [strain]'"
+              "Expected the format '[unit] of [type] - [strain]' or '[type] - [strain]'"
+      end
+
+      def zone_name
+        get_zone(batch.relationships.dig('zone', 'data', 'id')).name
       end
 
       def unit_of_weight
@@ -67,9 +76,11 @@ module MetrcService
       end
 
       def harvest_ingredient(consume)
-        crop_batch = @artemis.facility(@facility_id).batch(consume.options['batch_resource_id'])
+        crop_batch = @artemis.get_facility.batch(consume.options['batch_resource_id'])
         resource_unit = get_resource_unit(consume.options['resource_unit_id'])
         metrc_harvest = lookup_metrc_harvest(crop_batch.arbitrary_id)
+
+        raise DataMismatch, "expected to find a harvest in Metrc named '#{crop_batch.arbitrary_id}' but it does not exist" if metrc_harvest.nil?
 
         {
           HarvestId: metrc_harvest['Id'],
@@ -98,7 +109,10 @@ module MetrcService
 
       def start_consume_completions
         get_related_completions(:start).map do |start_completion|
-          get_child_completions(start_completion.id, filter: { action_type: 'consume' })
+          completions = get_child_completions(start_completion.parent_id, filter: { action_type: 'consume' })
+
+          # workaround: API not filtering by parent_id so we do that here
+          completions.select { |completion| completion.parent_id == start_completion.parent_id }
         end.flatten
       end
 
