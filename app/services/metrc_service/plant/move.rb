@@ -98,9 +98,8 @@ module MetrcService
       end
 
       def move_plant_batches(options)
-        batch = options[:batch]
         payload = {
-          Name: batch.arbitrary_id,
+          Name: batch_tag,
           Location: options[:zone_name],
           MoveDate: @attributes.dig('start_time')
         }
@@ -114,8 +113,9 @@ module MetrcService
         items        = get_items(options[:seeding_unit_id])
         first_tag_id = items.first.id
         barcode      = items.find { |item| item.id == first_tag_id }.relationships.dig('barcode', 'data', 'id')
-        payload      = {
-          Name: batch.arbitrary_id,
+
+        payload = {
+          Name: batch_tag,
           Count: batch.quantity.to_i,
           StartingTag: barcode,
           GrowthPhase: seeding_unit['name'],
@@ -131,7 +131,8 @@ module MetrcService
         batch        = options[:batch]
         seeding_unit = batch.zone.attributes['seeding_unit']
         items        = get_items(options[:seeding_unit_id])
-        payload      = items.map do |item|
+
+        payload = items.map do |item|
           {
             Id: nil,
             Label: item.relationships.dig('barcode', 'data', 'id'),

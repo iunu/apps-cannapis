@@ -164,15 +164,25 @@ RSpec.describe MetrcService::Plant::Start do
         }.with_indifferent_access
         zone = double(:zone, attributes: zone_attributes)
 
-        double(:batch, zone: zone,
-                       relationships: {},
-                       attributes: {
-                         quantity: '100',
-                         crop_variety: 'Banana Split',
-                         seeded_at: Time.zone.now,
-                         zone_name: 'Germination'
-                       }.with_indifferent_access)
+        double(:batch,
+               zone: zone,
+               relationships: {
+                 barcodes: { data: [{ id: '1A4FF01000000220000010' }] }
+               },
+               attributes: {
+                 quantity: '100',
+                 crop_variety: 'Banana Split',
+                 seeded_at: Time.zone.now,
+                 zone_name: 'Germination'
+               }.with_indifferent_access)
       end
+
+      before do
+        expect_any_instance_of(described_class)
+          .to receive(:batch)
+          .and_return(batch)
+      end
+
       subject { described_class.new(ctx, integration) }
 
       it 'returns a valid payload' do
@@ -194,16 +204,8 @@ RSpec.describe MetrcService::Plant::Start do
         {
           id: 3000,
           relationships: {
-            batch: {
-              data: {
-                id: 2002
-              }
-            },
-            facility: {
-              data: {
-                id: 1568
-              }
-            }
+            batch: { data: { id: 2002 } },
+            facility: { data: { id: 1568 } }
           },
           attributes: {
             options: {
@@ -222,24 +224,27 @@ RSpec.describe MetrcService::Plant::Start do
         }.with_indifferent_access
         zone = double(:zone, attributes: zone_attributes)
 
-        double(:batch, zone: zone,
-                       relationships: {
-                         barcodes: {
-                           data: [
-                             {
-                               type: :barcodes,
-                               id: '1A4FF01000000220000011'
-                             }
-                           ]
-                         }
-                       }.with_indifferent_access,
-                       attributes: {
-                         quantity: '100',
-                         crop_variety: 'Banana Split',
-                         seeded_at: Time.zone.now,
-                         zone_name: 'Germination'
-                       }.with_indifferent_access)
+        double(:batch,
+               zone: zone,
+               relationships: {
+                 barcodes: {
+                   data: [{ type: :barcodes, id: '1A4FF01000000220000011' }]
+                 }
+               }.with_indifferent_access,
+               attributes: {
+                 quantity: '100',
+                 crop_variety: 'Banana Split',
+                 seeded_at: Time.zone.now,
+                 zone_name: 'Germination'
+               }.with_indifferent_access)
       end
+
+      before do
+        expect_any_instance_of(described_class)
+          .to receive(:batch)
+          .and_return(batch)
+      end
+
       subject { described_class.new(ctx, integration) }
 
       it 'returns a valid payload using the batch barcode' do
