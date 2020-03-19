@@ -78,7 +78,7 @@ module MetrcService
 
         return :move_plants if previous_zone.include?('flow') && new_zone.include?('flow')
 
-        return :change_growth_phases if previous_zone.include?('veg') && new_zone.include?('flow')
+        return :change_plant_growth_phases if previous_zone.include?('veg') && new_zone.include?('flow')
 
         DEFAULT_MOVE_STEP
       end
@@ -127,7 +127,7 @@ module MetrcService
         call_metrc(:change_growth_phase, [payload])
       end
 
-      def change_growth_phases(options)
+      def change_plant_growth_phases(options)
         batch        = options[:batch]
         seeding_unit = batch.zone.attributes['seeding_unit']
         items        = get_items(options[:seeding_unit_id])
@@ -137,13 +137,13 @@ module MetrcService
             Id: nil,
             Label: item.relationships.dig('barcode', 'data', 'id'),
             NewTag: seeding_unit['name'], # TODO: Fix me
-            GrowthPhase: seeding_unit['name'], # TODO: Fix me
+            GrowthPhase: normalize_growth_phase(seeding_unit['name']),
             NewLocation: batch.zone.name,
             GrowthDate: @attributes.dig('start_time')
           }
         end
 
-        call_metrc(:change_growth_phases, payload)
+        call_metrc(:change_plant_growth_phase, payload)
       end
 
       def normalize_growth_phase(zone_name = nil)
