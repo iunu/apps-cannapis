@@ -24,16 +24,8 @@ RSpec.describe MetrcService::Batch do
       {
         id: 3000,
         relationships: {
-          batch: {
-            data: {
-              id: 2002
-            }
-          },
-          facility: {
-            data: {
-              id: 1568
-            }
-          }
+          batch: { data: { id: 2002 } },
+          facility: { data: { id: 1568 } }
         },
         attributes: {},
         completion_id: 1001
@@ -89,6 +81,12 @@ RSpec.describe MetrcService::Batch do
 
         expect(task)
           .to receive(:delete)
+          .and_call_original
+
+        expect(task)
+          .to receive(:current_action=)
+          .with(%r{metrc_service/plant/.*})
+          .exactly(6).times
           .and_call_original
       end
 

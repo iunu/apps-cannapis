@@ -1,12 +1,12 @@
 An error occurred while attempting to process a completion:
 
-Attempt number <%=@attempt%> has been rescheduled for the next cycle.
+Attempt number <%=@attempts%> has been scheduled for the next cycle.
 
 Vendor: <%=@integration.vendor_name %>
 Batch ID: <%=@task.batch_id %>
-Completion Type: <%=@action %>
 Artemis account ID: <%=@account.id %>
 User contact: <%=@account.full_name %> <<%=@account.email%>>
+Completion Type: <%=@task.current_action %>
 
 Error:
 <%=@error.message %>
