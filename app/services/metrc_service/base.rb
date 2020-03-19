@@ -161,10 +161,7 @@ module MetrcService
     end
 
     def batch_tag
-      barcode = batch.relationships.dig('barcodes', 'data', 0, 'id')
-      tracking_code = @attributes.dig('options', 'tracking_barcode')
-
-      tracking_code || barcode
+      batch.relationships.dig('barcodes', 'data', 0, 'id')
     end
 
     def validate_batch!

@@ -138,7 +138,7 @@ module MetrcService
             Label: item.relationships.dig('barcode', 'data', 'id'),
             NewTag: seeding_unit['name'], # TODO: Fix me
             GrowthPhase: seeding_unit['name'], # TODO: Fix me
-            NewLocation: options[:zone_name],
+            NewLocation: batch.zone.name,
             GrowthDate: @attributes.dig('start_time')
           }
         end

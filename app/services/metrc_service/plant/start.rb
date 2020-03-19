@@ -25,7 +25,7 @@ module MetrcService
           Type: type,
           Count: quantity,
           Strain: batch.attributes['crop_variety'],
-          Location: @attributes.dig('options', 'zone_name') || 'Mothers',
+          Location: batch.zone.name,
           PatientLicenseNumber: nil,
           ActualDate: batch.attributes['seeded_at']
         }]
