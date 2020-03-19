@@ -160,6 +160,10 @@ module MetrcService
       @batch ||= get_batch
     end
 
+    def batch_tag
+      batch.relationships.dig('barcodes', 'data', 0, 'id')
+    end
+
     def validate_batch!
       raise BatchCropInvalid unless batch.crop == MetrcService::CROP
     end

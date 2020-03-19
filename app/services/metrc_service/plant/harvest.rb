@@ -33,7 +33,7 @@ module MetrcService
 
         items.map do |item|
           {
-            DryingLocation: @attributes.dig(:options, :zone_name),
+            DryingLocation: batch.zone.name,
             PatientLicenseNumber: nil,
             ActualDate: harvest_date,
             Plant: item.relationships.dig('barcode', 'data', 'id'),
@@ -50,7 +50,7 @@ module MetrcService
 
         items.map do |item|
           {
-            DryingLocation: @attributes.dig(:options, :zone_name),
+            DryingLocation: batch.zone.name,
             PatientLicenseNumber: nil,
             ActualDate: harvest_date,
             Plant: item.relationships.dig('barcode', 'data', 'id'),
@@ -63,7 +63,7 @@ module MetrcService
 
       def build_harvest_complete_payload
         [{
-          Id: batch.arbitrary_id,
+          Id: batch_tag,
           ActualDate: harvest_date
         }]
       end
@@ -73,7 +73,7 @@ module MetrcService
 
         waste_completions.map do |completion|
           {
-            Id: batch.arbitrary_id,
+            Id: batch_tag,
             WasteType: waste_type(completion),
             UnitOfWeight: unit_of_weight(WASTE_WEIGHT),
             WasteWeight: completion.options['processed_quantity'],

@@ -97,9 +97,9 @@ RSpec.describe MetrcService::Plant::Move do
     end
 
     describe 'for a previous vegetative zone and a new flowering zone' do
-      it 'returns the change_growth_phases step' do
+      it 'returns the change_plant_growth_phases step' do
         next_step = subject.send :next_step, 'vegetative', 'flowering'
-        expect(next_step).to be :change_growth_phases
+        expect(next_step).to be :change_plant_growth_phases
       end
     end
 
