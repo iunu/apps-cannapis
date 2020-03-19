@@ -162,18 +162,17 @@ RSpec.describe MetrcService::Plant::Start do
             name: 'Clone'
           }
         }.with_indifferent_access
-        zone = double(:zone, attributes: zone_attributes)
+        zone = double(:zone, attributes: zone_attributes, name: 'Germination')
 
         double(:batch,
                zone: zone,
                relationships: {
-                 barcodes: { data: [{ id: '1A4FF01000000220000010' }] }
-               },
+                 'barcodes': { 'data': [{ 'id': '1A4FF01000000220000010' }] }
+               }.with_indifferent_access,
                attributes: {
                  quantity: '100',
                  crop_variety: 'Banana Split',
-                 seeded_at: Time.zone.now,
-                 zone_name: 'Germination'
+                 seeded_at: Time.zone.now
                }.with_indifferent_access)
       end
 
@@ -222,20 +221,19 @@ RSpec.describe MetrcService::Plant::Start do
             name: 'Clone'
           }
         }.with_indifferent_access
-        zone = double(:zone, attributes: zone_attributes)
+        zone = double(:zone, attributes: zone_attributes, name: 'Germination')
 
         double(:batch,
                zone: zone,
                relationships: {
                  barcodes: {
-                   data: [{ type: :barcodes, id: '1A4FF01000000220000011' }]
+                   'data': [{ 'type': :barcodes, 'id': '1A4FF01000000220000011' }]
                  }
                }.with_indifferent_access,
                attributes: {
                  quantity: '100',
                  crop_variety: 'Banana Split',
-                 seeded_at: Time.zone.now,
-                 zone_name: 'Germination'
+                 seeded_at: Time.zone.now
                }.with_indifferent_access)
       end
 
