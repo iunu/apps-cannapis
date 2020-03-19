@@ -2,6 +2,8 @@ class Scheduler < ApplicationRecord
   MAX_ATTEMPTS = 4
   RESCHEDULE_DELAY = 3600
 
+  attr_accessor :current_action
+
   belongs_to :integration
   validates :facility_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
   validates :batch_id, presence: true, numericality: { only_integer: true, greater_than: 0 }

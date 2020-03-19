@@ -11,7 +11,7 @@ class NotificationMailer < ApplicationMailer
 
     mail(
       to: recipient,
-      subject: "[Artemis -> #{@integration.vendor_name}] Failed for user #{@account.id}"
+      subject: "[Artemis -> #{@integration.vendor_name}] Task failed: #{@task.current_action} for user #{@account.id}"
     )
   end
 
@@ -22,7 +22,7 @@ class NotificationMailer < ApplicationMailer
 
     mail(
       to: recipient,
-      subject: "[Artemis -> #{@integration.vendor_name}] Task rescheduled (attempts #{@attempts}) for user #{@account.id}"
+      subject: "[Artemis -> #{@integration.vendor_name}] Task rescheduled (attempts #{@attempts}): #{@task.current_action} for user #{@account.id}"
     )
   end
 

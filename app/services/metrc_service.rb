@@ -22,20 +22,24 @@ module MetrcService
 
   module_function
 
-  def perform_action(ctx, integration)
-    Lookup.new(ctx, integration).perform_action
+  def perform_action(ctx, integration, task = nil)
+    Lookup.new(ctx, integration, task).perform_action
   end
 
   class Lookup
-    def initialize(ctx, integration)
+    def initialize(ctx, integration, task = nil)
       @ctx = ctx
       @integration = integration
+      @task = task
     end
 
     delegate :seeding_unit, to: :batch
 
     def perform_action
-      module_for_completion.call(@ctx, @integration, batch)
+      handler = module_for_completion
+
+      @task&.current_action = handler.name.underscore
+      handler.call(@ctx, @integration, batch)
     end
 
     def module_for_completion

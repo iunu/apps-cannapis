@@ -20,7 +20,7 @@ module MetrcService
           relationships: @relationships
         }.with_indifferent_access
 
-        MetrcService.perform_action(ctx, @integration)
+        MetrcService.perform_action(ctx, @integration, @task)
       end
 
       @task.delete
