@@ -1,7 +1,7 @@
 require 'rails_helper'
 require 'ostruct'
 
-RSpec.describe MetrcService::Package::Harvest do
+RSpec.describe MetrcService::Package::Start do
   METRC_API_KEY = ENV['METRC_SECRET_CA'] unless defined?(METRC_API_KEY)
 
   def load_response_json(path)
