@@ -178,5 +178,10 @@ module MetrcService
     def config
       @config ||= Rails.application.config_for('providers/metrc')
     end
+
+    # Possible statuses: active, removed, archived
+    def completion_status
+      @attributes['status']
+    end
   end
 end
