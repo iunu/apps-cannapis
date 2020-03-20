@@ -1,6 +1,7 @@
 GIT
   remote: https://github.com/artemis-ag/Metrc.git
-  revision: f1962821b348fb22d1a4d0478dfd40803ef46d79
+  revision: 1d215d545a190eb469c5d753fab363ac8b326d18
+  branch: feature/get_harvest
   specs:
     Metrc (0.2.7)
       bundler
