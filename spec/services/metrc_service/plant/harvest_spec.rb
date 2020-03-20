@@ -356,46 +356,4 @@ RSpec.describe MetrcService::Plant::Harvest do
       end
     end
   end
-
-  describe '#harvest_complete_payload' do
-    let(:start_time) { Time.now.utc - 1.hour }
-    let(:ctx) do
-      {
-        id: 3000,
-        relationships: {
-          batch: {
-            data: {
-              id: 2002
-            }
-          },
-          facility: {
-            data: {
-              id: 1568
-            }
-          }
-        },
-        attributes: { start_time: start_time },
-        completion_id: 1001
-      }
-    end
-    let(:batch_id) { '1A4FF010000002200000211' }
-    let(:batch) { double(:batch, arbitrary_id: batch_id, relationships: { 'barcodes': { 'data': [{ id: '1A4FF010000002200000211' }] } }.with_indifferent_access) }
-    let(:action_handler) { described_class.new(ctx, integration) }
-
-    before do
-      expect(action_handler)
-        .to receive(:batch)
-        .and_return(batch)
-    end
-
-    context 'the payload' do
-      subject { action_handler.send(:build_harvest_complete_payload) }
-      it do
-        is_expected.to include(
-          Id: batch_id,
-          ActualDate: start_time
-        )
-      end
-    end
-  end
 end
