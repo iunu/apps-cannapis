@@ -75,13 +75,6 @@ module MetrcService
       validate_seeding_unit!
     end
 
-    def call
-      super
-    ensure
-      transaction.save
-      log("Transaction: #{transaction.inspect}", :debug)
-    end
-
     def call_metrc(method, *args)
       log("[#{method.to_s.upcase}] Metrc API request. URI #{@client.uri}", :debug)
       log(args.to_yaml, :debug)
@@ -177,6 +170,11 @@ module MetrcService
 
     def config
       @config ||= Rails.application.config_for('providers/metrc')
+    end
+
+    # Possible statuses: active, removed, archived
+    def completion_status
+      @attributes['status']
     end
   end
 end

@@ -9,7 +9,7 @@ SimpleCov.formatters = [
   SimpleCov::Formatter::Console
 ]
 
-SimpleCov.start unless ENV['SKIP_COV']
+SimpleCov.start('rails') unless ENV['SKIP_COV']
 
 metric_api_key = 'ABC-123'.freeze
 
