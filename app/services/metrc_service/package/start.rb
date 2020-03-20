@@ -2,7 +2,9 @@ module MetrcService
   module Package
     class Start < MetrcService::Package::Base
       def call
-        call_metrc(:create_package, payload, testing?)
+        create_package
+        finish_harvests
+
         success!
       end
 
@@ -12,7 +14,30 @@ module MetrcService
         @transaction ||= get_transaction(:start_package_batch)
       end
 
-      def payload
+      def finish_harvests
+        payload = finished_harvest_ids.map do |harvest_id|
+          { Id: harvest_id, ActualDate: package_date }
+        end
+
+        call_metrc(:finish_harvest, payload) unless payload.empty?
+      end
+
+      def consumed_harvest_ids
+        @consumed_harvest_ids ||= []
+      end
+
+      def finished_harvest_ids
+        consumed_harvest_ids.select do |harvest_id|
+          harvest = call_metrc(:get_harvest, harvest_id)
+          harvest['CurrentWeight'].zero?
+        end
+      end
+
+      def create_package
+        call_metrc(:create_package, create_package_payload, testing?)
+      end
+
+      def create_package_payload
         [{
           Tag: tag,
           Location: zone_name,
@@ -76,9 +101,11 @@ module MetrcService
       def harvest_ingredient(consume)
         crop_batch = @artemis.get_facility.batch(consume.options['batch_resource_id'])
         resource_unit = get_resource_unit(consume.options['resource_unit_id'])
-        metrc_harvest = lookup_metrc_harvest(crop_batch.arbitrary_id)
 
+        metrc_harvest = lookup_metrc_harvest(crop_batch.arbitrary_id)
         raise DataMismatch, "expected to find a harvest in Metrc named '#{crop_batch.arbitrary_id}' but it does not exist" if metrc_harvest.nil?
+
+        consumed_harvest_ids << metrc_harvest['Id']
 
         {
           HarvestId: metrc_harvest['Id'],

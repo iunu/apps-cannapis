@@ -11,8 +11,7 @@ module MetrcService
         payload         = send("build_#{next_step}_payload", items, batch)
 
         call_metrc(next_step, payload)
-
-        finalize_harvest if complete?
+        remove_waste
 
         success!
       end
@@ -23,9 +22,8 @@ module MetrcService
         @transaction ||= get_transaction(:harvest_batch)
       end
 
-      def finalize_harvest
+      def remove_waste
         call_metrc(:remove_waste, build_remove_waste_payload)
-        call_metrc(:finish_harvest, build_harvest_complete_payload)
       end
 
       def build_manicure_plants_payload(items, _batch)
@@ -61,13 +59,6 @@ module MetrcService
         end
       end
 
-      def build_harvest_complete_payload
-        [{
-          Id: batch_tag,
-          ActualDate: harvest_date
-        }]
-      end
-
       def build_remove_waste_payload
         waste_completions = process_completions_by_unit_type(WASTE_WEIGHT)
 
@@ -93,7 +84,7 @@ module MetrcService
       def unit_of_weight(unit_type, _item = nil)
         # TODO: apply per-item resource lookup when available on Artemis API
         # resource_unit = get_resource_unit(item.resource_unit_id)
-        # resource_unit.name
+        # resource_unit.unit
 
         resource_unit(unit_type).unit
       end

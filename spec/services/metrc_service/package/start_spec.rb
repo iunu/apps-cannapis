@@ -143,6 +143,16 @@ RSpec.describe MetrcService::Package::Start do
         stub_request(:post, "https://sandbox-api-ca.metrc.com/packages/v1/create#{testing ? '/testing' : ''}?licenseNumber=LIC-0001")
           .with(body: expected_payload.to_json, basic_auth: [METRC_API_KEY, integration.secret])
           .to_return(status: 200, body: '', headers: {})
+
+        stub_request(:get, 'https://sandbox-api-ca.metrc.com/harvests/v1/1?licenseNumber=LIC-0001')
+          .to_return(status: 200, body: '{"Id":1,"Name":"Some-Other-Harvest","HarvestType":"Product","SourceStrainCount":0, "CurrentWeight": 100.0}')
+
+        stub_request(:get, 'https://sandbox-api-ca.metrc.com/harvests/v1/2?licenseNumber=LIC-0001')
+          .to_return(status: 200, body: '{"Id":2,"Name":"Feb6-5th-Ele-Can","HarvestType":"WholePlant","SourceStrainCount":0, "CurrentWeight": 0.0}')
+
+        stub_request(:post, 'https://sandbox-api-ca.metrc.com/harvests/v1/finish?licenseNumber=LIC-0001')
+          .with(body: '[{"Id":2,"ActualDate":"2020-02-24T05:00:00.000Z"}]', basic_auth: [METRC_API_KEY, integration.secret])
+          .to_return(status: 200, body: '', headers: {})
       end
 
       context 'standard package' do
