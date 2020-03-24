@@ -92,7 +92,7 @@ RSpec.describe MetrcService::Package::Start do
         [
           Tag: 'asdfasdfasdfasdf123123123',
           Location: 'Warehouse',
-          Item: 'Bulk Flower',
+          Item: 'Flower',
           UnitOfWeight: 'Grams',
           PatientLicenseNumber: nil,
           Note: nil,
@@ -126,10 +126,7 @@ RSpec.describe MetrcService::Package::Start do
           .to_return(body: load_response_json("api/package/batch#{testing ? '-testing' : ''}"))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
-          .to_return(body: { data: [{ id: '90210', type: 'completions', attributes: { id: 90210, action_type: 'start', parent_id: 90209 } }] }.to_json)
-
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter%5Bparent_id%5D=90209&filter%5Baction_type%5D=consume")
-          .to_return(body: { data: [{ id: '90211', type: 'completions', attributes: { id: 90211, action_type: 'consume', parent_id: 90209, options: { resource_unit_id: 26, batch_resource_id: 15, consumed_quantity: 50, requested_quantity: 10 } } }] }.to_json)
+          .to_return(body: { data: [{ id: '90210', type: 'completions', attributes: { id: 90210, action_type: 'start', parent_id: 90209 } }, { id: '90211', type: 'completions', attributes: { id: 90211, action_type: 'consume', parent_id: 90209, context: { source_batch: { id: 15 } }, options: { resource_unit_id: 26, batch_resource_id: 123, consumed_quantity: 50, requested_quantity: 10 } } }] }.to_json)
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/15")
           .to_return(body: load_response_json('api/package/crop-batch'))
@@ -140,7 +137,7 @@ RSpec.describe MetrcService::Package::Start do
         stub_request(:get, 'https://sandbox-api-ca.metrc.com/harvests/v1/active?licenseNumber=LIC-0001')
           .to_return(status: 200, body: '[{"Id":1,"Name":"Some-Other-Harvest","HarvestType":"Product","SourceStrainCount":0},{"Id":2,"Name":"Feb6-5th-Ele-Can","HarvestType":"WholePlant","SourceStrainCount":0}]')
 
-        stub_request(:post, "https://sandbox-api-ca.metrc.com/packages/v1/create#{testing ? '/testing' : ''}?licenseNumber=LIC-0001")
+        stub_request(:post, "https://sandbox-api-ca.metrc.com/harvests/v1/create/packages#{testing ? '/testing' : ''}?licenseNumber=LIC-0001")
           .with(body: expected_payload.to_json, basic_auth: [METRC_API_KEY, integration.secret])
           .to_return(status: 200, body: '', headers: {})
 

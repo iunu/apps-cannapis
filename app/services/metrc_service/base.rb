@@ -176,5 +176,23 @@ module MetrcService
     def completion_status
       @attributes['status']
     end
+
+    def lookup_metrc_harvest(name)
+      # TODO: consider date range for lookup - harvest create/finish dates?
+      harvests = call_metrc(:list_harvests)
+      metrc_harvest = harvests.find { |harvest| harvest['Name'] == name }
+      raise DataMismatch, "expected to find a harvest in Metrc named '#{name}' but it does not exist" if metrc_harvest.nil?
+
+      metrc_harvest
+    end
+
+    def resource_completions_by_unit_type(unit_type)
+      resource_unit_id = resource_unit(unit_type).id
+
+      batch
+        .completions
+        .select { |completion| %w[process generate].include?(completion.action_type) }
+        .select { |completion| completion.options['resource_unit_id'] == resource_unit_id }
+    end
   end
 end

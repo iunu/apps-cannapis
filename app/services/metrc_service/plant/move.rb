@@ -109,7 +109,7 @@ module MetrcService
 
       def change_growth_phase(options)
         batch        = options[:batch]
-        seeding_unit = batch.seeding_unit.attributes
+        # seeding_unit = batch.seeding_unit.attributes
         items        = get_items(options[:seeding_unit_id])
         first_tag_id = items.first.id
         barcode      = items.find { |item| item.id == first_tag_id }.relationships.dig('barcode', 'data', 'id')
@@ -118,7 +118,7 @@ module MetrcService
           Name: batch_tag,
           Count: batch.quantity.to_i,
           StartingTag: barcode,
-          GrowthPhase: seeding_unit['name'],
+          GrowthPhase: 'Flowering', # seeding_unit['name'],
           NewLocation: options[:zone_name],
           GrowthDate: @attributes.dig('start_time'),
           PatientLicenseNumber: nil
