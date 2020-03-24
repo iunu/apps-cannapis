@@ -3,7 +3,7 @@ module MetrcService
     class Start < MetrcService::Package::Base
       def call
         create_package
-        finish_harvests
+        # finish_harvests
 
         success!
       end
