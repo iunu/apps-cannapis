@@ -118,7 +118,7 @@ module MetrcService
 
     def resource_unit(unit_type)
       resource_units = get_resource_units.select do |resource_unit|
-        resource_unit.name =~ /#{unit_type} - #{batch.crop_variety}/
+        resource_unit.name =~ /#{unit_type}(,\s|\s-\s)#{batch.crop_variety}/
       end
 
       raise InvalidAttributes, "Ambiguous resource unit for #{unit_type} calculation. Expected 1 resource_unit, found #{resource_units.count}" if resource_units.count > 1
@@ -128,10 +128,10 @@ module MetrcService
     end
 
     # Artemis API delivers resource_unit#name in the following formats:
-    # (correct as of 2020-03-17)
+    # (correct as of 2020-03-24)
     #
-    #   (a):  [unit] of [resource type] - [strain]
-    #   (b):  [resource type] - [strain]
+    #   (a):  [unit] of [resource type], [strain]
+    #   (b):  [resource type], [strain]
     #
     # Here we are expecting format (a)
     def map_resource_unit(resource_unit)
@@ -142,7 +142,7 @@ module MetrcService
         id: resource_unit.id,
         name: resource_unit.name,
         unit: metrc_unit,
-        label: resource_unit.name[/^([\w\s]+) -/, 1],
+        label: resource_unit.name[/^([\w\s]+)(,\s|\s-\s)/, 1],
         strain: batch.crop_variety,
         kind: resource_unit.kind,
         conversion_si: resource_unit.conversion_si
