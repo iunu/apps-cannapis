@@ -15,10 +15,15 @@ module MetrcService
 
   WEIGHT_UNIT_MAP = {
     'mg' => 'Milligrams',
+    'Milligram' => 'Milligrams',
     'g' => 'Grams',
+    'Gram' => 'Grams',
     'kg' => 'Kilograms',
+    'Kilogram' => 'Kilograms',
     'oz' => 'Ounces',
-    'lb' => 'Pounds'
+    'Ounce' => 'Ounces',
+    'lb' => 'Pounds',
+    'Pound' => 'Pounds'
   }.freeze
 
   module_function
