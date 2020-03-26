@@ -8,12 +8,22 @@
       <%= facility.name %>
     </h4>
 
-    <span class="pill pill--purple ml-auto text--xxs">
-      <%= "#{facility.city}, #{facility.state}" %>
-    </span>
+    <% if facility.state %>
+      <span class="pill pill--purple ml-auto text--xxs">
+        <%= "#{facility.state}" %>
+      </span>
+    <% end %>
   </header>
 
   <section>
+    <% if facility.state.nil? %>
+      <div class="header__alerts danger">
+        <div class="alert">
+          Please define a state name on your facility's.
+        </div>
+      </div>
+    <% end %>
+
     <div class="my">
       <%= label_tag('facility[eod]', "Time after end-of-workday when Metrc should be updated (#{facility.time_zone})") %>
       <%= select_hour integrations[facility.id]&.eod, prefix: :facility, field_name: :eod, ampm: true %>
@@ -31,7 +41,7 @@
 
     <% if integrations[facility.id] %>
       <%= button_tag 'Update', type: :submit, class: 'btn btn--green fr' %>
-    <% else %>
+    <% elsif facility.state %>
       <%= button_tag 'Save', type: :submit, class: 'btn btn--green fr' %>
     <% end %>
     <div class="clearfix"></div>

@@ -4,8 +4,7 @@ module V1
 
     def update
       integration = Integration.find_or_create_by(account_id: session[:current_account_id], facility_id: params[:id])
-      timezone    = ActiveSupport::TimeZone.new(params.dig(:facility, :timezone))&.formatted_offset || '+00:00'
-
+      timezone = ActiveSupport::TimeZone.new(params.dig(:facility, :timezone))&.formatted_offset || '+00:00'
       integration.update(vendor: params.dig(:facility, :vendor),
                          vendor_id: params.dig(:facility, :license_number),
                          secret: params.dig(:facility, :api_secret),
@@ -22,7 +21,7 @@ module V1
     private
 
     def validate
-      redirect_to root_path unless params[:facility] && session[:current_account_id]
+      redirect_to root_path unless params[:facility] && session[:current_account_id] && params.dig(:facility, :state)
     end
   end
 end
