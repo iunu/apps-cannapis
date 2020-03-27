@@ -15,7 +15,7 @@ RSpec.describe 'home/_facility', type: :view do
     }
   end
 
-  before(:each) do
+  before do
     render partial: 'facility', locals: { integrations: integrations, facility: subject }
   end
 
@@ -36,8 +36,11 @@ RSpec.describe 'home/_facility', type: :view do
     end
   end
 
-  it 'renders the facility name, city, and state' do
+  it 'renders the facility name' do
     expect(rendered).to include subject.name
-    expect(rendered).to include "#{subject.city}, #{subject.state}"
+  end
+
+  it 'renders the facility state' do
+    expect(rendered).to include subject.state.to_s
   end
 end

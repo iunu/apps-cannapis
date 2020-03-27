@@ -134,24 +134,24 @@ jobs:
           path: /tmp/test-results
           destination: test_results
 
-  rubocop:
-    docker:
-      - image: circleci/ruby:2.6.5
-    steps:
-      - checkout
+  # rubocop:
+  #   docker:
+  #     - image: circleci/ruby:2.6.5
+  #   steps:
+  #     - checkout
 
-      - run:
-          name: Install bundle
-          command: sudo gem install bundler:2.0.2
+  #     - run:
+  #         name: Install bundle
+  #         command: sudo gem install bundler:2.0.2
 
-      - run:
-          name: Install dependencies
-          command: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
+  #     - run:
+  #         name: Install dependencies
+  #         command: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
 
-      - run:
-          name: Install Rubocop
-          command: sudo gem install rubocop:0.49.1
-      - run: bin/rubocop
+  #     - run:
+  #         name: Install Rubocop
+  #         command: sudo gem install rubocop:0.49.1
+  #     - run: bin/rubocop
 
   prod_deploy:
     machine:
@@ -169,7 +169,7 @@ workflows:
     jobs:
       - yarn_install
       - bundle_install
-      - rubocop
+      # - rubocop
       - precompile_assets:
           requires:
             - yarn_install
