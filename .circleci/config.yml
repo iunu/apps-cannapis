@@ -1,5 +1,25 @@
 version: 2.1
 jobs:
+  yarn_install:
+    docker:
+      - image: circleci/node:10.15.0
+
+    steps:
+      - checkout
+      - restore_cache:
+          name: Restore node_modules from cache
+          key: node_modules-v1-{{ checksum "yarn.lock" }}
+      - add_ssh_keys:
+            fingerprints:
+              - '94:83:95:15:e6:c9:0b:53:7f:a7:a2:47:9e:dc:55:70'
+      - run: yarn install --check-files
+
+      - save_cache:
+          paths:
+            - node_modules
+          name: Cache node_modules
+          key: node_modules-v1-{{ checksum "yarn.lock" }}
+
   bundle_install:
     docker:
       - image: circleci/ruby:2.6.5
@@ -147,6 +167,7 @@ workflows:
   version: 2
   run_tests:
     jobs:
+      - yarn_install
       - bundle_install
       # - rubocop
       - precompile_assets:
