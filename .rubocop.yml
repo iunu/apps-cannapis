@@ -1,4 +1,7 @@
-require: rubocop-rails
+require:
+  - rubocop-rails
+  - rubocop-performance
+  - rubocop-rspec
 
 AllCops:
   Exclude:
@@ -31,7 +34,7 @@ Metrics/BlockLength:
 Metrics/ClassLength:
   Enabled: false
 
-Metrics/LineLength:
+Layout/LineLength:
   Enabled: false
 
 Style/FrozenStringLiteralComment:
@@ -41,4 +44,16 @@ Naming/RescuedExceptionsVariableName:
   Enabled: false
 
 Rails/CreateTableWithTimestamps:
+  Enabled: false
+
+Style/HashEachMethods:
+  Enabled: true
+
+Style/HashTransformKeys:
+  Enabled: false
+
+Style/HashTransformValues:
+  Enabled: false
+
+RSpec/NamedSubject:
   Enabled: false

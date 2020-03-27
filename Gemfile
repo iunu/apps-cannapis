@@ -59,7 +59,10 @@ group :development, :test do
   gem 'factory_bot_rails'
   gem 'faker'
   gem 'rails-controller-testing'
-  gem 'rspec-rails', '~> 4.0.0.beta2'
+  gem 'rubocop'
+  gem 'rubocop-performance'
+  gem 'rubocop-rails'
+  gem 'rubocop-rspec'
 end
 
 group :development do
@@ -67,8 +70,6 @@ group :development do
   gem 'guard-rubocop', '~> 1.3'
   gem 'listen', '>= 3.0.5', '< 3.2'
   gem 'rb-readline'
-  gem 'rubocop'
-  gem 'rubocop-rails'
   gem 'terminal-notifier'
   gem 'terminal-notifier-guard'
   # Spring speeds up development by keeping your application running in the background. Read more: https://github.com/rails/spring
@@ -85,7 +86,6 @@ group :test do
   gem 'database_cleaner'
   gem 'rspec-activemodel-mocks'
   gem 'rspec-html-matchers', '~> 0.9.1'
-  gem 'rubocop-rspec'
   gem 'selenium-webdriver'
   gem 'shoulda-matchers'
   gem 'simplecov'
