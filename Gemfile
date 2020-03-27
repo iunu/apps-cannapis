@@ -32,14 +32,9 @@ gem 'http'
 # gem 'acts_as_paranoid', '~> 0.6.0'
 
 # Metrc API client
-# [WIP] set environment variable if modifications are needed.
-if ENV['LOCAL_METRC_GEM_DEV']
-  gem 'Metrc', path: ENV['LOCAL_METRC_GEM_DEV']
-else
-  gem 'Metrc', git: 'https://github.com/artemis-ag/Metrc.git' # rubocop:disable Bundler/DuplicatedGem
-end
-
 gem 'artemis_api', git: 'https://github.com/artemis-ag/artemis_api'
+gem 'Metrc', git: 'https://github.com/artemis-ag/Metrc.git'
+gem 'ncs_analytics', git: 'https://github.com/artemis-ag/ncs-integration.git'
 
 # Serialization
 gem 'jsonapi-rails', '~> 0.4.0' # JSONAPI serialization
