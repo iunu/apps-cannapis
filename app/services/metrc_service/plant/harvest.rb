@@ -60,21 +60,24 @@ module MetrcService
       end
 
       def build_remove_waste_payload
-        waste_completions = process_completions_by_unit_type(WASTE_WEIGHT)
+        waste_completions = resource_completions_by_unit_type(WASTE_WEIGHT)
+        metrc_harvest = lookup_metrc_harvest(batch.arbitrary_id)
 
         waste_completions.map do |completion|
           {
-            Id: batch_tag,
+            Id: metrc_harvest['Id'],
             WasteType: waste_type(completion),
             UnitOfWeight: unit_of_weight(WASTE_WEIGHT),
-            WasteWeight: completion.options['processed_quantity'],
+            WasteWeight: completion.options['generated_quantity'] || completion.options['processed_quantity'],
             ActualDate: harvest_date
           }
         end
       end
 
-      def waste_type(completion)
+      def waste_type(_completion)
         # TODO: determine waste type from 'process' completion
+
+        'Plant Material'
       end
 
       def harvest_date
@@ -90,25 +93,13 @@ module MetrcService
       end
 
       def total_weight(unit_type)
-        process_completions_by_unit_type(unit_type).sum do |completion|
-          completion.options['processed_quantity']
-        end
-      end
-
-      def process_completions_by_unit_type(unit_type)
-        move_process_completions.select do |nested_completion|
-          nested_completion.options['resource_unit_id'] == resource_unit(unit_type).id
+        resource_completions_by_unit_type(unit_type).sum do |completion|
+          completion.options['generated_quantity'] || completion.options['processed_quantity']
         end
       end
 
       def calculate_average_weight(items)
         (total_weight(WET_WEIGHT).to_f / items.size).round(2)
-      end
-
-      def move_process_completions
-        get_related_completions(:move).map do |move_completion|
-          get_child_completions(move_completion.id, filter: { action_type: 'process' })
-        end.flatten
       end
 
       def complete?
