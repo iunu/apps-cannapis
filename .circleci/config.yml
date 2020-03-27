@@ -147,7 +147,6 @@ workflows:
   version: 2
   run_tests:
     jobs:
-      - yarn_install
       - bundle_install
       # - rubocop
       - precompile_assets:
