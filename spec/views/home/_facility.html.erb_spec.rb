@@ -38,6 +38,6 @@ RSpec.describe 'home/_facility', type: :view do
 
   it 'renders the facility name, city, and state' do
     expect(rendered).to include subject.name
-    expect(rendered).to include "#{subject.city}, #{subject.state}"
+    expect(rendered).to include "#{subject.state}"
   end
 end
