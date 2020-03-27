@@ -36,7 +36,7 @@ gem 'http'
 if ENV['LOCAL_METRC_GEM_DEV']
   gem 'Metrc', path: ENV['LOCAL_METRC_GEM_DEV']
 else
-  gem 'Metrc', git: 'https://github.com/artemis-ag/Metrc.git', branch: 'feature/create_harvest_package' # rubocop:disable Bundler/DuplicatedGem
+  gem 'Metrc', git: 'https://github.com/artemis-ag/Metrc.git' # rubocop:disable Bundler/DuplicatedGem
 end
 
 gem 'artemis_api', git: 'https://github.com/artemis-ag/artemis_api'
