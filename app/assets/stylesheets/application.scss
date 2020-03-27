@@ -15280,6 +15280,12 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
   white-space: normal;
 }
 
+.header__alerts.danger {
+  color: #721c24;
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+}
+
 /* line 42, app/assets/stylesheets/components/_header-alerts.scss */
 .header__alerts .alert:not(:last-child) {
   border-bottom: 1px solid #ececec;
