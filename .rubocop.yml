@@ -57,3 +57,12 @@ Style/HashTransformValues:
 
 RSpec/NamedSubject:
   Enabled: false
+
+RSpec/LeadingSubject:
+  Enabled: false
+
+RSpec/ExampleLength:
+  Enabled: false
+
+RSpec/MultipleExpectations:
+  Max: 20
