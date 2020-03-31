@@ -32,8 +32,8 @@ module MetrcService
     Lookup.new(ctx, integration, task).perform_action
   end
 
-  def run_now?(ctx, integration, ref_time)
-    ref_time.hour >= integration.eod.hour || Lookup.new(ctx, integration).run_mode == :now
+  def run_now?(ctx, integration)
+    Lookup.new(ctx, integration).run_mode == :now
   end
 
   module_function :perform_action, :run_now?

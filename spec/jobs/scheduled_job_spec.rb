@@ -69,7 +69,7 @@ RSpec.describe ScheduledJob, type: :job do
     end
 
     context 'that can be rescheduled' do
-      let(:raised_error) { ScheduledJob::RetryableError.new('something went wrong', original: original_error) }
+      let(:raised_error) { Cannapi::RetryableError.new('something went wrong', original: original_error) }
 
       before do
         expect(mailer_with_params)
@@ -83,7 +83,7 @@ RSpec.describe ScheduledJob, type: :job do
     end
 
     context 'that can NOT be rescheduled due to too many retries' do
-      let(:raised_error) { ScheduledJob::TooManyRetriesError.new('something went wrong too many times', original: original_error) }
+      let(:raised_error) { Cannapi::TooManyRetriesError.new('something went wrong too many times', original: original_error) }
 
       before do
         expect(mailer_with_params)

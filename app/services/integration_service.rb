@@ -11,12 +11,22 @@ class IntegrationService < ApplicationService
     integrations.each do |integration|
       ref_time = Time.now.getlocal(integration.timezone)
 
-      if integration.vendor_module.run_now?(@ctx, integration, ref_time)
+      if ref_time.hour >= integration.eod.hour
         execute_job(integration)
+
+      elsif integration.vendor_module.run_now?(@ctx, integration)
+        schedule_job(integration, ref_time)
+        flush_job_queue(integration, ref_time)
+
       else
         schedule_job(integration, ref_time)
       end
     end
+  end
+
+  def flush_job_queue(integration, ref_time)
+    tasks = existing_jobs(ref_time)
+    TaskRunner.run(*tasks)
   end
 
   def execute_job(integration)
@@ -24,11 +34,7 @@ class IntegrationService < ApplicationService
   end
 
   def schedule_job(integration, ref_time)
-    exists = Scheduler.where(
-      facility_id: facility_id,
-      batch_id: batch_id,
-      run_on: ref_time.at_beginning_of_day..ref_time.at_end_of_day
-    )
+    exists = existing_jobs(ref_time)
 
     return if exists.size.positive?
 
@@ -39,6 +45,14 @@ class IntegrationService < ApplicationService
       facility_id: facility_id,
       batch_id: batch_id,
       run_on: later.utc
+    )
+  end
+
+  def existing_jobs(ref_time)
+    Scheduler.where(
+      facility_id: facility_id,
+      batch_id: batch_id,
+      run_on: ref_time.at_beginning_of_day..ref_time.at_end_of_day
     )
   end
 

@@ -127,7 +127,7 @@ RSpec.describe MetrcService do
         .and_return(target_module)
     end
 
-    subject { described_class.run_now?(ctx, integration, ref_time) }
+    subject { described_class.run_now?(ctx, integration) }
 
     context 'when it should execute immediately' do
       let(:target_module) do

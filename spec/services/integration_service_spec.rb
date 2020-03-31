@@ -57,38 +57,24 @@ RSpec.describe IntegrationService, sidekiq: :fake do
   end
 
   describe 'when the integration is active' do
-    let(:subject) do
-      account = Account.create(name: 'Jon Snow',
-                               artemis_id: 123,
-                               access_token: 'abc-123',
-                               refresh_token: 'abc-123',
-                               access_token_expires_in: Time.current + 1.day,
-                               access_token_created_at: Time.current)
-      Integration.create(account_id: account.id,
-                         facility_id: 456,
-                         state: :ca,
-                         vendor: :metrc,
-                         vendor_id: '123-ABC',
-                         secret: 'DEF-456')
-      params = ActionController::Parameters.new(relationships: {
-                                                  facility: {
-                                                    data: {
-                                                      id: 456
-                                                    }
-                                                  }
-                                                })
-      params.permit!
-      described_class.new(params)
+    let(:account) { create(:account) }
+    let(:integration) { create(:integration, account: account, facility_id: 456) }
+    let(:params) do
+      ActionController::Parameters.new(
+        relationships: { facility: { data: { id: integration.facility_id } } }
+      ).tap(&:permit!)
     end
 
+    subject { described_class.new(params) }
+
     it 'enqueues the job and does not raise an exception' do
-      expect(MetrcService).to receive(:run_now?).and_return(true)
+      expect(MetrcService).not_to receive(:run_now?)
       expect(VendorJob).to receive(:perform_later)
       expect { subject.call }.not_to raise_error
     end
   end
 
-  describe 'when #eod' do
+  describe 'when #eod...' do
     let(:integration) { create(:integration, eod: "#{eod}:00") }
     let(:batch_id) { 123 }
     let(:params) do

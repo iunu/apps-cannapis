@@ -77,7 +77,7 @@ module Common
     end
 
     def requeue!(exception: nil)
-      raise ScheduledJob::RetryableError.new(exception&.message, original: exception)
+      raise Cannapi::RetryableError.new(exception&.message, original: exception)
     end
 
     def log(msg, level = :info)

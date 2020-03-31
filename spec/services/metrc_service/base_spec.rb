@@ -348,7 +348,7 @@ RSpec.describe MetrcService::Base do
       end
 
       it 'should raise an error' do
-        expect { call }.to raise_error(ScheduledJob::RetryableError)
+        expect { call }.to raise_error(Cannapi::RetryableError)
       end
     end
   end
