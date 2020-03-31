@@ -3,6 +3,8 @@ module Common
     class TransactionAlreadyExecuted < StandardError; end
     class ServiceActionFailure < StandardError; end
 
+    DEFAULT_RUN_MODE = :later
+
     def self.call(*args, &block)
       instance = new(*args, &block)
       instance.run
@@ -10,6 +12,11 @@ module Common
       instance.result
     rescue ServiceActionFailure
       instance.result
+    end
+
+    def self.run_mode(mode = nil)
+      @mode = mode if mode.present?
+      @mode || DEFAULT_RUN_MODE
     end
 
     attr_accessor :result, :integration, :transaction

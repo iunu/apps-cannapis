@@ -1,6 +1,8 @@
 module MetrcService
   module Package
     class Start < MetrcService::Package::Base
+      run_mode :now
+
       def call
         create_package
         # finish_harvests

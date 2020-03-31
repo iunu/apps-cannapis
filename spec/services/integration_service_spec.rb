@@ -81,10 +81,52 @@ RSpec.describe IntegrationService, sidekiq: :fake do
       described_class.new(params)
     end
 
-    it 'enques the job and does not raises an exception' do
-      expect do
-        subject.call
-      end.not_to raise_error
+    it 'enqueues the job and does not raise an exception' do
+      expect(MetrcService).to receive(:run_now?).and_return(true)
+      expect(VendorJob).to receive(:perform_later)
+      expect { subject.call }.not_to raise_error
+    end
+  end
+
+  describe 'when #eod' do
+    let(:integration) { create(:integration, eod: "#{eod}:00") }
+    let(:batch_id) { 123 }
+    let(:params) do
+      ActionController::Parameters.new(
+        relationships: {
+          facility: { data: { id: integration.facility_id } },
+          batch: { data: { id: batch_id } }
+        }
+      ).tap(&:permit!)
+    end
+
+    subject { described_class.new(params) }
+
+    context 'has already passed' do
+      let(:eod) { Time.now.utc.hour }
+      it 'executes the job immediately' do
+        expect(VendorJob).to receive(:perform_later)
+        expect(Scheduler).not_to receive(:create)
+        expect { subject.call }.not_to raise_error
+      end
+    end
+
+    context 'has not yet passed' do
+      let(:eod) { Time.now.utc.hour + 1 }
+      let(:completion) { double(:completion, action_type: 'start') }
+      let(:seeding_unit) { double(:seeding_unit, name: 'Plant (barcoded)') }
+      let(:batch) { double(:batch, id: batch_id, seeding_unit: seeding_unit)  }
+
+      before do
+        allow(batch).to receive(:completion).with(any_args).and_return(completion)
+        expect_any_instance_of(MetrcService::Lookup).to receive(:batch).at_least(:once).and_return(batch)
+        expect(VendorJob).not_to receive(:perform_later)
+        expect(Scheduler).to receive(:create)
+      end
+
+      it 'enqueues the job' do
+        expect { subject.call }.not_to raise_error
+      end
     end
   end
 end

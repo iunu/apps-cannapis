@@ -8,6 +8,11 @@ RSpec.describe MetrcService::Package::Start do
     File.read("spec/support/data/#{path}.json")
   end
 
+  context '#run_mode' do
+    subject { described_class.run_mode }
+    it { is_expected.to eq(:now) }
+  end
+
   let(:integration) { create(:integration, state: 'ca') }
   let(:facility_id) { 2 }
   let(:batch_id) { 374 }
