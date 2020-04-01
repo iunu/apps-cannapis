@@ -44,6 +44,16 @@ RSpec.describe MetrcService do
         it { is_expected.to eq('plant') }
       end
 
+      context 'plants' do
+        let(:seeding_unit_name) { 'Plants' }
+        it { is_expected.to eq('plant') }
+      end
+
+      context 'clones' do
+        let(:seeding_unit_name) { 'Clones' }
+        it { is_expected.to eq('plant') }
+      end
+
       context 'package' do
         let(:seeding_unit_name) { 'Package' }
         it { is_expected.to eq('package') }
@@ -67,6 +77,16 @@ RSpec.describe MetrcService do
 
       context 'plant_barcoded' do
         let(:seeding_unit_name) { 'Plant (Barcoded)' }
+        it { is_expected.to eq(MetrcService::Plant::Start) }
+      end
+
+      context 'plants' do
+        let(:seeding_unit_name) { 'Plants' }
+        it { is_expected.to eq(MetrcService::Plant::Start) }
+      end
+
+      context 'clones' do
+        let(:seeding_unit_name) { 'Clones' }
         it { is_expected.to eq(MetrcService::Plant::Start) }
       end
 
