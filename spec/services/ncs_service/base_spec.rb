@@ -3,9 +3,9 @@ require 'rails_helper'
 RSpec.describe NcsService::Base do
   let(:integration) { create(:ncs_integration) }
 
-  context 'when holds the basic attributes' do
-    subject { described_class.new({}, integration) }
+  subject { described_class.new({}, integration) }
 
+  context 'when holds the basic attributes' do
     it 'has @integration' do
       expect(subject.instance_variable_get(:@integration)).to eq integration
     end

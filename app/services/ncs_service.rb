@@ -8,8 +8,6 @@ module NcsService
   CROP = 'Cannabis'.freeze
 
   SEEDING_UNIT_MAP = {
-    'testing_package' => 'package',
-    'plant_barcoded' => 'plant',
     'plant_clone' => 'plant'
   }.freeze
 
