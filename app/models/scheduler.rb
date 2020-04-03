@@ -11,10 +11,10 @@ class Scheduler < ApplicationRecord
   validates :run_on, presence: true
   validates :attempts, numericality: { only_integer: true, less_than: MAX_ATTEMPTS }
 
-  # scope :for_today do |timezone|
-  #   now = Time.now.getlocal(timezone)
-  #   where(run_on: now.at_beginning_of_day..now.at_end_of_day)
-  # end
+  scope :for_today, ->(timezone) do
+    now = Time.now.getlocal(timezone)
+    where(run_on: now.at_beginning_of_day..now.at_end_of_day)
+  end
 
   def reschedule!
     update!(

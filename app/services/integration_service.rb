@@ -24,8 +24,12 @@ class IntegrationService < ApplicationService
     end
   end
 
+  # Executes any pending jobs belonging to the *same* batch and facility
+  #
+  # If a job requires processing of *related*, batches that must happen
+  # in the handler (see Metrc::Package::Start)
   def flush_job_queue(integration, ref_time)
-    tasks = existing_jobs(ref_time)
+    tasks = existing_jobs(integration, ref_time)
     TaskRunner.run(*tasks)
   end
 
@@ -34,7 +38,7 @@ class IntegrationService < ApplicationService
   end
 
   def schedule_job(integration, ref_time)
-    exists = existing_jobs(ref_time)
+    exists = existing_jobs(integration, ref_time)
 
     return if exists.size.positive?
 
@@ -48,8 +52,9 @@ class IntegrationService < ApplicationService
     )
   end
 
-  def existing_jobs(ref_time)
+  def existing_jobs(integration, ref_time)
     Scheduler.where(
+      integration: integration,
       facility_id: facility_id,
       batch_id: batch_id,
       run_on: ref_time.at_beginning_of_day..ref_time.at_end_of_day

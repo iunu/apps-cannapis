@@ -115,4 +115,43 @@ RSpec.describe IntegrationService, sidekiq: :fake do
       end
     end
   end
+
+  describe 'flushing the job queue' do
+    let(:integration) { create(:integration, eod: "23:00") }
+    let(:batch_id) { 123 }
+    let(:params) do
+      ActionController::Parameters.new(
+        relationships: {
+          facility: { data: { id: integration.facility_id } },
+          batch: { data: { id: batch_id } }
+        }
+      ).tap(&:permit!)
+    end
+
+    let(:completion) { double(:completion, action_type: 'start') }
+    let(:seeding_unit) { double(:seeding_unit, name: 'Package') }
+    let(:batch) { double(:batch, id: batch_id, seeding_unit: seeding_unit)  }
+    let(:service) { described_class.new(params) }
+
+    before do
+      allow(batch).to receive(:completion).with(any_args).and_return(completion)
+      expect_any_instance_of(MetrcService::Lookup).to receive(:batch).at_least(:once).and_return(batch)
+      expect(VendorJob).not_to receive(:perform_later)
+      expect(Scheduler).not_to receive(:create)
+      expect(TaskRunner).to receive(:run)
+
+      create(
+        :task,
+        integration: integration,
+        facility_id: integration.facility_id,
+        batch_id: batch_id
+      )
+    end
+
+    subject { service }
+
+    it 'executes the job immediately' do
+      expect { subject.call }.not_to raise_error
+    end
+  end
 end

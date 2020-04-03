@@ -33,6 +33,7 @@ RSpec.describe ScheduledJob, type: :job do
   end
 
   context 'with a scheduled task' do
+    let(:successful_transaction) { create(:transaction, :start, :successful) }
     let(:task) { create(:task, integration: integration, facility_id: integration.facility_id, batch_id: 3000, run_on: now) }
 
     it 'calls the vendor module' do
@@ -44,7 +45,7 @@ RSpec.describe ScheduledJob, type: :job do
       expect(Scheduler).to receive(:where).with(hash_including(run_on: beginning_of_hour..end_of_hour))
                                           .and_return([task])
 
-      service_action = double(:action, run: true, result: true)
+      service_action = double(:action, run: true, result: successful_transaction)
       expect(MetrcService::Batch).to receive(:new).and_return(service_action)
 
       perform_enqueued_jobs { subject }

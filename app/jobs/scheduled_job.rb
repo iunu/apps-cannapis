@@ -2,15 +2,17 @@ class ScheduledJob < ApplicationJob
   queue_as :default
 
   def perform
-    tasks = get_tasks
+    tasks = find_tasks
     return if tasks.empty?
 
     TaskRunner.run(*tasks)
+  rescue Cannapi::TaskError => e
+    Rails.logger.error("Scheduled job failed: #{e.message}")
   end
 
   protected
 
-  def get_tasks
+  def find_tasks
     now = DateTime.now
     beginning_of_hour = now.beginning_of_hour
     end_of_hour       = now.end_of_hour

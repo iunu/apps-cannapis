@@ -12,7 +12,7 @@ module MetrcService
     def after; end
 
     def call
-      completions.each do |completion|
+      transactions = completions.map do |completion|
         ctx = {
           id: completion.id,
           type: :completions,
@@ -25,8 +25,8 @@ module MetrcService
 
       @task.delete
 
-      # explicitly return nil
-      nil
+      # a stub tranasction to represent the state of the batched transactions
+      Transaction.new(success: transactions.all?(&:success?))
     end
 
     def batch
@@ -44,7 +44,7 @@ module MetrcService
       return if completions.size.positive?
 
       @task.delete
-      raise InvalidOperation, "Completions where already performed. Batch ID #{@batch_id}"
+      raise TransactionAlreadyExecuted, 'batch already processed'
     end
 
     def completions

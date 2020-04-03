@@ -121,6 +121,7 @@ RSpec.describe MetrcService::Package::Start do
         ]
       end
 
+      let(:crop_batch_id) { 15 }
       let(:testing) { raise 'override in subcontext' }
 
       before do
@@ -131,9 +132,9 @@ RSpec.describe MetrcService::Package::Start do
           .to_return(body: load_response_json("api/package/batch#{testing ? '-testing' : ''}"))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
-          .to_return(body: { data: [{ id: '90210', type: 'completions', attributes: { id: 90210, action_type: 'start', parent_id: 90209 } }, { id: '90211', type: 'completions', attributes: { id: 90211, action_type: 'consume', parent_id: 90209, context: { source_batch: { id: 15 } }, options: { resource_unit_id: 26, batch_resource_id: 123, consumed_quantity: 50, requested_quantity: 10 } } }] }.to_json)
+          .to_return(body: { data: [{ id: '90210', type: 'completions', attributes: { id: 90210, action_type: 'start', parent_id: 90209 } }, { id: '90211', type: 'completions', attributes: { id: 90211, action_type: 'consume', parent_id: 90209, context: { source_batch: { id: crop_batch_id } }, options: { resource_unit_id: 26, batch_resource_id: 123, consumed_quantity: 50, requested_quantity: 10 } } }] }.to_json)
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/15")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{crop_batch_id}")
           .to_return(body: load_response_json('api/package/crop-batch'))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/resource_units/26")
@@ -159,8 +160,40 @@ RSpec.describe MetrcService::Package::Start do
 
       context 'standard package' do
         let(:testing) { false }
+        let(:upstream_transaction) { create(:transaction, :start, :successful) }
+
         it { is_expected.to eq(transaction) }
         it { is_expected.to be_success }
+
+        context 'when upstream tasks are not yet processed' do
+          before do
+            run_on = Time.parse("#{Time.now.localtime(integration.timezone).strftime('%F')}T#{integration.eod}#{integration.timezone}")
+
+            create(
+              :task,
+              integration: integration,
+              batch_id: crop_batch_id,
+              facility_id: facility_id,
+              run_on: run_on
+            )
+
+            stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/2/batches/15?include=zone,barcodes,completions,custom_data,seeding_unit,harvest_unit,sub_zone")
+              .to_return(body: load_response_json('api/package/crop-batch'))
+
+            expect(MetrcService::Plant::Start)
+              .to receive(:call)
+              .and_return(upstream_transaction)
+          end
+
+          context 'when upstream tasks succeed' do
+            it { is_expected.to be_success }
+          end
+
+          context 'when upstream tasks fail' do
+            let(:upstream_transaction) { create(:transaction, :start, :unsuccessful) }
+            it { is_expected.not_to be_success }
+          end
+        end
       end
 
       context 'testing package' do

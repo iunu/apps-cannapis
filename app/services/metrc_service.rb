@@ -4,6 +4,7 @@ module MetrcService
   class InvalidOperation < StandardError; end
   class InvalidAttributes < StandardError; end
   class DataMismatch < StandardError; end
+  class UpstreamProcessingError < StandardError; end
 
   CROP = 'Cannabis'.freeze
 

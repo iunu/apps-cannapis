@@ -2,17 +2,25 @@
 
 class TaskRunner
   def self.run(*tasks)
-    tasks.each do |task|
-      new(task).run
+    runners = tasks.map do |task|
+      new(task).tap(&:run)
     end
+
+    raise Cannapi::TaskError, 'one or more tasks failed; notifications sent' \
+      unless runners.all?(&:success?)
+
+    runners.map(&:result)
   end
+
+  attr_accessor :result
+  delegate :success?, to: :result, allow_nil: true
 
   def initialize(task)
     @task = task
   end
 
   def run
-    vendor_module.call(build_context, @task.integration, @task)
+    @result = vendor_module.call(build_context, @task.integration, nil, @task)
   rescue Cannapi::RetryableError => e
     Rails.logger.warn("Task #{@task.id} failed (attempt ##{@task.attempts + 1}) with retryable error, rescheduling...")
     report_rescheduled(e.original)
@@ -26,7 +34,7 @@ class TaskRunner
   def build_context
     {
       id: nil,
-      attributes: nil,
+      attributes: {},
       relationships: {
         batch: { data: { id: @task.batch_id } },
         facility: { data: { id: @task.facility_id } }

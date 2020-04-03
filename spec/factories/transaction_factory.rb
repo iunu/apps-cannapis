@@ -22,6 +22,10 @@ FactoryBot.define do
       type { :discard_batch }
     end
 
+    trait :start do
+      type { :start_batch }
+    end
+
     trait :harvest do
       type { :harvest_batch }
     end
