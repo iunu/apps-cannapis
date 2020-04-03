@@ -12,7 +12,7 @@ module MetrcService
     def after; end
 
     def call
-      transactions = completions.map do |completion|
+      transactions = completions.each_with_object([]) do |completion, arr|
         ctx = {
           id: completion.id,
           type: :completions,
@@ -20,13 +20,17 @@ module MetrcService
           relationships: @relationships
         }.with_indifferent_access
 
-        MetrcService.perform_action(ctx, @integration, @task)
+        arr << MetrcService.perform_action(ctx, @integration, @task)
+
+        # halt if the last action failed
+        break arr unless arr.last&.success?
       end
 
-      @task.delete
-
       # a stub tranasction to represent the state of the batched transactions
-      Transaction.new(success: transactions.all?(&:success?))
+      result = Transaction.new(success: transactions.all?(&:success?))
+      @task.delete if result.success?
+
+      result
     end
 
     def batch
