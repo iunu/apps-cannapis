@@ -169,6 +169,15 @@ module NcsService
       @attributes['status']
     end
 
+    def lookup_harvest(name)
+      # TODO: consider date range for lookup - harvest create/finish dates?
+      harvests = call_ncs(:harvest, :active)
+      ncs_harvest = harvests.find { |harvest| harvest['Name'] == name }
+      raise DataMismatch, "expected to find a harvest in NCS named '#{name}' but it does not exist" if ncs_harvest.nil?
+
+      ncs_harvest
+    end
+
     def resource_completions_by_unit_type(unit_type)
       resource_unit_id = resource_unit(unit_type).id
 

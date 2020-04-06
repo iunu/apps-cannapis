@@ -7,14 +7,16 @@ module NcsService
       def call
         seeding_unit_id = @attributes.dig(:options, :seeding_unit_id)
         items           = get_items(seeding_unit_id)
-        next_action     = complete? ? :harvest_plants : :manicure_plants
 
-        if next_action == :harvest_plants
+        if complete?
+          # We need to create a harvest first
+          create_harvest(items, batch)
+
+          payload = build_harvest_plants_payload(items, batch)
+          call_ncs(:plant, :harvest, payload)
+        else
           payload = build_manicure_plants_payload(items, batch)
           call_ncs(:plant, :manicure, payload)
-        else
-          create_harvest(items, batch)
-          call_ncs(:plant, :harvest, payload)
         end
 
         remove_waste
@@ -27,8 +29,9 @@ module NcsService
         @transaction ||= get_transaction(:harvest_batch)
       end
 
+      # TODO: Fix me
       def remove_waste
-        call_ncs(:remove_waste, build_remove_waste_payload)
+        call_ncs(:harvest, :remove_waste, build_remove_waste_payload)
       end
 
       def create_harvest(items, batch)
@@ -63,7 +66,7 @@ module NcsService
         end
       end
 
-      def build_harvest_plants_payload(items, batch, harvest)
+      def build_harvest_plants_payload(items, batch)
         harvest_name = batch.arbitrary_id
         average_weight = calculate_average_weight(items)
 
@@ -81,23 +84,16 @@ module NcsService
 
       def build_remove_waste_payload
         waste_completions = resource_completions_by_unit_type(WASTE_WEIGHT)
-        metrc_harvest = lookup_metrc_harvest(batch.arbitrary_id)
+        ncs_harvest = lookup_harvest(batch.arbitrary_id)
 
         waste_completions.map do |completion|
           {
-            Id: metrc_harvest['Id'],
-            WasteType: waste_type(completion),
-            UnitOfWeight: unit_of_weight(WASTE_WEIGHT),
-            WasteWeight: completion.options['generated_quantity'] || completion.options['processed_quantity'],
-            ActualDate: harvest_date
+            Id: ncs_harvest['Id'],
+            UnitOfWeightName: unit_of_weight(WASTE_WEIGHT),
+            TotalWasteWeight: completion.options['generated_quantity'] || completion.options['processed_quantity'],
+            FinishedDate: harvest_date
           }
         end
-      end
-
-      def waste_type(_completion)
-        # TODO: determine waste type from 'process' completion
-
-        'Plant Material'
       end
 
       def harvest_date
