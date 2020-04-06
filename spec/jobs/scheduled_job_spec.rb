@@ -33,6 +33,7 @@ RSpec.describe ScheduledJob, type: :job do
   end
 
   context 'with a scheduled task' do
+    let(:successful_transaction) { create(:transaction, :start, :successful) }
     let(:task) { create(:task, integration: integration, facility_id: integration.facility_id, batch_id: 3000, run_on: now) }
 
     it 'calls the vendor module' do
@@ -44,7 +45,7 @@ RSpec.describe ScheduledJob, type: :job do
       expect(Scheduler).to receive(:where).with(hash_including(run_on: beginning_of_hour..end_of_hour))
                                           .and_return([task])
 
-      service_action = double(:action, run: true, result: true)
+      service_action = double(:action, run: true, result: successful_transaction)
       expect(MetrcService::Batch).to receive(:new).and_return(service_action)
 
       perform_enqueued_jobs { subject }
@@ -69,7 +70,7 @@ RSpec.describe ScheduledJob, type: :job do
     end
 
     context 'that can be rescheduled' do
-      let(:raised_error) { ScheduledJob::RetryableError.new('something went wrong', original: original_error) }
+      let(:raised_error) { Cannapi::RetryableError.new('something went wrong', original: original_error) }
 
       before do
         expect(mailer_with_params)
@@ -83,7 +84,7 @@ RSpec.describe ScheduledJob, type: :job do
     end
 
     context 'that can NOT be rescheduled due to too many retries' do
-      let(:raised_error) { ScheduledJob::TooManyRetriesError.new('something went wrong too many times', original: original_error) }
+      let(:raised_error) { Cannapi::TooManyRetriesError.new('something went wrong too many times', original: original_error) }
 
       before do
         expect(mailer_with_params)

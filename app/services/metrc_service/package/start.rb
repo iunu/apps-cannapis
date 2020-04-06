@@ -1,7 +1,11 @@
 module MetrcService
   module Package
     class Start < MetrcService::Package::Base
+      run_mode :now
+
       def call
+        flush_upstream_tasks
+
         create_package
         # finish_harvests
 
@@ -12,6 +16,25 @@ module MetrcService
 
       def transaction
         @transaction ||= get_transaction(:start_package_batch)
+      end
+
+      def flush_upstream_tasks
+        consume_completions.each do |consume|
+          source_batch_id = consume.context.dig('source_batch', 'id')
+          tasks = upstream_tasks(source_batch_id)
+          next if tasks.empty?
+
+          TaskRunner.run(*tasks)
+        end
+      rescue Cannapi::TaskError => e
+        raise UpstreamProcessingError, "Failed to process upstream tasks: #{e.message}"
+      end
+
+      def upstream_tasks(source_batch_id)
+        @integration
+          .schedulers
+          .for_today(@integration.timezone)
+          .where(batch_id: source_batch_id, facility_id: @facility_id)
       end
 
       def finish_harvests

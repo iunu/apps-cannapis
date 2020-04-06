@@ -3,6 +3,11 @@ require 'rails_helper'
 RSpec.describe MetrcService::Base do
   let(:integration) { create(:integration, state: :ca) }
 
+  context '#run_mode' do
+    subject { described_class.run_mode }
+    it { is_expected.to eq(:later) }
+  end
+
   context 'holds the basic attributes' do
     subject { MetrcService::Base.new({}, integration) }
 
@@ -343,7 +348,7 @@ RSpec.describe MetrcService::Base do
       end
 
       it 'should raise an error' do
-        expect { call }.to raise_error(ScheduledJob::RetryableError)
+        expect { call }.to raise_error(Cannapi::RetryableError)
       end
     end
   end

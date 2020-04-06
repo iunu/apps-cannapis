@@ -1,6 +1,6 @@
 FactoryBot.define do
   factory :account do
-    artemis_id { SecureRandom.uuid }
+    sequence(:artemis_id) { |n| n }
     name { Faker::Name.name }
     access_token { Faker::Alphanumeric.unique.alphanumeric(number: 10) }
     refresh_token { Faker::Alphanumeric.unique.alphanumeric(number: 10) }

@@ -34,7 +34,9 @@ RSpec.describe MetrcService::Batch do
 
     let(:task) { create(:task, integration: integration) }
 
-    subject { described_class.call(ctx, integration, nil, task) }
+    let(:call) { described_class.call(ctx, integration, nil, task) }
+
+    subject { call }
 
     describe 'with corn crop' do
       include_examples 'with corn crop'
@@ -58,6 +60,8 @@ RSpec.describe MetrcService::Batch do
     end
 
     describe 'with completions' do
+      let(:successful_transaction) { create(:transaction, :harvest, :successful) }
+
       before do
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
           .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
@@ -67,17 +71,21 @@ RSpec.describe MetrcService::Batch do
 
         expect(MetrcService::Plant::Start)
           .to receive(:call)
+          .and_return(successful_transaction)
 
         expect(MetrcService::Plant::Move)
           .to receive(:call)
           .exactly(:twice)
+          .and_return(successful_transaction)
 
         expect(MetrcService::Plant::Discard)
           .to receive(:call)
+          .and_return(successful_transaction)
 
         expect(MetrcService::Plant::Harvest)
           .to receive(:call)
           .exactly(:twice)
+          .and_return(successful_transaction)
 
         expect(task)
           .to receive(:delete)
@@ -90,7 +98,8 @@ RSpec.describe MetrcService::Batch do
           .and_call_original
       end
 
-      it { is_expected.to be_nil }
+      it { is_expected.to be_a(Transaction) }
+      it { is_expected.to be_success }
     end
   end
 end
