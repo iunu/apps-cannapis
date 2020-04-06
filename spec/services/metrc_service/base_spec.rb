@@ -3,8 +3,8 @@ require 'rails_helper'
 RSpec.describe MetrcService::Base do
   let(:integration) { create(:integration, state: :ca) }
 
-  context 'holds the basic attributes' do
-    subject { MetrcService::Base.new({}, integration) }
+  describe 'holds the basic attributes' do
+    subject { described_class.new({}, integration) }
 
     it 'has @integration' do
       expect(subject.instance_variable_get(:@integration)).to eq integration
@@ -44,10 +44,10 @@ RSpec.describe MetrcService::Base do
       }
     end
 
-    subject { MetrcService::Base.new(ctx, integration) }
+    subject { described_class.new(ctx, integration) }
 
     it 'has .relationships' do
-      expect(subject.instance_variable_get(:@relationships)).to_not be_empty
+      expect(subject.instance_variable_get(:@relationships)).not_to be_empty
     end
 
     it 'has .attributes' do
@@ -71,36 +71,38 @@ RSpec.describe MetrcService::Base do
     end
   end
 
-  context '#get_transaction' do
-    it 'creates a new transaction' do
-      ctx = {
-        'id': 3000,
-        'relationships': {
-          'batch': {
-            'data': {
-              'id': 2002
+  describe '#get_transaction' do
+    let(:ctx) do
+      {
+        id: 3000,
+        relationships: {
+          batch: {
+            data: {
+              id: 2002
             }
           },
-          'facility': {
-            'data': {
-              'id': 1568
+          facility: {
+            data: {
+              id: 1568
             }
           }
         },
-        'attributes': {},
-        'completion_id': 3000
+        attributes: {},
+        completion_id: 3000
       }
-      instance = MetrcService::Base.new(ctx, integration)
-      name = :start_batch
+    end
+    let(:instance) { described_class.new(ctx, integration) }
+    let(:name) { :start_batch }
+
+    it 'creates a new transaction' do
       transaction = instance.send :get_transaction, name
-      expect(transaction).to_not be_nil
+      expect(transaction).not_to be_nil
       expect(transaction.type).to eq name.to_s
       expect(transaction.batch_id).to eq 2002
       expect(transaction.completion_id).to eq 3000
     end
 
     it 'returns an existing transaction' do
-      name = :start_batch
       existing = Transaction.create(account_id: integration.account.id,
                                     integration_id: integration.id,
                                     vendor: :metrc,
@@ -110,26 +112,26 @@ RSpec.describe MetrcService::Base do
                                     metadata: {},
                                     success: true)
       ctx = {
-        'id': 4000,
-        'relationships': {
-          'batch': {
-            'data': {
-              'id': 3002
+        id: 4000,
+        relationships: {
+          batch: {
+            data: {
+              id: 3002
             }
           },
-          'facility': {
-            'data': {
-              'id': 3568
+          facility: {
+            data: {
+              id: 3568
             }
           }
         },
-        'attributes': {},
-        'completion_id': 4000
+        attributes: {},
+        completion_id: 4000
       }
-      instance = MetrcService::Base.new(ctx, integration)
+      instance = described_class.new(ctx, integration)
       transaction = instance.send :get_transaction, name
 
-      expect(transaction).to_not be_nil
+      expect(transaction).not_to be_nil
       expect(transaction).to be_a Transaction
       expect(transaction.id).to eq existing.id
       expect(transaction.type).to eq existing.type
@@ -141,8 +143,29 @@ RSpec.describe MetrcService::Base do
     end
   end
 
-  context '#get_batch' do
-    before :all do
+  describe '#get_batch' do
+    let(:ctx) do
+      {
+        id: 3000,
+        relationships: {
+          batch: {
+            data: {
+              id: 2002
+            }
+          },
+          facility: {
+            data: {
+              id: 1568
+            }
+          }
+        },
+        attributes: {},
+        completion_id: 3000
+      }
+    end
+    subject { described_class.new(ctx, integration) }
+
+    before do
       stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
         .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
@@ -151,33 +174,37 @@ RSpec.describe MetrcService::Base do
     end
 
     it 'gets a batch', skip: 'FIXME' do
-      ctx = {
-        'id': 3000,
-        'relationships': {
-          'batch': {
-            'data': {
-              'id': 2002
-            }
-          },
-          'facility': {
-            'data': {
-              'id': 1568
-            }
-          }
-        },
-        'attributes': {},
-        'completion_id': 3000
-      }
-      instance = MetrcService::Base.new(ctx, integration)
-      batch = instance.send :get_batch
-      expect(batch).to_not be_nil
+      batch = subject.send :get_batch
+
+      expect(batch).not_to be_nil
       expect(batch.id).to eq 2002
       expect(batch.arbitrary_id).to eq 'Jun19-Bok-Cho'
     end
   end
 
-  context '#get_items' do
-    before :all do
+  describe '#get_items' do
+    let(:ctx) do
+      {
+        id: 3000,
+        relationships: {
+          batch: {
+            data: {
+              id: 2002
+            }
+          },
+          facility: {
+            data: {
+              id: 1568
+            }
+          }
+        },
+        attributes: {},
+        completion_id: 3000
+      }
+    end
+    subject { described_class.new(ctx, integration) }
+
+    before do
       stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
         .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
@@ -189,35 +216,39 @@ RSpec.describe MetrcService::Base do
     end
 
     it 'gets batch items', skip: 'FIXME' do
-      ctx = {
-        'id': 3000,
-        'relationships': {
-          'batch': {
-            'data': {
-              'id': 2002
-            }
-          },
-          'facility': {
-            'data': {
-              'id': 1568
-            }
-          }
-        },
-        'attributes': {},
-        'completion_id': 3000
-      }
       seeding_unit_id = 100
-      instance = MetrcService::Base.new(ctx, integration)
-      items = instance.send :get_items, seeding_unit_id
-      expect(items).to_not be_nil
+      items = subject.send :get_items, seeding_unit_id
+
+      expect(items).not_to be_nil
       expect(items.first.id).to eq 326_515
       expect(items.first.relationships.dig('barcode', 'data', 'id')).to eq '1A4FF0200000022000000207'
       expect(items.first.relationships.dig('seeding_unit', 'data', 'id')).to eq seeding_unit_id.to_s
     end
   end
 
-  context '#get_zone' do
-    before :all do
+  describe '#get_zone' do
+    let(:ctx) do
+      {
+        id: 3000,
+        relationships: {
+          batch: {
+            data: {
+              id: 2002
+            }
+          },
+          facility: {
+            data: {
+              id: 1568
+            }
+          }
+        },
+        attributes: {},
+        completion_id: 3000
+      }
+    end
+    subject { described_class.new(ctx, integration) }
+
+    before do
       stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
         .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
@@ -226,33 +257,16 @@ RSpec.describe MetrcService::Base do
     end
 
     it 'gets zone', skip: 'FIXME' do
-      ctx = {
-        'id': 3000,
-        'relationships': {
-          'batch': {
-            'data': {
-              'id': 2002
-            }
-          },
-          'facility': {
-            'data': {
-              'id': 1568
-            }
-          }
-        },
-        'attributes': {},
-        'completion_id': 3000
-      }
       zone_id = 2
-      instance = MetrcService::Base.new(ctx, integration)
-      zone = instance.send :get_zone, zone_id
-      expect(zone).to_not be_nil
+      zone = subject.send :get_zone, zone_id
+
+      expect(zone).not_to be_nil
       expect(zone.id).to eq zone_id
       expect(zone.name).to eq 'Propagation'
     end
   end
 
-  context '#get_resource_unit' do
+  describe '#get_resource_unit' do
     before do
       stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
         .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
@@ -276,13 +290,14 @@ RSpec.describe MetrcService::Base do
       }
     end
 
-    let(:instance) { MetrcService::Base.new(ctx, integration) }
+    let(:instance) { described_class.new(ctx, integration) }
     let(:resource_unit) { instance.send(:get_resource_unit, 1) }
     subject { resource_unit }
 
     it { is_expected.to be_a(OpenStruct) }
+
     it do
-      is_expected.to have_attributes(
+      expect(subject).to have_attributes(
         id: 1,
         name: 'g of Something - 5th Element',
         unit: 'Grams',
@@ -294,10 +309,10 @@ RSpec.describe MetrcService::Base do
     end
   end
 
-  context 'state' do
+  describe 'by state' do
     let(:state) { 'NY' }
     let(:integration) { create(:integration, state: state) }
-    let(:service) { MetrcService::Base.new({}, integration) }
+    let(:service) { described_class.new({}, integration) }
     subject { service.send(:state) }
 
     it { is_expected.to eq(integration.state) }
@@ -314,16 +329,18 @@ RSpec.describe MetrcService::Base do
 
     context 'when MT' do
       let(:state) { 'MT' }
-      it { is_expected.to eq('CO') }
 
-      context 'when lower case' do
-        let(:state) { 'mt' }
-        it { is_expected.to eq('CO') }
-      end
+      it { is_expected.to eq('CO') }
+    end
+
+    context 'when lower case' do
+      let(:state) { 'mt' }
+
+      it { is_expected.to eq('CO') }
     end
   end
 
-  context '#call_metrc error handling' do
+  describe '#call_metrc error handling' do
     let(:payload) do
       { Something: 'went wrong' }
     end
@@ -342,7 +359,7 @@ RSpec.describe MetrcService::Base do
           .to_return(status: 500, body: '', headers: {})
       end
 
-      it 'should raise an error' do
+      it 'raises an error' do
         expect { call }.to raise_error(ScheduledJob::RetryableError)
       end
     end

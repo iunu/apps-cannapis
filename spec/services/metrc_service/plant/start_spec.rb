@@ -28,7 +28,7 @@ RSpec.describe MetrcService::Plant::Start do
     }.with_indifferent_access
   end
 
-  context '#call' do
+  describe '#call' do
     subject { described_class.call(ctx, integration) }
 
     describe 'on an old successful transaction' do
@@ -66,12 +66,26 @@ RSpec.describe MetrcService::Plant::Start do
       include_examples 'with corn crop'
     end
 
-    describe 'metrc#create_plant_batches' do
+    describe '#create_plant_batches' do
       subject { described_class.call(ctx, integration) }
-      now = Time.zone.now.strftime('%Y-%m-%d')
-      let(:transaction) { stub_model Transaction, type: :start_batch, success: false }
 
-      before :all do
+      let(:now) { Time.zone.now.strftime('%Y-%m-%d') }
+      let(:transaction) { stub_model Transaction, type: :start_batch, success: false }
+      let(:expected_payload) do
+        [
+          {
+            Name: '1A4FF01000000220000010',
+            Type: 'Clone',
+            Count: 100,
+            Strain: 'Banana Split',
+            Location: 'Germination',
+            PatientLicenseNumber: nil,
+            ActualDate: now
+          }
+        ]
+      end
+
+      before do
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
           .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
@@ -126,21 +140,7 @@ RSpec.describe MetrcService::Plant::Start do
           .to_return(status: 200, body: '', headers: {})
       end
 
-      let(:expected_payload) do
-        [
-          {
-            Name: '1A4FF01000000220000010',
-            Type: 'Clone',
-            Count: 100,
-            Strain: 'Banana Split',
-            Location: 'Germination',
-            PatientLicenseNumber: nil,
-            ActualDate: now
-          }
-        ]
-      end
-
-      before do
+      it 'is successful' do
         expect_any_instance_of(described_class)
           .to receive(:get_transaction)
           .and_return transaction
@@ -148,14 +148,14 @@ RSpec.describe MetrcService::Plant::Start do
         expect_any_instance_of(described_class)
           .to receive(:build_start_payload)
           .and_return(expected_payload)
-      end
 
-      it { is_expected.to be_success }
+        expect(subject).to be_success
+      end
     end
   end
 
-  context '#build_start_payload' do
-    describe 'with tracking barcode' do
+  describe '#build_start_payload' do
+    context 'with tracking barcode' do
       let(:batch) do
         zone_attributes = {
           seeding_unit: {
@@ -176,15 +176,12 @@ RSpec.describe MetrcService::Plant::Start do
                }.with_indifferent_access)
       end
 
-      before do
-        expect_any_instance_of(described_class)
-          .to receive(:batch)
-          .and_return(batch)
-      end
-
       subject { described_class.new(ctx, integration) }
 
       it 'returns a valid payload' do
+        expect_any_instance_of(described_class)
+          .to receive(:batch)
+          .and_return(batch)
         payload = subject.send(:build_start_payload, batch).first
 
         expect(payload).not_to be_nil
@@ -237,15 +234,12 @@ RSpec.describe MetrcService::Plant::Start do
                }.with_indifferent_access)
       end
 
-      before do
-        expect_any_instance_of(described_class)
-          .to receive(:batch)
-          .and_return(batch)
-      end
-
       subject { described_class.new(ctx, integration) }
 
       it 'returns a valid payload using the batch barcode' do
+        expect_any_instance_of(described_class)
+          .to receive(:batch)
+          .and_return(batch)
         payload = subject.send(:build_start_payload, batch).first
 
         expect(payload).not_to be_nil

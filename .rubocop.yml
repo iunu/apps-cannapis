@@ -66,3 +66,12 @@ RSpec/ExampleLength:
 
 RSpec/MultipleExpectations:
   Max: 20
+
+RSpec/VerifiedDoubles:
+  Enabled: false
+
+RSpec/EmptyLineAfterFinalLet:
+  Enabled: false
+
+RSpec/AnyInstance:
+  Enabled: false

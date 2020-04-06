@@ -6,8 +6,13 @@ RSpec.describe SubscriptionJob, type: :job do
   let(:integration) { create(:integration) }
   subject { described_class.perform_later('http://localhost:8080', integration) }
 
-  before :all do
+  before do
     ActiveJob::Base.queue_adapter = :test
+  end
+
+  after do
+    clear_enqueued_jobs
+    clear_performed_jobs
   end
 
   it 'enqueues a new vendor job' do
@@ -16,17 +21,13 @@ RSpec.describe SubscriptionJob, type: :job do
   end
 
   it 'calls the subscription API', skip: 'Figure out object ID' do
-    expect(ArtemisApi::Subscription).to receive(:create).with(facility_id: integration.facility_id,
-                                                              subject: :completions,
-                                                              destination: 'http://localhost:8080/v1/webhook',
-                                                              client: client)
-                                                        .and_return(nil)
+    expect(ArtemisApi::Subscription).to have_received(:create)
+      .with(facility_id: integration.facility_id,
+            subject: :completions,
+            destination: 'http://localhost:8080/v1/webhook',
+            client: client)
+      .and_return(nil)
 
     perform_enqueued_jobs { subject }
-  end
-
-  after do
-    clear_enqueued_jobs
-    clear_performed_jobs
   end
 end

@@ -4,11 +4,18 @@ RSpec.describe ScheduledJob, type: :job do
   include ActiveJob::TestHelper
 
   subject { described_class.perform_later }
+
   let(:integration) { create(:integration) }
+
   let(:now) { Time.now.utc }
 
-  before :all do
+  before do
     ActiveJob::Base.queue_adapter = :test
+  end
+
+  after do
+    clear_enqueued_jobs
+    clear_performed_jobs
   end
 
   it 'enqueues a new scheduled job' do
@@ -17,7 +24,7 @@ RSpec.describe ScheduledJob, type: :job do
   end
 
   context 'with no scheduled tasks' do
-    before :all do
+    before do
       Scheduler.delete_all
     end
 
@@ -25,8 +32,9 @@ RSpec.describe ScheduledJob, type: :job do
       beginning_of_hour = now.beginning_of_hour
       end_of_hour       = now.end_of_hour
 
-      expect(Scheduler).to receive(:where).with(hash_including(run_on: beginning_of_hour..end_of_hour))
-                                          .and_return([])
+      expect(Scheduler).to have_received(:where)
+        .with(hash_including(run_on: beginning_of_hour..end_of_hour))
+        .and_return([])
 
       perform_enqueued_jobs { subject }
     end
@@ -34,86 +42,80 @@ RSpec.describe ScheduledJob, type: :job do
 
   context 'with a scheduled task' do
     let(:task) { create(:task, integration: integration, facility_id: integration.facility_id, batch_id: 3000, run_on: now) }
+    let(:service_action) { double(:action, run: true, result: true) }
 
     it 'calls the vendor module' do
       beginning_of_hour = now.beginning_of_hour
       end_of_hour       = now.end_of_hour
 
       # allow(MetrcService::Batch).to receive(:new)
-      allow_any_instance_of(MetrcService::Batch).to receive(:call)
-      expect(Scheduler).to receive(:where).with(hash_including(run_on: beginning_of_hour..end_of_hour))
-                                          .and_return([task])
+      allow_any_instance_of(MetrcService::Batch).to receive(:call) # rubocop:disable RSpec/AnyInstance
+      expect(Scheduler).to have_received(:where)
+        .with(hash_including(run_on: beginning_of_hour..end_of_hour))
+        .and_return([task])
 
-      service_action = double(:action, run: true, result: true)
-      expect(MetrcService::Batch).to receive(:new).and_return(service_action)
+      expect(MetrcService::Batch).to have_received(:new).and_return(service_action)
 
       perform_enqueued_jobs { subject }
     end
   end
 
-  context 'with a failing task' do
+  describe 'on a failing task' do
     let(:task) { create(:task, integration: integration, facility_id: integration.facility_id, batch_id: 3000, run_on: now) }
     let(:original_error) { double(:original_error) }
     let(:mailer_with_params) { double(:mailer) }
     let(:email) { double(:email, deliver_now: nil) }
+    let(:batch) { double(MetrcService::Batch) }
+    let(:mailer) { double(NotificationMailer) }
 
     before do
-      expect(MetrcService::Batch)
-        .to receive(:call)
+      allow(batch).to have_received(:call)
         .and_raise(raised_error)
 
-      expect(NotificationMailer)
-        .to receive(:with)
+      allow(mailer).to have_received(:with)
         .with(task: task, error: original_error)
         .and_return(mailer_with_params)
     end
 
-    context 'that can be rescheduled' do
+    context 'when it can be rescheduled' do
       let(:raised_error) { ScheduledJob::RetryableError.new('something went wrong', original: original_error) }
 
-      before do
+      it 'enqueues the job' do
         expect(mailer_with_params)
-          .to receive(:report_reschedule_email)
+          .to have_received(:report_reschedule_email)
           .and_return(email)
-      end
 
-      it 'should execute' do
         perform_enqueued_jobs { subject }
       end
     end
 
-    context 'that can NOT be rescheduled due to too many retries' do
+    context 'when it can NOT be rescheduled due to too many retries' do
       let(:raised_error) { ScheduledJob::TooManyRetriesError.new('something went wrong too many times', original: original_error) }
 
       before do
-        expect(mailer_with_params)
-          .to receive(:report_failure_email)
+        allow(mailer_with_params)
+          .to have_received(:report_failure_email)
           .and_return(email)
       end
 
-      it 'should execute' do
+      it 'enqueues the job' do
         perform_enqueued_jobs { subject }
       end
     end
 
-    context 'that can NOT be rescheduled due to non-retryable error' do
+    context 'when it can NOT be rescheduled due to non-retryable error' do
       let(:raised_error) { StandardError.new('something unexpected went wrong') }
       let(:original_error) { raised_error }
 
       before do
-        expect(mailer_with_params)
-          .to receive(:report_failure_email)
+        allow(mailer_with_params)
+          .to have_received(:report_failure_email)
           .and_return(email)
       end
 
-      it 'should execute' do
+      it 'enqueues the job' do
         perform_enqueued_jobs { subject }
       end
     end
-  end
-
-  after do
-    clear_enqueued_jobs
-    clear_performed_jobs
   end
 end
