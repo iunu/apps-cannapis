@@ -74,6 +74,10 @@ module MetrcService
         end
       end
 
+      # If the waste type (the resource unit's +product_modifier+) is found in the list of available waste types
+      # from Metrc (GET [metrc]/harvests/v1/waste/types), # then we will use that.
+      #
+      # If not, then we use the first available valid waste type from Metrc
       def waste_type(completion)
         waste_resource_unit = get_resource_unit(completion.attributes.dig('options', 'resource_unit_id'))
         metrc_waste_types = JSON.parse(@client.get('harvests', 'waste/types').body)
