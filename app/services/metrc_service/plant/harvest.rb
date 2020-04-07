@@ -1,8 +1,8 @@
 module MetrcService
   module Plant
     class Harvest < MetrcService::Base
-      WET_WEIGHT = 'Wet Material'.freeze
-      WASTE_WEIGHT = 'Waste'.freeze
+      WET_WEIGHT = 'wet_weight'.freeze
+      WASTE_WEIGHT = 'wet_waste'.freeze
 
       def call
         seeding_unit_id = @attributes.dig(:options, :seeding_unit_id)

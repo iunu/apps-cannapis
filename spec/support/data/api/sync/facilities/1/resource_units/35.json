@@ -1,0 +1,30 @@
+{
+  "data": {
+    "id": "35",
+    "type": "resource_units",
+    "attributes": {
+      "id": 35,
+      "name": "Gram of Wet Waste, 9 LB Hammer Cannabis",
+      "kind": "weight",
+      "unit_name": "Gram",
+      "unit_symbol": "g",
+      "unit_precision": 0,
+      "conversion_si": 1.0,
+      "unit_modifier": null,
+      "product_modifier": "Wet Waste",
+      "options": {
+        "metrc": "wet_waste"
+      }
+    },
+    "relationships": {
+      "crop_variety": {
+        "meta": {
+          "included": false
+        }
+      }
+    }
+  },
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

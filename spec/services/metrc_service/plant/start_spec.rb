@@ -7,16 +7,8 @@ RSpec.describe MetrcService::Plant::Start do
     {
       id: 3000,
       relationships: {
-        batch: {
-          data: {
-            id: 2002
-          }
-        },
-        facility: {
-          data: {
-            id: 1568
-          }
-        }
+        batch: { data: { id: 2002 } },
+        facility: { data: { id: 1568 } }
       },
       attributes: {
         options: {
@@ -37,16 +29,8 @@ RSpec.describe MetrcService::Plant::Start do
         {
           id: 3000,
           relationships: {
-            batch: {
-              data: {
-                id: 2002
-              }
-            },
-            facility: {
-              data: {
-                id: 1568
-              }
-            }
+            batch: { data: { id: 2002 } },
+            facility: { data: { id: 1568 } }
           },
           attributes: {},
           completion_id: 1001
