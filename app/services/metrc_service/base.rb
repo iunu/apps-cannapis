@@ -40,6 +40,7 @@ module MetrcService
       fail!
     rescue StandardError => e
       log("Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{e.inspect}", :error)
+      log(e.backtrace.join("\n"), :error)
       fail!(transaction)
     end
 
