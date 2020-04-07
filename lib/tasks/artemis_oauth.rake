@@ -1,8 +1,8 @@
 # frozen_string_literal: true
 
-namespace :artemis do
-  TOKEN_PATH = 'spec/support/token_store/artemis_token.json'
+require_relative './common'
 
+namespace :artemis do
   desc 'Authorize with Artemis API'
   task authorize: :environment do
     redirect = 'urn:ietf:wg:oauth:2.0:oob'

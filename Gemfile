@@ -58,6 +58,7 @@ group :development, :test do
   gem 'byebug', platforms: %w[mri mingw x64_mingw]
   gem 'factory_bot_rails'
   gem 'faker'
+  gem 'pmap'
   gem 'rails-controller-testing'
   gem 'rspec-rails', '~> 4.0.0.beta2'
   gem 'rubocop'

@@ -221,6 +221,7 @@ GEM
     parser (2.7.0.5)
       ast (~> 2.4.0)
     pg (1.2.3)
+    pmap (1.1.1)
     pry (0.13.0)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -435,6 +436,7 @@ DEPENDENCIES
   listen (>= 3.0.5, < 3.2)
   oauth2
   pg (>= 0.18, < 2.0)
+  pmap
   pry
   puma (~> 3.12)
   rails (~> 6.0.2)
