@@ -9,6 +9,6 @@ RSpec.shared_context('with synced data') do
     read_file("data/#{path}.json")
   end
 
-  let(:facility_id) { read_file('facility_id').to_i }
-  let(:batch_id) { read_file('batch_id').to_i }
+  let(:facility_id) { raise 'define +facility_id+ in your context' }
+  let(:batch_id) { raise 'define +batch_id+ in your context' }
 end

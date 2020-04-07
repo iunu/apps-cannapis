@@ -258,7 +258,10 @@ RSpec.describe MetrcService::Base do
   end
 
   context '#get_resource_unit' do
-    include_context 'with synced data'
+    include_context 'with synced data' do
+      let(:facility_id) { 1 }
+      let(:batch_id) { 331 }
+    end
 
     before do
       stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}")

@@ -112,7 +112,10 @@ RSpec.describe MetrcService::Plant::Harvest do
     end
 
     describe 'on a complete harvest' do
-      include_context 'with synced data'
+      include_context 'with synced data' do
+        let(:facility_id) { 1 }
+        let(:batch_id) { 331 }
+      end
 
       let(:transaction) { create(:transaction, :unsuccessful, :harvest, account: account, integration: integration) }
 
