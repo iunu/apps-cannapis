@@ -22,9 +22,14 @@ module MetrcService
         consume_completions.each do |consume|
           source_batch_id = consume.context.dig('source_batch', 'id')
           tasks = upstream_tasks(source_batch_id)
-          next if tasks.empty?
 
-          TaskRunner.run(*tasks)
+          if tasks.empty?
+            log("Source batch #{source_batch_id} has no pending completions!")
+          else
+            log("Flushing queued completions for source batch #{source_batch_id}")
+
+            TaskRunner.run(*tasks)
+          end
         end
       rescue Cannapi::TaskError => e
         raise UpstreamProcessingError, "Failed to process upstream tasks: #{e.message}"
