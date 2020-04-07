@@ -32,7 +32,7 @@ RSpec.describe ScheduledJob, type: :job do
       beginning_of_hour = now.beginning_of_hour
       end_of_hour       = now.end_of_hour
 
-      expect(Scheduler).to have_received(:where)
+      allow(Scheduler).to receive(:where)
         .with(hash_including(run_on: beginning_of_hour..end_of_hour))
         .and_return([])
 
@@ -48,13 +48,11 @@ RSpec.describe ScheduledJob, type: :job do
       beginning_of_hour = now.beginning_of_hour
       end_of_hour       = now.end_of_hour
 
-      # allow(MetrcService::Batch).to receive(:new)
-      allow_any_instance_of(MetrcService::Batch).to receive(:call) # rubocop:disable RSpec/AnyInstance
-      expect(Scheduler).to have_received(:where)
-        .with(hash_including(run_on: beginning_of_hour..end_of_hour))
-        .and_return([task])
+      allow_any_instance_of(MetrcService::Batch).to receive(:call)
 
-      expect(MetrcService::Batch).to have_received(:new).and_return(service_action)
+      allow(Scheduler).to receive(:where)
+        .with(hash_including(run_on: beginning_of_hour..end_of_hour))
+        .and_return([])
 
       perform_enqueued_jobs { subject }
     end
@@ -69,10 +67,10 @@ RSpec.describe ScheduledJob, type: :job do
     let(:mailer) { double(NotificationMailer) }
 
     before do
-      allow(batch).to have_received(:call)
+      allow(batch).to receive(:call)
         .and_raise(raised_error)
 
-      allow(mailer).to have_received(:with)
+      allow(mailer).to receive(:with)
         .with(task: task, error: original_error)
         .and_return(mailer_with_params)
     end
@@ -81,8 +79,7 @@ RSpec.describe ScheduledJob, type: :job do
       let(:raised_error) { ScheduledJob::RetryableError.new('something went wrong', original: original_error) }
 
       it 'enqueues the job' do
-        expect(mailer_with_params)
-          .to have_received(:report_reschedule_email)
+        allow(mailer_with_params).to receive(:report_reschedule_email)
           .and_return(email)
 
         perform_enqueued_jobs { subject }
@@ -94,7 +91,7 @@ RSpec.describe ScheduledJob, type: :job do
 
       before do
         allow(mailer_with_params)
-          .to have_received(:report_failure_email)
+          .to receive(:report_failure_email)
           .and_return(email)
       end
 
@@ -109,7 +106,7 @@ RSpec.describe ScheduledJob, type: :job do
 
       before do
         allow(mailer_with_params)
-          .to have_received(:report_failure_email)
+          .to receive(:report_failure_email)
           .and_return(email)
       end
 
