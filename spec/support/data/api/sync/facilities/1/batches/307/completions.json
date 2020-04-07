@@ -1,0 +1,183 @@
+{
+  "data": [
+    {
+      "id": "2045",
+      "type": "completions",
+      "attributes": {
+        "id": 2045,
+        "status": "active",
+        "user_id": 11,
+        "content": null,
+        "start_time": "2020-04-07T04:00:00.000Z",
+        "end_time": "2020-04-07T14:33:39.963Z",
+        "occurrence": null,
+        "action_type": "batch",
+        "parent_id": null,
+        "context": {
+          "source_batches": [
+            {
+              "id": 306,
+              "unit": "Gram of Wet Material, 5th Element Cannabis",
+              "quantity": 10.0,
+              "arbitrary_id": "Apr7-5th-Ele-Can-26"
+            }
+          ]
+        },
+        "options": {
+          "barcode": "1A4FF0100000022000001161",
+          "zone_id": 20,
+          "quantity": 1,
+          "resources": [
+            {
+              "resource_unit_id": 21,
+              "batch_resource_id": 166,
+              "consumed_quantity": 10,
+              "requested_quantity": 10
+            }
+          ],
+          "arbitrary_id": "Apr7-5th-Ele-Can",
+          "growth_cycle_id": 11,
+          "seeding_unit_id": 10,
+          "arbitrary_id_base": "5th-Ele-Can"
+        }
+      },
+      "relationships": {
+        "action_result": {
+          "data": {
+            "id": 307,
+            "type": "CropBatch"
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "307",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      }
+    },
+    {
+      "id": "2046",
+      "type": "completions",
+      "attributes": {
+        "id": 2046,
+        "status": "active",
+        "user_id": 11,
+        "content": null,
+        "start_time": "2020-04-07T04:00:00.000Z",
+        "end_time": "2020-04-07T14:33:39.963Z",
+        "occurrence": 0,
+        "action_type": "start",
+        "parent_id": 2045,
+        "context": {
+          "source_batches": null
+        },
+        "options": {
+          "zone_id": 20,
+          "quantity": 1,
+          "arbitrary_id": "Apr7-5th-Ele-Can",
+          "seeding_unit_id": 10,
+          "arbitrary_id_base": "5th-Ele-Can",
+          "zone_name": "Warehouse"
+        }
+      },
+      "relationships": {
+        "action_result": {
+          "meta": {
+            "included": false
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "307",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      }
+    },
+    {
+      "id": "2047",
+      "type": "completions",
+      "attributes": {
+        "id": 2047,
+        "status": "active",
+        "user_id": 11,
+        "content": null,
+        "start_time": "2020-04-07T04:00:00.000Z",
+        "end_time": "2020-04-07T14:33:39.963Z",
+        "occurrence": 0,
+        "action_type": "consume",
+        "parent_id": 2045,
+        "context": {
+          "source_batch": {
+            "id": 306,
+            "unit": "Gram of Wet Material, 5th Element Cannabis",
+            "quantity": 10.0,
+            "arbitrary_id": "Apr7-5th-Ele-Can-26"
+          },
+          "source_batches": null
+        },
+        "options": {
+          "resource_unit_id": 21,
+          "batch_resource_id": 166,
+          "consumed_quantity": 10,
+          "requested_quantity": 10,
+          "zone_name": "Warehouse"
+        }
+      },
+      "relationships": {
+        "action_result": {
+          "data": {
+            "id": 191,
+            "type": "ResourceTransfer"
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "307",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 1,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      }
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

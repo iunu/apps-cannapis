@@ -1,0 +1,75 @@
+{
+  "data": [
+    {
+      "id": "2379",
+      "type": "items",
+      "attributes": {
+        "id": 2379,
+        "harvest_quantity": 0.0,
+        "secondary_harvest_quantity": 0.0,
+        "status": "active",
+        "secondary_harvest_unit": null
+      },
+      "relationships": {
+        "batch": {
+          "meta": {
+            "included": false
+          }
+        },
+        "seeding_unit": {
+          "meta": {
+            "included": false
+          }
+        },
+        "harvest_unit": {
+          "meta": {
+            "included": false
+          }
+        },
+        "barcode": {
+          "data": {
+            "id": "1A4FF0000000022000005598",
+            "type": "barcodes"
+          }
+        }
+      }
+    },
+    {
+      "id": "2380",
+      "type": "items",
+      "attributes": {
+        "id": 2380,
+        "harvest_quantity": 0.0,
+        "secondary_harvest_quantity": 0.0,
+        "status": "active",
+        "secondary_harvest_unit": null
+      },
+      "relationships": {
+        "batch": {
+          "meta": {
+            "included": false
+          }
+        },
+        "seeding_unit": {
+          "meta": {
+            "included": false
+          }
+        },
+        "harvest_unit": {
+          "meta": {
+            "included": false
+          }
+        },
+        "barcode": {
+          "data": {
+            "id": "1A4FF0000000022000005599",
+            "type": "barcodes"
+          }
+        }
+      }
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}
