@@ -171,6 +171,9 @@ RSpec.describe MetrcService::Plant::Harvest do
         stub_request(:get, 'https://sandbox-api-md.metrc.com/harvests/v1/active?licenseNumber=LIC-0001')
           .to_return(status: 200, body: '[{"Id":123,"Name":"Some-Other-Harvest","HarvestType":"Product","SourceStrainCount":0},{"Id":234,"Name":"Apr7-5th-Ele-Can-42","HarvestType":"WholePlant","SourceStrainCount":0}]')
 
+        stub_request(:get, 'https://sandbox-api-md.metrc.com/harvests/v1/waste/types')
+          .to_return(status: 200, body: [{ Name: 'Plant Material' }].to_json, headers: {})
+
         stub_request(:post, 'https://sandbox-api-md.metrc.com/harvests/v1/removewaste?licenseNumber=LIC-0001')
           .with(
             body: [{ Id: 234, WasteType: 'Plant Material', UnitOfWeight: 'Grams', WasteWeight: 2.5, ActualDate: '2019-11-13T18:44:45' }].to_json,

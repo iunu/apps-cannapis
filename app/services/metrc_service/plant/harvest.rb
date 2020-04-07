@@ -74,10 +74,17 @@ module MetrcService
         end
       end
 
-      def waste_type(_completion)
-        # TODO: determine waste type from 'process' completion
+      def waste_type(completion)
+        waste_resource_unit = get_resource_unit(completion.attributes.dig('options', 'resource_unit_id'))
+        metrc_waste_types = JSON.parse(@client.get('harvests', 'waste/types').body)
+        valid_waste_types = metrc_waste_types.map { |obj| obj['Name'] }
 
-        'Plant Material'
+        if valid_waste_types.include?(waste_resource_unit.label)
+          completion.product_modifier
+        else
+          log("Waste type not found on Metrc, defaulting to #{valid_waste_types.first}", :warn)
+          valid_waste_types.first
+        end
       end
 
       def harvest_date
