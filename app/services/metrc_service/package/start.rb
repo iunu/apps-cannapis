@@ -97,22 +97,9 @@ module MetrcService
       end
 
       def item_type
-        # resource_unit_name = resource_units.name
+        validate_item_type!(resource_units.first.label)
 
-        # # try the format: [unit] of [type], [strain]
-        # type = resource_unit_name[/^[\w]+ of ([\w\s]+), [\w\s]+$/]
-
-        # # then try the format: [type], [strain]
-        # type = resource_unit_name[/^([^\-]+), [\w\s]+$/] if type.nil?
-
-        # raise InvalidAttributes,
-        #       "Item type could not be extracted from the resource unit name: #{resource_unit_name}. " \
-        #       "Expected the format '[unit] of [type], [strain]' or '[type], [strain]'" \
-        #       if type.nil?
-        #
-        # type
-
-        'Flower'
+        resource_units.first.label
       end
 
       def zone_name
@@ -163,6 +150,21 @@ module MetrcService
       def validate_resource_units!
         raise InvalidAttributes, 'The package contains resources of multiple types or units. Expected all resources in the package to be the same' \
           unless resource_units.uniq(&:unit).count == 1
+      end
+
+      def validate_item_type!(type)
+        return if metrc_supported_item_types.include?(type)
+
+        dictionary = DidYouMean::SpellChecker.new(dictionary: metrc_supported_item_types)
+        matches = dictionary.correct(type)
+        raise InvalidAttributes, "The package item type '#{type}' is not supported by Metrc. #{matches.present? ? "Did you mean #{dictionary.join(', ')}?" : "No similar types were found on Metrc."}"
+      end
+
+      def metrc_supported_item_types
+        @metrc_supported_item_types ||= begin
+                                          metrc_response = @client.get('items', 'categories').body
+                                          JSON.parse(metrc_response).map { |entry| entry['Name'] }
+                                        end
       end
     end
   end

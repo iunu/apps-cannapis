@@ -95,7 +95,7 @@ RSpec.describe MetrcService::Package::Start do
         [
           Tag: '1A4FF0100000022000001161',
           Location: 'Warehouse',
-          Item: 'Flower',
+          Item: 'Wet Material',
           UnitOfWeight: 'Grams',
           PatientLicenseNumber: nil,
           Note: nil,
@@ -151,9 +151,8 @@ RSpec.describe MetrcService::Package::Start do
         stub_request(:get, 'https://sandbox-api-ca.metrc.com/harvests/v1/2?licenseNumber=LIC-0001')
           .to_return(status: 200, body: '{"Id":2,"Name":"Apr7-5th-Ele-Can-26","HarvestType":"WholePlant","SourceStrainCount":0, "CurrentWeight": 0.0}')
 
-        # stub_request(:post, 'https://sandbox-api-ca.metrc.com/harvests/v1/finish?licenseNumber=LIC-0001')
-        #   .with(body: '[{"Id":2,"ActualDate":"2020-02-24T05:00:00.000Z"}]', basic_auth: [METRC_API_KEY, integration.secret])
-        #   .to_return(status: 200, body: '', headers: {})
+        stub_request(:get, 'https://sandbox-api-ca.metrc.com/items/v1/categories')
+          .to_return(status: 200, body: [{ Name: 'Wet Material' }].to_json)
       end
 
       context 'standard package' do
