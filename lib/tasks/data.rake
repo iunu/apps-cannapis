@@ -5,9 +5,9 @@ require 'fileutils'
 require 'pmap'
 
 namespace :artemis do
-  namespace :batch do
+  namespace :data do
     desc 'Download a batch and relevant associated records for testing. Required params: ARTEMIS_ID, FACILITY_ID, BATCH_ID'
-    task :fetch do
+    task :sync do
       helper = BatchFetchHelper.new
       helper.dump
     end
