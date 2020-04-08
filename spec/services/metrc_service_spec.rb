@@ -44,6 +44,16 @@ RSpec.describe MetrcService do
         it { is_expected.to eq('plant') }
       end
 
+      context 'plants' do
+        let(:seeding_unit_name) { 'Plants' }
+        it { is_expected.to eq('plant') }
+      end
+
+      context 'clones' do
+        let(:seeding_unit_name) { 'Clones' }
+        it { is_expected.to eq('plant') }
+      end
+
       context 'package' do
         let(:seeding_unit_name) { 'Package' }
         it { is_expected.to eq('package') }
@@ -70,6 +80,16 @@ RSpec.describe MetrcService do
         it { is_expected.to eq(MetrcService::Plant::Start) }
       end
 
+      context 'plants' do
+        let(:seeding_unit_name) { 'Plants' }
+        it { is_expected.to eq(MetrcService::Plant::Start) }
+      end
+
+      context 'clones' do
+        let(:seeding_unit_name) { 'Clones' }
+        it { is_expected.to eq(MetrcService::Plant::Start) }
+      end
+
       context 'package' do
         let(:seeding_unit_name) { 'Package' }
         it { is_expected.to eq(MetrcService::Package::Start) }
@@ -92,6 +112,48 @@ RSpec.describe MetrcService do
         it 'fails with an error' do
           expect { subject }.to raise_error(MetrcService::InvalidOperation)
         end
+      end
+    end
+  end
+
+  context '#run_now?' do
+    let(:integration) { create(:integration, eod: "#{Time.now.hour}:00") }
+    let(:ctx) { double(:ctx) }
+    let(:ref_time) { Time.now.localtime(integration.timezone) }
+
+    before do
+      expect_any_instance_of(MetrcService::Lookup)
+        .to receive(:module_for_completion)
+        .and_return(target_module)
+    end
+
+    subject { described_class.run_now?(ctx, integration) }
+
+    context 'when it should execute immediately' do
+      let(:target_module) do
+        Class.new(MetrcService::Base) do
+          run_mode :now
+        end
+      end
+
+      it { is_expected.to eq(true) }
+    end
+
+    context 'when it should schedule execution for later' do
+      context 'by default' do
+        let(:target_module) { Class.new(MetrcService::Base) }
+
+        it { is_expected.to eq(false) }
+      end
+
+      context 'by design' do
+        let(:target_module) do
+          Class.new(MetrcService::Base) do
+            run_mode :later
+          end
+        end
+
+        it { is_expected.to eq(false) }
       end
     end
   end

@@ -41,6 +41,7 @@ RSpec.describe ScheduledJob, type: :job do
   end
 
   context 'with a scheduled task' do
+    let(:successful_transaction) { create(:transaction, :start, :successful) }
     let(:task) { create(:task, integration: integration, facility_id: integration.facility_id, batch_id: 3000, run_on: now) }
     let(:service_action) { double(:action, run: true, result: true) }
 
@@ -50,9 +51,8 @@ RSpec.describe ScheduledJob, type: :job do
 
       allow_any_instance_of(MetrcService::Batch).to receive(:call)
 
-      allow(Scheduler).to receive(:where)
-        .with(hash_including(run_on: beginning_of_hour..end_of_hour))
-        .and_return([])
+      service_action = double(:action, run: true, result: successful_transaction)
+      expect(MetrcService::Batch).to receive(:new).and_return(service_action)
 
       perform_enqueued_jobs { subject }
     end
@@ -75,8 +75,8 @@ RSpec.describe ScheduledJob, type: :job do
         .and_return(mailer_with_params)
     end
 
-    context 'when it can be rescheduled' do
-      let(:raised_error) { ScheduledJob::RetryableError.new('something went wrong', original: original_error) }
+    context 'that can be rescheduled' do
+      let(:raised_error) { Cannapi::RetryableError.new('something went wrong', original: original_error) }
 
       it 'enqueues the job' do
         allow(mailer_with_params).to receive(:report_reschedule_email)
@@ -86,8 +86,8 @@ RSpec.describe ScheduledJob, type: :job do
       end
     end
 
-    context 'when it can NOT be rescheduled due to too many retries' do
-      let(:raised_error) { ScheduledJob::TooManyRetriesError.new('something went wrong too many times', original: original_error) }
+    context 'that can NOT be rescheduled due to too many retries' do
+      let(:raised_error) { Cannapi::TooManyRetriesError.new('something went wrong too many times', original: original_error) }
 
       before do
         allow(mailer_with_params)

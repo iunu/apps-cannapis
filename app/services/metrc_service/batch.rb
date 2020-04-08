@@ -12,7 +12,7 @@ module MetrcService
     def after; end
 
     def call
-      completions.each do |completion|
+      transactions = completions.each_with_object([]) do |completion, arr|
         ctx = {
           id: completion.id,
           type: :completions,
@@ -20,13 +20,17 @@ module MetrcService
           relationships: @relationships
         }.with_indifferent_access
 
-        MetrcService.perform_action(ctx, @integration, @task)
+        arr << MetrcService.perform_action(ctx, @integration, @task)
+
+        # halt if the last action failed
+        break arr unless arr.last&.success?
       end
 
-      @task.delete
+      # a stub tranasction to represent the state of the batched transactions
+      result = Transaction.new(success: transactions.all?(&:success?))
+      @task.delete if result.success?
 
-      # explicitly return nil
-      nil
+      result
     end
 
     def batch
@@ -44,7 +48,7 @@ module MetrcService
       return if completions.size.positive?
 
       @task.delete
-      raise InvalidOperation, "Completions where already performed. Batch ID #{@batch_id}"
+      raise TransactionAlreadyExecuted, 'batch already processed'
     end
 
     def completions
@@ -54,9 +58,9 @@ module MetrcService
     def filter_and_validate_completions
       [].tap do |arr|
         # Filter the completions we curently support
-        actions.select do |id|
-          completion = actions[id]
-          arr << completion if completion_supported?(completion) && !performed_transactions.include?(id)
+        actions.each do |completion|
+          next unless completion_supported?(completion) && !performed_transactions.include?(completion.id)
+          arr << completion
         end
 
         validate_completions!(arr)
@@ -69,12 +73,12 @@ module MetrcService
 
     def performed_transactions
       Transaction.succeed.where(batch_id: batch.id,
-                                completion_id: actions.keys,
+                                completion_id: actions.map(&:id),
                                 integration: @integration)&.pluck(:completion_id)
     end
 
     def actions
-      @actions ||= batch.client.objects['completions']
+      @actions ||= batch.completions
     end
   end
 end

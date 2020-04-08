@@ -3,8 +3,13 @@ require 'rails_helper'
 RSpec.describe MetrcService::Base do
   let(:integration) { create(:integration, state: :ca) }
 
-  describe 'holds the basic attributes' do
-    subject { described_class.new({}, integration) }
+  context '#run_mode' do
+    subject { described_class.run_mode }
+    it { is_expected.to eq(:later) }
+  end
+
+  context 'holds the basic attributes' do
+    subject { MetrcService::Base.new({}, integration) }
 
     it 'has @integration' do
       expect(subject.instance_variable_get(:@integration)).to eq integration
@@ -359,8 +364,8 @@ RSpec.describe MetrcService::Base do
           .to_return(status: 500, body: '', headers: {})
       end
 
-      it 'raises an error' do
-        expect { call }.to raise_error(ScheduledJob::RetryableError)
+      it 'should raise an error' do
+        expect { call }.to raise_error(Cannapi::RetryableError)
       end
     end
   end

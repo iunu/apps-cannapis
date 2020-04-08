@@ -4,30 +4,68 @@ class IntegrationService < ApplicationService
   end
 
   def call
-    facility_id = @ctx.dig('relationships', 'facility', 'data', 'id')
     # Look up for active integrations
     integrations = Integration.active.where(facility_id: facility_id)
-
     raise 'No integrations for this facility' unless integrations.size.positive?
 
     integrations.each do |integration|
-      now = Time.now.getlocal(integration.timezone)
+      ref_time = Time.now.getlocal(integration.timezone)
 
-      if now.hour >= integration.eod.hour
-        VendorJob.perform_later(@ctx, integration)
+      if ref_time.hour >= integration.eod.hour
+        execute_job(integration)
+
+      elsif integration.vendor_module.run_now?(@ctx, integration)
+        schedule_job(integration, ref_time)
+        flush_job_queue(integration, ref_time)
+
       else
-        batch_id = @ctx.dig('relationships', 'batch', 'data', 'id')
-        later = now.at_beginning_of_day + integration.eod.hour.hours
-
-        exists = Scheduler.where(facility_id: facility_id, batch_id: batch_id, run_on: now.at_beginning_of_day..now.at_end_of_day)
-
-        next if exists.size.positive?
-
-        Scheduler.create(integration: integration,
-                         facility_id: facility_id,
-                         batch_id: batch_id,
-                         run_on: later.utc)
+        schedule_job(integration, ref_time)
       end
     end
+  end
+
+  # Executes any pending jobs belonging to the *same* batch and facility
+  #
+  # If a job requires processing of *related*, batches that must happen
+  # in the handler (see Metrc::Package::Start)
+  def flush_job_queue(integration, ref_time)
+    tasks = existing_jobs(integration, ref_time)
+    TaskRunner.run(*tasks)
+  end
+
+  def execute_job(integration)
+    VendorJob.perform_later(@ctx, integration)
+  end
+
+  def schedule_job(integration, ref_time)
+    exists = existing_jobs(integration, ref_time)
+
+    return if exists.size.positive?
+
+    later = ref_time.at_beginning_of_day + integration.eod.hour.hours
+
+    Scheduler.create(
+      integration: integration,
+      facility_id: facility_id,
+      batch_id: batch_id,
+      run_on: later.utc
+    )
+  end
+
+  def existing_jobs(integration, ref_time)
+    Scheduler.where(
+      integration: integration,
+      facility_id: facility_id,
+      batch_id: batch_id,
+      run_on: ref_time.at_beginning_of_day..ref_time.at_end_of_day
+    )
+  end
+
+  def facility_id
+    @facility_id ||= @ctx.dig('relationships', 'facility', 'data', 'id')
+  end
+
+  def batch_id
+    @batch_id ||= @ctx.dig('relationships', 'batch', 'data', 'id')
   end
 end

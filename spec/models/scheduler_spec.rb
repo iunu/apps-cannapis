@@ -22,7 +22,7 @@ RSpec.describe Scheduler, type: :model do
       end
 
       it 'should raise an error' do
-        expect { subject.reschedule! }.to raise_error(ScheduledJob::TooManyRetriesError)
+        expect { subject.reschedule! }.to raise_error(Cannapi::TooManyRetriesError)
       end
     end
   end

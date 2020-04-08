@@ -78,4 +78,4 @@ group :lint, halt_on_fail: true do
     watch(/.+\.rb$/)
     watch(%r{(?:.+/)?\.rubocop(?:_todo)?\.yml$}) { |m| File.dirname(m[0]) }
   end
-end
+end unless ENV['SKIP_LINT']

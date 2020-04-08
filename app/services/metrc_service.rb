@@ -4,13 +4,16 @@ module MetrcService
   class InvalidOperation < StandardError; end
   class InvalidAttributes < StandardError; end
   class DataMismatch < StandardError; end
+  class UpstreamProcessingError < StandardError; end
 
   CROP = 'Cannabis'.freeze
 
   SEEDING_UNIT_MAP = {
     'testing_package' => 'package',
     'plant_barcoded' => 'plant',
-    'plant_clone' => 'plant'
+    'plant_clone' => 'plant',
+    'clones' => 'plant',
+    'plants' => 'plant'
   }.freeze
 
   WEIGHT_UNIT_MAP = {
@@ -26,11 +29,15 @@ module MetrcService
     'Pound' => 'Pounds'
   }.freeze
 
-  module_function
-
   def perform_action(ctx, integration, task = nil)
     Lookup.new(ctx, integration, task).perform_action
   end
+
+  def run_now?(ctx, integration)
+    Lookup.new(ctx, integration).run_mode == :now
+  end
+
+  module_function :perform_action, :run_now?
 
   class Lookup
     def initialize(ctx, integration, task = nil)
@@ -40,6 +47,7 @@ module MetrcService
     end
 
     delegate :seeding_unit, to: :batch
+    delegate :run_mode, to: :module_for_completion
 
     def perform_action
       handler = module_for_completion

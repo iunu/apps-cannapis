@@ -39,4 +39,16 @@ module Cannapi
 
     config.web_console.whiny_requests = false if ENV['WAIT_HOSTS'] # We're running on docker-compose!
   end
+
+  class TaskError < StandardError
+    attr_reader :original
+
+    def initialize(message = nil, original: nil)
+      @original = original
+      super(message)
+    end
+  end
+
+  class RetryableError < TaskError; end
+  class TooManyRetriesError < TaskError; end
 end
