@@ -38,8 +38,12 @@ module MetrcService
     rescue InvalidBatch, InvalidOperation => e
       log(e.message)
       fail!
-    rescue StandardError => e
+    rescue ServiceActionFailure => e
       log("Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{e.inspect}", :error)
+      fail!(transaction)
+    rescue StandardError => e
+      log("Unhandled failure: batch ID #{@batch_id}, completion ID #{@completion_id}; #{e.inspect}", :error)
+      log(e.backtrace.join("\n"), :error) if Rails.env.development?
       fail!(transaction)
     end
 

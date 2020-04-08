@@ -180,6 +180,9 @@ RSpec.describe MetrcService::Package::Start do
             stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/2/batches/15?include=zone,barcodes,completions,custom_data,seeding_unit,harvest_unit,sub_zone")
               .to_return(body: load_response_json('api/package/crop-batch'))
 
+            stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/1/completions?filter%5Bcrop_batch_ids%5D%5B0%5D=15")
+              .to_return(body: load_response_json('api/package/crop-batch-completions'))
+
             expect(MetrcService::Plant::Start)
               .to receive(:call)
               .and_return(upstream_transaction)
