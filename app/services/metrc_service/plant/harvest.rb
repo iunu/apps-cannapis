@@ -74,21 +74,29 @@ module MetrcService
         end
       end
 
-      # If the waste type (the resource unit's +product_modifier+) is found in the list of available waste types
-      # from Metrc (GET [metrc]/harvests/v1/waste/types), # then we will use that.
-      #
-      # If not, then we use the first available valid waste type from Metrc
       def waste_type(completion)
         waste_resource_unit = get_resource_unit(completion.attributes.dig('options', 'resource_unit_id'))
-        metrc_waste_types = JSON.parse(@client.get('harvests', 'waste/types').body)
-        valid_waste_types = metrc_waste_types.map { |obj| obj['Name'] }
+        validate_waste_type!(waste_resource_unit.label)
 
-        if valid_waste_types.include?(waste_resource_unit.label)
-          completion.product_modifier
-        else
-          log("Waste type not found on Metrc, defaulting to #{valid_waste_types.first}", :warn)
-          valid_waste_types.first
-        end
+        waste_resource_unit.label
+      end
+
+      def validate_waste_type!(type)
+        return if metrc_supported_waste_types.include?(type)
+
+        dictionary = DidYouMean::SpellChecker.new(dictionary: metrc_supported_waste_types)
+        matches = dictionary.correct(type)
+
+        raise InvalidAttributes,
+          "The harvest waste type '#{type}' is not supported by Metrc. "\
+          "#{matches.present? ? "Did you mean #{matches.map(&:inspect).join(', ')}?" : 'No similar types were found on Metrc.'}"
+      end
+
+      def metrc_supported_waste_types
+        @metrc_supported_waste_types ||= begin
+                                           metrc_response = @client.get('harvests', 'waste/types').body
+                                           JSON.parse(metrc_response).map { |entry| entry['Name']  }
+                                         end
       end
 
       def harvest_date
