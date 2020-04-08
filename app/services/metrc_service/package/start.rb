@@ -157,7 +157,10 @@ module MetrcService
 
         dictionary = DidYouMean::SpellChecker.new(dictionary: metrc_supported_item_types)
         matches = dictionary.correct(type)
-        raise InvalidAttributes, "The package item type '#{type}' is not supported by Metrc. #{matches.present? ? "Did you mean #{dictionary.join(', ')}?" : "No similar types were found on Metrc."}"
+
+        raise InvalidAttributes,
+              "The package item type '#{type}' is not supported by Metrc. "\
+              "#{matches.present? ? "Did you mean #{matches.map(&:inspect).join(', ')}?" : 'No similar types were found on Metrc.'}"
       end
 
       def metrc_supported_item_types

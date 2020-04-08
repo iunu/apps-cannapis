@@ -213,4 +213,44 @@ RSpec.describe MetrcService::Package::Start do
       end
     end
   end
+
+  describe '#validate_item_type!' do
+    let(:handler) { described_class.new(ctx, integration) }
+
+    subject { handler.send(:validate_item_type!, item_type) }
+
+    before do
+      stub_request(:get, 'https://sandbox-api-ca.metrc.com/items/v1/categories')
+        .to_return(status: 200, body: valid_categories.to_json)
+    end
+
+    context 'when type is valid' do
+      let(:valid_categories) { [{ Name: 'Wet Material' }] }
+      let(:item_type) { 'Wet Material' }
+
+      it 'should not raise an error' do
+        expect { subject }.not_to raise_error
+      end
+    end
+
+    context 'when type is not valid' do
+      let(:valid_categories) { [{ Name: 'Flower' }] }
+
+      context 'and not similar to supported types' do
+        let(:item_type) { 'Bud' }
+
+        it 'should not raise an error' do
+          expect { subject }.to raise_error(MetrcService::InvalidAttributes, /package item type .* not supported .* No similar types/)
+        end
+      end
+
+      context 'but similar to supported types' do
+        let(:item_type) { 'Flowers' }
+
+        it 'should not raise an error' do
+          expect { subject }.to raise_error(MetrcService::InvalidAttributes, /package item type .* not supported .* Did you mean "Flower"/)
+        end
+      end
+    end
+  end
 end
