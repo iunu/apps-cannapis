@@ -1,0 +1,28 @@
+{
+  "data": {
+    "id": "2",
+    "type": "resource_units",
+    "attributes": {
+      "id": 2,
+      "name": "Bottle of CloneEx Rooting Gel",
+      "kind": "count",
+      "unit_name": "Bottle",
+      "unit_symbol": "bottle",
+      "unit_precision": 0,
+      "conversion_si": 1.0,
+      "unit_modifier": null,
+      "product_modifier": null,
+      "options": null
+    },
+    "relationships": {
+      "crop_variety": {
+        "meta": {
+          "included": false
+        }
+      }
+    }
+  },
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

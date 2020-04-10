@@ -1,8 +1,8 @@
 module MetrcService
   module Plant
     class Harvest < MetrcService::Base
-      WET_WEIGHT = 'Wet Material'.freeze
-      WASTE_WEIGHT = 'Waste'.freeze
+      WET_WEIGHT = 'wet_weight'.freeze
+      WASTE_WEIGHT = 'wet_waste'.freeze
 
       def call
         seeding_unit_id = @attributes.dig(:options, :seeding_unit_id)
@@ -74,10 +74,29 @@ module MetrcService
         end
       end
 
-      def waste_type(_completion)
-        # TODO: determine waste type from 'process' completion
+      def waste_type(completion)
+        waste_resource_unit = get_resource_unit(completion.attributes.dig('options', 'resource_unit_id'))
+        validate_waste_type!(waste_resource_unit.label)
 
-        'Plant Material'
+        waste_resource_unit.label
+      end
+
+      def validate_waste_type!(type)
+        return if metrc_supported_waste_types.include?(type)
+
+        dictionary = DidYouMean::SpellChecker.new(dictionary: metrc_supported_waste_types)
+        matches = dictionary.correct(type)
+
+        raise InvalidAttributes,
+          "The harvest waste type '#{type}' is not supported by Metrc. "\
+          "#{matches.present? ? "Did you mean #{matches.map(&:inspect).join(', ')}?" : 'No similar types were found on Metrc.'}"
+      end
+
+      def metrc_supported_waste_types
+        @metrc_supported_waste_types ||= begin
+                                           metrc_response = @client.get('harvests', 'waste/types').body
+                                           JSON.parse(metrc_response).map { |entry| entry['Name']  }
+                                         end
       end
 
       def harvest_date

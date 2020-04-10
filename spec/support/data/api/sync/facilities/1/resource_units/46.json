@@ -1,0 +1,28 @@
+{
+  "data": {
+    "id": "46",
+    "type": "resource_units",
+    "attributes": {
+      "id": 46,
+      "name": "Plant of Banana Crush Cannabis",
+      "kind": "count",
+      "unit_name": "Plant",
+      "unit_symbol": "plant",
+      "unit_precision": 0,
+      "conversion_si": 1.0,
+      "unit_modifier": null,
+      "product_modifier": null,
+      "options": null
+    },
+    "relationships": {
+      "crop_variety": {
+        "meta": {
+          "included": false
+        }
+      }
+    }
+  },
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

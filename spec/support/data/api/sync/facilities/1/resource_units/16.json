@@ -1,0 +1,28 @@
+{
+  "data": {
+    "id": "16",
+    "type": "resource_units",
+    "attributes": {
+      "id": 16,
+      "name": "Gram of Grade B Flower, Boss Hog Cannabis",
+      "kind": "weight",
+      "unit_name": "Gram",
+      "unit_symbol": "g",
+      "unit_precision": 0,
+      "conversion_si": 1.0,
+      "unit_modifier": null,
+      "product_modifier": "Grade B Flower",
+      "options": null
+    },
+    "relationships": {
+      "crop_variety": {
+        "meta": {
+          "included": false
+        }
+      }
+    }
+  },
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

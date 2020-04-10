@@ -1,0 +1,28 @@
+{
+  "data": {
+    "id": "57",
+    "type": "resource_units",
+    "attributes": {
+      "id": 57,
+      "name": "10g Package of Flower, Banana Crush Cannabis",
+      "kind": "count",
+      "unit_name": "Package",
+      "unit_symbol": "package",
+      "unit_precision": 0,
+      "conversion_si": 1.0,
+      "unit_modifier": "10g",
+      "product_modifier": "Flower",
+      "options": null
+    },
+    "relationships": {
+      "crop_variety": {
+        "meta": {
+          "included": false
+        }
+      }
+    }
+  },
+  "jsonapi": {
+    "version": "1.0"
+  }
+}
