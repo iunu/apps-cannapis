@@ -147,7 +147,7 @@ module MetrcService
         id: resource_unit.id,
         name: resource_unit.name,
         unit: metrc_unit,
-        label: resource_unit.product_modifier,
+        label: resource_unit.product_modifier.presence || resource_unit.unit_name,
         strain: resource_unit.name[/^[\w\s]+,\s([\w\s]+) Cannabis/, 1],
         kind: resource_unit.kind,
         metrc_type: resource_unit&.options&.fetch('metrc', nil)
@@ -190,6 +190,15 @@ module MetrcService
 
       metrc_harvest
     end
+
+    def lookup_metrc_plant_batch(tag)
+      metrc_plant_batches = call_metrc(:list_plant_batches)
+      metrc_plant_batch = metrc_plant_batches.find { |batch| batch['Name'] == tag }
+      raise DataMismatch, "expected to find a plant batch in Metrc with the tag '#{tag}' but it does not exist" if metrc_plant_batch.nil?
+
+      metrc_plant_batch
+    end
+
 
     def resource_completions_by_unit_type(unit_type)
       resource_unit_id = resource_unit(unit_type).id
