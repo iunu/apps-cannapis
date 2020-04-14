@@ -1,0 +1,28 @@
+{
+  "data": {
+    "id": "26",
+    "type": "resource_units",
+    "attributes": {
+      "id": 26,
+      "name": "Gram of Grade A Flower, 5th Element Cannabis",
+      "kind": "weight",
+      "unit_name": "Gram",
+      "unit_symbol": "g",
+      "unit_precision": 0,
+      "conversion_si": 1.0,
+      "unit_modifier": null,
+      "product_modifier": "Grade A Flower",
+      "options": null
+    },
+    "relationships": {
+      "crop_variety": {
+        "meta": {
+          "included": false
+        }
+      }
+    }
+  },
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

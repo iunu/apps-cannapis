@@ -1,0 +1,185 @@
+{
+  "data": [
+    {
+      "id": "398",
+      "type": "completions",
+      "attributes": {
+        "id": 398,
+        "status": "active",
+        "user_id": 11,
+        "content": null,
+        "start_time": "2020-04-14T04:00:00.000Z",
+        "end_time": "2020-04-14T18:41:58.104Z",
+        "occurrence": null,
+        "action_type": "batch",
+        "parent_id": null,
+        "context": {
+          "source_batches": [
+            {
+              "id": 65,
+              "unit": "Plant of Boss Hog Cannabis",
+              "quantity": 5.0,
+              "arbitrary_id": "Apr14-Bos-Hog-Can-19"
+            }
+          ]
+        },
+        "options": {
+          "barcode": "123123123123123",
+          "zone_id": 41,
+          "quantity": 1,
+          "resources": [
+            {
+              "resource_unit_id": 3,
+              "batch_resource_id": 35,
+              "consumed_quantity": 5,
+              "requested_quantity": 100
+            }
+          ],
+          "sub_zone_id": null,
+          "arbitrary_id": "Apr14-Bos-Hog-Can",
+          "growth_cycle_id": 20,
+          "seeding_unit_id": 10,
+          "arbitrary_id_base": "Bos-Hog-Can"
+        }
+      },
+      "relationships": {
+        "action_result": {
+          "data": {
+            "id": 72,
+            "type": "CropBatch"
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "72",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 2,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      }
+    },
+    {
+      "id": "399",
+      "type": "completions",
+      "attributes": {
+        "id": 399,
+        "status": "active",
+        "user_id": 11,
+        "content": null,
+        "start_time": "2020-04-14T04:00:00.000Z",
+        "end_time": "2020-04-14T18:41:58.104Z",
+        "occurrence": 0,
+        "action_type": "start",
+        "parent_id": 398,
+        "context": {
+          "source_batches": null
+        },
+        "options": {
+          "zone_id": 41,
+          "quantity": 1,
+          "sub_zone_id": null,
+          "arbitrary_id": "Apr14-Bos-Hog-Can",
+          "seeding_unit_id": 10,
+          "arbitrary_id_base": "Bos-Hog-Can",
+          "zone_name": "Warehouse"
+        }
+      },
+      "relationships": {
+        "action_result": {
+          "meta": {
+            "included": false
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "72",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 2,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      }
+    },
+    {
+      "id": "400",
+      "type": "completions",
+      "attributes": {
+        "id": 400,
+        "status": "active",
+        "user_id": 11,
+        "content": null,
+        "start_time": "2020-04-14T04:00:00.000Z",
+        "end_time": "2020-04-14T18:41:58.104Z",
+        "occurrence": 0,
+        "action_type": "consume",
+        "parent_id": 398,
+        "context": {
+          "source_batch": {
+            "id": 65,
+            "unit": "Plant of Boss Hog Cannabis",
+            "quantity": 5.0,
+            "arbitrary_id": "Apr14-Bos-Hog-Can-19"
+          },
+          "source_batches": null
+        },
+        "options": {
+          "resource_unit_id": 3,
+          "batch_resource_id": 35,
+          "consumed_quantity": 5,
+          "requested_quantity": 100,
+          "zone_name": "Warehouse"
+        }
+      },
+      "relationships": {
+        "action_result": {
+          "data": {
+            "id": 60,
+            "type": "ResourceTransfer"
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "72",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 2,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      }
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

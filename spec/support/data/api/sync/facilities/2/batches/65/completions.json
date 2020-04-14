@@ -1,0 +1,222 @@
+{
+  "data": [
+    {
+      "id": "376",
+      "type": "completions",
+      "attributes": {
+        "id": 376,
+        "status": "active",
+        "user_id": 11,
+        "content": null,
+        "start_time": "2020-04-14T04:00:00.000Z",
+        "end_time": "2020-04-14T15:42:19.389Z",
+        "occurrence": null,
+        "action_type": "batch",
+        "parent_id": null,
+        "context": {
+          "source_batches": null
+        },
+        "options": {
+          "barcode": "1A4FF0000000022000006360",
+          "zone_id": 23,
+          "quantity": 100,
+          "resources": [
+
+          ],
+          "sub_zone_id": null,
+          "arbitrary_id": "Apr14-Bos-Hog-Can",
+          "growth_cycle_id": 19,
+          "seeding_unit_id": 6,
+          "arbitrary_id_base": "Bos-Hog-Can"
+        }
+      },
+      "relationships": {
+        "action_result": {
+          "data": {
+            "id": 65,
+            "type": "CropBatch"
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "65",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 2,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      }
+    },
+    {
+      "id": "377",
+      "type": "completions",
+      "attributes": {
+        "id": 377,
+        "status": "active",
+        "user_id": 11,
+        "content": null,
+        "start_time": "2020-04-14T04:00:00.000Z",
+        "end_time": "2020-04-14T15:42:19.389Z",
+        "occurrence": 0,
+        "action_type": "start",
+        "parent_id": 376,
+        "context": {
+          "source_batches": null
+        },
+        "options": {
+          "zone_id": 23,
+          "quantity": 100,
+          "sub_zone_id": null,
+          "arbitrary_id": "Apr14-Bos-Hog-Can",
+          "seeding_unit_id": 6,
+          "arbitrary_id_base": "Bos-Hog-Can",
+          "zone_name": "Mother Room Prop"
+        }
+      },
+      "relationships": {
+        "action_result": {
+          "meta": {
+            "included": false
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "65",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 2,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      }
+    },
+    {
+      "id": "378",
+      "type": "completions",
+      "attributes": {
+        "id": 378,
+        "status": "active",
+        "user_id": 11,
+        "content": null,
+        "start_time": "2020-04-14T04:00:00.000Z",
+        "end_time": "2020-04-30T04:00:00.000Z",
+        "occurrence": 0,
+        "action_type": "harvest",
+        "parent_id": null,
+        "context": {
+          "source_batches": null
+        },
+        "options": {
+          "resources": [
+            {
+              "resource_unit_id": 3,
+              "generated_quantity": 100
+            }
+          ],
+          "harvest_type": "complete",
+          "harvest_unit_id": 6,
+          "seeding_unit_id": 6,
+          "quantity_remaining": 100,
+          "calculated_quantity": 100.0,
+          "zone_name": "Mother Room Prop"
+        }
+      },
+      "relationships": {
+        "action_result": {
+          "meta": {
+            "included": false
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "65",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 2,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      }
+    },
+    {
+      "id": "379",
+      "type": "completions",
+      "attributes": {
+        "id": 379,
+        "status": "active",
+        "user_id": 11,
+        "content": null,
+        "start_time": "2020-04-14T04:00:00.000Z",
+        "end_time": "2020-04-30T04:00:00.000Z",
+        "occurrence": 0,
+        "action_type": "generate",
+        "parent_id": 378,
+        "context": {
+          "source_batches": null
+        },
+        "options": {
+          "resource_unit_id": 3,
+          "generated_quantity": 100,
+          "zone_name": "Mother Room Prop"
+        }
+      },
+      "relationships": {
+        "action_result": {
+          "data": {
+            "id": 35,
+            "type": "BatchResource"
+          }
+        },
+        "batch": {
+          "data": {
+            "id": "65",
+            "type": "batches"
+          }
+        },
+        "facility": {
+          "data": {
+            "id": 2,
+            "type": "facilities"
+          }
+        },
+        "user": {
+          "data": {
+            "id": 11,
+            "type": "users"
+          }
+        }
+      }
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}
