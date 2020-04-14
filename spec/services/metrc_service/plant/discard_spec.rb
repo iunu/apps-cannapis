@@ -210,7 +210,7 @@ RSpec.describe MetrcService::Plant::Discard do
       expect(payload.first).to eq(
         PlantBatch: 'Oct1-Ban-Spl-Can',
         Count: 1,
-        ReasonNote: 'Does not meet internal QC',
+        ReasonNote: '',
         ActualDate: now
       )
     end
@@ -249,7 +249,7 @@ RSpec.describe MetrcService::Plant::Discard do
         expect(payload.first).to eq(
           Id: nil,
           Label: '1A4FF01000000220000010',
-          ReasonNote: 'Does not meet internal QC',
+          ReasonNote: '',
           ActualDate: now
         )
       end
@@ -263,7 +263,7 @@ RSpec.describe MetrcService::Plant::Discard do
         instance = described_class.new(ctx, integration)
         note = instance.send :reason_note, discard
 
-        expect(note).to eq 'Does not meet internal QC'
+        expect(note).to eq ''
       end
     end
 
@@ -275,7 +275,7 @@ RSpec.describe MetrcService::Plant::Discard do
         instance = described_class.new(ctx, integration)
         note = instance.send :reason_note, discard
 
-        expect(note).to eq 'Does not meet internal QC'
+        expect(note).to eq ''
       end
     end
 
