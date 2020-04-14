@@ -3,7 +3,8 @@ module MetrcService
     class Start < MetrcService::Package::Base
       run_mode :now
 
-      PLANTINGS_PACKAGE_TYPE = 'ImmaturePlant'.freeze
+      # Valid types can be found on metrc endpoint: /items/v1/categories
+      PLANTINGS_PACKAGE_TYPE = 'Immature Plant'.freeze
 
       def call
         flush_upstream_tasks
