@@ -3,11 +3,16 @@ module MetrcService
     class Start < MetrcService::Package::Base
       run_mode :now
 
+      PLANTINGS_PACKAGE_TYPE = 'ImmaturePlant'.freeze
+
       def call
         flush_upstream_tasks
 
-        create_package
-        # finish_harvests
+        if plant_package?
+          create_plant_batch_package
+        else
+          create_product_package
+        end
 
         success!
       end
@@ -61,11 +66,42 @@ module MetrcService
         end
       end
 
-      def create_package
-        call_metrc(:create_harvest_package, create_package_payload, testing?)
+      def plant_package?
+        item_type(skip_validation: true).match?(/Plant/)
       end
 
-      def create_package_payload
+      def create_plant_batch_package
+        call_metrc(:create_plant_batch_package, create_plant_batch_package_payload)
+      end
+
+      def create_plant_batch_package_payload
+        consume_completions.map do |consume|
+          crop_batch = crop_batch_for_consume(consume)
+          plant_count = consume.options['consumed_quantity']
+          crop_batch_tag = crop_batch.relationships.dig('barcodes', 'data', 0, 'id')
+          metrc_plant_batch = lookup_metrc_plant_batch(crop_batch_tag)
+
+          {
+            Id: metrc_plant_batch['Id'],
+            PlantBatch: crop_batch.arbitrary_id,
+            Count: plant_count,
+            Location: nil,
+            Item: PLANTINGS_PACKAGE_TYPE,
+            Tag: tag,
+            PatientLicenseNumber: nil,
+            Note: '',
+            IsTradeSample: false,
+            IsDonation: false,
+            ActualDate: package_date
+          }
+        end
+      end
+
+      def create_product_package
+        call_metrc(:create_harvest_package, create_product_package_payload, testing?)
+      end
+
+      def create_product_package_payload
         [{
           Tag: tag,
           Location: zone_name,
@@ -96,8 +132,8 @@ module MetrcService
         batch.relationships.dig('barcodes', 'data', 0, 'id')
       end
 
-      def item_type
-        validate_item_type!(resource_units.first.label)
+      def item_type(skip_validation: false)
+        validate_item_type!(resource_units.first.label) unless skip_validation
 
         resource_units.first.label
       end
@@ -117,7 +153,7 @@ module MetrcService
       end
 
       def harvest_ingredient(consume)
-        crop_batch = @artemis.get_facility.batch(consume.context.dig('source_batch', 'id'))
+        crop_batch = crop_batch_for_consume(consume)
         resource_unit = get_resource_unit(consume.options['resource_unit_id'])
         metrc_harvest = lookup_metrc_harvest(crop_batch.arbitrary_id)
 
@@ -129,6 +165,10 @@ module MetrcService
           Weight: consume.options['consumed_quantity'],
           UnitOfWeight: resource_unit.unit
         }
+      end
+
+      def crop_batch_for_consume(consume)
+        @artemis.get_facility.batch(consume.context.dig('source_batch', 'id'), include: 'barcodes')
       end
 
       def package_date

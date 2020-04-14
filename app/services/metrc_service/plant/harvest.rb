@@ -7,6 +7,10 @@ module MetrcService
       def call
         seeding_unit_id = @attributes.dig(:options, :seeding_unit_id)
         items           = get_items(seeding_unit_id)
+
+        # allow for harvest of nursery crops - generates clones
+        return success! if items.empty?
+
         next_step       = complete? ? :harvest_plants : :manicure_plants
         payload         = send("build_#{next_step}_payload", items, batch)
 

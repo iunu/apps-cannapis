@@ -1,6 +1,7 @@
 GIT
   remote: https://github.com/artemis-ag/Metrc.git
-  revision: 05eca12d82a2dc63b028cf5e64d9c31726aa8c7a
+  revision: 964cdbe36d99a7ceafdccea0b3342ce3262e578d
+  branch: feature/plant-batch-package
   specs:
     Metrc (0.2.7)
       bundler
