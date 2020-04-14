@@ -11,9 +11,13 @@ module MetrcService
   SEEDING_UNIT_MAP = {
     'testing_package' => 'package',
     'plant_barcoded' => 'plant',
+    'plants_barcoded' => 'plant',
     'plant_clone' => 'plant',
+    'plants_clone' => 'plant',
     'clones' => 'plant',
-    'plants' => 'plant'
+    'clone' => 'plant',
+    'plants' => 'plant',
+    'plant' => 'plant'
   }.freeze
 
   WEIGHT_UNIT_MAP = {
