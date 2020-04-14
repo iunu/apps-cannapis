@@ -132,7 +132,7 @@ RSpec.describe MetrcService::Package::Start do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/completions"))
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{crop_batch_id}")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{crop_batch_id}?include=barcodes")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{crop_batch_id}"))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/resource_units/21")
