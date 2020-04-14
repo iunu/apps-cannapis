@@ -23,7 +23,7 @@
 <% content_for :header_aux do %>
   <div class="directional-text">
     <% if @current_account %>
-      <%= link_to 'Revoke authorization', unauthorize_url(id: @current_account.id), class: 'btn btn--outline btn--sm', id: 'btn-unauthorize' %>
+      <%= link_to 'Logout', logout_url(id: @current_account.id), class: 'btn btn--outline btn--sm', id: 'btn-unauthorize' %>
     <% else %>
       <%= link_to 'Connect to Artemis', authorize_url, class: 'btn btn--outline btn--sm', id: 'btn-authorize' %>
     <% end %>

@@ -33,7 +33,7 @@ RSpec.describe 'home/index', type: :view do
     it 'renders the unauthenticate button' do
       expect(rendered).to have_selector 'div.width'
       expect(view.content_for(:header_aux)).to have_selector '#btn-unauthorize'
-      expect(view.content_for(:header_aux)).to include 'Revoke authorization'
+      expect(view.content_for(:header_aux)).to include 'Logout'
       expect(view.content_for(:header_aux)).not_to have_selector '#btn-authorize'
     end
 
