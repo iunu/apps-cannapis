@@ -18,14 +18,9 @@ class AuthorizationController < ApplicationController
     redirect_to root_path
   end
 
-  def unauthorize
+  def logout
     return render json: {}, status: :bad_request unless params[:id]
 
-    account = Account.find(params[:id])
-    account.update(access_token: nil,
-                   refresh_token: nil,
-                   access_token_expires_in: nil,
-                   access_token_created_at: nil)
     session[:current_account_id] = nil
     redirect_to root_path
   end

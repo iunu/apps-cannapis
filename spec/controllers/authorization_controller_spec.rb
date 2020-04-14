@@ -15,9 +15,9 @@ RSpec.describe AuthorizationController, type: :controller do
     end
   end
 
-  describe 'GET #unauthorize' do
+  describe 'GET #logout' do
     it 'returns http success' do
-      get :unauthorize
+      get :logout
       expect(response).to have_http_status(:bad_request)
     end
   end

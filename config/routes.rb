@@ -4,7 +4,7 @@ Rails.application.routes.draw do
 
   get 'authorize'      => 'authorization#authorize'
   get 'oauth/callback' => 'authorization#callback'
-  get 'unauthorize'    => 'authorization#unauthorize'
+  get 'logout'         => 'authorization#logout'
 
   namespace :v1 do
     post 'webhook'      => 'webhook#handler'
