@@ -1,0 +1,28 @@
+{
+  "data": {
+    "id": "4",
+    "type": "resource_units",
+    "attributes": {
+      "id": 4,
+      "name": "Milliliter of B-52",
+      "kind": "volume",
+      "unit_name": "Milliliter",
+      "unit_symbol": "ml",
+      "unit_precision": 0,
+      "conversion_si": 0.001,
+      "unit_modifier": null,
+      "product_modifier": null,
+      "options": null
+    },
+    "relationships": {
+      "crop_variety": {
+        "meta": {
+          "included": false
+        }
+      }
+    }
+  },
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

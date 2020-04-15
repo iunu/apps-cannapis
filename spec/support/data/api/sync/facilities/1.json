@@ -1,0 +1,60 @@
+{
+  "data": {
+    "id": "1",
+    "type": "facilities",
+    "attributes": {
+      "id": 1,
+      "organization_id": 2,
+      "facility_type": "greenhouse",
+      "name": "Cannademo West",
+      "slug": "cannademo-west",
+      "country_code": "US",
+      "city": "LA",
+      "state": "CA",
+      "postal_code": "90210",
+      "size": 9580,
+      "size_type": "sqft",
+      "time_zone": "Eastern Time (US & Canada)",
+      "status": "active",
+      "crops_columns": [
+        "days_since_seeding",
+        "harvest_date",
+        "harvest_zone",
+        "identifier",
+        "initial_zone",
+        "next_move_date",
+        "planned_harvest_date",
+        "seed_quantity",
+        "quantity",
+        "timeline",
+        "zone",
+        "estimated_labor_hours"
+      ]
+    },
+    "relationships": {
+      "metrics": {
+        "meta": {
+          "included": false
+        }
+      },
+      "sensors": {
+        "meta": {
+          "included": false
+        }
+      },
+      "users": {
+        "meta": {
+          "included": false
+        }
+      },
+      "resource_units": {
+        "meta": {
+          "included": false
+        }
+      }
+    }
+  },
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

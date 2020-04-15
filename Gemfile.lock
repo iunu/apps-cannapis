@@ -1,6 +1,6 @@
 GIT
   remote: https://github.com/artemis-ag/Metrc.git
-  revision: 05eca12d82a2dc63b028cf5e64d9c31726aa8c7a
+  revision: 415cd29a93fc9c3f6cd975d7cccb509f42953e08
   specs:
     Metrc (0.2.7)
       bundler
@@ -10,9 +10,10 @@ GIT
 
 GIT
   remote: https://github.com/artemis-ag/artemis_api
-  revision: 65d8f98354a842c6a417db7eb1a67027ae3380ca
+  revision: de11bb422fa6c14c3d763fa2a76ee64ee65be2a3
   specs:
-    artemis_api (0.5.0)
+    artemis_api (0.6.1)
+      oauth2
 
 GIT
   remote: https://github.com/artemis-ag/ncs-integration.git
@@ -128,7 +129,7 @@ GEM
       railties (>= 4.2.0)
     faker (2.11.0)
       i18n (>= 1.6, < 2)
-    faraday (1.0.0)
+    faraday (1.0.1)
       multipart-post (>= 1.2, < 3)
     ffi (1.12.2)
     ffi-compiler (1.0.1)
@@ -229,6 +230,7 @@ GEM
     parser (2.7.0.5)
       ast (~> 2.4.0)
     pg (1.2.3)
+    pmap (1.1.1)
     pry (0.13.0)
       coderay (~> 1.1)
       method_source (~> 1.0)
@@ -444,6 +446,7 @@ DEPENDENCIES
   ncs_analytics!
   oauth2
   pg (>= 0.18, < 2.0)
+  pmap
   pry
   puma (~> 3.12)
   rails (~> 6.0.2)

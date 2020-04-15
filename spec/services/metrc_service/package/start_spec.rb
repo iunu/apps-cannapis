@@ -4,8 +4,9 @@ require 'ostruct'
 RSpec.describe MetrcService::Package::Start do
   METRC_API_KEY = ENV['METRC_SECRET_CA'] unless defined?(METRC_API_KEY)
 
-  def load_response_json(path)
-    File.read("spec/support/data/#{path}.json")
+  include_context 'with synced data' do
+    let(:facility_id) { 1 }
+    let(:batch_id) { 307 }
   end
 
   context '#run_mode' do
@@ -14,34 +15,31 @@ RSpec.describe MetrcService::Package::Start do
   end
 
   let(:integration) { create(:integration, state: 'ca') }
-  let(:facility_id) { 2 }
-  let(:batch_id) { 374 }
 
   let(:ctx) do
     {
-      'id': '2365',
+      'id': '2046',
       'type': 'completions',
       'attributes': {
-        'id': 2365,
-        'user_id': 20,
+        'id': 2046,
+        'status': 'active',
+        'user_id': 11,
         'content': nil,
-        'start_time': '2020-02-24T05:00:00.000Z',
-        'end_time': '2020-02-24T05:00:00.000Z',
+        'start_time': '2020-04-07T04:00:00.000Z',
+        'end_time': '2020-04-07T14:33:39.963Z',
         'occurrence': 0,
-        'action_type': 'harvest',
+        'action_type': 'start',
+        'parent_id': 2045,
+        'context': {
+          'source_batches': nil
+        },
         'options': {
-          'resources': [
-            {
-              'resource_unit_id': 26,
-              'generated_quantity': 100
-            }
-          ],
-          'harvest_type': 'complete',
-          'note_content': '',
-          'harvest_unit_id': 12,
-          'seeding_unit_id': 11,
-          'quantity_remaining': 1,
-          'calculated_quantity': 1.0
+          'zone_id': 20,
+          'quantity': 1,
+          'arbitrary_id': 'Apr7-5th-Ele-Can',
+          'seeding_unit_id': 10,
+          'arbitrary_id_base': '5th-Ele-Can',
+          'zone_name': 'Warehouse'
         }
       },
       'relationships': {
@@ -52,19 +50,19 @@ RSpec.describe MetrcService::Package::Start do
         },
         'batch': {
           'data': {
-            'id': '374',
+            'id': batch_id,
             'type': 'batches'
           }
         },
         'facility': {
           'data': {
-            'id': 2,
+            'id': facility_id,
             'type': 'facilities'
           }
         },
         'user': {
           'data': {
-            'id': 20,
+            'id': 11,
             'type': 'users'
           }
         }
@@ -80,129 +78,233 @@ RSpec.describe MetrcService::Package::Start do
       .and_return(transaction)
   end
 
-  context '#call' do
-    subject { described_class.call(ctx, integration) }
+  subject { described_class.call(ctx, integration) }
 
-    describe 'on an old successful transaction' do
-      before { transaction.success = true }
-      it { is_expected.to eq(transaction) }
-    end
-
-    describe 'with corn crop' do
-      include_examples 'with corn crop'
-    end
-
-    describe 'on a complete harvest' do
-      let(:expected_payload) do
-        [
-          Tag: 'asdfasdfasdfasdf123123123',
-          Location: 'Warehouse',
-          Item: 'Flower',
-          UnitOfWeight: 'Grams',
-          PatientLicenseNumber: nil,
-          Note: nil,
-          IsProductionBatch: false,
-          ProductionBatchNumber: nil,
-          IsTradeSample: false,
-          ProductRequiresRemediation: false,
-          RemediateProduct: false,
-          RemediationMethodId: nil,
-          RemediationDate: nil,
-          RemediationSteps: nil,
-          ActualDate: '2020-02-24T05:00:00.000Z',
-          Ingredients: [
-            {
-              HarvestId: 2,
-              HarvestName: 'Feb6-5th-Ele-Can',
-              Weight: 50,
-              UnitOfWeight: 'Grams'
-            }
-          ]
-        ]
+  context 'with product package' do
+    context '#call' do
+      describe 'on an old successful transaction' do
+        before { transaction.success = true }
+        it { is_expected.to eq(transaction) }
       end
 
-      let(:crop_batch_id) { 15 }
-      let(:testing) { raise 'override in subcontext' }
+      describe 'with corn crop' do
+        include_examples 'with corn crop'
+      end
+
+      describe 'on a complete harvest' do
+        let(:expected_payload) do
+          [
+            Tag: '1A4FF0100000022000001161',
+            Location: 'Warehouse',
+            Item: 'Wet Material',
+            UnitOfWeight: 'Grams',
+            PatientLicenseNumber: nil,
+            Note: nil,
+            IsProductionBatch: false,
+            ProductionBatchNumber: nil,
+            IsTradeSample: false,
+            ProductRequiresRemediation: false,
+            RemediateProduct: false,
+            RemediationMethodId: nil,
+            RemediationDate: nil,
+            RemediationSteps: nil,
+            ActualDate: '2020-04-07T04:00:00.000Z',
+            Ingredients: [
+              {
+                HarvestId: 2,
+                HarvestName: 'Apr7-5th-Ele-Can-26',
+                Weight: 10,
+                UnitOfWeight: 'Grams'
+              }
+            ]
+          ]
+        end
+
+        let(:crop_batch_id) { 306 }
+        let(:testing) { raise 'override in subcontext' }
+
+        before do
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}")
+            .to_return(body: load_response_json("api/sync/facilities/#{facility_id}"))
+
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone")
+            .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
+
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
+            .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/completions"))
+
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{crop_batch_id}?include=barcodes")
+            .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{crop_batch_id}"))
+
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/resource_units/21")
+            .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/resource_units/21"))
+
+          stub_request(:get, 'https://sandbox-api-ca.metrc.com/harvests/v1/active?licenseNumber=LIC-0001')
+            .to_return(status: 200, body: '[{"Id":1,"Name":"Some-Other-Harvest","HarvestType":"Product","SourceStrainCount":0},{"Id":2,"Name":"Apr7-5th-Ele-Can-26","HarvestType":"WholePlant","SourceStrainCount":0}]')
+
+          stub_request(:post, "https://sandbox-api-ca.metrc.com/harvests/v1/create/packages#{testing ? '/testing' : ''}?licenseNumber=LIC-0001")
+            .with(body: expected_payload.to_json, basic_auth: [METRC_API_KEY, integration.secret])
+            .to_return(status: 200, body: '', headers: {})
+
+          stub_request(:get, 'https://sandbox-api-ca.metrc.com/harvests/v1/1?licenseNumber=LIC-0001')
+            .to_return(status: 200, body: '{"Id":1,"Name":"Some-Other-Harvest","HarvestType":"Product","SourceStrainCount":0, "CurrentWeight": 100.0}')
+
+          stub_request(:get, 'https://sandbox-api-ca.metrc.com/harvests/v1/2?licenseNumber=LIC-0001')
+            .to_return(status: 200, body: '{"Id":2,"Name":"Apr7-5th-Ele-Can-26","HarvestType":"WholePlant","SourceStrainCount":0, "CurrentWeight": 0.0}')
+
+          stub_request(:get, 'https://sandbox-api-ca.metrc.com/items/v1/categories')
+            .to_return(status: 200, body: [{ Name: 'Wet Material' }].to_json)
+        end
+
+        context 'standard package' do
+          let(:testing) { false }
+          let(:upstream_transaction) { create(:transaction, :start, :successful) }
+
+          it { is_expected.to eq(transaction) }
+          it { is_expected.to be_success }
+
+          context 'when upstream tasks are not yet processed' do
+            before do
+              run_on = Time.parse("#{Time.now.localtime(integration.timezone).strftime('%F')}T#{integration.eod}#{integration.timezone}")
+
+              create(
+                :task,
+                integration: integration,
+                batch_id: crop_batch_id,
+                facility_id: facility_id,
+                run_on: run_on
+              )
+
+              stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{crop_batch_id}?include=zone,zone.sub_stage,barcodes,completions,custom_data,seeding_unit,harvest_unit,sub_zone")
+                .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{crop_batch_id}"))
+
+              stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter%5Bcrop_batch_ids%5D%5B0%5D=#{crop_batch_id}")
+                .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{crop_batch_id}/completions"))
+
+              expect(MetrcService::Plant::Start)
+                .to receive(:call)
+                .and_return(upstream_transaction)
+            end
+
+            context 'when upstream tasks succeed' do
+              before do
+                expect(MetrcService::Plant::Move)
+                  .to receive(:call)
+                  .and_return(upstream_transaction)
+
+                expect(MetrcService::Plant::Harvest)
+                  .to receive(:call)
+                  .and_return(upstream_transaction)
+              end
+
+              it { is_expected.to be_success }
+            end
+
+            context 'when upstream tasks fail' do
+              let(:upstream_transaction) { create(:transaction, :start, :unsuccessful) }
+              it { is_expected.not_to be_success }
+            end
+          end
+        end
+
+        xcontext 'testing package', 'pending testing template' do
+          let(:testing) { true }
+          it { is_expected.to eq(transaction) }
+          it { is_expected.to be_success }
+        end
+      end
+    end
+  end
+
+  context 'with plant package' do
+    describe 'on a complete harvest' do
+      let(:expected_payload) do
+        [{
+          Id: 12345,
+          PlantBatch: 'Apr14-Bos-Hog-Can-19',
+          Count: 5,
+          Location: nil,
+          Item: 'Immature Plant',
+          Tag: '123123123123123',
+          PatientLicenseNumber: nil,
+          Note: '',
+          IsTradeSample: false,
+          IsDonation: false,
+          ActualDate: '2020-04-07T04:00:00.000Z'
+        }]
+      end
+
+      let(:facility_id) { 2 }
+      let(:batch_id) { 72 }
+      let(:crop_batch_id) { 65 }
 
       before do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}")
-          .to_return(body: load_response_json('api/package/facility'))
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}"))
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone")
-          .to_return(body: load_response_json("api/package/batch#{testing ? '-testing' : ''}"))
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
-          .to_return(body: { data: [{ id: '90210', type: 'completions', attributes: { id: 90210, action_type: 'start', parent_id: 90209 } }, { id: '90211', type: 'completions', attributes: { id: 90211, action_type: 'consume', parent_id: 90209, context: { source_batch: { id: crop_batch_id } }, options: { resource_unit_id: 26, batch_resource_id: 123, consumed_quantity: 50, requested_quantity: 10 } } }] }.to_json)
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/completions"))
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{crop_batch_id}")
-          .to_return(body: load_response_json('api/package/crop-batch'))
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{crop_batch_id}?include=barcodes")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{crop_batch_id}"))
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/resource_units/26")
-          .to_return(body: load_response_json('api/package/resource_unit'))
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/resource_units/3")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/resource_units/3"))
 
-        stub_request(:get, 'https://sandbox-api-ca.metrc.com/harvests/v1/active?licenseNumber=LIC-0001')
-          .to_return(status: 200, body: '[{"Id":1,"Name":"Some-Other-Harvest","HarvestType":"Product","SourceStrainCount":0},{"Id":2,"Name":"Feb6-5th-Ele-Can","HarvestType":"WholePlant","SourceStrainCount":0}]')
+        stub_request(:get, 'https://sandbox-api-ca.metrc.com/plantbatches/v1/active?licenseNumber=LIC-0001')
+          .to_return(status: 200, body: [{ Id: 54321, Name: 'not-this-one' }, { Id: 12345, Name: '1A4FF0000000022000006360' }].to_json)
 
-        stub_request(:post, "https://sandbox-api-ca.metrc.com/harvests/v1/create/packages#{testing ? '/testing' : ''}?licenseNumber=LIC-0001")
+        stub_request(:get, 'https://sandbox-api-ca.metrc.com/items/v1/categories')
+          .to_return(status: 200, body: [{ Name: 'Wet Material' }].to_json)
+
+        stub_request(:post, "https://sandbox-api-ca.metrc.com/plantbatches/v1/createpackages?licenseNumber=LIC-0001")
           .with(body: expected_payload.to_json, basic_auth: [METRC_API_KEY, integration.secret])
           .to_return(status: 200, body: '', headers: {})
-
-        stub_request(:get, 'https://sandbox-api-ca.metrc.com/harvests/v1/1?licenseNumber=LIC-0001')
-          .to_return(status: 200, body: '{"Id":1,"Name":"Some-Other-Harvest","HarvestType":"Product","SourceStrainCount":0, "CurrentWeight": 100.0}')
-
-        stub_request(:get, 'https://sandbox-api-ca.metrc.com/harvests/v1/2?licenseNumber=LIC-0001')
-          .to_return(status: 200, body: '{"Id":2,"Name":"Feb6-5th-Ele-Can","HarvestType":"WholePlant","SourceStrainCount":0, "CurrentWeight": 0.0}')
-
-        # stub_request(:post, 'https://sandbox-api-ca.metrc.com/harvests/v1/finish?licenseNumber=LIC-0001')
-        #   .with(body: '[{"Id":2,"ActualDate":"2020-02-24T05:00:00.000Z"}]', basic_auth: [METRC_API_KEY, integration.secret])
-        #   .to_return(status: 200, body: '', headers: {})
       end
 
-      context 'standard package' do
-        let(:testing) { false }
-        let(:upstream_transaction) { create(:transaction, :start, :successful) }
+      it { is_expected.to be_success }
+    end
+  end
 
-        it { is_expected.to eq(transaction) }
-        it { is_expected.to be_success }
+  describe '#validate_item_type!' do
+    let(:handler) { described_class.new(ctx, integration) }
 
-        context 'when upstream tasks are not yet processed' do
-          before do
-            run_on = Time.parse("#{Time.now.localtime(integration.timezone).strftime('%F')}T#{integration.eod}#{integration.timezone}")
+    subject { handler.send(:validate_item_type!, item_type) }
 
-            create(
-              :task,
-              integration: integration,
-              batch_id: crop_batch_id,
-              facility_id: facility_id,
-              run_on: run_on
-            )
+    before do
+      stub_request(:get, 'https://sandbox-api-ca.metrc.com/items/v1/categories')
+        .to_return(status: 200, body: valid_categories.to_json)
+    end
 
-            stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/2/batches/15?include=zone,barcodes,completions,custom_data,seeding_unit,harvest_unit,sub_zone")
-              .to_return(body: load_response_json('api/package/crop-batch'))
+    context 'when type is valid' do
+      let(:valid_categories) { [{ Name: 'Wet Material' }] }
+      let(:item_type) { 'Wet Material' }
 
-            stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/1/completions?filter%5Bcrop_batch_ids%5D%5B0%5D=15")
-              .to_return(body: load_response_json('api/package/crop-batch-completions'))
+      it 'should not raise an error' do
+        expect { subject }.not_to raise_error
+      end
+    end
 
-            expect(MetrcService::Plant::Start)
-              .to receive(:call)
-              .and_return(upstream_transaction)
-          end
+    context 'when type is not valid' do
+      let(:valid_categories) { [{ Name: 'Flower' }] }
 
-          context 'when upstream tasks succeed' do
-            it { is_expected.to be_success }
-          end
+      context 'and not similar to supported types' do
+        let(:item_type) { 'Bud' }
 
-          context 'when upstream tasks fail' do
-            let(:upstream_transaction) { create(:transaction, :start, :unsuccessful) }
-            it { is_expected.not_to be_success }
-          end
+        it 'should not raise an error' do
+          expect { subject }.to raise_error(MetrcService::InvalidAttributes, /package item type .* not supported .* No similar types/)
         end
       end
 
-      context 'testing package' do
-        let(:testing) { true }
-        it { is_expected.to eq(transaction) }
-        it { is_expected.to be_success }
+      context 'but similar to supported types' do
+        let(:item_type) { 'Flowers' }
+
+        it 'should not raise an error' do
+          expect { subject }.to raise_error(MetrcService::InvalidAttributes, /package item type .* not supported .* Did you mean "Flower"/)
+        end
       end
     end
   end

@@ -11,7 +11,7 @@ class ArtemisService
     @artemis.facility(id || @facility_id)
   end
 
-  def get_batch(include = 'zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
+  def get_batch(include = 'zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
     @artemis.facility(@facility_id)
             .batch(@batch_id, include: include)
   end
@@ -20,6 +20,12 @@ class ArtemisService
     @artemis.facility(@facility_id)
             .batch(@batch_id)
             .items(seeding_unit_id: seeding_unit_id, include: include)
+
+  # TODO: handle empty item lists in the API gem
+  rescue NoMethodError => e
+    raise unless e.message.match?(/undefined method `each' for nil/)
+
+    []
   end
 
   def get_zone(zone_id, include: nil)

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe MetrcService::Plant::Move do
   let(:account) { create(:account) }
-  let(:integration) { create(:integration, account: account) }
+  let(:integration) { create(:integration, account: account, state: 'md') }
   let(:ctx) do
     {
       id: 3000,
@@ -21,16 +21,25 @@ RSpec.describe MetrcService::Plant::Move do
   end
 
   context '#call' do
+    include_context 'with synced data' do
+      let(:facility_id) { 2 }
+      let(:batch_id) { 81 }
+    end
+
+    let(:transaction) { create(:transaction, :unsuccessful, :move, account: account, integration: integration) }
+
     subject { described_class.call(ctx, integration) }
 
     let(:ctx) do
       {
         id: 3000,
         relationships: {
-          batch: { data: { id: 2002 } },
-          facility: { data: { id: 1568 } }
+          batch: { data: { id: batch_id } },
+          facility: { data: { id: facility_id } }
         },
-        attributes: {},
+        attributes: {
+          start_time: '2020-04-15'
+        },
         completion_id: 1001
       }.with_indifferent_access
     end
@@ -39,13 +48,14 @@ RSpec.describe MetrcService::Plant::Move do
       expect_any_instance_of(described_class)
         .to receive(:get_transaction)
         .and_return(transaction)
-
-      expect_any_instance_of(described_class)
-        .to receive(:get_batch)
-        .and_return(batch)
     end
 
     describe 'on an old successful transaction' do
+      before do
+        expect_any_instance_of(described_class)
+          .to receive(:get_batch)
+          .and_return(batch)
+      end
       let(:transaction) { create(:transaction, :successful, :move, account: account, integration: integration) }
       let(:zone) { double(:zone, attributes: { name: nil }) }
       let(:batch) { double(:batch, crop: 'Cannabis', zone: zone) }
@@ -55,6 +65,41 @@ RSpec.describe MetrcService::Plant::Move do
 
     describe 'with corn crop' do
       include_examples 'with corn crop'
+    end
+
+    describe 'moving to vegetative substage' do
+      let(:seeding_unit_id) { 7 }
+      before do
+        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}"))
+
+        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
+
+        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
+
+        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}/items?filter[seeding_unit_id]=#{seeding_unit_id}&include=barcodes,seeding_unit")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/items"))
+
+        stub_request(:post, 'https://sandbox-api-md.metrc.com/plantbatches/v1/changegrowthphase?licenseNumber=LIC-0001')
+          .with(body: expected_payload.to_json)
+          .to_return(status: 200)
+      end
+
+      let(:expected_payload) do
+        [{
+          Name: 'abcdef123',
+          Count: 2,
+          StartingTag: 'abcdef124',
+          GrowthPhase: 'Vegetative',
+          NewLocation: 'Mother Room',
+          GrowthDate: '2020-04-15',
+          PatientLicenseNumber: nil
+        }]
+      end
+
+      it { is_expected.to be_success }
     end
   end
 

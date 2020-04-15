@@ -174,7 +174,7 @@ RSpec.describe MetrcService::Base do
       stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
         .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
-      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
+      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
         .to_return(body: { data: { id: '2002', type: 'batches', attributes: { id: 2002, arbitrary_id: 'Jun19-Bok-Cho' } } }.to_json)
     end
 
@@ -273,22 +273,22 @@ RSpec.describe MetrcService::Base do
 
   describe '#get_resource_unit' do
     before do
-      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
-        .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
+      stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}")
+        .to_return(body: load_response_json("api/sync/facilities/#{facility_id}"))
 
-      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
-        .to_return(body: { data: { id: '2002', type: 'batches', attributes: { id: 2002, crop_variety: '5th Element' } } }.to_json)
+      stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone")
+        .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
 
-      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/resource_units/1')
-        .to_return(body: { data: { id: '1', type: 'resource_units', attributes: { id: 1, name: 'g of Something - 5th Element', kind: 'weight', conversion_si: 1.0 } } }.to_json)
+      stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/resource_units/8")
+        .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/resource_units/8"))
     end
 
     let(:ctx) do
       {
         id: 3000,
         relationships: {
-          batch: { data: { id: 2002 } },
-          facility: { data: { id: 1568 } }
+          batch: { data: { id: batch_id } },
+          facility: { data: { id: facility_id } }
         },
         attributes: {},
         completion_id: 3000
@@ -296,20 +296,20 @@ RSpec.describe MetrcService::Base do
     end
 
     let(:instance) { described_class.new(ctx, integration) }
-    let(:resource_unit) { instance.send(:get_resource_unit, 1) }
+    let(:resource_unit) { instance.send(:get_resource_unit, 8) }
     subject { resource_unit }
 
     it { is_expected.to be_a(OpenStruct) }
 
     it do
-      expect(subject).to have_attributes(
-        id: 1,
-        name: 'g of Something - 5th Element',
+      is_expected.to have_attributes(
+        id: 8,
+        name: 'Gram of Wet Material, Boss Hog Cannabis',
         unit: 'Grams',
-        label: 'g of Something',
-        strain: '5th Element',
+        label: 'Wet Material',
+        strain: 'Boss Hog',
         kind: 'weight',
-        conversion_si: 1.0
+        metrc_type: 'wet_weight'
       )
     end
   end

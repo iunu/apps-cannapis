@@ -122,7 +122,8 @@ module MetrcService
 
     def resource_unit(unit_type)
       resource_units = get_resource_units.select do |resource_unit|
-        resource_unit.name =~ /#{unit_type}(,\s|\s-\s)#{batch.crop_variety}/
+        resource_unit.metrc_type == unit_type &&
+          resource_unit.strain.match?(batch.crop_variety)
       end
 
       raise InvalidAttributes, "Ambiguous resource unit for #{unit_type} calculation. Expected 1 resource_unit, found #{resource_units.count}" if resource_units.count > 1
@@ -132,24 +133,24 @@ module MetrcService
     end
 
     # Artemis API delivers resource_unit#name in the following formats:
-    # (correct as of 2020-03-24)
+    # (correct as of 2020-04-07)
     #
     #   (a):  [unit] of [resource type], [strain]
     #   (b):  [resource type], [strain]
     #
     # Here we are expecting format (a)
     def map_resource_unit(resource_unit)
-      artemis_unit = resource_unit.name[/^(\w+)/, 1]
+      artemis_unit = resource_unit.unit_name
       metrc_unit = MetrcService::WEIGHT_UNIT_MAP.fetch(artemis_unit, artemis_unit)
 
       OpenStruct.new(
         id: resource_unit.id,
         name: resource_unit.name,
         unit: metrc_unit,
-        label: resource_unit.name[/^([\w\s]+)(,\s|\s-\s)/, 1],
-        strain: batch.crop_variety,
+        label: resource_unit.product_modifier.presence || resource_unit.unit_name,
+        strain: resource_unit.name[/^[\w\s]+,\s([\w\s]+) Cannabis/, 1],
         kind: resource_unit.kind,
-        conversion_si: resource_unit.conversion_si
+        metrc_type: resource_unit&.options&.fetch('metrc', nil)
       )
     end
 
@@ -189,6 +190,15 @@ module MetrcService
 
       metrc_harvest
     end
+
+    def lookup_metrc_plant_batch(tag)
+      metrc_plant_batches = call_metrc(:list_plant_batches)
+      metrc_plant_batch = metrc_plant_batches.find { |batch| batch['Name'] == tag }
+      raise DataMismatch, "expected to find a plant batch in Metrc with the tag '#{tag}' but it does not exist" if metrc_plant_batch.nil?
+
+      metrc_plant_batch
+    end
+
 
     def resource_completions_by_unit_type(unit_type)
       resource_unit_id = resource_unit(unit_type).id

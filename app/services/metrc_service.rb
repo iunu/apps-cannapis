@@ -11,9 +11,13 @@ module MetrcService
   SEEDING_UNIT_MAP = {
     'testing_package' => 'package',
     'plant_barcoded' => 'plant',
+    'plants_barcoded' => 'plant',
     'plant_clone' => 'plant',
+    'plants_clone' => 'plant',
     'clones' => 'plant',
-    'plants' => 'plant'
+    'clone' => 'plant',
+    'plants' => 'plant',
+    'plant' => 'plant'
   }.freeze
 
   WEIGHT_UNIT_MAP = {
@@ -73,7 +77,7 @@ module MetrcService
     end
 
     def batch
-      @batch ||= artemis.get_batch('zone,barcodes,completions,custom_data,seeding_unit,harvest_unit,sub_zone')
+      @batch ||= artemis.get_batch('zone,zone.sub_stage,barcodes,completions,custom_data,seeding_unit,harvest_unit,sub_zone')
     end
 
     def completion

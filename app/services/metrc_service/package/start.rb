@@ -3,11 +3,17 @@ module MetrcService
     class Start < MetrcService::Package::Base
       run_mode :now
 
+      # Valid types can be found on metrc endpoint: /items/v1/categories
+      PLANTINGS_PACKAGE_TYPE = 'Immature Plant'.freeze
+
       def call
         flush_upstream_tasks
 
-        create_package
-        # finish_harvests
+        if plant_package?
+          create_plant_batch_package
+        else
+          create_product_package
+        end
 
         success!
       end
@@ -61,11 +67,42 @@ module MetrcService
         end
       end
 
-      def create_package
-        call_metrc(:create_harvest_package, create_package_payload, testing?)
+      def plant_package?
+        item_type(skip_validation: true).match?(/Plant/)
       end
 
-      def create_package_payload
+      def create_plant_batch_package
+        call_metrc(:create_plant_batch_package, create_plant_batch_package_payload)
+      end
+
+      def create_plant_batch_package_payload
+        consume_completions.map do |consume|
+          crop_batch = crop_batch_for_consume(consume)
+          plant_count = consume.options['consumed_quantity']
+          crop_batch_tag = crop_batch.relationships.dig('barcodes', 'data', 0, 'id')
+          metrc_plant_batch = lookup_metrc_plant_batch(crop_batch_tag)
+
+          {
+            Id: metrc_plant_batch['Id'],
+            PlantBatch: crop_batch.arbitrary_id,
+            Count: plant_count,
+            Location: nil,
+            Item: PLANTINGS_PACKAGE_TYPE,
+            Tag: tag,
+            PatientLicenseNumber: nil,
+            Note: '',
+            IsTradeSample: false,
+            IsDonation: false,
+            ActualDate: package_date
+          }
+        end
+      end
+
+      def create_product_package
+        call_metrc(:create_harvest_package, create_product_package_payload, testing?)
+      end
+
+      def create_product_package_payload
         [{
           Tag: tag,
           Location: zone_name,
@@ -96,28 +133,10 @@ module MetrcService
         batch.relationships.dig('barcodes', 'data', 0, 'id')
       end
 
-      def item_type
-        # resource_unit_name = resource_units.name
+      def item_type(skip_validation: false)
+        validate_item_type!(resource_units.first.label) unless skip_validation
 
-        # # try the format: [unit] of [type], [strain]
-        # type = resource_unit_name[/^[\w]+ of ([\w\s]+), [\w\s]+$/]
-
-        # # then try the format: [type], [strain]
-        # type = resource_unit_name[/^([^\-]+), [\w\s]+$/] if type.nil?
-
-        # raise InvalidAttributes,
-        #       "Item type could not be extracted from the resource unit name: #{resource_unit_name}. " \
-        #       "Expected the format '[unit] of [type], [strain]' or '[type], [strain]'" \
-        #       if type.nil?
-        #
-        # type
-
-        case resource_units.first.name
-        when /Plant/
-          'Plant'
-        else
-          'Flower'
-        end
+        resource_units.first.label
       end
 
       def zone_name
@@ -135,7 +154,7 @@ module MetrcService
       end
 
       def harvest_ingredient(consume)
-        crop_batch = @artemis.get_facility.batch(consume.context.dig('source_batch', 'id'))
+        crop_batch = crop_batch_for_consume(consume)
         resource_unit = get_resource_unit(consume.options['resource_unit_id'])
         metrc_harvest = lookup_metrc_harvest(crop_batch.arbitrary_id)
 
@@ -147,6 +166,10 @@ module MetrcService
           Weight: consume.options['consumed_quantity'],
           UnitOfWeight: resource_unit.unit
         }
+      end
+
+      def crop_batch_for_consume(consume)
+        @artemis.get_facility.batch(consume.context.dig('source_batch', 'id'), include: 'barcodes')
       end
 
       def package_date
@@ -168,6 +191,24 @@ module MetrcService
       def validate_resource_units!
         raise InvalidAttributes, 'The package contains resources of multiple types or units. Expected all resources in the package to be the same' \
           unless resource_units.uniq(&:unit).count == 1
+      end
+
+      def validate_item_type!(type)
+        return if metrc_supported_item_types.include?(type)
+
+        dictionary = DidYouMean::SpellChecker.new(dictionary: metrc_supported_item_types)
+        matches = dictionary.correct(type)
+
+        raise InvalidAttributes,
+              "The package item type '#{type}' is not supported by Metrc. "\
+              "#{matches.present? ? "Did you mean #{matches.map(&:inspect).join(', ')}?" : 'No similar types were found on Metrc.'}"
+      end
+
+      def metrc_supported_item_types
+        @metrc_supported_item_types ||= begin
+                                          metrc_response = @client.get('items', 'categories').body
+                                          JSON.parse(metrc_response).map { |entry| entry['Name'] }
+                                        end
       end
     end
   end

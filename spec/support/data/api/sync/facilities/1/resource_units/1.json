@@ -1,0 +1,28 @@
+{
+  "data": {
+    "id": "1",
+    "type": "resource_units",
+    "attributes": {
+      "id": 1,
+      "name": "Planting Tub",
+      "kind": "count",
+      "unit_name": null,
+      "unit_symbol": null,
+      "unit_precision": 0,
+      "conversion_si": 1.0,
+      "unit_modifier": null,
+      "product_modifier": null,
+      "options": null
+    },
+    "relationships": {
+      "crop_variety": {
+        "meta": {
+          "included": false
+        }
+      }
+    }
+  },
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

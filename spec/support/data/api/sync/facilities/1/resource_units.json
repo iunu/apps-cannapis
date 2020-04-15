@@ -1,0 +1,1963 @@
+{
+  "data": [
+    {
+      "id": "1",
+      "type": "resource_units",
+      "attributes": {
+        "id": 1,
+        "name": "Planting Tub",
+        "kind": "count",
+        "unit_name": null,
+        "unit_symbol": null,
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": null,
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "2",
+      "type": "resource_units",
+      "attributes": {
+        "id": 2,
+        "name": "Bottle of CloneEx Rooting Gel",
+        "kind": "count",
+        "unit_name": "Bottle",
+        "unit_symbol": "bottle",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": null,
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "3",
+      "type": "resource_units",
+      "attributes": {
+        "id": 3,
+        "name": "Milliliter of Rhino Skin",
+        "kind": "volume",
+        "unit_name": "Milliliter",
+        "unit_symbol": "ml",
+        "unit_precision": 0,
+        "conversion_si": 0.001,
+        "unit_modifier": null,
+        "product_modifier": null,
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "4",
+      "type": "resource_units",
+      "attributes": {
+        "id": 4,
+        "name": "Milliliter of B-52",
+        "kind": "volume",
+        "unit_name": "Milliliter",
+        "unit_symbol": "ml",
+        "unit_precision": 0,
+        "conversion_si": 0.001,
+        "unit_modifier": null,
+        "product_modifier": null,
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "5",
+      "type": "resource_units",
+      "attributes": {
+        "id": 5,
+        "name": "Milliliter of Grow A",
+        "kind": "volume",
+        "unit_name": "Milliliter",
+        "unit_symbol": "ml",
+        "unit_precision": 0,
+        "conversion_si": 0.001,
+        "unit_modifier": null,
+        "product_modifier": null,
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "6",
+      "type": "resource_units",
+      "attributes": {
+        "id": 6,
+        "name": "Milliliter of Grow B",
+        "kind": "volume",
+        "unit_name": "Milliliter",
+        "unit_symbol": "ml",
+        "unit_precision": 0,
+        "conversion_si": 0.001,
+        "unit_modifier": null,
+        "product_modifier": null,
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "7",
+      "type": "resource_units",
+      "attributes": {
+        "id": 7,
+        "name": "Plant of Boss Hog Cannabis",
+        "kind": "count",
+        "unit_name": "Plant",
+        "unit_symbol": "plant",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": null,
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "8",
+      "type": "resource_units",
+      "attributes": {
+        "id": 8,
+        "name": "Gram of Wet Material, Boss Hog Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Wet Material",
+        "options": {
+          "metrc": "wet_weight"
+        }
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "9",
+      "type": "resource_units",
+      "attributes": {
+        "id": 9,
+        "name": "Gram of Wet Waste, Boss Hog Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Wet Waste",
+        "options": {
+          "metrc": "wet_waste"
+        }
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "10",
+      "type": "resource_units",
+      "attributes": {
+        "id": 10,
+        "name": "Gram of Dry Material, Boss Hog Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Dry Material",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "11",
+      "type": "resource_units",
+      "attributes": {
+        "id": 11,
+        "name": "Gram of Bud, Boss Hog Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Bud",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "12",
+      "type": "resource_units",
+      "attributes": {
+        "id": 12,
+        "name": "Gram of Shake, Boss Hog Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Shake",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "13",
+      "type": "resource_units",
+      "attributes": {
+        "id": 13,
+        "name": "Gram of Kief, Boss Hog Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Kief",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "14",
+      "type": "resource_units",
+      "attributes": {
+        "id": 14,
+        "name": "Gram of Stem, Boss Hog Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Stem",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "15",
+      "type": "resource_units",
+      "attributes": {
+        "id": 15,
+        "name": "Gram of Trim, Boss Hog Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Trim",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "16",
+      "type": "resource_units",
+      "attributes": {
+        "id": 16,
+        "name": "Gram of Grade B Flower, Boss Hog Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Grade B Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "17",
+      "type": "resource_units",
+      "attributes": {
+        "id": 17,
+        "name": "Gram of Grade A Flower, Boss Hog Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Grade A Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "18",
+      "type": "resource_units",
+      "attributes": {
+        "id": 18,
+        "name": "10g Package of Flower, Boss Hog Cannabis",
+        "kind": "count",
+        "unit_name": "Package",
+        "unit_symbol": "package",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": "10g",
+        "product_modifier": "Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "19",
+      "type": "resource_units",
+      "attributes": {
+        "id": 19,
+        "name": "50g Package of Flower, Boss Hog Cannabis",
+        "kind": "count",
+        "unit_name": "Package",
+        "unit_symbol": "package",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": "50g",
+        "product_modifier": "Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "20",
+      "type": "resource_units",
+      "attributes": {
+        "id": 20,
+        "name": "Plant of 5th Element Cannabis",
+        "kind": "count",
+        "unit_name": "Plant",
+        "unit_symbol": "plant",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": null,
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "21",
+      "type": "resource_units",
+      "attributes": {
+        "id": 21,
+        "name": "Gram of Wet Material, 5th Element Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Wet Material",
+        "options": {
+          "metrc": "wet_weight"
+        }
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "22",
+      "type": "resource_units",
+      "attributes": {
+        "id": 22,
+        "name": "Gram of Wet Waste, 5th Element Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Wet Waste",
+        "options": {
+          "metrc": "wet_waste"
+        }
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "23",
+      "type": "resource_units",
+      "attributes": {
+        "id": 23,
+        "name": "Gram of Dry Material, 5th Element Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Dry Material",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "24",
+      "type": "resource_units",
+      "attributes": {
+        "id": 24,
+        "name": "Gram of Bud, 5th Element Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Bud",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "25",
+      "type": "resource_units",
+      "attributes": {
+        "id": 25,
+        "name": "Gram of Shake, 5th Element Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Shake",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "26",
+      "type": "resource_units",
+      "attributes": {
+        "id": 26,
+        "name": "Gram of Kief, 5th Element Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Kief",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "27",
+      "type": "resource_units",
+      "attributes": {
+        "id": 27,
+        "name": "Gram of Stem, 5th Element Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Stem",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "28",
+      "type": "resource_units",
+      "attributes": {
+        "id": 28,
+        "name": "Gram of Trim, 5th Element Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Trim",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "29",
+      "type": "resource_units",
+      "attributes": {
+        "id": 29,
+        "name": "Gram of Grade B Flower, 5th Element Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Grade B Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "30",
+      "type": "resource_units",
+      "attributes": {
+        "id": 30,
+        "name": "Gram of Grade A Flower, 5th Element Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Grade A Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "31",
+      "type": "resource_units",
+      "attributes": {
+        "id": 31,
+        "name": "10g Package of Flower, 5th Element Cannabis",
+        "kind": "count",
+        "unit_name": "Package",
+        "unit_symbol": "package",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": "10g",
+        "product_modifier": "Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "32",
+      "type": "resource_units",
+      "attributes": {
+        "id": 32,
+        "name": "50g Package of Flower, 5th Element Cannabis",
+        "kind": "count",
+        "unit_name": "Package",
+        "unit_symbol": "package",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": "50g",
+        "product_modifier": "Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "33",
+      "type": "resource_units",
+      "attributes": {
+        "id": 33,
+        "name": "Plant of 9 LB Hammer Cannabis",
+        "kind": "count",
+        "unit_name": "Plant",
+        "unit_symbol": "plant",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": null,
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "34",
+      "type": "resource_units",
+      "attributes": {
+        "id": 34,
+        "name": "Gram of Wet Material, 9 LB Hammer Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Wet Material",
+        "options": {
+          "metrc": "wet_weight"
+        }
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "35",
+      "type": "resource_units",
+      "attributes": {
+        "id": 35,
+        "name": "Gram of Wet Waste, 9 LB Hammer Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Wet Waste",
+        "options": {
+          "metrc": "wet_waste"
+        }
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "36",
+      "type": "resource_units",
+      "attributes": {
+        "id": 36,
+        "name": "Gram of Dry Material, 9 LB Hammer Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Dry Material",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "37",
+      "type": "resource_units",
+      "attributes": {
+        "id": 37,
+        "name": "Gram of Bud, 9 LB Hammer Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Bud",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "38",
+      "type": "resource_units",
+      "attributes": {
+        "id": 38,
+        "name": "Gram of Shake, 9 LB Hammer Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Shake",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "39",
+      "type": "resource_units",
+      "attributes": {
+        "id": 39,
+        "name": "Gram of Kief, 9 LB Hammer Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Kief",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "40",
+      "type": "resource_units",
+      "attributes": {
+        "id": 40,
+        "name": "Gram of Stem, 9 LB Hammer Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Stem",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "41",
+      "type": "resource_units",
+      "attributes": {
+        "id": 41,
+        "name": "Gram of Trim, 9 LB Hammer Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Trim",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "42",
+      "type": "resource_units",
+      "attributes": {
+        "id": 42,
+        "name": "Gram of Grade B Flower, 9 LB Hammer Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Grade B Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "43",
+      "type": "resource_units",
+      "attributes": {
+        "id": 43,
+        "name": "Gram of Grade A Flower, 9 LB Hammer Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Grade A Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "44",
+      "type": "resource_units",
+      "attributes": {
+        "id": 44,
+        "name": "10g Package of Flower, 9 LB Hammer Cannabis",
+        "kind": "count",
+        "unit_name": "Package",
+        "unit_symbol": "package",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": "10g",
+        "product_modifier": "Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "45",
+      "type": "resource_units",
+      "attributes": {
+        "id": 45,
+        "name": "50g Package of Flower, 9 LB Hammer Cannabis",
+        "kind": "count",
+        "unit_name": "Package",
+        "unit_symbol": "package",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": "50g",
+        "product_modifier": "Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "46",
+      "type": "resource_units",
+      "attributes": {
+        "id": 46,
+        "name": "Plant of Banana Crush Cannabis",
+        "kind": "count",
+        "unit_name": "Plant",
+        "unit_symbol": "plant",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": null,
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "47",
+      "type": "resource_units",
+      "attributes": {
+        "id": 47,
+        "name": "Gram of Wet Material, Banana Crush Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Wet Material",
+        "options": {
+          "metrc": "wet_weight"
+        }
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "48",
+      "type": "resource_units",
+      "attributes": {
+        "id": 48,
+        "name": "Gram of Wet Waste, Banana Crush Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Wet Waste",
+        "options": {
+          "metrc": "wet_waste"
+        }
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "49",
+      "type": "resource_units",
+      "attributes": {
+        "id": 49,
+        "name": "Gram of Dry Material, Banana Crush Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Dry Material",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "50",
+      "type": "resource_units",
+      "attributes": {
+        "id": 50,
+        "name": "Gram of Bud, Banana Crush Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Bud",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "51",
+      "type": "resource_units",
+      "attributes": {
+        "id": 51,
+        "name": "Gram of Shake, Banana Crush Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Shake",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "52",
+      "type": "resource_units",
+      "attributes": {
+        "id": 52,
+        "name": "Gram of Kief, Banana Crush Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Kief",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "53",
+      "type": "resource_units",
+      "attributes": {
+        "id": 53,
+        "name": "Gram of Stem, Banana Crush Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Stem",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "54",
+      "type": "resource_units",
+      "attributes": {
+        "id": 54,
+        "name": "Gram of Trim, Banana Crush Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Trim",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "55",
+      "type": "resource_units",
+      "attributes": {
+        "id": 55,
+        "name": "Gram of Grade B Flower, Banana Crush Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Grade B Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "56",
+      "type": "resource_units",
+      "attributes": {
+        "id": 56,
+        "name": "Gram of Grade A Flower, Banana Crush Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Grade A Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "57",
+      "type": "resource_units",
+      "attributes": {
+        "id": 57,
+        "name": "10g Package of Flower, Banana Crush Cannabis",
+        "kind": "count",
+        "unit_name": "Package",
+        "unit_symbol": "package",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": "10g",
+        "product_modifier": "Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "58",
+      "type": "resource_units",
+      "attributes": {
+        "id": 58,
+        "name": "50g Package of Flower, Banana Crush Cannabis",
+        "kind": "count",
+        "unit_name": "Package",
+        "unit_symbol": "package",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": "50g",
+        "product_modifier": "Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "59",
+      "type": "resource_units",
+      "attributes": {
+        "id": 59,
+        "name": "Plant of Bruce Banner BX Cannabis",
+        "kind": "count",
+        "unit_name": "Plant",
+        "unit_symbol": "plant",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": null,
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "60",
+      "type": "resource_units",
+      "attributes": {
+        "id": 60,
+        "name": "Gram of Wet Material, Bruce Banner BX Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Wet Material",
+        "options": {
+          "metrc": "wet_weight"
+        }
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "61",
+      "type": "resource_units",
+      "attributes": {
+        "id": 61,
+        "name": "Gram of Wet Waste, Bruce Banner BX Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Wet Waste",
+        "options": {
+          "metrc": "wet_waste"
+        }
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "62",
+      "type": "resource_units",
+      "attributes": {
+        "id": 62,
+        "name": "Gram of Dry Material, Bruce Banner BX Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Dry Material",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "63",
+      "type": "resource_units",
+      "attributes": {
+        "id": 63,
+        "name": "Gram of Bud, Bruce Banner BX Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Bud",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "64",
+      "type": "resource_units",
+      "attributes": {
+        "id": 64,
+        "name": "Gram of Shake, Bruce Banner BX Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Shake",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "65",
+      "type": "resource_units",
+      "attributes": {
+        "id": 65,
+        "name": "Gram of Kief, Bruce Banner BX Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Kief",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "66",
+      "type": "resource_units",
+      "attributes": {
+        "id": 66,
+        "name": "Gram of Stem, Bruce Banner BX Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Stem",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "67",
+      "type": "resource_units",
+      "attributes": {
+        "id": 67,
+        "name": "Gram of Trim, Bruce Banner BX Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Trim",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "68",
+      "type": "resource_units",
+      "attributes": {
+        "id": 68,
+        "name": "Gram of Grade B Flower, Bruce Banner BX Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Grade B Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "69",
+      "type": "resource_units",
+      "attributes": {
+        "id": 69,
+        "name": "Gram of Grade A Flower, Bruce Banner BX Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Grade A Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "70",
+      "type": "resource_units",
+      "attributes": {
+        "id": 70,
+        "name": "10g Package of Flower, Bruce Banner BX Cannabis",
+        "kind": "count",
+        "unit_name": "Package",
+        "unit_symbol": "package",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": "10g",
+        "product_modifier": "Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "71",
+      "type": "resource_units",
+      "attributes": {
+        "id": 71,
+        "name": "50g Package of Flower, Bruce Banner BX Cannabis",
+        "kind": "count",
+        "unit_name": "Package",
+        "unit_symbol": "package",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": "50g",
+        "product_modifier": "Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "72",
+      "type": "resource_units",
+      "attributes": {
+        "id": 72,
+        "name": "Plant of ChemDog Cannabis",
+        "kind": "count",
+        "unit_name": "Plant",
+        "unit_symbol": "plant",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": null,
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "73",
+      "type": "resource_units",
+      "attributes": {
+        "id": 73,
+        "name": "Gram of Wet Material, ChemDog Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Wet Material",
+        "options": {
+          "metrc": "wet_weight"
+        }
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "74",
+      "type": "resource_units",
+      "attributes": {
+        "id": 74,
+        "name": "Gram of Wet Waste, ChemDog Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Wet Waste",
+        "options": {
+          "metrc": "wet_waste"
+        }
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "75",
+      "type": "resource_units",
+      "attributes": {
+        "id": 75,
+        "name": "Gram of Dry Material, ChemDog Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Dry Material",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "76",
+      "type": "resource_units",
+      "attributes": {
+        "id": 76,
+        "name": "Gram of Bud, ChemDog Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Bud",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "77",
+      "type": "resource_units",
+      "attributes": {
+        "id": 77,
+        "name": "Gram of Shake, ChemDog Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Shake",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "78",
+      "type": "resource_units",
+      "attributes": {
+        "id": 78,
+        "name": "Gram of Kief, ChemDog Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Kief",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "79",
+      "type": "resource_units",
+      "attributes": {
+        "id": 79,
+        "name": "Gram of Stem, ChemDog Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Stem",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "80",
+      "type": "resource_units",
+      "attributes": {
+        "id": 80,
+        "name": "Gram of Trim, ChemDog Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Trim",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "81",
+      "type": "resource_units",
+      "attributes": {
+        "id": 81,
+        "name": "Gram of Grade B Flower, ChemDog Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Grade B Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "82",
+      "type": "resource_units",
+      "attributes": {
+        "id": 82,
+        "name": "Gram of Grade A Flower, ChemDog Cannabis",
+        "kind": "weight",
+        "unit_name": "Gram",
+        "unit_symbol": "g",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": null,
+        "product_modifier": "Grade A Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "83",
+      "type": "resource_units",
+      "attributes": {
+        "id": 83,
+        "name": "10g Package of Flower, ChemDog Cannabis",
+        "kind": "count",
+        "unit_name": "Package",
+        "unit_symbol": "package",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": "10g",
+        "product_modifier": "Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "84",
+      "type": "resource_units",
+      "attributes": {
+        "id": 84,
+        "name": "50g Package of Flower, ChemDog Cannabis",
+        "kind": "count",
+        "unit_name": "Package",
+        "unit_symbol": "package",
+        "unit_precision": 0,
+        "conversion_si": 1.0,
+        "unit_modifier": "50g",
+        "product_modifier": "Flower",
+        "options": null
+      },
+      "relationships": {
+        "crop_variety": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

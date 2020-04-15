@@ -7,16 +7,8 @@ RSpec.describe MetrcService::Plant::Start do
     {
       id: 3000,
       relationships: {
-        batch: {
-          data: {
-            id: 2002
-          }
-        },
-        facility: {
-          data: {
-            id: 1568
-          }
-        }
+        batch: { data: { id: 2002 } },
+        facility: { data: { id: 1568 } }
       },
       attributes: {
         options: {
@@ -37,16 +29,8 @@ RSpec.describe MetrcService::Plant::Start do
         {
           id: 3000,
           relationships: {
-            batch: {
-              data: {
-                id: 2002
-              }
-            },
-            facility: {
-              data: {
-                id: 1568
-              }
-            }
+            batch: { data: { id: 2002 } },
+            facility: { data: { id: 1568 } }
           },
           attributes: {},
           completion_id: 1001
@@ -89,7 +73,7 @@ RSpec.describe MetrcService::Plant::Start do
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
           .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
-        stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
+        stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
           .to_return(body: {
             data: {
               id: '2002',
