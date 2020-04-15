@@ -40,9 +40,14 @@ RSpec.describe NcsService do
     describe '#module_name_for_seeding_unit' do
       subject { instance.send(:module_name_for_seeding_unit) }
 
-      describe 'plant_barcoded' do
-        let(:seeding_unit_name) { 'Plant (Barcoded)' }
-        it { is_expected.to eq('plant_barcoded') }
+      describe 'plants_barcoded' do
+        let(:seeding_unit_name) { 'Plants (Barcoded)' }
+        it { is_expected.to eq('plant') }
+      end
+
+      describe 'plants_clone' do
+        let(:seeding_unit_name) { 'Plants (Clone)' }
+        it { is_expected.to eq('plant') }
       end
 
       describe 'package' do
@@ -52,7 +57,7 @@ RSpec.describe NcsService do
 
       describe 'testing_package' do
         let(:seeding_unit_name) { 'Testing Package' }
-        it { is_expected.to eq('testing_package') }
+        it { is_expected.to eq('package') }
       end
 
       describe 'sales_order' do
@@ -69,33 +74,27 @@ RSpec.describe NcsService do
       subject { instance.send(:module_for_completion) }
 
       describe 'plant_clone' do
-        let(:seeding_unit_name) { 'Plant (Clone)' }
+        let(:seeding_unit_name) { 'Plants (Clone)' }
 
         it { is_expected.to eq(NcsService::Plant::Start) }
       end
 
-      describe 'package', skip: 'Check if package is a valid seeding unit' do
+      describe 'package' do
         let(:seeding_unit_name) { 'Package' }
 
-        it { is_expected.to raise_error(NcsService::InvalidOperation) }
+        it { is_expected.to eq(NcsService::Package::Start) }
       end
 
-      describe 'testing_package', skip: 'Check if testing_package is a valid seeding unit' do
+      describe 'testing_package' do
         let(:seeding_unit_name) { 'Testing Package' }
 
-        it { is_expected.to raise_error(NcsService::InvalidOperation) }
+        it { is_expected.to eq(NcsService::Package::Start) }
       end
 
-      describe 'sales_order', skip: 'Check if sales_order is a valid seeding unit' do
-        let(:action_type) { 'discard' }
-        let(:seeding_unit_name) { 'Sales Order' }
-
-        it { is_expected.to eq(NcsService::SalesOrder::Discard) }
-      end
-
-      describe 'sales_order', skip: 'Check if sales_order is a valid seeding unit' do
+      describe 'sales_order' do
         let(:action_type) { 'move' }
         let(:seeding_unit_name) { 'Sales Order' }
+
         it 'fails with an error' do
           expect { subject }.to raise_error(NcsService::InvalidOperation)
         end

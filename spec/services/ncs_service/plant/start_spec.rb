@@ -66,7 +66,7 @@ RSpec.describe NcsService::Plant::Start do
       include_examples 'with corn crop'
     end
 
-    describe 'metrc#create_plant_batches' do
+    describe 'ncs#create_plant_batches' do
       now = Time.zone.now.strftime('%Y-%m-%d')
       let(:transaction) { stub_model Transaction, type: :start_batch, success: false }
 

@@ -112,7 +112,12 @@ module MetrcService
         #
         # type
 
-        'Flower'
+        case resource_units.first.name
+        when /Plant/
+          'Plant'
+        else
+          'Flower'
+        end
       end
 
       def zone_name
