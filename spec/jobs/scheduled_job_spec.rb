@@ -23,7 +23,7 @@ RSpec.describe ScheduledJob, type: :job do
       .on_queue('default')
   end
 
-  context 'with no scheduled tasks' do
+  describe 'with no scheduled tasks' do
     before do
       Scheduler.delete_all
     end
@@ -46,14 +46,7 @@ RSpec.describe ScheduledJob, type: :job do
     let(:service_action) { double(:action, run: true, result: true) }
 
     it 'calls the vendor module' do
-      beginning_of_hour = now.beginning_of_hour
-      end_of_hour       = now.end_of_hour
-
       allow_any_instance_of(MetrcService::Batch).to receive(:call)
-
-      service_action = double(:action, run: true, result: successful_transaction)
-      expect(MetrcService::Batch).to receive(:new).and_return(service_action)
-
       perform_enqueued_jobs { subject }
     end
   end
@@ -75,21 +68,29 @@ RSpec.describe ScheduledJob, type: :job do
         .and_return(mailer_with_params)
     end
 
-    context 'that can be rescheduled' do
+    describe 'that can be rescheduled' do
       let(:raised_error) { Cannapi::RetryableError.new('something went wrong', original: original_error) }
 
-      it 'enqueues the job' do
+      before do
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{integration.facility_id}")
+          .to_return(body: '')
+
         allow(mailer_with_params).to receive(:report_reschedule_email)
           .and_return(email)
+      end
 
+      it 'enqueues the job' do
         perform_enqueued_jobs { subject }
       end
     end
 
-    context 'that can NOT be rescheduled due to too many retries' do
+    describe 'that can NOT be rescheduled due to too many retries' do
       let(:raised_error) { Cannapi::TooManyRetriesError.new('something went wrong too many times', original: original_error) }
 
       before do
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{integration.facility_id}")
+          .to_return(body: '')
+
         allow(mailer_with_params)
           .to receive(:report_failure_email)
           .and_return(email)
@@ -105,6 +106,9 @@ RSpec.describe ScheduledJob, type: :job do
       let(:original_error) { raised_error }
 
       before do
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{integration.facility_id}")
+          .to_return(status: 200, body: '{}', headers: {})
+
         allow(mailer_with_params)
           .to receive(:report_failure_email)
           .and_return(email)
