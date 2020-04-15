@@ -7,8 +7,10 @@ module NcsService
         flush_upstream_tasks
 
         if plant_package
+          @transaction_type = :create_plant_package
           create_plant_package
         else
+          @transaction_type = :create_product_package
           create_product_package
         end
 
@@ -18,7 +20,7 @@ module NcsService
       private
 
       def transaction
-        @transaction ||= get_transaction(:start_package_batch)
+        @transaction ||= get_transaction(@transaction_type)
       end
 
       def flush_upstream_tasks
@@ -46,13 +48,13 @@ module NcsService
       end
 
       def create_plant_package
-        payload = create_plant_package_payload
+        payload = plant_package_payload
         call_ncs(:plant_batch, :create_packages, payload)
       end
 
-      def create_plant_package_payload
+      def plant_package_payload
         [{
-          PlantBatchId: null,
+          PlantBatchId: nil,
           PlantBatchName: batch.arbitrary_id,
           PlantCount: batch.attributes['quantity']&.to_i,
           RoomName: zone_name,
@@ -62,13 +64,37 @@ module NcsService
         }]
       end
 
+      def product_package_payload
+        harvest = lookup_harvest(batch.arbitrary_id)
+
+        [{
+          HarvestId: harvest['id'],
+          Label: barcode,
+          RoomName: zone_name,
+          ProductName: batch.attributes['crop_variety'],
+          Weight: batch.attributes['quantity']&.to_i,
+          UnitOfMeasureName: unit_of_weight,
+          IsProductionBatch: false,
+          ProductionBatchNumber: nil,
+          ProductRequiresRemediation: false,
+          RemediationMethodId: nil,
+          RemediationDate: nil,
+          RemediationSteps: nil,
+          PackagedDate: package_date
+        }]
+      end
+
       def create_product_package
-        # payload = create_plant_package_payload
-        # call_ncs(:package, :create, payload)
+        payload = product_package_payload
+        call_ncs(:harvest, :create_package, payload)
       end
 
       def testing?
-        batch.arbitrary_id =~ /test/i
+        batch.arbitrary_id.match?(/test/i)
+      end
+
+      def plant_package
+        item_type == 'Plant'
       end
 
       def barcode
@@ -76,11 +102,13 @@ module NcsService
       end
 
       def item_type
-        case resource_units.first.name
-        when /Plant/
-          'Plant'
-        else
-          'Flower'
+        @item_type ||= begin
+          case resource_units.first.name
+          when /Plant/
+            'Plant'
+          else
+            'Flower'
+          end
         end
       end
 
@@ -102,6 +130,12 @@ module NcsService
         batch.completions.select do |completion|
           completion.action_type == 'consume'
         end
+      end
+
+      def unit_of_weight
+        validate_resource_units!
+
+        resource_units.first.unit
       end
 
       def validate_resource_units!

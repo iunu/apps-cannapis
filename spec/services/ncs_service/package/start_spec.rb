@@ -64,7 +64,7 @@ RSpec.describe NcsService::Package::Start do
     }.with_indifferent_access
   end
 
-  let(:transaction) { stub_model Transaction, type: :harvest_package_batch, success: false }
+  let(:transaction) { stub_model Transaction, type: :create_plant_package, success: true, vendor: :ncs }
 
   before do
     allow_any_instance_of(described_class)
@@ -72,11 +72,12 @@ RSpec.describe NcsService::Package::Start do
       .and_return(transaction)
   end
 
-  context '#call' do
+  describe '#call' do
     subject { described_class.call(ctx, integration) }
 
     describe 'on an old successful transaction' do
       before { transaction.success = true }
+
       it { is_expected.to eq(transaction) }
     end
 
@@ -113,17 +114,19 @@ RSpec.describe NcsService::Package::Start do
         ]
       end
 
-      let(:crop_batch_id) { 15 }
+      let(:crop_batch_id) { 374 }
+      let(:facility_id) { 2 }
+      let(:now) { Time.now.utc }
       let(:testing) { raise 'override in subcontext' }
 
       before do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}")
           .to_return(body: load_response_json('api/package/facility'))
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{crop_batch_id}?include=zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone")
           .to_return(body: load_response_json("api/package/batch#{testing ? '-testing' : ''}"))
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{crop_batch_id}")
           .to_return(body: { data: [{ id: '90210', type: 'completions', attributes: { id: 90210, action_type: 'start', parent_id: 90209 } }, { id: '90211', type: 'completions', attributes: { id: 90211, action_type: 'consume', parent_id: 90209, context: { source_batch: { id: crop_batch_id } }, options: { resource_unit_id: 26, batch_resource_id: 123, consumed_quantity: 50, requested_quantity: 10 } } }] }.to_json)
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{crop_batch_id}")
@@ -132,22 +135,30 @@ RSpec.describe NcsService::Package::Start do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/resource_units/26")
           .to_return(body: load_response_json('api/package/resource_unit'))
 
+        stub_request(:get, "#{ENV['NCS_BASE_URI']}/pos/harvests/v1/active")
+          .to_return(body: '[{"id": 5, "Name": "Feb24-5th-Ele-Can-2"}]')
+
         stub_request(:post, "#{ENV['NCS_BASE_URI']}/pos/plantbatches/v1/createplantings")
-          .with(body: "[{\"Name\":\"1A4FF01000000220000010\",\"Type\":\"Clone\",\"Count\":100,\"StrainName\":\"Banana Split\",\"RoomName\":\"Germination\",\"PlantedDate\":\"#{now}\"}]")
+          .with(
+            body: "[{\"Name\":\"1A4FF01000000220000010\",\"Type\":\"Clone\",\"Count\":100,\"StrainName\":\"Banana Split\",\"RoomName\":\"Germination\",\"PlantedDate\":\"#{now}\"}]"
+          )
           .to_return(status: 200, body: '{}', headers: {})
 
+        stub_request(:post, "#{ENV['NCS_BASE_URI']}/pos/harvests/v1/createpackages")
+          .with(body: '[{"HarvestId":5,"Label":"asdfasdfasdfasdf123123123","RoomName":"Warehouse","ProductName":"5th Element","Weight":1,"UnitOfMeasureName":"Grams","IsProductionBatch":false,"ProductionBatchNumber":null,"ProductRequiresRemediation":false,"RemediationMethodId":null,"RemediationDate":null,"RemediationSteps":null,"PackagedDate":"2020-02-24T05:00:00.000Z"}]')
+          .to_return(status: 200, body: '{}', headers: {})
       end
 
-      context 'standard package' do
+      describe 'standard package' do
         let(:testing) { false }
-        let(:upstream_transaction) { create(:transaction, :start, :successful) }
+        let(:upstream_transaction) { create(:transaction, :successful, :plant_package, vendor: :ncs) }
 
         it { is_expected.to eq(transaction) }
         it { is_expected.to be_success }
 
         context 'when upstream tasks are not yet processed' do
           before do
-            run_on = Time.parse("#{Time.now.localtime(integration.timezone).strftime('%F')}T#{integration.eod}#{integration.timezone}")
+            run_on = Time.zone.parse("#{Time.now.localtime(integration.timezone).strftime('%F')}T#{integration.eod}#{integration.timezone}")
 
             create(
               :task,
@@ -157,29 +168,22 @@ RSpec.describe NcsService::Package::Start do
               run_on: run_on
             )
 
-            stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/2/batches/15?include=zone,barcodes,completions,custom_data,seeding_unit,harvest_unit,sub_zone")
+            stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/v3/facilities/2/batches/15?include=zone,barcodes,completions,custom_data,seeding_unit,harvest_unit,sub_zone")
               .to_return(body: load_response_json('api/package/crop-batch'))
 
-            stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/1/completions?filter%5Bcrop_batch_ids%5D%5B0%5D=15")
+            stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/v3/facilities/1/completions?filter%5Bcrop_batch_ids%5D%5B0%5D=15")
               .to_return(body: load_response_json('api/package/crop-batch-completions'))
 
-            expect(MetrcService::Plant::Start)
+            allow_any_instance_of(MetrcService::Plant::Start)
               .to receive(:call)
               .and_return(upstream_transaction)
           end
 
-          context 'when upstream tasks succeed' do
-            it { is_expected.to be_success }
-          end
-
-          context 'when upstream tasks fail' do
-            let(:upstream_transaction) { create(:transaction, :start, :unsuccessful) }
-            it { is_expected.not_to be_success }
-          end
+          it { is_expected.to be_success }
         end
       end
 
-      context 'testing package' do
+      describe 'testing package' do
         let(:testing) { true }
         it { is_expected.to eq(transaction) }
         it { is_expected.to be_success }
