@@ -53,7 +53,7 @@ RSpec.xdescribe MetrcService::SalesOrder::Discard do
         stub_request(:get, api_url("facilities/#{facility_id}"))
           .to_return(body: load_response_json('api/sales_order/facility'))
 
-        stub_request(:get, api_url("facilities/#{facility_id}/batches/#{batch_id}?include=zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone"))
+        stub_request(:get, api_url("facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone"))
           .to_return(body: load_response_json('api/sales_order/batch'))
 
         stub_request(:get, api_url("facilities/#{facility_id}/batches/#{batch_id}"))
