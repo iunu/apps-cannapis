@@ -10,8 +10,7 @@ GIT
 
 GIT
   remote: https://github.com/artemis-ag/artemis_api
-  revision: 389497c6aedd20154efa3a7c29ff8c06a66b581e
-  branch: relationship-fixes
+  revision: de11bb422fa6c14c3d763fa2a76ee64ee65be2a3
   specs:
     artemis_api (0.6.1)
       oauth2
