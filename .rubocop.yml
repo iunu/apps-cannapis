@@ -75,3 +75,6 @@ RSpec/EmptyLineAfterFinalLet:
 
 RSpec/AnyInstance:
   Enabled: false
+
+RSpec/NestedGroups:
+  Enabled: false
