@@ -67,7 +67,7 @@ namespace :artemis do
       end
 
       def batch
-        client.oauth_token.get("/api/v3/facilities/#{@facility_id}/batches/#{@batch_id}?include=zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone")
+        client.oauth_token.get("/api/v3/facilities/#{@facility_id}/batches/#{@batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone")
       end
       
       def items
