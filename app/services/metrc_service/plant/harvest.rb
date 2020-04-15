@@ -5,16 +5,15 @@ module MetrcService
       WASTE_WEIGHT = 'wet_waste'.freeze
 
       def call
-        seeding_unit_id = @attributes.dig(:options, :seeding_unit_id)
-        items           = get_items(seeding_unit_id)
-
         # allow for harvest of nursery crops - generates clones
         return success! if items.empty?
 
-        next_step       = complete? ? :harvest_plants : :manicure_plants
-        payload         = send("build_#{next_step}_payload", items, batch)
+        if complete?
+          harvest_plants
+        else
+          manicure_plants
+        end
 
-        call_metrc(next_step, payload)
         remove_waste
 
         success!
@@ -28,6 +27,10 @@ module MetrcService
 
       def remove_waste
         call_metrc(:remove_waste, build_remove_waste_payload)
+      end
+
+      def manicure_plants
+        call_metrc(:manicure_plants, build_manicure_plants_payload(items, batch))
       end
 
       def build_manicure_plants_payload(items, _batch)
@@ -46,6 +49,10 @@ module MetrcService
         end
       end
 
+      def harvest_plants
+        call_metrc(:harvest_plants, build_harvest_plants_payload(items, batch))
+      end
+
       def build_harvest_plants_payload(items, batch)
         harvest_name = batch.arbitrary_id
         average_weight = calculate_average_weight(items)
@@ -61,6 +68,14 @@ module MetrcService
             HarvestName: harvest_name
           }
         end
+      end
+
+      def items
+        @items ||= get_items(seeding_unit_id)
+      end
+
+      def seeding_unit_id
+        @seeding_unit_id ||= @attributes.dig(:options, :seeding_unit_id)
       end
 
       def build_remove_waste_payload
