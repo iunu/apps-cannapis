@@ -1,7 +1,8 @@
 require 'rails_helper'
 
 RSpec.describe NcsService::Base do
-  let(:integration) { create(:ncs_integration) }
+  let(:account) { create(:account) }
+  let(:integration) { create(:ncs_integration, account: account) }
 
   subject { described_class.new({}, integration) }
 
@@ -146,30 +147,34 @@ RSpec.describe NcsService::Base do
       stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
         .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
-      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
-        .to_return(body: { data: { id: '2002', type: 'batches', attributes: { id: 2002, arbitrary_id: 'Jun19-Bok-Cho' } } }.to_json)
+      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
+        .to_return(body: { data: { id: '2002', type: 'batches', attributes: { id: 2002, arbitrary_id: 'Jun19-Bok-Cho', facility_id: 1568 } } }.to_json)
     end
 
-    it 'gets a batch' do
-      ctx = {
-        'id': 3000,
-        'relationships': {
-          'batch': {
-            'data': {
-              'id': 2002
+    let(:ctx) do
+      {
+        id: 3000,
+        relationships: {
+          batch: {
+            data: {
+              id: 2002
             }
           },
-          'facility': {
-            'data': {
-              'id': 1568
+          facility: {
+            data: {
+              id: 1568
             }
           }
         },
-        'attributes': {},
-        'completion_id': 3000
-      }
-      instance = described_class.new(ctx, integration)
-      batch = instance.send :get_batch
+        attributes: {},
+        completion_id: 3000
+      }.with_indifferent_access
+    end
+
+    subject { described_class.new(ctx, integration) }
+
+    it 'gets a batch' do
+      batch = subject.send :get_batch
       expect(batch).not_to be_nil
       expect(batch.id).to eq 2002
       expect(batch.arbitrary_id).to eq 'Jun19-Bok-Cho'
@@ -182,33 +187,38 @@ RSpec.describe NcsService::Base do
         .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
       stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002')
-        .to_return(body: { data: { id: '2002', type: 'batches', attributes: { id: 2002, arbitrary_id: 'Jun19-Bok-Cho' } } }.to_json)
+        .to_return(body: { data: { id: '2002', type: 'batches', attributes: { id: 2002, arbitrary_id: 'Jun19-Bok-Cho', facility_id: 1568 } } }.to_json)
 
-      stub_request(:get, 'https://portal.artemisag.com/api/v3/items?filter[seeding_unit_id]=100&include=barcodes,seeding_unit')
+      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002/items?filter[seeding_unit_id]=100&include=barcodes,seeding_unit')
         .to_return(body: { data: [{ id: '326515', type: 'items', attributes: { id: 326515, status: 'active' }, relationships: { barcode: { data: { id: '1A4FF0200000022000000207', type: 'barcodes' } }, seeding_unit: { data: { id: '100', type: 'seeding_units' } } } }] }.to_json)
     end
 
-    it 'gets batch items' do
-      ctx = {
-        'id': 3000,
-        'relationships': {
-          'batch': {
-            'data': {
-              'id': 2002
+    let(:integration) { create(:ncs_integration, account: account, facility_id: 1568) }
+    let(:ctx) do
+      {
+        id: 3000,
+        relationships: {
+          batch: {
+            data: {
+              id: 2002
             }
           },
-          'facility': {
-            'data': {
-              'id': 1568
+          facility: {
+            data: {
+              id: integration.facility_id
             }
           }
         },
-        'attributes': {},
-        'completion_id': 3000
-      }
-      seeding_unit_id = 100
-      instance = described_class.new(ctx, integration)
-      items = instance.send :get_items, seeding_unit_id
+        attributes: {},
+        completion_id: 3000
+      }.with_indifferent_access
+    end
+    let(:seeding_unit_id) { 100 }
+
+    subject { described_class.new(ctx, integration) }
+
+    it 'gets batch items' do
+      items = subject.send :get_items, seeding_unit_id
       expect(items).not_to be_nil
       expect(items.first.id).to eq 326_515
       expect(items.first.relationships.dig('barcode', 'data', 'id')).to eq '1A4FF0200000022000000207'
@@ -257,7 +267,7 @@ RSpec.describe NcsService::Base do
       stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
         .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
-      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
+      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
         .to_return(body: { data: { id: '2002', type: 'batches', attributes: { id: 2002, crop_variety: '5th Element' } } }.to_json)
 
       stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/resource_units/1')
@@ -314,7 +324,7 @@ RSpec.describe NcsService::Base do
       end
 
       it 'raises an error' do
-        expect { instance.send(:call_ncs, :plant_batch, :create, payload) }.to raise_error(ScheduledJob::RetryableError)
+        expect { instance.send(:call_ncs, :plant_batch, :create, payload) }.to raise_error(Cannapi::RetryableError)
       end
     end
   end

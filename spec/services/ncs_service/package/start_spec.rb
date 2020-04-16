@@ -11,53 +11,53 @@ RSpec.describe NcsService::Package::Start do
 
   let(:ctx) do
     {
-      'id': '2365',
-      'type': 'completions',
-      'attributes': {
-        'id': 2365,
-        'user_id': 20,
-        'content': nil,
-        'start_time': '2020-02-24T05:00:00.000Z',
-        'end_time': '2020-02-24T05:00:00.000Z',
-        'occurrence': 0,
-        'action_type': 'harvest',
-        'options': {
-          'resources': [
+      id: '2365',
+      type: 'completions',
+      attributes: {
+        id: 2365,
+        user_id: 20,
+        content: nil,
+        start_time: '2020-02-24T05:00:00.000Z',
+        end_time: '2020-02-24T05:00:00.000Z',
+        occurrence: 0,
+        action_type: 'harvest',
+        options: {
+          resources: [
             {
-              'resource_unit_id': 26,
-              'generated_quantity': 100
+              resource_unit_id: 26,
+              generated_quantity: 100
             }
           ],
-          'harvest_type': 'complete',
-          'note_content': '',
-          'harvest_unit_id': 12,
-          'seeding_unit_id': 11,
-          'quantity_remaining': 1,
-          'calculated_quantity': 1.0
+          harvest_type: 'complete',
+          note_content: '',
+          harvest_unit_id: 12,
+          seeding_unit_id: 11,
+          quantity_remaining: 1,
+          calculated_quantity: 1.0
         }
       },
-      'relationships': {
-        'action_result': {
-          'meta': {
-            'included': false
+      relationships: {
+        action_result: {
+          meta: {
+            included: false
           }
         },
-        'batch': {
-          'data': {
-            'id': '374',
-            'type': 'batches'
+        batch: {
+          data: {
+            id: '374',
+            type: 'batches'
           }
         },
-        'facility': {
-          'data': {
-            'id': 2,
-            'type': 'facilities'
+        facility: {
+          data: {
+            id: 2,
+            type: 'facilities'
           }
         },
-        'user': {
-          'data': {
-            'id': 20,
-            'type': 'users'
+        user: {
+          data: {
+            id: 20,
+            type: 'users'
           }
         }
       }

@@ -78,3 +78,9 @@ RSpec/AnyInstance:
 
 RSpec/NestedGroups:
   Enabled: false
+
+Lint/RaiseException:
+  Enabled: false
+
+Lint/StructNewOverride:
+  Enabled: false
