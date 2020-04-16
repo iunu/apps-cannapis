@@ -9,8 +9,6 @@ services:
     command: bin/dev
     volumes:
       - .:/var/artemis/app
-    ports:
-      - 3000:3000
     depends_on:
       - db
       - migrate
@@ -68,8 +66,6 @@ services:
   redis:
     image: redis
     container_name: cannapi-queue
-    ports:
-      - 6379
 
   traefik:
     image: traefik:1.7.18
