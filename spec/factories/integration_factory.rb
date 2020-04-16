@@ -16,5 +16,12 @@ FactoryBot.define do
       vendor { :metrc }
       vendor_id { ENV['METRC_API_LICENSE'] }
     end
+
+    factory :ncs_integration do
+      secret { 'ABC1234567890' }
+      state { :ca }
+      vendor { :ncs }
+      vendor_id { 123456 }
+    end
   end
 end

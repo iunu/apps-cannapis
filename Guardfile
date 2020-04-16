@@ -23,7 +23,7 @@
 #                          installed the spring binstubs per the docs)
 #  * zeus: 'zeus rspec' (requires the server to be started separately)
 #  * 'just' rspec: 'rspec'
-notification :terminal_notifier if `uname` =~ /Darwin/
+notification :terminal_notifier if `uname`.match?(/Darwin/)
 
 group :test do
   guard :rspec, cmd: 'bundle exec rspec' do
@@ -73,8 +73,8 @@ group :test do
   end
 end
 
-group :lint do
-  guard :rubocop do
+group :lint, halt_on_fail: true do
+  guard :rubocop, all_on_start: false do
     watch(/.+\.rb$/)
     watch(%r{(?:.+/)?\.rubocop(?:_todo)?\.yml$}) { |m| File.dirname(m[0]) }
   end

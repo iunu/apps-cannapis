@@ -1,5 +1,5 @@
 FactoryBot.define do
-  factory :task, class: Scheduler do
+  factory :task, class: 'Scheduler' do
     integration
 
     facility_id { Faker::Number.number(digits: 4) }

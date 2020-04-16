@@ -33,5 +33,13 @@ FactoryBot.define do
     trait :move do
       type { :move_batch }
     end
+
+    trait :plant_package do
+      type { :create_plant_package }
+    end
+
+    trait :product_package do
+      type { :create_product_package }
+    end
   end
 end
