@@ -1,8 +1,6 @@
 # frozen_string_literal: true
 
 class ArtemisService
-  attr_reader :facility_id
-
   def initialize(account, batch_id, facility_id)
     @artemis = account.client
     @batch_id = batch_id
@@ -19,7 +17,6 @@ class ArtemisService
   end
 
   def get_items(seeding_unit_id, include: 'barcodes,seeding_unit')
-    # byebug
     @artemis.facility(@facility_id)
             .batch(@batch_id)
             .items(seeding_unit_id: seeding_unit_id, include: include)
