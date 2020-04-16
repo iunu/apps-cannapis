@@ -17,9 +17,9 @@ GIT
 
 GIT
   remote: https://github.com/artemis-ag/ncs-integration.git
-  revision: 5f32d3c850bd5640dea3f471bf06f2ad983469ba
+  revision: e6b71c589dc2672ca0e5212ba741541a1e53fc5d
   specs:
-    ncs_analytics (0.1.4)
+    ncs_analytics (0.1.5)
       bundler
       httparty
 
