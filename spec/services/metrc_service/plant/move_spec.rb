@@ -57,14 +57,18 @@ RSpec.describe MetrcService::Plant::Move do
           .and_return(batch)
       end
       let(:transaction) { create(:transaction, :successful, :move, account: account, integration: integration) }
-      let(:zone) { double(:zone, attributes: { name: nil }) }
+      let(:sub_stage) { double(:sub_stage, name: 'clone', attributes: { 'name': 'clone' }) }
+      let(:zone) { double(:zone, sub_stage: sub_stage)  }
       let(:batch) { double(:batch, crop: 'Cannabis', zone: zone) }
 
       it { is_expected.to eq(transaction) }
     end
 
     describe 'with corn crop' do
-      include_examples 'with corn crop'
+      include_examples 'with corn crop' do
+        let(:sub_stage) { double(:sub_stage, name: 'clone', attributes: { 'name': 'clone' }) }
+        let(:zone) { double(:zone, crop: 'Corn', sub_stage: sub_stage)  }
+      end
     end
 
     describe 'moving to vegetative substage' do
@@ -94,6 +98,43 @@ RSpec.describe MetrcService::Plant::Move do
           StartingTag: 'abcdef124',
           GrowthPhase: 'Vegetative',
           NewLocation: 'Mother Room',
+          GrowthDate: '2020-04-15',
+          PatientLicenseNumber: nil
+        }]
+      end
+
+      it { is_expected.to be_success }
+    end
+
+    describe 'moving to flower substage' do
+      let(:batch_id) { 82 }
+      let(:seeding_unit_id) { 7 }
+      before do
+        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}"))
+
+        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
+
+        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
+
+        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}/items?filter[seeding_unit_id]=#{seeding_unit_id}&include=barcodes,seeding_unit")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/items"))
+
+        stub_request(:post, 'https://sandbox-api-md.metrc.com/plantbatches/v1/changegrowthphase?licenseNumber=LIC-0001')
+          .with(body: expected_payload.to_json)
+          .to_return(status: 200)
+      end
+      before { $debug = true }
+
+      let(:expected_payload) do
+        [{
+          Name: 'movesintoflowering123',
+          Count: 2,
+          StartingTag: 'someitembarcode123',
+          GrowthPhase: 'Flowering',
+          NewLocation: 'F4 - Outside',
           GrowthDate: '2020-04-15',
           PatientLicenseNumber: nil
         }]
@@ -156,27 +197,38 @@ RSpec.describe MetrcService::Plant::Move do
     end
   end
 
-  describe '#normalize_growth_phase' do
-    subject { described_class.new(ctx, integration) }
+  describe '#normalized_growth_phase' do
+    let(:sub_stage) { double(:sub_stage, name: 'clone') }
+    let(:zone) { double(:zone, sub_stage: sub_stage)  }
+    let(:batch) { double(:batch, zone: zone) }
+    let(:service) { described_class.new(ctx, integration) }
+    let(:params) { [] }
 
-    it 'returns clone when the zone is not defined' do
-      growth_phase = subject.send :normalize_growth_phase
-      expect(growth_phase).to eq 'clone'
+    subject { service.send(:normalized_growth_phase, *params) }
+
+    context 'with default value' do
+      before do
+        expect(service)
+          .to receive(:batch)
+          .and_return(batch)
+      end
+
+      it { is_expected.to eq('Clone') }
     end
 
-    it 'returns vegetative when the zone is vegetative' do
-      growth_phase = subject.send :normalize_growth_phase, 'vegetative'
-      expect(growth_phase).to eq 'vegetative'
+    context 'when sub_stage is vegetative' do
+      let(:params) { ['vegetative'] }
+      it { is_expected.to eq('Vegetative') }
     end
 
-    it 'returns flowering when the zone is flowering' do
-      growth_phase = subject.send :normalize_growth_phase, 'flowering'
-      expect(growth_phase).to eq 'flowering'
+    context 'when sub_stage is flowering' do
+      let(:params) { ['flowering'] }
+      it { is_expected.to eq('Flowering') }
     end
 
-    it 'returns clone as the default growth phase' do
-      growth_phase = subject.send :normalize_growth_phase, 'growing'
-      expect(growth_phase).to eq 'clone'
+    context 'when sub_stage is something unexpected' do
+      let(:params) { ['growing'] }
+      it { is_expected.to eq('Clone') }
     end
   end
 end
