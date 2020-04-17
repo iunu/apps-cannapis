@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe NcsService::Plant::Move do
   let(:account) { create(:account) }
-  let(:integration) { create(:ncs_integration, account: account) }
+  let(:integration) { create(:integration, :ncs_vendor, account: account) }
   let(:ctx) do
     {
       id: 3000,

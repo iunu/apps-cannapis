@@ -12,7 +12,7 @@ module NcsService
     def after; end
 
     def call
-      completions.each do |completion|
+      transactions = completions.each_with_object([]) do |completion, arr|
         ctx = {
           id: completion.id,
           type: :completions,
@@ -20,17 +20,21 @@ module NcsService
           relationships: @relationships
         }.with_indifferent_access
 
-        NcsService.perform_action(ctx, @integration, @task)
+        arr << NcsService.perform_action(ctx, @integration, @task)
+
+        # halt if the last action failed
+        break arr unless arr.last&.success?
       end
 
-      @task.delete
+      # a stub tranasction to represent the state of the batched transactions
+      result = Transaction.new(success: transactions.all?(&:success?))
+      @task.delete if result.success?
 
-      # explicitly return nil
-      nil
+      result
     end
 
     def batch
-      @batch ||= get_batch 'zone,barcodes,completions,custom_data,seeding_unit,harvest_unit,sub_zone'
+      @batch ||= get_batch 'zone,zone.sub_stage,barcodes,completions,custom_data,seeding_unit,harvest_unit,sub_zone'
     end
 
     def validate_batch!
@@ -74,7 +78,7 @@ module NcsService
     end
 
     def actions
-      @actions ||= batch.client.objects['completions']
+      @actions ||= batch.completions
     end
   end
 end

@@ -2,7 +2,7 @@ require 'rails_helper'
 require 'ostruct'
 
 RSpec.describe NcsService::Plant::Start do
-  let(:integration) { create(:ncs_integration) }
+  let(:integration) { create(:integration, :ncs_vendor) }
   let(:ctx) do
     {
       id: 3000,

@@ -6,7 +6,7 @@ RSpec.describe NcsService::Plant::Harvest do
   end
 
   let(:account) { create(:account) }
-  let(:integration) { create(:ncs_integration, account: account) }
+  let(:integration) { create(:integration, :ncs_vendor, account: account) }
   let(:ctx) do
     {
       id: 3000,
