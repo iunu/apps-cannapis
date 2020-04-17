@@ -36,6 +36,12 @@ module NcsService
     Lookup.new(ctx, integration, task).perform_action
   end
 
+  def run_now?(ctx, integration)
+    Lookup.new(ctx, integration).run_mode == :now
+  end
+
+  module_function :perform_action, :run_now?
+
   class Lookup
     def initialize(ctx, integration, task = nil)
       @ctx = ctx
@@ -44,6 +50,7 @@ module NcsService
     end
 
     delegate :seeding_unit, to: :batch
+    delegate :run_mode, to: :module_for_completion
 
     def perform_action
       handler = module_for_completion

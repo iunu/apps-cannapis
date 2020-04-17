@@ -116,7 +116,7 @@ RSpec.describe MetrcService do
     end
   end
 
-  context '#run_now?' do
+  describe '#run_now?' do
     let(:integration) { create(:integration, eod: "#{Time.now.hour}:00") }
     let(:ctx) { double(:ctx) }
     let(:ref_time) { Time.now.localtime(integration.timezone) }

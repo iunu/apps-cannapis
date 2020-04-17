@@ -101,4 +101,46 @@ RSpec.describe NcsService do
       end
     end
   end
+
+  describe '#run_now?' do
+    let(:integration) { create(:integration, eod: "#{Time.now.hour}:00") }
+    let(:ctx) { double(:ctx) }
+    let(:ref_time) { Time.now.localtime(integration.timezone) }
+
+    before do
+      expect_any_instance_of(NcsService::Lookup)
+        .to receive(:module_for_completion)
+        .and_return(target_module)
+    end
+
+    subject { described_class.run_now?(ctx, integration) }
+
+    context 'when it should execute immediately' do
+      let(:target_module) do
+        Class.new(NcsService::Base) do
+          run_mode :now
+        end
+      end
+
+      it { is_expected.to eq(true) }
+    end
+
+    context 'when it should schedule execution for later' do
+      context 'by default' do
+        let(:target_module) { Class.new(NcsService::Base) }
+
+        it { is_expected.to eq(false) }
+      end
+
+      context 'by design' do
+        let(:target_module) do
+          Class.new(NcsService::Base) do
+            run_mode :later
+          end
+        end
+
+        it { is_expected.to eq(false) }
+      end
+    end
+  end
 end
