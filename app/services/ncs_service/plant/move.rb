@@ -6,6 +6,7 @@ module NcsService
         vegetative: %i[vegetative flowering],
         flowering: %i[flowering]
       }.freeze
+
       DEFAULT_MOVE_STEP = :change_growth_phase
 
       def call
@@ -34,7 +35,7 @@ module NcsService
           'batch_id = ? AND type = ? AND vendor = ? AND id NOT IN (?)',
           @batch_id,
           :move_batch,
-          :metrc,
+          :ncs,
           transaction.id
         )
       end
