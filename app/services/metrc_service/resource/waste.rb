@@ -1,15 +1,15 @@
 module MetrcService
   module Resource
-    class Waste < MetrcService::Base
-      WET_WASTE = 'wet_waste'.freeze
+    class Waste < Base
+      resource_name 'wet_waste'
 
       def call
-        remove_waste if waste_completions.present?
+        remove_waste if resource_present?
+
+        success!
       end
 
-      def waste_completions
-        @waste_completions ||= resource_completions_by_unit_type(WET_WASTE)
-      end
+      private
 
       def remove_waste
         call_metrc(:remove_waste, build_remove_waste_payload)
@@ -18,11 +18,11 @@ module MetrcService
       def build_remove_waste_payload
         metrc_harvest = lookup_metrc_harvest(batch.arbitrary_id)
 
-        waste_completions.map do |completion|
+        resource_completions.map do |completion|
           {
             Id: metrc_harvest['Id'],
             WasteType: waste_type(completion),
-            UnitOfWeight: unit_of_weight(WET_WASTE),
+            UnitOfWeight: unit_of_weight(resource_name),
             WasteWeight: completion.options['generated_quantity'] || completion.options['processed_quantity'],
             ActualDate: harvest_date
           }
@@ -30,12 +30,12 @@ module MetrcService
       end
 
       def waste_type(completion)
-        validate_waste_type!(waste_resource_unit.label)
+        validate_waste_type!(waste_resource_unit(completion).label)
 
-        waste_resource_unit.label
+        waste_resource_unit(completion).label
       end
 
-      def waste_resource_unit
+      def waste_resource_unit(completion)
         @waste_resource_unit ||= get_resource_unit(completion.attributes.dig('options', 'resource_unit_id'))
       end
 
@@ -56,6 +56,18 @@ module MetrcService
                                            metrc_response = @client.get('harvests', 'waste/types').body
                                            JSON.parse(metrc_response).map { |entry| entry['Name']  }
                                          end
+      end
+
+      def unit_of_weight(unit_type, _item = nil)
+        # TODO: apply per-item resource lookup when available on Artemis API
+        # resource_unit = get_resource_unit(item.resource_unit_id)
+        # resource_unit.unit
+
+        resource_unit(unit_type).unit
+      end
+
+      def harvest_date
+        @attributes.dig(:start_time)
       end
     end
   end
