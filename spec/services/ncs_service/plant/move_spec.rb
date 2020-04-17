@@ -58,52 +58,52 @@ RSpec.describe NcsService::Plant::Move do
     end
   end
 
-  describe '#next_step' do
+  context '#next_step' do
     subject { described_class.new(ctx, integration) }
 
-    context 'with no zones' do
+    describe 'for no zones' do
       it 'returns the default move step' do
         next_step = subject.send :next_step
         expect(next_step).to be :change_growth_phase
       end
     end
 
-    context 'with a previous clone zone and a new vegetative zone' do
+    describe 'for a previous clone zone and a new vegetative zone' do
       it 'returns the default move step' do
         next_step = subject.send :next_step, 'clone', 'vegetative'
         expect(next_step).to be :change_growth_phase
       end
     end
 
-    context 'with a previous clone zone and a new clone zone' do
-      it 'returns the plant batch change growth phase step' do
+    describe 'for a previous clone zone and a new clone zone' do
+      it 'returns the move_plant_batches step' do
         next_step = subject.send :next_step, 'clone', 'clone'
-        expect(next_step).to be :move_plant_batches
+        expect(next_step).to be :change_growth_phase
       end
     end
 
-    context 'with a previous vegetative zone and a new vegetative zone' do
-      it 'returns the move plant step' do
+    describe 'for a previous vegetative zone and a new vegetative zone' do
+      it 'returns the move_plants step' do
         next_step = subject.send :next_step, 'vegetative', 'vegetative'
         expect(next_step).to be :move_plants
       end
     end
 
-    context 'with a previous flowering zone and a new flowering zone' do
-      it 'returns the move plant step' do
+    describe 'for a previous flowering zone and a new flowering zone' do
+      it 'returns the move_plants step' do
         next_step = subject.send :next_step, 'flowering', 'flowering'
         expect(next_step).to be :move_plants
       end
     end
 
-    context 'with a previous vegetative zone and a new flowering zone' do
-      it 'returns the plant change growth phases step' do
+    describe 'for a previous vegetative zone and a new flowering zone' do
+      it 'returns the change_plant_growth_phases step' do
         next_step = subject.send :next_step, 'vegetative', 'flowering'
-        expect(next_step).to be :change_plant_growth_phases
+        expect(next_step).to be :change_growth_phase
       end
     end
 
-    context 'with an unkonwn zone and a new unkonwn zone' do
+    describe 'for an unkonwn zone and a new unkonwn zone' do
       it 'returns the default move step' do
         next_step = subject.send :next_step, 'drying', 'dispatch'
         expect(next_step).to be :change_growth_phase
@@ -111,27 +111,38 @@ RSpec.describe NcsService::Plant::Move do
     end
   end
 
-  describe '#normalize_growth_phase' do
-    subject { described_class.new(ctx, integration) }
+  describe '#normalized_growth_phase' do
+    let(:sub_stage) { double(:sub_stage, name: 'clone') }
+    let(:zone) { double(:zone, sub_stage: sub_stage)  }
+    let(:batch) { double(:batch, zone: zone) }
+    let(:service) { described_class.new(ctx, integration) }
+    let(:params) { [] }
 
-    it 'returns clone when the zone is not defined' do
-      growth_phase = subject.send :normalize_growth_phase
-      expect(growth_phase).to eq 'clone'
+    subject { service.send(:normalized_growth_phase, *params) }
+
+    context 'with default value' do
+      before do
+        expect(service)
+          .to receive(:batch)
+          .and_return(batch)
+      end
+
+      it { is_expected.to eq('Clone') }
     end
 
-    it 'returns vegetative when the zone is vegetative' do
-      growth_phase = subject.send :normalize_growth_phase, 'vegetative'
-      expect(growth_phase).to eq 'vegetative'
+    context 'when sub_stage is vegetative' do
+      let(:params) { ['vegetative'] }
+      it { is_expected.to eq('Vegetative') }
     end
 
-    it 'returns flowering when the zone is flowering' do
-      growth_phase = subject.send :normalize_growth_phase, 'flowering'
-      expect(growth_phase).to eq 'flowering'
+    context 'when sub_stage is flowering' do
+      let(:params) { ['flowering'] }
+      it { is_expected.to eq('Flowering') }
     end
 
-    it 'returns clone as the default growth phase' do
-      growth_phase = subject.send :normalize_growth_phase, 'growing'
-      expect(growth_phase).to eq 'clone'
+    context 'when sub_stage is something unexpected' do
+      let(:params) { ['growing'] }
+      it { is_expected.to eq('Clone') }
     end
   end
 end

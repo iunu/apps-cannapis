@@ -83,7 +83,7 @@ module MetrcService
           }
         end
 
-        call_metrc(:move_plants, [payload])
+        call_metrc(:move_plants, payload)
       end
 
       def move_plant_batches

@@ -10,18 +10,9 @@ module NcsService
       DEFAULT_MOVE_STEP = :change_growth_phase
 
       def call
-        zone_name = normalize_growth_phase(zone['name'])
-        next_step_name = determine_next_step_name(zone_name)
-
         log("Next step: #{next_step_name}. Batch ID #{@batch_id}, completion ID #{@completion_id}")
 
-        options = {
-          seeding_unit_id: @attributes.dig('options', 'seeding_unit_id'),
-          batch: batch,
-          zone_name: zone['name']
-        }
-
-        send(next_step_name, options)
+        send(next_step_name)
 
         success!
       end
@@ -46,113 +37,100 @@ module NcsService
 
       private
 
-      def determine_next_step_name(zone_name)
+      def next_step_name
         transactions = prior_move_transactions
         return DEFAULT_MOVE_STEP if transactions.count.zero?
 
-        previous_zone = normalize_growth_phase(transactions.last.metadata.dig('zone', 'name'))
+        previous_growth_phase = normalized_growth_phase(transactions.last.metadata.dig('sub_stage', 'name'))
 
         # Does last move includes new move?
-        is_included = is_included?(previous_zone, zone_name)
-        log("Transactions: #{transactions.size}, Previous zone: #{previous_zone}, Zone is included: #{is_included}, Batch ID #{@batch_id}, completion ID #{@completion_id}")
+        is_included = is_included?(previous_growth_phase, normalized_growth_phase)
+        log("Transactions: #{transactions.size}, Previous growth phase: #{previous_growth_phase}, Growth phase is included: #{is_included}, Batch ID #{@batch_id}, completion ID #{@completion_id}")
 
-        raise InvalidOperation, "Failed: Zone #{zone_name} is not a valid next zone for #{previous_zone}. Batch ID #{@batch_id}, completion ID #{@completion_id}" \
+        raise InvalidOperation, "Failed: Substage #{normalized_growth_phase} is not a valid next phase for #{previous_growth_phase}. Batch ID #{@batch_id}, completion ID #{@completion_id}" \
           unless is_included
 
-        next_step(previous_zone, zone_name)
+        next_step(previous_growth_phase, normalized_growth_phase)
       end
 
-      def is_included?(previous_zone, zone_name) # rubocop:disable Naming/PredicateName
-        GROWTH_CYCLES[previous_zone.to_sym]&.include?(zone_name.to_sym)
+      def is_included?(previous_growth_phase, growth_phase) # rubocop:disable Naming/PredicateName
+        GROWTH_CYCLES[previous_growth_phase.downcase.to_sym]&.include?(growth_phase.downcase.to_sym)
       end
 
-      def next_step(previous_zone = nil, new_zone = nil) # rubocop:disable Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
-        return DEFAULT_MOVE_STEP if previous_zone.nil? || new_zone.nil?
+      def next_step(previous_growth_phase = nil, new_growth_phase = nil) # rubocop:disable Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
+        return DEFAULT_MOVE_STEP if previous_growth_phase.nil? || new_growth_phase.nil?
 
-        new_zone.downcase!
+        new_growth_phase.downcase!
 
-        return DEFAULT_MOVE_STEP if previous_zone.include?('clone') && new_zone.include?('veg')
+        return DEFAULT_MOVE_STEP if previous_growth_phase.include?('clone') && new_growth_phase.include?('clone')
 
-        return :move_plant_batches if previous_zone.include?('clone') && new_zone.include?('clone')
+        return :move_plants if previous_growth_phase.include?('veg') && new_growth_phase.include?('veg')
 
-        return :move_plants if previous_zone.include?('veg') && new_zone.include?('veg')
-
-        return :move_plants if previous_zone.include?('flow') && new_zone.include?('flow')
-
-        return :change_plant_growth_phases if previous_zone.include?('veg') && new_zone.include?('flow')
+        return :move_plants if previous_growth_phase.include?('flow') && new_growth_phase.include?('flow')
 
         DEFAULT_MOVE_STEP
       end
 
       def move_plants(options)
-        items   = get_items(options[:seeding_unit_id])
         payload = items.map do |item|
           {
             Id: nil,
             Label: item.relationships.dig('barcode', 'data', 'id'),
-            RoomName: options[:zone_name]
+            RoomName: batch.zone.name
           }
         end
 
-        call_ncs(:plant, :move, [payload])
+        call_ncs(:plant, :move, payload)
       end
 
-      def move_plant_batches(options)
-        payload = {
-          Name: batch_tag,
-          Location: options[:zone_name],
-          MoveDate: @attributes.dig('start_time')
-        }
+      # def move_plant_batches
+      #   payload = {
+      #     Name: batch_tag,
+      #     Location: batch.zone.name,
+      #     MoveDate: start_time
+      #   }
 
-        call_ncs(:plant_batch, :change_growth_phase, [payload])
-      end
+      #   call_metrc(:move_plant_batches, [payload])
+      # end
 
       def change_growth_phase(options)
-        batch        = options[:batch]
-        # seeding_unit = batch.seeding_unit.attributes
-        items        = get_items(options[:seeding_unit_id])
         first_tag_id = items.first.id
         barcode      = items.find { |item| item.id == first_tag_id }.relationships.dig('barcode', 'data', 'id')
 
         payload = {
           Name: batch_tag,
           Count: batch.quantity.to_i,
-          NewTag: barcode,
-          GrowthPhase: 'Flowering', # seeding_unit['name'],
-          RoomName: options[:zone_name],
-          GrowthDate: @attributes.dig('start_time')
+          NewTag: immature? ? nil : barcode,
+          GrowthPhase: normalized_growth_phase,
+          RoomName: batch.zone.name,
+          GrowthDate: start_time
         }
 
-        call_ncs(:plant_batch, :change_growth_phase, [payload])
+        call_ncs(:plant_batch, :change_growth_phase, payload)
       end
 
-      def change_plant_growth_phases(options)
-        batch        = options[:batch]
-        seeding_unit = batch.zone.attributes['seeding_unit']
-        items        = get_items(options[:seeding_unit_id])
-
-        payload = items.map do |item|
-          {
-            Id: nil,
-            Label: item.relationships.dig('barcode', 'data', 'id'),
-            NewTag: seeding_unit['name'], # TODO: Fix me
-            GrowthPhase: normalize_growth_phase(seeding_unit['name']),
-            NewRoom: batch.zone.name,
-            GrowthDate: @attributes.dig('start_time')
-          }
-        end
-
-        call_ncs(:plant, :change_growth_phases, payload)
+      def items
+        @items ||= get_items(batch.seeding_unit.id)
       end
 
-      def normalize_growth_phase(zone_name = nil)
-        case zone_name
+      def start_time
+        @attributes.dig('start_time')
+      end
+
+      def immature?
+        normalized_growth_phase != 'Flowering'
+      end
+
+      def normalized_growth_phase(input = nil)
+        input ||= batch.zone.sub_stage.name
+
+        case input
         when /veg/i
-          'vegetative'
+          'Vegetative'
         when /flow/i
-          'flowering'
+          'Flowering'
         else
-          'clone'
+          'Clone'
         end
       end
     end
