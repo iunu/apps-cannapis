@@ -62,7 +62,7 @@ module NcsService
 
         new_growth_phase.downcase!
 
-        return DEFAULT_MOVE_STEP if previous_growth_phase.include?('clone') && new_growth_phase.include?('clone')
+        return :move_plants if previous_growth_phase.include?('clone') && new_growth_phase.include?('clone')
 
         return :move_plants if previous_growth_phase.include?('veg') && new_growth_phase.include?('veg')
 
@@ -83,30 +83,19 @@ module NcsService
         call_ncs(:plant, :move, payload)
       end
 
-      # def move_plant_batches
-      #   payload = {
-      #     Name: batch_tag,
-      #     Location: batch.zone.name,
-      #     MoveDate: start_time
-      #   }
-
-      #   call_metrc(:move_plant_batches, [payload])
-      # end
-
       def change_growth_phase(options)
         first_tag_id = items.first.id
         barcode      = items.find { |item| item.id == first_tag_id }.relationships.dig('barcode', 'data', 'id')
 
         payload = {
-          Name: batch_tag,
-          Count: batch.quantity.to_i,
+          Label: batch_tag,
           NewTag: immature? ? nil : barcode,
           GrowthPhase: normalized_growth_phase,
-          RoomName: batch.zone.name,
+          NewRoom: batch.zone.name,
           GrowthDate: start_time
         }
 
-        call_ncs(:plant_batch, :change_growth_phase, payload)
+        call_ncs(:plant, :change_growth_phases, payload)
       end
 
       def items

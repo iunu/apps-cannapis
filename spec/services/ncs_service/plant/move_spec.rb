@@ -78,7 +78,7 @@ RSpec.describe NcsService::Plant::Move do
     describe 'for a previous clone zone and a new clone zone' do
       it 'returns the move_plant_batches step' do
         next_step = subject.send :next_step, 'clone', 'clone'
-        expect(next_step).to be :change_growth_phase
+        expect(next_step).to be :move_plants
       end
     end
 
