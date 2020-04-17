@@ -1,6 +1,6 @@
 module MetrcService
   module Plant
-    class Start < MetrcService::Base
+    class Start < Base
       def call
         payload = build_start_payload(batch)
 

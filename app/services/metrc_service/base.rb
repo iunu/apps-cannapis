@@ -207,7 +207,6 @@ module MetrcService
       metrc_plant_batch
     end
 
-
     def resource_completions_by_unit_type(unit_type)
       resource_unit_id = resource_unit(unit_type).id
 

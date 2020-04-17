@@ -359,44 +359,4 @@ RSpec.describe MetrcService::Plant::Harvest do
       end
     end
   end
-
-  describe '#validate_waste_type!' do
-    let(:handler) { described_class.new(ctx, integration) }
-
-    subject { handler.send(:validate_waste_type!, waste_type) }
-
-    before do
-      stub_request(:get, 'https://sandbox-api-md.metrc.com/harvests/v1/waste/types')
-        .to_return(status: 200, body: valid_types.to_json)
-    end
-
-    context 'when type is valid' do
-      let(:valid_types) { [{ Name: 'Wet Waste' }] }
-      let(:waste_type) { 'Wet Waste' }
-
-      it 'should not raise an error' do
-        expect { subject }.not_to raise_error
-      end
-    end
-
-    context 'when type is not valid' do
-      let(:valid_types) { [{ Name: 'Plants' }] }
-
-      context 'and not similar to supported types' do
-        let(:waste_type) { 'Wet Waste' }
-
-        it 'should not raise an error' do
-          expect { subject }.to raise_error(MetrcService::InvalidAttributes, /harvest waste type .* not supported .* No similar types/)
-        end
-      end
-
-      context 'but similar to supported types' do
-        let(:waste_type) { 'Plant' }
-
-        it 'should not raise an error' do
-          expect { subject }.to raise_error(MetrcService::InvalidAttributes, /harvest waste type .* not supported .* Did you mean "Plants"/)
-        end
-      end
-    end
-  end
 end

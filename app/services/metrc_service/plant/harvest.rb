@@ -1,8 +1,7 @@
 module MetrcService
   module Plant
-    class Harvest < MetrcService::Base
+    class Harvest < Base
       WET_WEIGHT = 'wet_weight'.freeze
-      WASTE_WEIGHT = 'wet_waste'.freeze
 
       def call
         # allow for harvest of nursery crops - generates clones
@@ -14,7 +13,7 @@ module MetrcService
           manicure_plants
         end
 
-        remove_waste
+        handle_resources
 
         success!
       end
@@ -23,10 +22,6 @@ module MetrcService
 
       def transaction
         @transaction ||= get_transaction(:harvest_batch)
-      end
-
-      def remove_waste
-        call_metrc(:remove_waste, build_remove_waste_payload)
       end
 
       def manicure_plants
@@ -76,46 +71,6 @@ module MetrcService
 
       def seeding_unit_id
         @seeding_unit_id ||= @attributes.dig(:options, :seeding_unit_id)
-      end
-
-      def build_remove_waste_payload
-        waste_completions = resource_completions_by_unit_type(WASTE_WEIGHT)
-        metrc_harvest = lookup_metrc_harvest(batch.arbitrary_id)
-
-        waste_completions.map do |completion|
-          {
-            Id: metrc_harvest['Id'],
-            WasteType: waste_type(completion),
-            UnitOfWeight: unit_of_weight(WASTE_WEIGHT),
-            WasteWeight: completion.options['generated_quantity'] || completion.options['processed_quantity'],
-            ActualDate: harvest_date
-          }
-        end
-      end
-
-      def waste_type(completion)
-        waste_resource_unit = get_resource_unit(completion.attributes.dig('options', 'resource_unit_id'))
-        validate_waste_type!(waste_resource_unit.label)
-
-        waste_resource_unit.label
-      end
-
-      def validate_waste_type!(type)
-        return if metrc_supported_waste_types.include?(type)
-
-        dictionary = DidYouMean::SpellChecker.new(dictionary: metrc_supported_waste_types)
-        matches = dictionary.correct(type)
-
-        raise InvalidAttributes,
-          "The harvest waste type '#{type}' is not supported by Metrc. "\
-          "#{matches.present? ? "Did you mean #{matches.map(&:inspect).join(', ')}?" : 'No similar types were found on Metrc.'}"
-      end
-
-      def metrc_supported_waste_types
-        @metrc_supported_waste_types ||= begin
-                                           metrc_response = @client.get('harvests', 'waste/types').body
-                                           JSON.parse(metrc_response).map { |entry| entry['Name']  }
-                                         end
       end
 
       def harvest_date
