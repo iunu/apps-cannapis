@@ -6,6 +6,7 @@ module MetrcService
         vegetative: %i[vegetative flowering],
         flowering: %i[flowering]
       }.freeze
+
       DEFAULT_MOVE_STEP = :change_growth_phase
 
       def call
@@ -57,15 +58,17 @@ module MetrcService
 
         new_growth_phase.downcase!
 
-        return DEFAULT_MOVE_STEP if previous_growth_phase.include?('clone') && new_growth_phase.include?('veg')
-
         return :move_plant_batches if previous_growth_phase.include?('clone') && new_growth_phase.include?('clone')
 
         return :move_plants if previous_growth_phase.include?('veg') && new_growth_phase.include?('veg')
 
         return :move_plants if previous_growth_phase.include?('flow') && new_growth_phase.include?('flow')
 
-        return :change_plant_growth_phases if previous_growth_phase.include?('veg') && new_growth_phase.include?('flow')
+        # clone -> veg
+        # veg -> flow
+        # any other case
+        #
+        # -> default
 
         DEFAULT_MOVE_STEP
       end
@@ -100,7 +103,7 @@ module MetrcService
         payload = {
           Name: batch_tag,
           Count: batch.quantity.to_i,
-          StartingTag: barcode,
+          StartingTag: immature? ? nil : barcode,
           GrowthPhase: normalized_growth_phase,
           NewLocation: batch.zone.name,
           GrowthDate: start_time,
@@ -110,27 +113,16 @@ module MetrcService
         call_metrc(:change_growth_phase, [payload])
       end
 
-      def change_plant_growth_phases
-        payload = items.map do |item|
-          {
-            Id: nil,
-            Label: item.relationships.dig('barcode', 'data', 'id'),
-            NewTag: '', # seeding_unit['name'], # TODO: Fix me
-            GrowthPhase: normalized_growth_phase,
-            NewLocation: batch.zone.name,
-            GrowthDate: start_time
-          }
-        end
-
-        call_metrc(:change_plant_growth_phase, payload)
-      end
-
       def items
         @items ||= get_items(batch.seeding_unit.id)
       end
 
       def start_time
         @attributes.dig('start_time')
+      end
+
+      def immature?
+        normalized_growth_phase != 'Flowering'
       end
 
       def normalized_growth_phase(input = nil)
