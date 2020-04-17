@@ -5510,7 +5510,7 @@ input.icon--calendar,
 textarea.icon--calendar,
 select.icon--calendar,
 .bootstrap-typeahead input.icon--calendar {
-  background-image: url(/assets/calendar.svg);
+  background-image: url(asset_path('calendar.svg'));
 }
 
 /* line 59, app/assets/stylesheets/base/_forms.scss */
@@ -5563,7 +5563,7 @@ textarea {
 
 /* line 93, app/assets/stylesheets/base/_forms.scss */
 select {
-  background-image: url(/assets/chevron-down.svg);
+  background-image: url(asset_path('chevron-down.svg'));
   background-position: calc(100% - 0.5rem) center;
   background-repeat: no-repeat;
   padding-right: 2rem;
@@ -5571,7 +5571,7 @@ select {
 
 /* line 102, app/assets/stylesheets/base/_forms.scss */
 select[disabled] {
-  background-image: url(/assets/chevron-down.svg);
+  background-image: url(asset_path('chevron-down.svg'));
 }
 
 /* line 107, app/assets/stylesheets/base/_forms.scss */
@@ -5594,7 +5594,7 @@ input[type='radio'],
 /* line 123, app/assets/stylesheets/base/_forms.scss */
 input[type='checkbox'],
 .task__checkbox {
-  background-image: url(/assets/check.svg);
+  background-image: url(asset_path('check.svg'));
   background-position: center;
   background-repeat: no-repeat;
   background-size: 100%;
@@ -5627,7 +5627,7 @@ input[type='radio']:checked {
 
 /* line 150, app/assets/stylesheets/base/_forms.scss */
 input[type='file'] {
-  background-image: url(/assets/export.svg);
+  background-image: url(asset_path('export.svg'));
   background-position: calc(100% - 0.5rem) center;
   background-repeat: no-repeat;
   cursor: pointer;
@@ -5744,7 +5744,7 @@ label.label--light,
 /* line 48, app/assets/stylesheets/vendor/_chosen.scss */
 .chosen-container-single .chosen-single {
   background-color: white;
-  background-image: url(/assets/chevron-down.svg);
+  background-image: url(asset_path('chevron-down.svg'));
   background-position: calc(100% - 0.5rem) center;
   background-repeat: no-repeat;
   border: 1px solid #dadada;
@@ -5801,7 +5801,7 @@ label.label--light,
   background-color: #ececec;
   border: 0;
   box-shadow: none;
-  background-image: url(/assets/search.svg);
+  background-image: url(asset_path('search.svg'));
   background-position: calc(100% - 0.5rem) center;
   background-repeat: no-repeat;
   background-size: 1.5em;
@@ -5961,7 +5961,7 @@ label.label--light,
   bottom: 0;
   opacity: .5;
   width: 1.25rem;
-  background-image: url(/assets/close.svg);
+  background-image: url(asset_path('close.svg'));
   background-position: center;
   background-repeat: no-repeat;
   background-size: 1.25em;
@@ -6003,7 +6003,7 @@ label.label--light,
 /* @group Active  */
 /* line 280, app/assets/stylesheets/vendor/_chosen.scss */
 .chosen-container-active .chosen-single {
-  background-image: url(/assets/chevron-up.svg);
+  background-image: url(asset_path('chevron-up.svg'));
   border: 1px solid #3B82F4;
   box-shadow: 0 0 0.5rem rgba(0, 0, 0, 0.25);
 }
@@ -6374,7 +6374,7 @@ label.label--light,
 /* line 51, app/assets/stylesheets/vendor/_flatpickr.scss */
 .flatpickr-input {
   background-color: white !important;
-  background-image: url(/assets/calendar.svg);
+  background-image: url(asset_path('calendar.svg'));
   background-position: calc(100% - 0.5rem) center;
   background-repeat: no-repeat;
   background-size: 1.5rem;
@@ -10783,7 +10783,7 @@ button,
 /* line 3, app/assets/stylesheets/objects/_tooltips.scss */
 .tooltip {
   background-color: #014D86;
-  background-image: url(/assets/help.svg);
+  background-image: url(asset_path('help.svg'));
   background-position: center;
   background-repeat: no-repeat;
   background-size: 80%;
@@ -10876,7 +10876,7 @@ button,
 
 /* line 7, app/assets/stylesheets/objects/_popovers.scss */
 .popover__arrow::after {
-  background-image: url(/assets/caret-down.svg);
+  background-image: url(asset_path('caret-down.svg'));
   background-position: center;
   background-repeat: no-repeat;
   background-size: contain;
@@ -10889,7 +10889,7 @@ button,
 
 /* line 19, app/assets/stylesheets/objects/_popovers.scss */
 .popover__arrow--white::after {
-  background-image: url(/assets/caret-down.svg);
+  background-image: url(asset_path('caret-down.svg'));
 }
 
 /* line 24, app/assets/stylesheets/objects/_popovers.scss */
@@ -11566,7 +11566,7 @@ button,
 
 /* line 145, app/assets/stylesheets/objects/_modals.scss */
 .modal__close {
-  background-image: url(/assets/close.svg);
+  background-image: url(asset_path('close.svg'));
   background-position: center;
   background-repeat: no-repeat;
   background-size: 1.75rem;
@@ -11585,47 +11585,47 @@ button,
 
 /* line 163, app/assets/stylesheets/objects/_modals.scss */
 .modal__header--green .modal__close {
-  background-image: url(/assets/close.svg);
+  background-image: url(asset_path('close.svg'));
 }
 
 /* line 163, app/assets/stylesheets/objects/_modals.scss */
 .modal__header--light-green .modal__close {
-  background-image: url(/assets/close.svg);
+  background-image: url(asset_path('close.svg'));
 }
 
 /* line 163, app/assets/stylesheets/objects/_modals.scss */
 .modal__header--light-blue .modal__close {
-  background-image: url(/assets/close.svg);
+  background-image: url(asset_path('close.svg'));
 }
 
 /* line 163, app/assets/stylesheets/objects/_modals.scss */
 .modal__header--medium-blue .modal__close {
-  background-image: url(/assets/close.svg);
+  background-image: url(asset_path('close.svg'));
 }
 
 /* line 163, app/assets/stylesheets/objects/_modals.scss */
 .modal__header--purple .modal__close {
-  background-image: url(/assets/close.svg);
+  background-image: url(asset_path('close.svg'));
 }
 
 /* line 163, app/assets/stylesheets/objects/_modals.scss */
 .modal__header--light-purple .modal__close {
-  background-image: url(/assets/close.svg);
+  background-image: url(asset_path('close.svg'));
 }
 
 /* line 163, app/assets/stylesheets/objects/_modals.scss */
 .modal__header--gray .modal__close {
-  background-image: url(/assets/close.svg);
+  background-image: url(asset_path('close.svg'));
 }
 
 /* line 163, app/assets/stylesheets/objects/_modals.scss */
 .modal__header--dark-gray .modal__close {
-  background-image: url(/assets/close.svg);
+  background-image: url(asset_path('close.svg'));
 }
 
 /* line 163, app/assets/stylesheets/objects/_modals.scss */
 .modal__header--red .modal__close {
-  background-image: url(/assets/close.svg);
+  background-image: url(asset_path('close.svg'));
 }
 
 /* line 173, app/assets/stylesheets/objects/_modals.scss */
@@ -11737,7 +11737,7 @@ button,
 
 /* line 265, app/assets/stylesheets/objects/_modals.scss */
 .side-modal__close {
-  background-image: url(/assets/close.svg);
+  background-image: url(asset_path('close.svg'));
   background-position: center;
   background-repeat: no-repeat;
   background-size: 2rem;
@@ -12040,7 +12040,7 @@ span.tab.is-current,
 
 /* line 92, app/assets/stylesheets/objects/_forms.scss */
 input[type='password'] {
-  background-image: url(/assets/lock.svg);
+  background-image: url(asset_path('lock.svg'));
   background-position: calc(100% - 0.5rem);
   background-repeat: no-repeat;
   background-size: 1rem;
@@ -12049,7 +12049,7 @@ input[type='password'] {
 
 /* line 99, app/assets/stylesheets/objects/_forms.scss */
 input[type='password'].is-strong {
-  background-image: url(/assets/circle-check.svg);
+  background-image: url(asset_path('circle-check.svg'));
 }
 
 /* line 104, app/assets/stylesheets/objects/_forms.scss */
@@ -12122,12 +12122,12 @@ input[type='password'].is-strong {
 
 /* line 1, app/assets/stylesheets/objects/_search.scss */
 .search__go {
-  background-image: url(/assets/search.svg);
+  background-image: url(asset_path('search.svg'));
 }
 
 /* line 5, app/assets/stylesheets/objects/_search.scss */
 .search__clear {
-  background-image: url(/assets/close.svg);
+  background-image: url(asset_path('close.svg'));
   cursor: pointer;
   display: none;
   opacity: .75;
@@ -12531,7 +12531,7 @@ ag-progress-bars {
 /* line 36, app/assets/stylesheets/objects/_flash.scss */
 .flash__close {
   background-color: transparent;
-  background-image: url(/assets/close.svg);
+  background-image: url(asset_path('close.svg'));
   background-position: center;
   background-repeat: no-repeat;
   border: 0;
@@ -12650,7 +12650,7 @@ ag-progress-bars {
 
 /* line 28, app/assets/stylesheets/objects/_empty.scss */
 .empty--fretboard::before {
-  background-image: url(/assets/fretboard-blank.png);
+  background-image: url(asset_path('fretboard-blank.png'));
   background-size: 100%;
   left: -0.75rem;
   right: -0.75rem;
@@ -12658,19 +12658,19 @@ ag-progress-bars {
 
 /* line 37, app/assets/stylesheets/objects/_empty.scss */
 .empty--yield::before {
-  background-image: url(/assets/yield-this-week-blank.png);
+  background-image: url(asset_path('yield-this-week-blank.png'));
   background-size: auto 90%;
 }
 
 /* line 44, app/assets/stylesheets/objects/_empty.scss */
 .empty--sensors::before {
-  background-image: url(/assets/sensors-blank.png);
+  background-image: url(asset_path('sensors-blank.png'));
   background-size: auto 80%;
 }
 
 /* line 51, app/assets/stylesheets/objects/_empty.scss */
 .empty--daily-yield-average::before {
-  background-image: url(/assets/daily-yield-average-blank.png);
+  background-image: url(asset_path('daily-yield-average-blank.png'));
   background-size: auto 80%;
 }
 
@@ -12875,7 +12875,7 @@ ag-sensor-graph.is-empty::after {
 
 /* line 20, app/assets/stylesheets/objects/_repeater.scss */
 .repeater.has-handle .handle {
-  background-image: url(/assets/handle.svg);
+  background-image: url(asset_path('handle.svg'));
   background-position: center;
   background-repeat: no-repeat;
   background-size: 14px;
@@ -13050,7 +13050,7 @@ ag-sensor-graph.is-empty::after {
 .activity-icon {
   background-color: #dadada;
   background-size: 1.25rem;
-  background-image: url(/assets/check.svg);
+  background-image: url(asset_path('check.svg'));
   background-position: center;
   background-repeat: no-repeat;
   border-radius: 50% !important;
@@ -13065,161 +13065,161 @@ ag-sensor-graph.is-empty::after {
 .activity-icon.sprayed {
   background-color: #dadada;
   background-size: 1.25rem;
-  background-image: url(/assets/check.svg);
+  background-image: url(asset_path('check.svg'));
 }
 
 /* line 72, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.seeded {
   background-color: #3DB86E;
   background-size: 1.25rem;
-  background-image: url(/assets/seed.svg);
+  background-image: url(asset_path('seed.svg'));
 }
 
 /* line 76, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.completed {
   background-color: #3DB86E;
   background-size: 1.25rem;
-  background-image: url(/assets/check.svg);
+  background-image: url(asset_path('check.svg'));
 }
 
 /* line 80, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.harvested {
   background-color: #3DB86E;
   background-size: 1rem;
-  background-image: url(/assets/harvest.svg);
+  background-image: url(asset_path('harvest.svg'));
 }
 
 /* line 84, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.crop_batch_updated {
   background-color: #f6ae2d;
   background-size: 1rem;
-  background-image: url(/assets/harvest.svg);
+  background-image: url(asset_path('harvest.svg'));
 }
 
 /* line 88, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.crop_batch_complete {
   background-color: #3DB86E;
   background-size: 1rem;
-  background-image: url(/assets/harvest.svg);
+  background-image: url(asset_path('harvest.svg'));
 }
 
 /* line 92, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.crop_batch_quantity_created {
   background-color: #3DB86E;
   background-size: 1.25rem;
-  background-image: url(/assets/seed.svg);
+  background-image: url(asset_path('seed.svg'));
 }
 
 /* line 96, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.kpi_created {
   background-color: #3DB86E;
   background-size: 1.25rem;
-  background-image: url(/assets/feature-kpis.svg);
+  background-image: url(asset_path('feature-kpis.svg'));
 }
 
 /* line 100, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.kpi_updated {
   background-color: #f6ae2d;
   background-size: 1.25rem;
-  background-image: url(/assets/feature-kpis.svg);
+  background-image: url(asset_path('feature-kpis.svg'));
 }
 
 /* line 104, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.kpi_removed {
   background-color: #f53d3d;
   background-size: 1.25rem;
-  background-image: url(/assets/feature-kpis.svg);
+  background-image: url(asset_path('feature-kpis.svg'));
 }
 
 /* line 108, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.report_updated {
   background-color: #f6ae2d;
   background-size: 1.25rem;
-  background-image: url(/assets/feature-reports.svg);
+  background-image: url(asset_path('feature-reports.svg'));
 }
 
 /* line 112, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.photo_created {
   background-color: #3DB86E;
   background-size: 1.25rem;
-  background-image: url(/assets/camera.svg);
+  background-image: url(asset_path('camera.svg'));
 }
 
 /* line 116, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.photo_removed {
   background-color: #f53d3d;
   background-size: 1.25rem;
-  background-image: url(/assets/camera.svg);
+  background-image: url(asset_path('camera.svg'));
 }
 
 /* line 120, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.note {
   background-color: #dadada;
   background-size: 1.25rem;
-  background-image: url(/assets/note.svg);
+  background-image: url(asset_path('note.svg'));
 }
 
 /* line 124, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.note_created {
   background-color: #3DB86E;
   background-size: 1.25rem;
-  background-image: url(/assets/note.svg);
+  background-image: url(asset_path('note.svg'));
 }
 
 /* line 128, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.note_removed {
   background-color: #f53d3d;
   background-size: 1.25rem;
-  background-image: url(/assets/note.svg);
+  background-image: url(asset_path('note.svg'));
 }
 
 /* line 132, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.tank_created {
   background-color: #3DB86E;
   background-size: 1.25rem;
-  background-image: url(/assets/feature-nutrients.svg);
+  background-image: url(asset_path('feature-nutrients.svg'));
 }
 
 /* line 136, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.tank_updated {
   background-color: #f6ae2d;
   background-size: 1.25rem;
-  background-image: url(/assets/feature-nutrients.svg);
+  background-image: url(asset_path('feature-nutrients.svg'));
 }
 
 /* line 140, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.tank_removed {
   background-color: #f53d3d;
   background-size: 1.25rem;
-  background-image: url(/assets/feature-nutrients.svg);
+  background-image: url(asset_path('feature-nutrients.svg'));
 }
 
 /* line 144, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.harvest_removed {
   background-color: #f53d3d;
   background-size: 1rem;
-  background-image: url(/assets/harvest.svg);
+  background-image: url(asset_path('harvest.svg'));
 }
 
 /* line 148, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.split {
   background-color: #3B82F4;
   background-size: 1.25rem;
-  background-image: url(/assets/split.svg);
+  background-image: url(asset_path('split.svg'));
 }
 
 /* line 152, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.moved {
   background-color: #3B82F4;
   background-size: 1.25rem;
-  background-image: url(/assets/arrow-right.svg);
+  background-image: url(asset_path('arrow-right.svg'));
 }
 
 /* line 156, app/assets/stylesheets/objects/_activities.scss */
 .activity-icon.discarded {
   background-color: #f53d3d;
   background-size: 1.25rem;
-  background-image: url(/assets/trash.svg);
+  background-image: url(asset_path('trash.svg'));
 }
 
 /* line 161, app/assets/stylesheets/objects/_activities.scss */
@@ -13727,7 +13727,7 @@ ag-fancy-table.no-scrollers .scroller {
 /* line 94, app/assets/stylesheets/objects/_timeline.scss */
 .crop-timeline.is-complete .crop-timeline__bar::after {
   background-color: #014D86;
-  background-image: url(/assets/check.svg);
+  background-image: url(asset_path('check.svg'));
   display: inline-block;
 }
 
@@ -13761,7 +13761,7 @@ ag-fancy-table.no-scrollers .scroller {
 /* line 122, app/assets/stylesheets/objects/_timeline.scss */
 .crop-timeline.is-harvested .crop-timeline__bar::after {
   background-color: #3DB86E;
-  background-image: url(/assets/check.svg);
+  background-image: url(asset_path('check.svg'));
   display: inline-block;
 }
 
@@ -13795,7 +13795,7 @@ ag-fancy-table.no-scrollers .scroller {
 /* line 150, app/assets/stylesheets/objects/_timeline.scss */
 .crop-timeline.is-overdue .crop-timeline__bar::after {
   background-color: #f53d3d;
-  background-image: url(/assets/alert.svg);
+  background-image: url(asset_path('alert.svg'));
   background-size: 1rem;
   display: inline-block;
 }
@@ -14130,14 +14130,14 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
 
 /* line 102, app/assets/stylesheets/objects/_scroller.scss */
 .scroller__arrow--left {
-  background-image: url(/assets/arrow-left.svg);
+  background-image: url(asset_path('arrow-left.svg'));
   border-bottom-right-radius: 0;
   border-top-right-radius: 0;
 }
 
 /* line 108, app/assets/stylesheets/objects/_scroller.scss */
 .scroller__arrow--right {
-  background-image: url(/assets/arrow-right.svg);
+  background-image: url(asset_path('arrow-right.svg'));
   border-bottom-left-radius: 0;
   border-top-left-radius: 0;
 }
@@ -14213,7 +14213,7 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
 
 /* line 63, app/assets/stylesheets/objects/_spreadsheet.scss */
 .react-grid-HeaderCell-sortable {
-  background-image: url(/assets/sort-arrow-both.png);
+  background-image: url(asset_path('sort-arrow-both.png'));
   background-position: right center;
   background-repeat: no-repeat;
   background-size: 8px;
@@ -14224,12 +14224,12 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
 
 /* line 73, app/assets/stylesheets/objects/_spreadsheet.scss */
 .react-grid-HeaderCell-sortable--ascending {
-  background-image: url(/assets/sort-arrow-up.png);
+  background-image: url(asset_path('sort-arrow-up.png'));
 }
 
 /* line 77, app/assets/stylesheets/objects/_spreadsheet.scss */
 .react-grid-HeaderCell-sortable--descending {
-  background-image: url(/assets/sort-arrow-down.png);
+  background-image: url(asset_path('sort-arrow-down.png'));
 }
 
 /* line 81, app/assets/stylesheets/objects/_spreadsheet.scss */
@@ -14305,7 +14305,7 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
 
 /* line 140, app/assets/stylesheets/objects/_spreadsheet.scss */
 .react-grid-Cell select.editor-main {
-  background-image: url(/assets/chevron-down.svg) !important;
+  background-image: url(asset_path('chevron-down.svg')) !important;
   background-position: calc(100% - 0.5rem) center !important;
   background-repeat: no-repeat !important;
   background-size: 18px !important;
@@ -14564,7 +14564,7 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
 
 /* line 32, app/assets/stylesheets/components/_announcements.scss */
 .announcement__close::before {
-  background-image: url(/assets/close.svg);
+  background-image: url(asset_path('close.svg'));
   background-position: center;
   background-repeat: no-repeat;
   content: '';
@@ -14601,7 +14601,7 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
 
 /* line 65, app/assets/stylesheets/components/_announcements.scss */
 .google-play-badge {
-  background-image: url(/assets/google-play-badge.svg);
+  background-image: url(asset_path('google-play-badge.svg'));
   background-repeat: no-repeat;
   height: 40px;
   width: 135px;
@@ -14855,7 +14855,7 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
 
 /* line 1, app/assets/stylesheets/components/_header-user.scss */
 .header__user {
-  background-image: url(/assets/profile.svg);
+  background-image: url(asset_path('profile.svg'));
   cursor: default;
   padding-right: 0;
 }
@@ -14917,7 +14917,7 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
 
 /* line 1, app/assets/stylesheets/components/_header-nav.scss */
 .header__nav-toggle {
-  background-image: url(/assets/menu.svg);
+  background-image: url(asset_path('menu.svg'));
   left: 0;
 }
 
@@ -15082,7 +15082,7 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
 
 /* line 1, app/assets/stylesheets/components/_header-search.scss */
 .header__search-toggle {
-  background-image: url(/assets/search.svg);
+  background-image: url(asset_path('search.svg'));
   background-size: 1.65rem;
 }
 
@@ -15160,14 +15160,14 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
 
 /* line 51, app/assets/stylesheets/components/_header-search.scss */
 .header__search .search__go {
-  background-image: url(/assets/search.svg);
+  background-image: url(asset_path('search.svg'));
   width: 2rem;
   z-index: 1;
 }
 
 /* line 57, app/assets/stylesheets/components/_header-search.scss */
 .header__search .search__clear {
-  background-image: url(/assets/close.svg);
+  background-image: url(asset_path('close.svg'));
   z-index: 1;
 }
 
@@ -15212,7 +15212,7 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
   /* line 99, app/assets/stylesheets/components/_header-search.scss */
   .header__search-close {
     background-color: transparent;
-    background-image: url(/assets/close.svg);
+    background-image: url(asset_path('close.svg'));
     background-position: center;
     background-repeat: no-repeat;
     background-size: 2rem;
@@ -15331,7 +15331,7 @@ a.highlight--kpi:hover, a.highlight--kpi:focus {
 
 /* line 82, app/assets/stylesheets/components/_header-alerts.scss */
 .header__alerts-icon {
-  background-image: url(/assets/notification.svg);
+  background-image: url(asset_path('notification.svg'));
 }
 
 /* line 86, app/assets/stylesheets/components/_header-alerts.scss */
@@ -15708,7 +15708,7 @@ ag-fretboard::after {
 /* line 181, app/assets/stylesheets/components/_fretboard.scss */
 .fret__cell-icon {
   background-color: #3DB86E;
-  background-image: url(/assets/harvest.svg);
+  background-image: url(asset_path('harvest.svg'));
   background-position: center;
   background-repeat: no-repeat;
   background-size: 1rem;
@@ -15722,7 +15722,7 @@ ag-fretboard::after {
 /* line 193, app/assets/stylesheets/components/_fretboard.scss */
 .is-partial .fret__cell-icon {
   background-color: #dadada;
-  background-image: url(/assets/harvest.svg);
+  background-image: url(asset_path('harvest.svg'));
 }
 
 /* line 199, app/assets/stylesheets/components/_fretboard.scss */
@@ -15822,7 +15822,7 @@ button.task__checkbox.is-checked:hover {
 
 /* line 73, app/assets/stylesheets/components/_task.scss */
 .is-repeating .task__text {
-  background-image: url(/assets/repeat.svg);
+  background-image: url(asset_path('repeat.svg'));
   background-position: left 3px;
   background-repeat: no-repeat;
   background-size: 1rem;
@@ -15866,7 +15866,7 @@ button.task__checkbox.is-checked:hover {
   overflow: hidden;
   text-indent: 200%;
   white-space: nowrap;
-  background-image: url(/assets/edit.svg);
+  background-image: url(asset_path('edit.svg'));
   background-position: center;
   background-repeat: no-repeat;
   background-size: 1.5rem;
@@ -15889,7 +15889,7 @@ button.task__checkbox.is-checked:hover {
 
 /* line 133, app/assets/stylesheets/components/_task.scss */
 .task__edit--close {
-  background-image: url(/assets/close.svg);
+  background-image: url(asset_path('close.svg'));
 }
 
 /* line 137, app/assets/stylesheets/components/_task.scss */
@@ -17306,7 +17306,7 @@ body[dir='rtl'] .timeline-sidepanel {
 
 /* line 349, app/assets/stylesheets/components/_timeline.scss */
 .timeline-section__title .collapse {
-  background-image: url(/assets/chevron-down.svg);
+  background-image: url(asset_path('chevron-down.svg'));
   background-position: center;
   background-repeat: no-repeat;
   flex-shrink: 0;
@@ -17324,7 +17324,7 @@ body[dir='rtl'] .timeline-sidepanel {
 
 /* line 367, app/assets/stylesheets/components/_timeline.scss */
 .timeline-section__title:hover .collapse, .timeline-section__title:focus .collapse {
-  background-image: url(/assets/chevron-down.svg);
+  background-image: url(asset_path('chevron-down.svg'));
 }
 
 /* line 376, app/assets/stylesheets/components/_timeline.scss */
@@ -17435,7 +17435,7 @@ body[dir='rtl'] .timeline-sidepanel {
 .auth {
   align-items: center;
   background-color: #001D41;
-  background-image: url(/assets/auth-bgr.png);
+  background-image: url(asset_path('auth-bgr.png'));
   background-position: center bottom;
   background-repeat: no-repeat;
   background-size: cover;
@@ -17559,7 +17559,7 @@ body[class^='reports'] .l-sidebar.is_stuck {
 
 /* line 59, app/assets/stylesheets/pages/_reports.scss */
 .reports__save-popover > .btn {
-  background-image: url(/assets/caret-down.svg);
+  background-image: url(asset_path('caret-down.svg'));
   background-position: calc(100% - 0.5rem);
   background-repeat: no-repeat;
   cursor: default;
@@ -17583,7 +17583,7 @@ body[class^='reports'] .l-sidebar.is_stuck {
 
 /* line 81, app/assets/stylesheets/pages/_reports.scss */
 .reports__title {
-  background-image: url(/assets/archive.svg);
+  background-image: url(asset_path('archive.svg'));
   background-position: left center;
   background-repeat: no-repeat;
   background-size: 1.5rem;
@@ -17624,7 +17624,7 @@ body[class^='reports'] .l-sidebar.is_stuck {
 
 /* line 115, app/assets/stylesheets/pages/_reports.scss */
 .report__date-window::before {
-  background-image: url(/assets/arrow-right.svg);
+  background-image: url(asset_path('arrow-right.svg'));
   background-size: 1em;
   content: '';
   display: inline-block;
@@ -17691,7 +17691,7 @@ body[class^='reports'] .l-sidebar.is_stuck {
 
 /* line 172, app/assets/stylesheets/pages/_reports.scss */
 .facility__widget--empty {
-  background-image: url(/assets/plus.svg);
+  background-image: url(asset_path('plus.svg'));
   background-position: center;
   background-repeat: no-repeat;
   background-size: 2rem;
@@ -17772,7 +17772,7 @@ body.is-editing .facility__widget .tooltip .tooltip__text::after {
 
 /* line 230, app/assets/stylesheets/pages/_reports.scss */
 .reports__clear {
-  background-image: url(/assets/close.svg);
+  background-image: url(asset_path('close.svg'));
   background-position: left center;
   background-repeat: no-repeat;
   background-size: 1.25rem;
@@ -17784,7 +17784,7 @@ body.is-editing .facility__widget .tooltip .tooltip__text::after {
 
 /* line 241, app/assets/stylesheets/pages/_reports.scss */
 .report__edit__remove {
-  background-image: url(/assets/close.svg);
+  background-image: url(asset_path('close.svg'));
   background-position: left center;
   background-repeat: no-repeat;
   background-size: 1.25rem;
@@ -18769,7 +18769,7 @@ ag-production-map {
 
 /* line 28, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__save-status {
-  background-image: url(/assets/unsaved.png);
+  background-image: url(asset_path('unsaved.png'));
   background-position: right center;
   background-repeat: no-repeat;
   background-size: 1rem;
@@ -18800,43 +18800,43 @@ ag-production-map {
 
 /* line 56, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__icon--start {
-  background-image: url(/assets/gc-start.svg);
+  background-image: url(asset_path('gc-start.svg'));
 }
 
 /* line 60, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__icon--harvest {
-  background-image: url(/assets/gc-harvest.svg);
+  background-image: url(asset_path('gc-harvest.svg'));
 }
 
 /* line 64, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__icon--discard {
-  background-image: url(/assets/gc-discard.svg);
+  background-image: url(asset_path('gc-discard.svg'));
 }
 
 /* line 68, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__icon--move {
-  background-image: url(/assets/gc-move.svg);
+  background-image: url(asset_path('gc-move.svg'));
 }
 
 /* line 72, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__icon--manual_task {
-  background-image: url(/assets/gc-manual_task.svg);
+  background-image: url(asset_path('gc-manual_task.svg'));
   background-size: 55%;
 }
 
 /* line 77, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__icon--wait {
-  background-image: url(/assets/gc-wait.svg);
+  background-image: url(asset_path('gc-wait.svg'));
 }
 
 /* line 81, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__icon--kpi {
-  background-image: url(/assets/agrilysticons/feature-reports.svg);
+  background-image: url(asset_path('agrilysticons/feature-reports.svg'));
 }
 
 /* line 85, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__icon--seeding_schedule {
-  background-image: url(/assets/calendar.svg);
+  background-image: url(asset_path('calendar.svg'));
 }
 
 /* line 91, app/assets/stylesheets/pages/_growth-cycles.scss */
@@ -19005,7 +19005,7 @@ ag-production-map {
 
 /* line 153, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__action.is-repeating .gc__action__repeat {
-  background-image: url(/assets/repeat.svg);
+  background-image: url(asset_path('repeat.svg'));
   background-position: center 0.5rem;
   background-repeat: no-repeat;
   background-size: 1.5rem;
@@ -19079,7 +19079,7 @@ ag-production-map {
 
 /* line 219, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__action__repeat-text {
-  background-image: url(/assets/repeat.svg);
+  background-image: url(asset_path('repeat.svg'));
   background-position: left center;
   background-repeat: no-repeat;
   background-size: 1rem;
@@ -19289,7 +19289,7 @@ ag-production-map {
 
 /* line 408, app/assets/stylesheets/pages/_growth-cycles.scss */
 .gc__edit-line {
-  background-image: url(/assets/stripe.png);
+  background-image: url(asset_path('stripe.png'));
   background-size: 6px;
   border-bottom: 2px #f53d3d dashed;
   display: inline-block;
@@ -19587,7 +19587,7 @@ ag-production-map {
 
 /* line 14, app/assets/stylesheets/pages/_food-safety.scss */
 .file-upload__link {
-  background-image: url(/assets/documents-doc.svg);
+  background-image: url(asset_path('documents-doc.svg'));
   background-position: left center;
   background-repeat: no-repeat;
   background-size: 1.125rem;
@@ -19602,7 +19602,7 @@ ag-production-map {
 
 /* line 27, app/assets/stylesheets/pages/_food-safety.scss */
 .file-upload__link.documents-image {
-  background-image: url(/assets/documents-image.svg);
+  background-image: url(asset_path('documents-image.svg'));
 }
 
 /* line 33, app/assets/stylesheets/pages/_food-safety.scss */
@@ -19943,7 +19943,7 @@ td.print-table__write-in {
 
 /* line 9, app/assets/stylesheets/print/tasks.scss */
 .print-task-checkbox[checked] {
-  background-image: url(/assets/check.svg) !important;
+  background-image: url(asset_path('check.svg')) !important;
   background-position: center;
   background-repeat: no-repeat;
   background-size: 75%;
@@ -19952,7 +19952,7 @@ td.print-table__write-in {
 @media print {
   /* line 9, app/assets/stylesheets/print/tasks.scss */
   .print-task-checkbox[checked] {
-    content: url(/assets/check.svg);
+    content: url(asset_path('check.svg'));
   }
 }
 
