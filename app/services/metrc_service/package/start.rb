@@ -106,7 +106,7 @@ module MetrcService
         [{
           Tag: tag,
           Location: zone_name,
-          Item: item_type,
+          Item: batch.crop_variety,
           UnitOfWeight: unit_of_weight,
           PatientLicenseNumber: nil,
           Note: note,

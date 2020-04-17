@@ -96,7 +96,7 @@ RSpec.describe MetrcService::Package::Start do
           [
             Tag: '1A4FF0100000022000001161',
             Location: 'Warehouse',
-            Item: 'Wet Material',
+            Item: '5th Element',
             UnitOfWeight: 'Grams',
             PatientLicenseNumber: nil,
             Note: nil,
