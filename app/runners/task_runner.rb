@@ -20,6 +20,10 @@ class TaskRunner
   end
 
   def run
+    # Refresh OAuth token
+    account = @task.integration.account
+    account.refresh_token_if_needed
+
     @result = vendor_module.call(build_context, @task.integration, nil, @task)
   rescue Cannapi::RetryableError => e
     Rails.logger.warn("Task #{@task.id} failed (attempt ##{@task.attempts + 1}) with retryable error, rescheduling...")

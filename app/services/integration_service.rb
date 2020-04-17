@@ -8,6 +8,10 @@ class IntegrationService < ApplicationService
     integrations = Integration.active.where(facility_id: facility_id)
     raise 'No integrations for this facility' unless integrations.size.positive?
 
+    # Refresh OAuth token
+    account = integrations.first.account
+    account.refresh_token_if_needed
+
     integrations.each do |integration|
       ref_time = Time.now.getlocal(integration.timezone)
 

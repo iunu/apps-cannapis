@@ -5,7 +5,7 @@ class Account < ApplicationRecord
   has_many :transactions, dependent: :destroy
 
   def refresh_token_if_needed
-    return unless @client.oauth_token.expired?
+    return unless @client&.oauth_token.expired?
 
     new_token = @client.refresh
     expires_in = (new_token.to_hash[:expires_at].to_i - new_token.to_hash[:created_at].to_i)
