@@ -7,7 +7,8 @@ RSpec.describe NcsService::Package::Start do
   end
 
   let(:account) { create(:account) }
-  let(:integration) { create(:ncs_integration, account: account) }
+  let(:integration) { create(:integration, :ncs_vendor, account: account) }
+  let(:transaction) { create(:transaction, :ncs_vendor, :successful, :plant_package, account: account, integration: integration) }
 
   let(:ctx) do
     {
@@ -63,8 +64,6 @@ RSpec.describe NcsService::Package::Start do
       }
     }.with_indifferent_access
   end
-
-  let(:transaction) { stub_model Transaction, type: :create_plant_package, success: true, vendor: :ncs }
 
   before do
     allow_any_instance_of(described_class)

@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe NcsService::Base do
   let(:account) { create(:account) }
-  let(:integration) { create(:ncs_integration, account: account) }
+  let(:integration) { create(:integration, :ncs_vendor, account: account) }
 
   subject { described_class.new({}, integration) }
 
@@ -193,7 +193,7 @@ RSpec.describe NcsService::Base do
         .to_return(body: { data: [{ id: '326515', type: 'items', attributes: { id: 326515, status: 'active' }, relationships: { barcode: { data: { id: '1A4FF0200000022000000207', type: 'barcodes' } }, seeding_unit: { data: { id: '100', type: 'seeding_units' } } } }] }.to_json)
     end
 
-    let(:integration) { create(:ncs_integration, account: account, facility_id: 1568) }
+    let(:integration) { create(:integration, :ncs_vendor, account: account, facility_id: 1568) }
     let(:ctx) do
       {
         id: 3000,

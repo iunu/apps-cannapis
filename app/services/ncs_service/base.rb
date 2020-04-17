@@ -40,6 +40,9 @@ module NcsService
     rescue InvalidBatch, InvalidOperation => e
       log(e.message)
       fail!
+    rescue ServiceActionFailure => e
+      log("Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{e.inspect}", :error)
+      fail!(transaction)
     rescue StandardError => e
       log("Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{e.inspect}", :error)
       fail!(transaction)
@@ -176,6 +179,14 @@ module NcsService
       raise DataMismatch, "expected to find a harvest in NCS named '#{name}' but it does not exist" if ncs_harvest.nil?
 
       ncs_harvest
+    end
+
+    def lookup_plant_batch(tag)
+      plant_batches = call_ncs(:plant_batch, :all)
+      plant_batch = plant_batches.find { |batch| batch['Name'] == tag }
+      raise DataMismatch, "expected to find a plant batch in Metrc with the tag '#{tag}' but it does not exist" if plant_batch.nil?
+
+      plant_batch
     end
 
     def resource_completions_by_unit_type(unit_type)

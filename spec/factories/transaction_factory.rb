@@ -41,5 +41,9 @@ FactoryBot.define do
     trait :product_package do
       type { :create_product_package }
     end
+
+    trait :ncs_vendor do
+      vendor { :ncs }
+    end
   end
 end

@@ -30,8 +30,6 @@ module NcsService
     'Pound' => 'Pounds'
   }.freeze
 
-  module_function
-
   def perform_action(ctx, integration, task = nil)
     Lookup.new(ctx, integration, task).perform_action
   end

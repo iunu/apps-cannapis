@@ -21,7 +21,7 @@ RSpec.describe NcsService do
 
   describe 'module lookup' do
     let(:account) { create(:account) }
-    let(:integration) { create(:ncs_integration, account: account) }
+    let(:integration) { create(:integration, :ncs_vendor, account: account) }
     let(:task) { create(:task, integration: integration) }
     let(:instance) { described_class::Lookup.new(ctx, integration) }
     let(:seeding_unit) { double(:seeding_unit, name: seeding_unit_name) }
