@@ -40,10 +40,6 @@ module Common
     rescue ServiceActionFailure => e
       log("Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{e.inspect}", :error)
       fail!(transaction)
-    rescue StandardError => e
-      log("Unhandled failure: batch ID #{@batch_id}, completion ID #{@completion_id}; #{e.inspect}", :error)
-      log(e.backtrace.join("\n"), :error) if Rails.env.development?
-      fail!(transaction)
     end
 
     private
@@ -96,7 +92,20 @@ module Common
     end
 
     def batch_tag
-      batch.relationships.dig('barcodes', 'data', 0, 'id')
+      return @tag if @tag
+
+      barcodes = batch.relationships.dig('barcodes', 'data')&.map { |label| label['id'] }
+
+      matches = barcodes&.select { |label| /[A-Z0-9]{24,}/.match?(label) }
+
+      raise InvalidAttributes, "Missing barcode for batch '#{batch.arbitrary_id}'" if barcodes.blank?
+      raise InvalidAttributes, "Expected barcode for batch '#{batch.arbitrary_id}' to be alphanumeric with 24 characters. Got: #{barcodes.join(', ')}" if matches.blank?
+
+      return @tag = matches&.first unless matches&.size > 1
+
+      matches.sort! { |a, b| a <=> b }
+
+      @tag = matches&.first
     end
 
     def validate_batch!
