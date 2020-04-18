@@ -1,8 +1,5 @@
 module Common
   class BaseServiceAction
-    class TransactionAlreadyExecuted < StandardError; end
-    class ServiceActionFailure < StandardError; end
-
     DEFAULT_RUN_MODE = :later
 
     def self.call(*args, &block)

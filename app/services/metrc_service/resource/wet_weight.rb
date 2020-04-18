@@ -1,6 +1,10 @@
+require_relative '../../common/resource_handling'
+
 module MetrcService
   module Resource
     class WetWeight < Base
+      include Common::ResourceHandling
+
       resource_name 'wet_weight'
 
       def call
