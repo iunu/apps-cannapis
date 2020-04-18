@@ -96,7 +96,7 @@ RSpec.describe NcsService do
         let(:seeding_unit_name) { 'Sales Order' }
 
         it 'fails with an error' do
-          expect { subject }.to raise_error(NcsService::InvalidOperation)
+          expect { subject }.to raise_error(InvalidOperation)
         end
       end
     end

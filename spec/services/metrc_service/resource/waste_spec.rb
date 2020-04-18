@@ -48,7 +48,7 @@ RSpec.describe MetrcService::Resource::Waste do
         let(:waste_type) { 'Wet Waste' }
 
         it 'should not raise an error' do
-          expect { subject }.to raise_error(MetrcService::InvalidAttributes, /harvest waste type .* not supported .* No similar types/)
+          expect { subject }.to raise_error(InvalidAttributes, /harvest waste type .* not supported .* No similar types/)
         end
       end
 
@@ -56,7 +56,7 @@ RSpec.describe MetrcService::Resource::Waste do
         let(:waste_type) { 'Plant' }
 
         it 'should not raise an error' do
-          expect { subject }.to raise_error(MetrcService::InvalidAttributes, /harvest waste type .* not supported .* Did you mean "Plants"/)
+          expect { subject }.to raise_error(InvalidAttributes, /harvest waste type .* not supported .* Did you mean "Plants"/)
         end
       end
     end

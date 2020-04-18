@@ -110,7 +110,7 @@ RSpec.describe MetrcService do
         let(:action_type) { 'move' }
         let(:seeding_unit_name) { 'Sales Order' }
         it 'fails with an error' do
-          expect { subject }.to raise_error(MetrcService::InvalidOperation)
+          expect { subject }.to raise_error(InvalidOperation)
         end
       end
     end

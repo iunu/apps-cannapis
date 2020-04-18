@@ -1,10 +1,4 @@
 module NcsService
-  class InvalidBatch < StandardError; end
-  class BatchCropInvalid < StandardError; end
-  class InvalidOperation < StandardError; end
-  class InvalidAttributes < StandardError; end
-  class DataMismatch < StandardError; end
-
   CROP = 'Cannabis'.freeze
 
   SEEDING_UNIT_MAP = {
