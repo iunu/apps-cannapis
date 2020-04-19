@@ -27,7 +27,7 @@ module NcsService
       end
 
       # a stub tranasction to represent the state of the batched transactions
-      result = Transaction.new(success: transactions.all?(&:success?))
+      result = Transaction.new(vendor: :ncs, success: transactions.all?(&:success?))
       @task.delete if result.success?
 
       result

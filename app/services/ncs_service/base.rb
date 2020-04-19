@@ -41,10 +41,10 @@ module NcsService
       log(e.message)
       fail!
     rescue ServiceActionFailure => e
-      log("Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{e.inspect}", :error)
+      log("[NCS_SERVICE_ACTION_FAILURE] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{e.inspect}", :error)
       fail!(transaction)
     rescue StandardError => e
-      log("Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{e.inspect}", :error)
+      log("[NCS_SERVICE_FAILURE] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{e.inspect}", :error)
       fail!(transaction)
     end
 
