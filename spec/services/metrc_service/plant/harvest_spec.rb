@@ -115,13 +115,14 @@ RSpec.describe MetrcService::Plant::Harvest do
       include_context 'with synced data' do
         let(:facility_id) { 1 }
         let(:batch_id) { 331 }
+        let(:completion_id) { 2114 }
       end
 
       let(:transaction) { create(:transaction, :unsuccessful, :harvest, account: account, integration: integration) }
 
       let(:ctx) do
         {
-          id: 3000,
+          id: completion_id,
           relationships: {
             batch: { data: { id: batch_id } },
             facility: { data: { id: facility_id } }
@@ -140,9 +141,14 @@ RSpec.describe MetrcService::Plant::Harvest do
       end
       let(:seeding_unit_id) { ctx.dig(:attributes, :options, :seeding_unit_id) }
 
+      let(:completion_fixtures) { JSON.parse(load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/completions")) }
+
+
       subject { described_class.call(ctx, integration) }
 
       before do
+        @stubs = []
+
         stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}"))
 
@@ -155,16 +161,22 @@ RSpec.describe MetrcService::Plant::Harvest do
         stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/completions"))
 
+        generate_completions = completion_fixtures['data'].select do |completion|
+          completion['attributes'].slice('parent_id', 'action_type').values == [completion_id, 'generate']
+        end
+
+        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=#{completion_id}")
+          .to_return(body: { data: generate_completions }.to_json)
+
         stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/resource_units")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/resource_units"))
 
         stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}/items?filter[seeding_unit_id]=#{seeding_unit_id}&include=barcodes,seeding_unit")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/items"))
 
-        stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/harvestplants?licenseNumber=LIC-0001')
+        @stubs << stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/harvestplants?licenseNumber=LIC-0001')
           .with(
             body: [{"DryingLocation":"Mother Room","PatientLicenseNumber":nil,"ActualDate":"2019-11-13T18:44:45","Plant":"1A4FF0000000022000006107","Weight":5.0,"UnitOfWeight":"Grams","HarvestName":"Apr7-5th-Ele-Can-42"},{"DryingLocation":"Mother Room","PatientLicenseNumber":nil,"ActualDate":"2019-11-13T18:44:45","Plant":"1A4FF0000000022000006108","Weight":5.0,"UnitOfWeight":"Grams","HarvestName":"Apr7-5th-Ele-Can-42"}].to_json,
-            basic_auth: [METRC_API_KEY, integration.secret]
           )
           .to_return(status: 200, body: '', headers: {})
 
@@ -174,7 +186,7 @@ RSpec.describe MetrcService::Plant::Harvest do
         stub_request(:get, 'https://sandbox-api-md.metrc.com/harvests/v1/waste/types')
           .to_return(status: 200, body: [{ Name: 'Wet Waste' }].to_json, headers: {})
 
-        stub_request(:post, 'https://sandbox-api-md.metrc.com/harvests/v1/removewaste?licenseNumber=LIC-0001')
+        @stubs << stub_request(:post, 'https://sandbox-api-md.metrc.com/harvests/v1/removewaste?licenseNumber=LIC-0001')
           .with(
             body: [{ Id: 234, WasteType: 'Wet Waste', UnitOfWeight: 'Grams', WasteWeight: 2.5, ActualDate: '2019-11-13T18:44:45' }].to_json,
             basic_auth: [METRC_API_KEY, integration.secret]
@@ -183,6 +195,12 @@ RSpec.describe MetrcService::Plant::Harvest do
       end
 
       it { is_expected.to be_success }
+
+      after do
+        @stubs.each do |stub|
+          expect(stub).to have_been_requested
+        end
+      end
     end
   end
 

@@ -190,6 +190,8 @@ RSpec.describe MetrcService::Plant::Move do
       let(:completion_fixtures) { JSON.parse(load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/completions")) }
 
       before do
+        @stubs = []
+
         stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}"))
 
@@ -219,7 +221,7 @@ RSpec.describe MetrcService::Plant::Move do
           .with(body: expected_payload.to_json)
           .to_return(status: 200)
 
-        stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/harvestplants?licenseNumber=LIC-0001')
+        @stubs << stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/harvestplants?licenseNumber=LIC-0001')
           .with(
             body: [{
               DryingLocation: 'F3 - Inside',
@@ -247,7 +249,7 @@ RSpec.describe MetrcService::Plant::Move do
         stub_request(:get, 'https://sandbox-api-md.metrc.com/harvests/v1/waste/types')
           .to_return(status: 200, body: [{ Name: 'Wet Waste' }].to_json, headers: {})
 
-        stub_request(:post, 'https://sandbox-api-md.metrc.com/harvests/v1/removewaste?licenseNumber=LIC-0001')
+        @stubs << stub_request(:post, 'https://sandbox-api-md.metrc.com/harvests/v1/removewaste?licenseNumber=LIC-0001')
           .with(
             body: [{ Id: 234, WasteType: 'Wet Waste', UnitOfWeight: 'Grams', WasteWeight: 0.5, ActualDate: '2020-04-15' }].to_json,
           )
@@ -267,6 +269,12 @@ RSpec.describe MetrcService::Plant::Move do
       end
 
       it { is_expected.to be_success }
+
+      after do
+        @stubs.each do |stub|
+          expect(stub).to have_been_requested
+        end
+      end
     end
   end
 
