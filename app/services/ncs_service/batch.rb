@@ -48,7 +48,7 @@ module NcsService
       return if completions.size.positive?
 
       @task.delete
-      raise InvalidOperation, "Completions where already performed. Batch ID #{@batch_id}"
+      raise TransactionAlreadyExecuted, 'batch already processed'
     end
 
     def completions
@@ -58,9 +58,9 @@ module NcsService
     def filter_and_validate_completions
       [].tap do |arr|
         # Filter the completions we curently support
-        actions.select do |id|
-          completion = actions[id]
-          arr << completion if completion_supported?(completion) && !performed_transactions.include?(id)
+        actions.each do |completion|
+          next unless completion_supported?(completion) && !performed_transactions.include?(completion.id)
+          arr << completion
         end
 
         validate_completions!(arr)
@@ -73,7 +73,7 @@ module NcsService
 
     def performed_transactions
       Transaction.succeed.where(batch_id: batch.id,
-                                completion_id: actions.keys,
+                                completion_id: actions.map(&:id),
                                 integration: @integration)&.pluck(:completion_id)
     end
 
