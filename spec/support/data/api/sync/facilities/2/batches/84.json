@@ -1,0 +1,440 @@
+{
+  "data": {
+    "id": "84",
+    "type": "batches",
+    "attributes": {
+      "id": 84,
+      "arbitrary_id": "Apr18-5th-Ele-Can",
+      "start_type": "seed",
+      "quantity": 2.0,
+      "harvest_quantity": null,
+      "expected_harvest_at": "2020-08-16",
+      "harvested_at": null,
+      "seeded_at": "2020-04-18",
+      "completed_at": null,
+      "facility_id": 2,
+      "zone_name": "F3 - Inside",
+      "crop_variety": "5th Element",
+      "crop": "Cannabis"
+    },
+    "relationships": {
+      "harvests": {
+        "meta": {
+          "included": false
+        }
+      },
+      "completions": {
+        "meta": {
+          "included": false
+        }
+      },
+      "items": {
+        "meta": {
+          "included": false
+        }
+      },
+      "custom_data": {
+        "data": [
+
+        ]
+      },
+      "barcodes": {
+        "data": [
+          {
+            "type": "barcodes",
+            "id": "batchbarcode123"
+          }
+        ]
+      },
+      "discards": {
+        "meta": {
+          "included": false
+        }
+      },
+      "seeding_unit": {
+        "data": {
+          "type": "seeding_units",
+          "id": "7"
+        }
+      },
+      "harvest_unit": {
+        "data": null
+      },
+      "zone": {
+        "data": {
+          "id": 28,
+          "type": "zones"
+        }
+      },
+      "sub_zone": {
+        "data": {
+          "id": null,
+          "type": "sub_zones"
+        }
+      }
+    }
+  },
+  "included": [
+    {
+      "id": "batchbarcode123",
+      "type": "barcodes",
+      "attributes": {
+        "id": "batchbarcode123"
+      },
+      "relationships": {
+        "target": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    },
+    {
+      "id": "7",
+      "type": "seeding_units",
+      "attributes": {
+        "id": 7,
+        "name": "Plant (Barcoded)",
+        "secondary_display_active": false,
+        "secondary_display_capacity": 0,
+        "item_tracking_method": "preprinted"
+      }
+    },
+    {
+      "id": "28",
+      "type": "zones",
+      "attributes": {
+        "id": 28,
+        "facility_id": 2,
+        "name": "F3 - Inside",
+        "slug": "f3---inside",
+        "zone_type": null,
+        "created_at": "2020-04-10T19:01:00.078Z",
+        "updated_at": "2020-04-10T19:01:00.078Z",
+        "status": "active",
+        "position": null,
+        "size": 93.0,
+        "seeding_unit": {
+          "id": 7,
+          "name": "Plant (Barcoded)",
+          "zones": [
+            {
+              "id": 7,
+              "slug": "f3---inside",
+              "name": "F3 - Inside",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 28,
+              "slug": "f3---inside",
+              "name": "F3 - Inside",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 29,
+              "slug": "f4---outside",
+              "name": "F4 - Outside",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 8,
+              "slug": "f4---outside",
+              "name": "F4 - Outside",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 9,
+              "slug": "f5---zone-1",
+              "name": "F5 - Zone 1",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 30,
+              "slug": "f5---zone-1",
+              "name": "F5 - Zone 1",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 31,
+              "slug": "f5---zone-2",
+              "name": "F5 - Zone 2",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 10,
+              "slug": "f5---zone-2",
+              "name": "F5 - Zone 2",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 32,
+              "slug": "f5---zone-3",
+              "name": "F5 - Zone 3",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 11,
+              "slug": "f5---zone-3",
+              "name": "F5 - Zone 3",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 12,
+              "slug": "f5---zone-4",
+              "name": "F5 - Zone 4",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 33,
+              "slug": "f5---zone-4",
+              "name": "F5 - Zone 4",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 34,
+              "slug": "f5---zone-5",
+              "name": "F5 - Zone 5",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 13,
+              "slug": "f5---zone-5",
+              "name": "F5 - Zone 5",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 35,
+              "slug": "f6---zone-1",
+              "name": "F6 - Zone 1",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 14,
+              "slug": "f6---zone-1",
+              "name": "F6 - Zone 1",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 15,
+              "slug": "f6---zone-4",
+              "name": "F6 - Zone 4",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 36,
+              "slug": "f6---zone-4",
+              "name": "F6 - Zone 4",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 16,
+              "slug": "f7---l",
+              "name": "F7 - L",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 37,
+              "slug": "f7---l",
+              "name": "F7 - L",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 25,
+              "slug": "mother-room",
+              "name": "Mother Room",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 4,
+              "slug": "mother-room",
+              "name": "Mother Room",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 26,
+              "slug": "va---zone-1",
+              "name": "VA - Zone 1",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 5,
+              "slug": "va---zone-1",
+              "name": "VA - Zone 1",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 27,
+              "slug": "vd---top",
+              "name": "VD - Top",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            },
+            {
+              "id": 6,
+              "slug": "vd---top",
+              "name": "VD - Top",
+              "seeding_unit_id": 7,
+              "zone_type": null,
+              "sub_zones": [
+
+              ]
+            }
+          ],
+          "secondary_display_active": null,
+          "secondary_display_capacity": 0
+        },
+        "seeding_unit_capacity": 2400,
+        "system": null
+      },
+      "relationships": {
+        "sub_zones": {
+          "meta": {
+            "included": false
+          }
+        },
+        "stage": {
+          "data": {
+            "id": "4",
+            "type": "stages"
+          }
+        },
+        "sub_stage": {
+          "data": {
+            "id": "3",
+            "type": "sub_stages"
+          }
+        },
+        "seeding_unit": {
+          "data": {
+            "id": "7",
+            "type": "seeding_units"
+          }
+        }
+      }
+    },
+    {
+      "id": "3",
+      "type": "sub_stages",
+      "attributes": {
+        "id": 3,
+        "name": "Flower",
+        "position": 2
+      },
+      "relationships": {
+        "stage": {
+          "data": {
+            "id": "4",
+            "type": "stages"
+          }
+        },
+        "zones": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

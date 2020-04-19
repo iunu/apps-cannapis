@@ -2,7 +2,7 @@ require_relative '../../common/resource_handling'
 
 module MetrcService
   module Resource
-    class Waste < MetrcService::Base
+    class WetWaste < MetrcService::Base
       include Common::ResourceHandling
 
       resource_name 'wet_waste'

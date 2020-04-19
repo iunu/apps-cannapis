@@ -1,6 +1,6 @@
 module MetrcService
   module Plant
-    class Move < MetrcService::Base
+    class Move < Base
       GROWTH_CYCLES = {
         clone: %i[clone vegetative],
         vegetative: %i[vegetative flowering],
@@ -13,6 +13,8 @@ module MetrcService
         log("Next step: #{next_step_name}. Batch ID #{@batch_id}, completion ID #{@completion_id}")
 
         send(next_step_name)
+
+        handle_resources
 
         success!
       end

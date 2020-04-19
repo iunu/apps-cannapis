@@ -10,13 +10,19 @@ module MetrcService
       end
 
       def handle_generated_resources
+        return if completions_by_action_type('generate').empty?
+
         Resource::WetWeight.call(@ctx, @integration, @batch)
-        Resource::Waste.call(@ctx, @integration, @batch)
+        Resource::WetWaste.call(@ctx, @integration, @batch)
       end
 
       def handle_processed_resources; end
 
       def handle_consumed_resources; end
+
+      def completions_by_action_type(action_type)
+        get_child_completions(@completion_id, filter: { action_type: action_type })
+      end
     end
   end
 end

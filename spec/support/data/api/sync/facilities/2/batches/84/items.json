@@ -1,0 +1,75 @@
+{
+  "data": [
+    {
+      "id": "489",
+      "type": "items",
+      "attributes": {
+        "id": 489,
+        "harvest_quantity": 0.0,
+        "secondary_harvest_quantity": 0.0,
+        "status": "active",
+        "secondary_harvest_unit": null
+      },
+      "relationships": {
+        "batch": {
+          "meta": {
+            "included": false
+          }
+        },
+        "seeding_unit": {
+          "meta": {
+            "included": false
+          }
+        },
+        "harvest_unit": {
+          "meta": {
+            "included": false
+          }
+        },
+        "barcode": {
+          "data": {
+            "id": "aplantbarcode123",
+            "type": "barcodes"
+          }
+        }
+      }
+    },
+    {
+      "id": "490",
+      "type": "items",
+      "attributes": {
+        "id": 490,
+        "harvest_quantity": 0.0,
+        "secondary_harvest_quantity": 0.0,
+        "status": "active",
+        "secondary_harvest_unit": null
+      },
+      "relationships": {
+        "batch": {
+          "meta": {
+            "included": false
+          }
+        },
+        "seeding_unit": {
+          "meta": {
+            "included": false
+          }
+        },
+        "harvest_unit": {
+          "meta": {
+            "included": false
+          }
+        },
+        "barcode": {
+          "data": {
+            "id": "aplantbarcode124",
+            "type": "barcodes"
+          }
+        }
+      }
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}
