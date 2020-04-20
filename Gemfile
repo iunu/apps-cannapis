@@ -50,6 +50,8 @@ gem 'bugsnag', '~> 6.13'
 
 gem 'pmap'
 
+gem 'rest-client'
+
 group :development, :test do
   # Call 'byebug' anywhere in the code to stop execution and get a debugger console
   gem 'byebug', platforms: %w[mri mingw x64_mingw]
