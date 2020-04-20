@@ -12,6 +12,22 @@ class TaskRunner
     runners.map(&:result)
   end
 
+  def self.simulate_failure
+    user = OpenStruct.new
+    dummy_client = OpenStruct.new(current_user: user)
+    account = Account.new
+
+    account.define_singleton_method(:client) do
+      dummy_client
+    end
+
+    integration = Integration.new(account: account, vendor: 'test')
+    task = Scheduler.new(integration: integration)
+    task.current_action = 'test'
+
+    new(task).run
+  end
+
   attr_accessor :result
   delegate :success?, to: :result, allow_nil: true
 

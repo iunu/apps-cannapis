@@ -1,4 +1,4 @@
-return if Rails.env.production?
+return unless ENV['MAILTRAP_API_TOKEN'].present?
 
 require 'rest-client'
 require 'json'
