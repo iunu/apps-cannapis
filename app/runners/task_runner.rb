@@ -25,7 +25,15 @@ class TaskRunner
     task = Scheduler.new(integration: integration)
     task.current_action = 'test'
 
-    new(task).run
+    runner = new(task)
+
+    # retryable
+    error = Cannapi::RetryableError.new('this was retryable')
+    runner.send(:report_rescheduled, error)
+
+    # non-retryable
+    error = Cannapi::TooManyRetriesError.new('this was not retryable')
+    runner.send(:report_failed, error)
   end
 
   attr_accessor :result
