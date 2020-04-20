@@ -67,7 +67,7 @@ module Common
     def success!
       log("Success: batch ID #{@batch_id}, completion ID #{@completion_id}")
 
-      transaction.success = true
+      transaction.update(success: true)
       transaction
     end
 

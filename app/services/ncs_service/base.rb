@@ -86,12 +86,15 @@ module NcsService
       @client.send(resource).send(method, *args)
     rescue *RETRYABLE_ERRORS => e
       log("NCS Analytics: Retryable error: #{e.inspect}", :warn)
+      Bugsnag.notify(e)
       requeue!(exception: e)
     rescue NcsAnalytics::Errors::MissingConfiguration, NcsAnalytics::Errors::MissingParameter => e
       log("NCS Analytics: Configuration error: #{e.inspect}", :error)
+      Bugsnag.notify(e)
       fail!(exception: e)
     rescue StandardError => e
       log("NCS Analytics: #{e.inspect}", :error)
+      Bugsnag.notify(e)
       fail!(exception: e)
     end
 
