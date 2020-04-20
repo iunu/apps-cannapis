@@ -18,7 +18,8 @@ module MetrcService
       def build_start_payload(batch)
         batch_quantity = batch.attributes['quantity']&.to_i
         quantity = batch_quantity.positive? ? batch_quantity : @attributes.dig('options', 'quantity')&.to_i
-        type = %w[clone seed plant].include?(batch.zone.attributes.dig('seeding_unit', 'name').downcase) ? batch.zone.attributes.dig('seeding_unit', 'name') : 'Clone'
+        seeding_unit = batch.zone.attributes.dig('seeding_unit', 'name').downcase
+        type = /seed/.match?(seeding_unit) ? 'Seed' : 'Clone'
 
         [{
           Name: batch_tag,
