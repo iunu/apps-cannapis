@@ -2,9 +2,9 @@ module MetrcService
   module Plant
     class Discard < MetrcService::Base
       def call
-        payload = send("build_#{plant_type}_payload", discard, batch)
+        payload = send("build_#{plant_state}_payload", discard, batch)
+        action = plant_state == 'immature' ? :destroy_plant_batches : :destroy_plants
 
-        action = plant_type == 'immature' ? :destroy_plant_batches : :destroy_plants
         call_metrc(action, payload)
 
         success!
