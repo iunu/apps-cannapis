@@ -56,6 +56,7 @@ class TaskRunner
   rescue Cannapi::TooManyRetriesError => e
     report_failed(e.original)
   rescue StandardError => e
+    Bugsnag.notify(e)
     report_failed(e)
   end
 
