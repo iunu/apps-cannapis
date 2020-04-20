@@ -80,7 +80,7 @@ module MetrcService
           crop_batch = crop_batch_for_consume(consume)
           plant_count = consume.options['consumed_quantity']
           crop_batch_tag = crop_batch.relationships.dig('barcodes', 'data', 0, 'id')
-          metrc_plant_batch = lookup_metrc_plant_batch(crop_batch_tag)
+          metrc_plant_batch = lookup_metrc_plant_batch(batch_tag)
 
           {
             Id: metrc_plant_batch['Id'],
