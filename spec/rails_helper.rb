@@ -71,6 +71,11 @@ RSpec.configure do |config|
     DatabaseCleaner.clean
   end
 
+  config.before(:each) do
+    WebMock.stub_request(:post, 'https://notify.bugsnag.com/')
+    WebMock.stub_request(:post, 'https://sessions.bugsnag.com/')
+  end
+
   config.before do
     DatabaseCleaner.clean
   end
