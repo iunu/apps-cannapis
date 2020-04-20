@@ -1,7 +1,7 @@
+return if Rails.env.production?
+
 require 'rest-client'
 require 'json'
-
-return if Rails.env.production?
 
 response = RestClient::Resource.new("https://mailtrap.io/api/v1/inboxes.json?api_token=#{ENV['MAILTRAP_API_TOKEN']}").get
 
