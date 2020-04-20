@@ -55,7 +55,8 @@ Currently the following is synced:
 
 ### Notification Mailer
 
-If `MAILTRAP_API_KEY` is set, then mailers will be automatically configured to use Mailtrap for testing sending of emails.
+If `SEND_MAILS` is set, then mails will be sent via Mailgun.
+If `SEND_MAILS` is not set, and if `MAILTRAP_API_KEY` is set, then mailers will be automatically configured to use Mailtrap for testing sending of emails.
 
 Mails tests can be triggered via any of the following:
 - `rake notifier:test`
