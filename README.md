@@ -52,3 +52,12 @@ Currently the following is synced:
 - batch (with includes)
 - batch/completions
 - batch/items
+
+### Notification Mailer
+
+If `MAILTRAP_API_KEY` is set, then mailers will be automatically configured to use Mailtrap for testing sending of emails.
+
+Mails tests can be triggered via any of the following:
+- `rake notifier:test`
+- `POST app-domain/v1/test_mailer` 
+- `TaskRunner.simulate_failure` 
