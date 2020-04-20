@@ -156,7 +156,19 @@ module NcsService
     end
 
     def batch_tag
-      batch.relationships.dig('barcodes', 'data', 0, 'id')
+      return @tag if @tag
+
+      matches = batch
+                  .relationships
+                  .dig('barcodes', 'data')
+                  &.select { |label| /[A-Z0-9]{24,}/.match?(label['id']) }
+
+      return @tag = matches&.first&.dig('id') unless matches&.size > 1
+
+      matches.sort! { |a, b| a <=> b }
+
+      @tag = matches&.first&.dig('id')
+      @tag
     end
 
     def validate_batch!
@@ -178,7 +190,7 @@ module NcsService
     def lookup_harvest(name)
       # TODO: consider date range for lookup - harvest create/finish dates?
       harvests = call_ncs(:harvest, :active)
-      ncs_harvest = harvests.find { |harvest| harvest['Name'] == name }
+      ncs_harvest = harvests&.find { |harvest| harvest['Name'] == name }
       raise DataMismatch, "expected to find a harvest in NCS named '#{name}' but it does not exist" if ncs_harvest.nil?
 
       ncs_harvest
@@ -186,7 +198,7 @@ module NcsService
 
     def lookup_plant_batch(tag)
       plant_batches = call_ncs(:plant_batch, :all)
-      plant_batch = plant_batches.find { |batch| batch['Name'] == tag }
+      plant_batch = plant_batches&.find { |batch| batch['Name'] == tag }
       raise DataMismatch, "expected to find a plant batch in Metrc with the tag '#{tag}' but it does not exist" if plant_batch.nil?
 
       plant_batch
