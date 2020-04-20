@@ -170,7 +170,7 @@ RSpec.describe NcsService::Plant::Start do
       let(:batch) do
         zone_attributes = {
           seeding_unit: {
-            name: 'Clone'
+            name: 'Plant (Seed)'
           }
         }.with_indifferent_access
         zone = double(:zone, attributes: zone_attributes, name: 'Germination')
@@ -202,7 +202,7 @@ RSpec.describe NcsService::Plant::Start do
 
         expect(payload).not_to be_nil
         expect(payload[:Name]).to eq '1A4FF01000000220000011'
-        expect(payload[:Type]).to eq 'Clone'
+        expect(payload[:Type]).to eq 'Seed'
         expect(payload[:Count]).to eq 100
         expect(payload[:StrainName]).to eq 'Banana Split'
         expect(payload[:RoomName]).to eq 'Germination'
