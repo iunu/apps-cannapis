@@ -54,8 +54,7 @@ module NcsService
 
       def plant_package_payload
         [{
-          PlantBatchId: nil,
-          PlantBatchName: batch.arbitrary_id,
+          PlantBatchName: batch_tag,
           PlantCount: batch.attributes['quantity']&.to_i,
           RoomName: zone_name,
           ProductName: batch.attributes['crop_variety'],
@@ -65,11 +64,11 @@ module NcsService
       end
 
       def product_package_payload
-        harvest = lookup_harvest(batch.arbitrary_id)
+        harvest = lookup_harvest(batch_tag)
 
         [{
           HarvestId: harvest['id'],
-          Label: barcode,
+          Label: batch_tag,
           RoomName: zone_name,
           ProductName: batch.attributes['crop_variety'],
           Weight: batch.attributes['quantity']&.to_i,
