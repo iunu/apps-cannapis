@@ -311,7 +311,7 @@ RSpec.describe MetrcService::Package::Start do
       let(:valid_categories) { [{ Name: 'Wet Material' }] }
       let(:item_type) { 'Wet Material' }
 
-      it 'should not raise an error' do
+      it 'does not raise an error' do
         expect { subject }.not_to raise_error
       end
     end
@@ -322,7 +322,7 @@ RSpec.describe MetrcService::Package::Start do
       describe 'and not similar to supported types' do
         let(:item_type) { 'Bud' }
 
-        it 'should not raise an error' do
+        it 'does not raise an error' do
           expect { subject }.to raise_error(InvalidAttributes, /package item type .* not supported .* No similar types/)
         end
       end
@@ -330,7 +330,7 @@ RSpec.describe MetrcService::Package::Start do
       describe 'but similar to supported types' do
         let(:item_type) { 'Flowers' }
 
-        it 'should not raise an error' do
+        it 'does not raise an error' do
           expect { subject }.to raise_error(InvalidAttributes, /package item type .* not supported .* Did you mean "Flower"/)
         end
       end

@@ -6,6 +6,8 @@ module BaseService
       Net::HTTPRetriableError,
     ].freeze
 
+    FATAL_ERRORS = [].freeze
+
     attr_reader :artemis
 
     delegate :seeding_unit, to: :batch
@@ -43,10 +45,12 @@ module BaseService
     def call_vendor(method, *args)
       @vendor.call(method, *args)
     rescue *self.class::RETRYABLE_ERRORS => e
-      log("#{integration.vendor.upcase}: Retryable error: #{e.inspect}", :warn)
+      Bugsnag.notify(e)
+      log(": Retryable error: #{e.inspect}", :warn)
       requeue!(exception: e)
-    rescue StandardError => e
-      log("#{integration.vendor.upcase}: #{e.inspect}", :error)
+    rescue *self.class::FATAL_ERRORS => e
+      Bugsnag.notify(e)
+      log("#{integration.vendor.upcase}: Configuration error: #{e.inspect}", :error)
       fail!(exception: e)
     end
 

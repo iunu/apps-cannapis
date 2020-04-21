@@ -5,40 +5,13 @@ module MetrcService
       Metrc::RequestError
     ].freeze
 
-    private
-
-    def build_client
-      debug = !ENV['DEMO'].nil? || Rails.env.development? || Rails.env.test?
-      secret_key = ENV["METRC_SECRET_#{@integration.state.upcase}"]
-
-      throw "No Metrc key is available for #{@integration.state.upcase}" unless secret_key
-
-      Metrc.configure do |config|
-        config.api_key  = secret_key
-        config.state    = state
-        config.sandbox  = debug
-      end
-
-      Metrc::Client.new(user_key: @integration.secret, debug: debug)
-    end
+    FATAL_ERRORS = [
+      *BaseService::Base::FATAL_ERRORS,
+      Metrc::MissingConfiguration,
+      Metrc::MissingParameter
+    ].freeze
 
     protected
-
-    def call_metrc(method, *args)
-      log("[#{method.to_s.upcase}] Metrc API request. URI #{@client.uri}", :debug)
-      log(args.to_yaml, :debug)
-
-      response = @client.send(method, @integration.license, *args)
-      JSON.parse(response.body) if response&.body&.present?
-    rescue *RETRYABLE_ERRORS => e
-      log("METRC: Retryable error: #{e.inspect}", :warn)
-      Bugsnag.notify(e)
-      requeue!(exception: e)
-    rescue Metrc::MissingConfiguration, Metrc::MissingParameter => e
-      Bugsnag.notify(e)
-      log("METRC: Configuration error: #{e.inspect}", :error)
-      fail!(exception: e)
-    end
 
     def resource_unit(unit_type)
       resource_units = get_resource_units.select do |resource_unit|
@@ -77,7 +50,7 @@ module MetrcService
 
     def lookup_metrc_harvest(name)
       # TODO: consider date range for lookup - harvest create/finish dates?
-      harvests = call_metrc(:list_harvests)
+      harvests = call_vendor(:list_harvests)
       metrc_harvest = harvests&.find { |harvest| harvest['Name'] == name }
       raise DataMismatch, "expected to find a harvest in Metrc named '#{name}' but it does not exist" if metrc_harvest.nil?
 

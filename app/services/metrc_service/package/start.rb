@@ -53,7 +53,7 @@ module MetrcService
           { Id: harvest_id, ActualDate: package_date }
         end
 
-        call_metrc(:finish_harvest, payload) unless payload.empty?
+        call_vendor(:finish_harvest, payload) unless payload.empty?
       end
 
       def consumed_harvest_ids
@@ -62,7 +62,7 @@ module MetrcService
 
       def finished_harvest_ids
         consumed_harvest_ids.select do |harvest_id|
-          harvest = call_metrc(:get_harvest, harvest_id)
+          harvest = call_vendor(:get_harvest, harvest_id)
           harvest['CurrentWeight'].zero?
         end
       end
@@ -72,7 +72,7 @@ module MetrcService
       end
 
       def create_plant_batch_package
-        call_metrc(:create_plant_batch_package, create_plant_batch_package_payload)
+        call_vendor(:create_plant_batch_package, create_plant_batch_package_payload)
       end
 
       def create_plant_batch_package_payload
@@ -96,7 +96,7 @@ module MetrcService
       end
 
       def create_product_package
-        call_metrc(:create_harvest_package, create_product_package_payload, testing?)
+        call_vendor(:create_harvest_package, create_product_package_payload, testing?)
       end
 
       def create_product_package_payload
@@ -202,10 +202,7 @@ module MetrcService
       end
 
       def metrc_supported_item_types
-        @metrc_supported_item_types ||= begin
-                                          metrc_response = @client.get('items', 'categories').body
-                                          JSON.parse(metrc_response).map { |entry| entry['Name'] }
-                                        end
+        @metrc_supported_item_types ||= @vendor.get_item_categories
       end
     end
   end

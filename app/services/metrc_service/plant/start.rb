@@ -4,7 +4,7 @@ module MetrcService
       def call
         payload = build_start_payload(batch)
 
-        call_metrc(:create_plant_batches, payload)
+        call_vendor(:create_plant_batches, payload)
 
         success!
       end

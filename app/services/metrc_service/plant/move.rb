@@ -85,7 +85,7 @@ module MetrcService
           }
         end
 
-        call_metrc(:move_plants, payload)
+        call_vendor(:move_plants, payload)
       end
 
       def move_plant_batches
@@ -95,7 +95,7 @@ module MetrcService
           MoveDate: start_time
         }
 
-        call_metrc(:move_plant_batches, [payload])
+        call_vendor(:move_plant_batches, [payload])
       end
 
       def change_growth_phase
@@ -112,7 +112,7 @@ module MetrcService
           PatientLicenseNumber: nil
         }
 
-        call_metrc(:change_growth_phase, [payload])
+        call_vendor(:change_growth_phase, [payload])
       end
 
       def items

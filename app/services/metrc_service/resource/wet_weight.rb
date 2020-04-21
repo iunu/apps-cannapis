@@ -16,7 +16,7 @@ module MetrcService
       private
 
       def harvest_plants
-        call_metrc(:harvest_plants, build_harvest_plants_payload(items, batch))
+        call_vendor(:harvest_plants, build_harvest_plants_payload(items, batch))
       end
 
       def build_harvest_plants_payload(items, batch)

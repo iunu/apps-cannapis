@@ -1,5 +1,5 @@
 module MetrcService
-  class Batch < MetrcService::Base
+  class Batch < Base
     def initialize(ctx, integration, batch = nil, task = nil)
       @task = task
       super(ctx, integration, batch)

@@ -15,12 +15,12 @@ RSpec.describe MetrcService::Base do
       expect(subject.instance_variable_get(:@integration)).to eq integration
     end
 
-    it 'has @logger' do
-      expect(subject.instance_variable_get(:@logger)).to eq Rails.logger
+    it 'has logger' do
+      expect(subject.logger).to eq Rails.logger
     end
 
-    it 'has @client' do
-      expect(subject.instance_variable_get(:@client)).to be_a Metrc::Client
+    it 'has @vendor' do
+      expect(subject.instance_variable_get(:@vendor)).to be_a MetrcService::Client
     end
 
     it 'does not have a @batch' do
@@ -306,7 +306,7 @@ RSpec.describe MetrcService::Base do
     end
   end
 
-  describe 'state' do
+  xdescribe 'state', 'move to base_service/client spec' do
     let(:state) { 'NY' }
     let(:integration) { create(:integration, state: state) }
     let(:service) { MetrcService::Base.new({}, integration) }
@@ -335,22 +335,19 @@ RSpec.describe MetrcService::Base do
     end
   end
 
-  describe '#call_metrc error handling' do
+  describe '#call_vendor error handling' do
     let(:payload) do
       { Something: 'went wrong' }
     end
 
     let(:integration) { create(:integration, state: :md) }
     let(:instance) { described_class.new({}, integration) }
-    let(:call) { instance.send(:call_metrc, :create_plant_batches, payload) }
+    let(:call) { instance.send(:call_vendor, :create_plant_batches, payload) }
 
     context 'when retryable' do
       before do
         stub_request(:post, 'https://sandbox-api-md.metrc.com/plantbatches/v1/createplantings?licenseNumber=LIC-0001')
-          .with(
-            body: '{"Something":"went wrong"}',
-            basic_auth: [ENV["METRC_SECRET_#{integration.state.upcase}"], integration.secret]
-          )
+          .with(body: '{"Something":"went wrong"}')
           .to_return(status: 500, body: '', headers: {})
       end
 

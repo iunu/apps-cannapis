@@ -16,7 +16,7 @@ module MetrcService
       private
 
       def remove_waste
-        call_metrc(:remove_waste, build_remove_waste_payload)
+        call_vendor(:remove_waste, build_remove_waste_payload)
       end
 
       def build_remove_waste_payload
@@ -44,9 +44,9 @@ module MetrcService
       end
 
       def validate_waste_type!(type)
-        return if metrc_supported_waste_types.include?(type)
+        return if supported_waste_types.include?(type)
 
-        dictionary = DidYouMean::SpellChecker.new(dictionary: metrc_supported_waste_types)
+        dictionary = DidYouMean::SpellChecker.new(dictionary: supported_waste_types)
         matches = dictionary.correct(type)
 
         raise InvalidAttributes,
@@ -54,12 +54,8 @@ module MetrcService
           "#{matches.present? ? "Did you mean #{matches.map(&:inspect).join(', ')}?" : 'No similar types were found on Metrc.'}"
       end
 
-      def metrc_supported_waste_types
-        # TODO: implement this call in the Metrc gem
-        @metrc_supported_waste_types ||= begin
-                                           metrc_response = @client.get('harvests', 'waste/types').body
-                                           JSON.parse(metrc_response).map { |entry| entry['Name']  }
-                                         end
+      def supported_waste_types
+        @supported_waste_types ||= @vendor.get_supported_waste_types
       end
 
       def unit_of_weight(unit_type, _item = nil)
