@@ -13,7 +13,8 @@ module MetrcService
       private
 
       def plant_state
-        @plant_state ||= seeding_unit.item_tracking_method.nil? ? 'immature' : 'mature'
+        tracking_method = seeding_unit.item_tracking_method
+        @plant_state ||= [nil, 'none'].include?(tracking_method) ? 'immature' : 'mature'
       end
 
       def transaction
@@ -21,9 +22,7 @@ module MetrcService
       end
 
       def discard
-        @artemis.facility(@facility_id)
-                .batch(batch.id)
-                .discard(@relationships.dig('action_result', 'data', 'id'))
+        batch.discard(@relationships.dig('action_result', 'data', 'id'))
       end
 
       def build_immature_payload(discard, batch)
