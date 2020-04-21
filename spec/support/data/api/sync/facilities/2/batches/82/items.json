@@ -28,7 +28,7 @@
         },
         "barcode": {
           "data": {
-            "id": "someitembarcode123",
+            "id": "ABCDEF1234567890ABCDEF01",
             "type": "barcodes"
           }
         }

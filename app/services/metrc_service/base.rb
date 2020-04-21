@@ -156,17 +156,18 @@ module MetrcService
     def batch_tag
       return @tag if @tag
 
-      matches = batch
-                  .relationships
-                  .dig('barcodes', 'data')
-                  &.select { |label| /[A-Z0-9]{24,}/.match?(label['id']) }
+      barcodes = batch.relationships.dig('barcodes', 'data')&.map { |label| label['id'] }
 
-      return @tag = matches&.first&.dig('id') unless matches&.size > 1
+      matches = barcodes&.select { |label| /[A-Z0-9]{24,}/.match?(label) }
+
+      raise InvalidAttributes, "No barcode found for batch '#{batch.arbitrary_id}'" unless barcodes.present?
+      raise InvalidAttributes, "Expected barcode for batch '#{batch.arbitrary_id}' to be alphanumeric with 24 characters. Got: '#{barcodes.join(', ')}'" unless matches.present?
+
+      return @tag = matches&.first unless matches&.size > 1
 
       matches.sort! { |a, b| a <=> b }
 
-      @tag = matches&.first&.dig('id')
-      @tag
+      @tag = matches&.first
     end
 
     def validate_batch!

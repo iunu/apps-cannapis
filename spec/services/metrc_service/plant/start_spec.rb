@@ -151,7 +151,7 @@ RSpec.describe MetrcService::Plant::Start do
         double(:batch,
                zone: zone,
                relationships: {
-                 'barcodes': { 'data': [{ 'id': '1A4FF01000000220000010' }] }
+                 'barcodes': { 'data': [{ 'id': '1A4FF0100000022000001010' }] }
                }.with_indifferent_access,
                attributes: {
                  quantity: '100',
@@ -169,7 +169,7 @@ RSpec.describe MetrcService::Plant::Start do
         payload = subject.send(:build_start_payload, batch).first
 
         expect(payload).not_to be_nil
-        expect(payload[:Name]).to eq '1A4FF01000000220000010'
+        expect(payload[:Name]).to eq '1A4FF0100000022000001010'
         expect(payload[:Type]).to eq 'Clone'
         expect(payload[:Count]).to eq 100
         expect(payload[:Strain]).to eq 'Banana Split'
@@ -208,7 +208,7 @@ RSpec.describe MetrcService::Plant::Start do
                zone: zone,
                relationships: {
                  barcodes: {
-                   'data': [{ 'type': :barcodes, 'id': '1A4FF01000000220000011' }]
+                   'data': [{ 'type': :barcodes, 'id': '1A4FF0100000022000001101' }]
                  }
                }.with_indifferent_access,
                attributes: {
@@ -227,7 +227,7 @@ RSpec.describe MetrcService::Plant::Start do
         payload = subject.send(:build_start_payload, batch).first
 
         expect(payload).not_to be_nil
-        expect(payload[:Name]).to eq '1A4FF01000000220000011'
+        expect(payload[:Name]).to eq '1A4FF0100000022000001101'
         expect(payload[:Type]).to eq 'Seed'
         expect(payload[:Count]).to eq 100
         expect(payload[:Strain]).to eq 'Banana Split'

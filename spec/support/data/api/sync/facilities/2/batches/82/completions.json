@@ -17,7 +17,7 @@
           "source_batches": null
         },
         "options": {
-          "barcode": "movesintoflowering123",
+          "barcode": "ABCDEF1234567890ABCDEF01",
           "zone_id": 23,
           "quantity": 2,
           "resources": [
@@ -134,7 +134,7 @@
           "zone_name": "Mother Room",
           "sub_zone_id": null,
           "seeding_unit_id": 7,
-          "tracking_barcode": "someitembarcode123"
+          "tracking_barcode": "ABCDEF1234567890ABCDEF01"
         }
       },
       "relationships": {

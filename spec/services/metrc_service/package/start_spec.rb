@@ -225,7 +225,7 @@ RSpec.describe MetrcService::Package::Start do
           Count: 5,
           Location: nil,
           Item: 'Immature Plant',
-          Tag: '123123123123123',
+          Tag: '1234567890ABCD1234567890',
           PatientLicenseNumber: nil,
           Note: '',
           IsTradeSample: false,
@@ -255,7 +255,7 @@ RSpec.describe MetrcService::Package::Start do
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/resource_units/3"))
 
         stub_request(:get, 'https://sandbox-api-ca.metrc.com/plantbatches/v1/active?licenseNumber=LIC-0001')
-          .to_return(status: 200, body: [{ Id: 54321, Name: 'not-this-one' }, { Id: 12345, Name: '1A4FF0000000022000006360' }].to_json)
+          .to_return(status: 200, body: [{ Id: 54321, Name: 'not-this-one' }, { Id: 12345, Name: '1234567890ABCD1234567890' }].to_json)
 
         stub_request(:get, 'https://sandbox-api-ca.metrc.com/items/v1/categories')
           .to_return(status: 200, body: [{ Name: 'Wet Material' }].to_json)
