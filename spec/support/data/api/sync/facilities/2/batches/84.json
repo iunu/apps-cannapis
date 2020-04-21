@@ -42,7 +42,7 @@
         "data": [
           {
             "type": "barcodes",
-            "id": "batchbarcode123"
+            "id": "ABCDEF1234567890ABCDEF01"
           }
         ]
       },
@@ -76,10 +76,10 @@
   },
   "included": [
     {
-      "id": "batchbarcode123",
+      "id": "ABCDEF1234567890ABCDEF01",
       "type": "barcodes",
       "attributes": {
-        "id": "batchbarcode123"
+        "id": "ABCDEF1234567890ABCDEF01"
       },
       "relationships": {
         "target": {

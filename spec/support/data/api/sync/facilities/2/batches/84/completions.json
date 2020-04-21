@@ -134,7 +134,7 @@
           "zone_name": "Mother Room",
           "sub_zone_id": null,
           "seeding_unit_id": 7,
-          "tracking_barcode": "aplantbarcode123"
+          "tracking_barcode": "ABCDEF1234567890ABCDEF02"
         }
       },
       "relationships": {

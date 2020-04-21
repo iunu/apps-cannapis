@@ -227,7 +227,7 @@ RSpec.describe MetrcService::Plant::Move do
               DryingLocation: 'F3 - Inside',
               PatientLicenseNumber: nil,
               ActualDate: '2020-04-15',
-              Plant: 'aplantbarcode123',
+              Plant: 'ABCDEF1234567890ABCDEF02',
               Weight: 2.5,
               UnitOfWeight: 'Grams',
               HarvestName: 'Apr18-5th-Ele-Can'
@@ -235,7 +235,7 @@ RSpec.describe MetrcService::Plant::Move do
               DryingLocation: 'F3 - Inside',
               PatientLicenseNumber: nil,
               ActualDate: '2020-04-15',
-              Plant: 'aplantbarcode124',
+              Plant: 'ABCDEF1234567890ABCDEF03',
               Weight: 2.5,
               UnitOfWeight: 'Grams',
               HarvestName: 'Apr18-5th-Ele-Can'
@@ -258,9 +258,9 @@ RSpec.describe MetrcService::Plant::Move do
 
       let(:expected_payload) do
         [{
-          Name: 'batchbarcode123',
+          Name: 'ABCDEF1234567890ABCDEF01',
           Count: 2,
-          StartingTag: 'aplantbarcode123',
+          StartingTag: 'ABCDEF1234567890ABCDEF02',
           GrowthPhase: 'Flowering',
           NewLocation: 'F3 - Inside',
           GrowthDate: '2020-04-15',

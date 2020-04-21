@@ -28,7 +28,7 @@
         },
         "barcode": {
           "data": {
-            "id": "aplantbarcode123",
+            "id": "ABCDEF1234567890ABCDEF02",
             "type": "barcodes"
           }
         }
@@ -62,7 +62,7 @@
         },
         "barcode": {
           "data": {
-            "id": "aplantbarcode124",
+            "id": "ABCDEF1234567890ABCDEF03",
             "type": "barcodes"
           }
         }
