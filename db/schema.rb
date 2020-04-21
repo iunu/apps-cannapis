@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_16_154230) do
+ActiveRecord::Schema.define(version: 2020_04_21_213937) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "pgcrypto"
@@ -34,7 +34,7 @@ ActiveRecord::Schema.define(version: 2020_04_16_154230) do
     t.integer "facility_id"
     t.string "state"
     t.string "vendor"
-    t.string "vendor_id"
+    t.string "license"
     t.text "secret"
     t.datetime "deleted_at"
     t.datetime "created_at", precision: 6, null: false
