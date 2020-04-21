@@ -1,5 +1,9 @@
+require_relative './logging'
+
 module Common
   class BaseServiceAction
+    include Common::Logging
+
     DEFAULT_RUN_MODE = :later
 
     def self.call(*args, &block)
@@ -17,10 +21,6 @@ module Common
     end
 
     attr_accessor :result, :integration, :transaction
-
-    def initialize(*)
-      @logger = Rails.logger
-    end
 
     def run(*args)
       before
@@ -75,10 +75,6 @@ module Common
 
     def requeue!(exception: nil)
       raise Cannapi::RetryableError.new(exception&.message, original: exception)
-    end
-
-    def log(msg, level = :info)
-      @logger.send(level, "[#{self.class.name}] #{msg}")
     end
 
     def completion_status
