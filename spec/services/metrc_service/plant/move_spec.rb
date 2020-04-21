@@ -93,7 +93,7 @@ RSpec.describe MetrcService::Plant::Move do
 
       let(:expected_payload) do
         [{
-          Name: 'abcdef123',
+          Name: 'ABCDEF1234567890ABCDEF01',
           Count: 2,
           StartingTag: nil,
           GrowthPhase: 'Vegetative',
@@ -126,13 +126,12 @@ RSpec.describe MetrcService::Plant::Move do
           .with(body: expected_payload.to_json)
           .to_return(status: 200)
       end
-      before { $debug = true }
 
       let(:expected_payload) do
         [{
-          Name: 'movesintoflowering123',
+          Name: 'ABCDEF1234567890ABCDEF01',
           Count: 2,
-          StartingTag: 'someitembarcode123',
+          StartingTag: 'ABCDEF1234567890ABCDEF01',
           GrowthPhase: 'Flowering',
           NewLocation: 'F4 - Outside',
           GrowthDate: '2020-04-15',

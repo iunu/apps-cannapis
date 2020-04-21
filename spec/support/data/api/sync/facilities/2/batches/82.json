@@ -42,7 +42,7 @@
         "data": [
           {
             "type": "barcodes",
-            "id": "movesintoflowering123"
+            "id": "ABCDEF1234567890ABCDEF01"
           }
         ]
       },
@@ -76,10 +76,10 @@
   },
   "included": [
     {
-      "id": "movesintoflowering123",
+      "id": "ABCDEF1234567890ABCDEF01",
       "type": "barcodes",
       "attributes": {
-        "id": "movesintoflowering123"
+        "id": "ABCDEF1234567890ABCDEF01"
       },
       "relationships": {
         "target": {

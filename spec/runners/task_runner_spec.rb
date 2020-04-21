@@ -52,6 +52,9 @@ RSpec.describe(TaskRunner) do
 
         expect_any_instance_of(NotificationMailer)
           .to receive(:report_reschedule_email)
+
+        stub_request(:get, 'https://portal.artemisag.com/api/v3/user')
+          .to_return(status: 200, body: { data: { attributes: { full_name: 'Jimmy Two Times', email: 'jtt@cosanostra.it' } } }.to_json)
       end
 
       it 'raises an error' do
