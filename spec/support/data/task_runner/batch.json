@@ -20,7 +20,7 @@
       "barcodes": {
         "data": [
           {
-            "id": "asdfasdfasdfasdf123123123",
+            "id": "01234567890123456789ABCD",
             "type": "barcodes"
           }
         ]
@@ -78,9 +78,9 @@
   "included": [
     {
       "attributes": {
-        "id": "asdfasdfasdfasdf123123123"
+        "id": "01234567890123456789ABCD"
       },
-      "id": "asdfasdfasdfasdf123123123",
+      "id": "01234567890123456789ABCD",
       "relationships": {
         "target": {
           "meta": {
