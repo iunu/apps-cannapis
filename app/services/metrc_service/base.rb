@@ -160,8 +160,8 @@ module MetrcService
 
       matches = barcodes&.select { |label| /[A-Z0-9]{24,}/.match?(label) }
 
-      raise InvalidAttributes, "No barcode found for batch '#{batch.arbitrary_id}'" unless barcodes.present?
-      raise InvalidAttributes, "Expected barcode for batch '#{batch.arbitrary_id}' to be alphanumeric with 24 characters. Got: '#{barcodes.join(', ')}'" unless matches.present?
+      raise InvalidAttributes, "Missing barcode for batch '#{batch.arbitrary_id}'" if barcodes.blank?
+      raise InvalidAttributes, "Expected barcode for batch '#{batch.arbitrary_id}' to be alphanumeric with 24 characters. Got: #{barcodes.join(', ')}" if matches.blank?
 
       return @tag = matches&.first unless matches&.size > 1
 

@@ -359,4 +359,65 @@ RSpec.describe MetrcService::Base do
       end
     end
   end
+
+  describe '#batch_tag' do
+    let(:integration) { create(:integration, state: :md) }
+    let(:instance) { described_class.new({}, integration) }
+    let(:call) { instance.send(:batch_tag) }
+    let(:batch) do
+      double(:batch, arbitrary_id: 'a-batch-id', relationships: batch_relationships)
+    end
+
+    before do
+      expect(instance)
+        .to receive(:batch)
+        .at_least(:once)
+        .and_return(batch)
+    end
+
+    subject { call }
+
+    context 'when batch has a valid tag' do
+      let(:batch_relationships) do
+        {
+          'barcodes': {
+            'data': [
+              { 'id': '12345678901234567890ABCD' }
+            ]
+          }
+        }.with_indifferent_access
+      end
+
+      it 'does not raise an exception' do
+        expect { subject }.not_to raise_exception
+      end
+    end
+
+    context 'when batch has no tags' do
+      let(:batch_relationships) do
+        { 'barcodes': { 'data': [] } }.with_indifferent_access
+      end
+
+      it 'raises an exception' do
+        expect { subject }.to raise_exception(MetrcService::InvalidAttributes, /Missing barcode for batch 'a-batch-id'/)
+      end
+    end
+
+    context 'when batch has invalid tags' do
+      let(:batch_relationships) do
+        {
+          'barcodes': {
+            'data': [
+              { 'id': 'Apr-20-5th-Ele-1' },
+              { 'id': 'something-else' }
+            ]
+          }
+        }.with_indifferent_access
+      end
+
+      it 'raises an exception' do
+        expect { subject }.to raise_exception(MetrcService::InvalidAttributes, /Expected barcode for batch 'a-batch-id' to be alphanumeric with 24 characters. Got: Apr-20-5th-Ele-1, something-else/)
+      end
+    end
+  end
 end
