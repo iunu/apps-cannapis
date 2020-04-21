@@ -130,9 +130,9 @@ module MetrcService
       end
 
       def item_type(skip_validation: false)
-        validate_item_type!(resource_units.first.label) unless skip_validation
+        validate_item_type!(resource_units&.first&.label) unless skip_validation
 
-        resource_units.first.label
+        resource_units&.first&.label
       end
 
       def zone_name
