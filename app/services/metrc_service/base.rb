@@ -1,9 +1,7 @@
-require_relative '../common/base'
-
 module MetrcService
-  class Base < Common::Base
+  class Base < BaseService::Base
     RETRYABLE_ERRORS = [
-      Net::HTTPRetriableError,
+      *BaseService::Base::RETRYABLE_ERRORS,
       Metrc::RequestError
     ].freeze
 

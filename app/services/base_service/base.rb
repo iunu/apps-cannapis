@@ -1,7 +1,7 @@
-require_relative './base_service_action'
+require_relative '../common/base_service_action'
 
-module Common
-  class Base < BaseServiceAction
+module BaseService
+  class Base < Common::BaseServiceAction
     RETRYABLE_ERRORS = [
       Net::HTTPRetriableError,
     ].freeze
@@ -23,10 +23,8 @@ module Common
       @facility_id = @relationships&.dig(:facility, :data, :id)
       @batch_id = @relationships&.dig(:batch, :data, :id)
       @artemis  = ArtemisService.new(@integration.account, @batch_id, @facility_id)
-      @client = build_client
+      @vendor = scope::Client.new(@integration)
       @batch  = batch if batch
-
-      super
     end
 
     def run(*)
@@ -42,15 +40,17 @@ module Common
       fail!(transaction)
     end
 
-    private
-
-    attr_reader :client
-
-    def build_client
-      raise NotImplementedError
+    def call_vendor(method, *args)
+      @vendor.call(method, *args)
+    rescue *self.class::RETRYABLE_ERRORS => e
+      log("#{integration.vendor.upcase}: Retryable error: #{e.inspect}", :warn)
+      requeue!(exception: e)
+    rescue StandardError => e
+      log("#{integration.vendor.upcase}: #{e.inspect}", :error)
+      fail!(exception: e)
     end
 
-    protected
+    private
 
     def before
       log("Started: batch ID #{@batch_id}, completion ID #{@completion_id}")
@@ -61,10 +61,6 @@ module Common
 
       validate_batch!
       validate_seeding_unit!
-    end
-
-    def state
-      config[:state_map].fetch(@integration.state.upcase.to_sym, @integration.state)
     end
 
     def get_transaction(name, metadata = @attributes)
@@ -131,10 +127,6 @@ module Common
         "Batch ID #{@batch_id}, completion ID #{@completion_id}"
     end
 
-    def config
-      @config ||= Rails.application.config_for('providers/metrc')
-    end
-
     # Possible statuses: active, removed, archived
     def completion_status
       @attributes['status']
@@ -147,6 +139,10 @@ module Common
         .completions
         .select { |completion| %w[process generate].include?(completion.action_type) }
         .select { |completion| completion.options['resource_unit_id'] == resource_unit_id }
+    end
+
+    def scope
+      MetrcService
     end
   end
 end
