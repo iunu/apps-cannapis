@@ -79,7 +79,7 @@ module MetrcService
     def lookup_metrc_harvest(name)
       # TODO: consider date range for lookup - harvest create/finish dates?
       harvests = call_metrc(:list_harvests)
-      metrc_harvest = harvests.find { |harvest| harvest['Name'] == name }
+      metrc_harvest = harvests&.find { |harvest| harvest['Name'] == name }
       raise DataMismatch, "expected to find a harvest in Metrc named '#{name}' but it does not exist" if metrc_harvest.nil?
 
       metrc_harvest
@@ -87,7 +87,7 @@ module MetrcService
 
     def lookup_metrc_plant_batch(tag)
       metrc_plant_batches = call_metrc(:list_plant_batches)
-      metrc_plant_batch = metrc_plant_batches.find { |batch| batch['Name'] == tag }
+      metrc_plant_batch = metrc_plant_batches&.find { |batch| batch['Name'] == tag }
       raise DataMismatch, "expected to find a plant batch in Metrc with the tag '#{tag}' but it does not exist" if metrc_plant_batch.nil?
 
       metrc_plant_batch
