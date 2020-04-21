@@ -1,6 +1,8 @@
 module MetrcService
   module Plant
     class Discard < MetrcService::Base
+      NOT_SPECIFIED = 'Not Specified'.freeze
+
       def call
         payload = send("build_#{plant_state}_payload", discard, batch)
         action = plant_state == 'immature' ? :destroy_plant_batches : :destroy_plants
@@ -70,7 +72,7 @@ module MetrcService
         reason_type = discard.attributes['reason_type']
         reason_note = "#{reason_type.capitalize}: #{reason_description}. #{@attributes.dig('options', 'note_content')}" if reason_type && reason_description
 
-        reason_note || ''
+        reason_note || NOT_SPECIFIED
       end
     end
   end
