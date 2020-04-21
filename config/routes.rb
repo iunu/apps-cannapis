@@ -9,5 +9,6 @@ Rails.application.routes.draw do
   namespace :v1 do
     post 'webhook'      => 'webhook#handler'
     post 'facility/:id' => 'facility#update'
+    post 'test_mailer'  => 'webhook#test_mailer'
   end
 end

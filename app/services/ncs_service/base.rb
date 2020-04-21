@@ -43,9 +43,6 @@ module NcsService
     rescue ServiceActionFailure => e
       log("[NCS_SERVICE_ACTION_FAILURE] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{e.inspect}", :error)
       fail!(transaction)
-    rescue StandardError => e
-      log("[NCS_SERVICE_FAILURE] Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{e.inspect}", :error)
-      fail!(transaction)
     end
 
     private
@@ -90,10 +87,6 @@ module NcsService
       requeue!(exception: e)
     rescue NcsAnalytics::Errors::MissingConfiguration, NcsAnalytics::Errors::MissingParameter => e
       log("NCS Analytics: Configuration error: #{e.inspect}", :error)
-      Bugsnag.notify(e)
-      fail!(exception: e)
-    rescue StandardError => e
-      log("NCS Analytics: #{e.inspect}", :error)
       Bugsnag.notify(e)
       fail!(exception: e)
     end

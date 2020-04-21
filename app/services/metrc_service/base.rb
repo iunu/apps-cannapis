@@ -41,10 +41,6 @@ module MetrcService
     rescue ServiceActionFailure => e
       log("Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{e.inspect}", :error)
       fail!(transaction)
-    rescue StandardError => e
-      log("Unhandled failure: batch ID #{@batch_id}, completion ID #{@completion_id}; #{e.inspect}", :error)
-      log(e.backtrace.join("\n"), :error) if Rails.env.development?
-      fail!(transaction)
     end
 
     private
@@ -91,10 +87,6 @@ module MetrcService
       requeue!(exception: e)
     rescue Metrc::MissingConfiguration, Metrc::MissingParameter => e
       log("METRC: Configuration error: #{e.inspect}", :error)
-      Bugsnag.notify(e)
-      fail!(exception: e)
-    rescue StandardError => e
-      log("METRC: #{e.inspect}", :error)
       Bugsnag.notify(e)
       fail!(exception: e)
     end

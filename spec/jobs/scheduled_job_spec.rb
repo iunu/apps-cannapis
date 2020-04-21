@@ -52,20 +52,17 @@ RSpec.describe ScheduledJob, type: :job do
   end
 
   describe 'on a failing task' do
-    let(:task) { create(:task, integration: integration, facility_id: integration.facility_id, batch_id: 3000, run_on: now) }
+    let!(:task) { create(:task, integration: integration, facility_id: integration.facility_id, batch_id: 3000, run_on: now) }
     let(:original_error) { double(:original_error) }
     let(:mailer_with_params) { double(:mailer) }
     let(:email) { double(:email, deliver_now: nil) }
-    let(:batch) { double(MetrcService::Batch) }
+    let(:batch) { MetrcService::Batch }
     let(:mailer) { double(NotificationMailer) }
 
     before do
-      allow(batch).to receive(:call)
+      allow(batch)
+        .to receive(:call)
         .and_raise(raised_error)
-
-      allow(mailer).to receive(:with)
-        .with(task: task, error: original_error)
-        .and_return(mailer_with_params)
     end
 
     describe 'that can be rescheduled' do
@@ -73,10 +70,10 @@ RSpec.describe ScheduledJob, type: :job do
 
       before do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{integration.facility_id}")
-          .to_return(body: '')
+          .to_return(body: '{}')
 
-        allow(mailer_with_params).to receive(:report_reschedule_email)
-          .and_return(email)
+        expect_any_instance_of(TaskRunner)
+          .to receive(:report_rescheduled)
       end
 
       it 'enqueues the job' do
@@ -91,9 +88,8 @@ RSpec.describe ScheduledJob, type: :job do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{integration.facility_id}")
           .to_return(body: '')
 
-        allow(mailer_with_params)
-          .to receive(:report_failure_email)
-          .and_return(email)
+        expect_any_instance_of(TaskRunner)
+          .to receive(:report_failed)
       end
 
       it 'enqueues the job' do
@@ -109,9 +105,8 @@ RSpec.describe ScheduledJob, type: :job do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{integration.facility_id}")
           .to_return(status: 200, body: '{}', headers: {})
 
-        allow(mailer_with_params)
-          .to receive(:report_failure_email)
-          .and_return(email)
+        expect_any_instance_of(TaskRunner)
+          .to receive(:report_failed)
       end
 
       it 'enqueues the job' do

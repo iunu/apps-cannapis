@@ -10,6 +10,10 @@ module V1
       render json: {}, status: :no_content
     end
 
+    def test_mailer
+      TaskRunner.simulate_failure
+    end
+
     private
 
     def valid_params

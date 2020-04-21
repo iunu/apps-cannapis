@@ -12,6 +12,30 @@ class TaskRunner
     runners.map(&:result)
   end
 
+  def self.simulate_failure
+    user = OpenStruct.new
+    dummy_client = OpenStruct.new(current_user: user)
+    account = Account.new
+
+    account.define_singleton_method(:client) do
+      dummy_client
+    end
+
+    integration = Integration.new(account: account, vendor: 'test')
+    task = Scheduler.new(integration: integration)
+    task.current_action = 'test'
+
+    runner = new(task)
+
+    # retryable
+    error = Cannapi::RetryableError.new('this was retryable')
+    runner.send(:report_rescheduled, error)
+
+    # non-retryable
+    error = Cannapi::TooManyRetriesError.new('this was not retryable')
+    runner.send(:report_failed, error)
+  end
+
   attr_accessor :result
   delegate :success?, to: :result, allow_nil: true
 
@@ -32,6 +56,7 @@ class TaskRunner
   rescue Cannapi::TooManyRetriesError => e
     report_failed(e.original)
   rescue StandardError => e
+    Bugsnag.notify(e)
     report_failed(e)
   end
 
