@@ -20,9 +20,4 @@ class Integration < ApplicationRecord
   def vendor_module
     "#{vendor.camelize}Service".constantize
   end
-
-  # For backward compatibility
-  def vendor_id
-    license
-  end
 end
