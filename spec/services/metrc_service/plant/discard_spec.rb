@@ -127,7 +127,7 @@ RSpec.describe MetrcService::Plant::Discard do
 
         stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/destroyplants?licenseNumber=LIC-0001')
           .with(
-            body: [{ Id: nil, Label: '1A4FF010000002200000105', ReasonNote: 'Does not meet internal QC', ActualDate: '2019-10-25T00:00:00.000Z' }, { Id: nil, Label: '1A4FF010000002200000104', ReasonNote: 'Does not meet internal QC', ActualDate: '2019-10-25T00:00:00.000Z' }, { Id: nil, Label: '1A4FF010000002200000103', ReasonNote: 'Does not meet internal QC', ActualDate: '2019-10-25T00:00:00.000Z' }].to_json,
+            body: [{ Id: nil, Label: '1A4FF010000002200000105', ReasonNote: described_class::NOT_SPECIFIED, ActualDate: '2019-10-25T00:00:00.000Z' }, { Id: nil, Label: '1A4FF010000002200000104', ReasonNote: described_class::NOT_SPECIFIED, ActualDate: '2019-10-25T00:00:00.000Z' }, { Id: nil, Label: '1A4FF010000002200000103', ReasonNote: described_class::NOT_SPECIFIED, ActualDate: '2019-10-25T00:00:00.000Z' }].to_json,
             basic_auth: [METRC_API_KEY, integration.secret]
           )
           .to_return(status: 200, body: '', headers: {})
@@ -136,9 +136,7 @@ RSpec.describe MetrcService::Plant::Discard do
           .not_to receive(:get_transaction)
       end
 
-      # FIXME
-      # it { is_expected.to be_a(Transaction) }
-      # it { is_expected.to be_success }
+      it { is_expected.to be_success }
     end
 
     describe 'on a partial discard' do
@@ -182,15 +180,13 @@ RSpec.describe MetrcService::Plant::Discard do
 
         stub_request(:post, 'https://sandbox-api-md.metrc.com/plantbatches/v1/destroy?licenseNumber=LIC-0001')
           .with(
-            body: [{ PlantBatch: 'Oct1-Ban-Spl-Can', Count: 5, ReasonNote: 'Does not meet internal QC', ActualDate: '2019-10-25T00:00:00.000Z' }].to_json,
+            body: [{ PlantBatch: 'Oct1-Ban-Spl-Can', Count: 5, ReasonNote: described_class::NOT_SPECIFIED, ActualDate: '2019-10-25T00:00:00.000Z' }].to_json,
             basic_auth: [METRC_API_KEY, integration.secret]
           )
           .to_return(status: 200, body: '', headers: {})
       end
 
-      # FIXME
-      # it { is_expected.to be_a(Transaction) }
-      # it { is_expected.to be_success }
+      it { is_expected.to be_success }
     end
   end
 
@@ -210,7 +206,7 @@ RSpec.describe MetrcService::Plant::Discard do
       expect(payload.first).to eq(
         PlantBatch: 'Oct1-Ban-Spl-Can',
         Count: 1,
-        ReasonNote: 'Does not meet internal QC',
+        ReasonNote: described_class::NOT_SPECIFIED,
         ActualDate: now
       )
     end
@@ -249,7 +245,7 @@ RSpec.describe MetrcService::Plant::Discard do
         expect(payload.first).to eq(
           Id: nil,
           Label: '1A4FF01000000220000010',
-          ReasonNote: 'Does not meet internal QC',
+          ReasonNote: described_class::NOT_SPECIFIED,
           ActualDate: now
         )
       end
@@ -263,7 +259,7 @@ RSpec.describe MetrcService::Plant::Discard do
         instance = described_class.new(ctx, integration)
         note = instance.send :reason_note, discard
 
-        expect(note).to eq 'Does not meet internal QC'
+        expect(note).to eq described_class::NOT_SPECIFIED
       end
     end
 
@@ -275,7 +271,7 @@ RSpec.describe MetrcService::Plant::Discard do
         instance = described_class.new(ctx, integration)
         note = instance.send :reason_note, discard
 
-        expect(note).to eq 'Does not meet internal QC'
+        expect(note).to eq described_class::NOT_SPECIFIED
       end
     end
 

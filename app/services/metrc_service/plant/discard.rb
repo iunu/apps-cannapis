@@ -1,6 +1,8 @@
 module MetrcService
   module Plant
     class Discard < MetrcService::Base
+      NOT_SPECIFIED = 'Not Specified'.freeze
+
       def call
         payload = send("build_#{plant_state}_payload", discard, batch)
         action = plant_state == 'immature' ? :destroy_plant_batches : :destroy_plants
@@ -13,7 +15,8 @@ module MetrcService
       private
 
       def plant_state
-        @plant_state ||= seeding_unit.item_tracking_method.nil? ? 'immature' : 'mature'
+        tracking_method = seeding_unit.item_tracking_method
+        @plant_state ||= [nil, 'none'].include?(tracking_method) ? 'immature' : 'mature'
       end
 
       def transaction
@@ -21,9 +24,7 @@ module MetrcService
       end
 
       def discard
-        @artemis.facility(@facility_id)
-                .batch(batch.id)
-                .discard(@relationships.dig('action_result', 'data', 'id'))
+        batch.discard(@relationships.dig('action_result', 'data', 'id'))
       end
 
       def build_immature_payload(discard, batch)
@@ -69,10 +70,9 @@ module MetrcService
       def reason_note(discard)
         reason_description = discard.attributes['reason_description']
         reason_type = discard.attributes['reason_type']
-        reason_note = 'Does not meet internal QC'
         reason_note = "#{reason_type.capitalize}: #{reason_description}. #{@attributes.dig('options', 'note_content')}" if reason_type && reason_description
 
-        reason_note
+        reason_note || NOT_SPECIFIED
       end
     end
   end
