@@ -2,11 +2,14 @@ module MetrcService
   module Package
     class Start < MetrcService::Package::Base
       run_mode :now
+      WAIT_TIME = 5.minutes
 
       # Valid types can be found on metrc endpoint: /items/v1/categories
       PLANTINGS_PACKAGE_TYPE = 'Immature Plant'.freeze
 
       def call
+        sleep(WAIT_TIME) unless Rails.env.development? || Rails.env.test?
+
         flush_upstream_tasks
 
         if plant_package?

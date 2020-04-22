@@ -2,8 +2,11 @@ module NcsService
   module Package
     class Start < NcsService::Package::Base
       run_mode :now
+      WAIT_TIME = 5.minutes
 
       def call
+        sleep(WAIT_TIME) unless Rails.env.development? || Rails.env.test?
+
         flush_upstream_tasks
 
         if plant_package
