@@ -18,12 +18,35 @@
     },
     "relationships": {
       "crop_variety": {
-        "meta": {
-          "included": false
+        "data": {
+          "type": "crop_varieties",
+          "id": "4"
         }
       }
     }
   },
+  "included": [
+    {
+      "id": "4",
+      "type": "crop_varieties",
+      "attributes": {
+        "id": 4,
+        "name": "5th Element",
+        "slug": "5th-element",
+        "generic": false,
+        "crop_id": 2,
+        "predicted_harvest_unit_name": null
+      },
+      "relationships": {
+        "crop": {
+          "data": {
+            "id": "2",
+            "type": "crops"
+          }
+        }
+      }
+    }
+  ],
   "jsonapi": {
     "version": "1.0"
   }

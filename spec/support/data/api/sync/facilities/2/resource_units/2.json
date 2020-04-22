@@ -16,12 +16,35 @@
     },
     "relationships": {
       "crop_variety": {
-        "meta": {
-          "included": false
+        "data": {
+          "type": "crop_varieties",
+          "id": "2"
         }
       }
     }
   },
+  "included": [
+    {
+      "id": "2",
+      "type": "crop_varieties",
+      "attributes": {
+        "id": 2,
+        "name": "CloneEx Rooting Gel",
+        "slug": "cloneex-rooting-gel",
+        "generic": false,
+        "crop_id": 1,
+        "predicted_harvest_unit_name": null
+      },
+      "relationships": {
+        "crop": {
+          "data": {
+            "id": "1",
+            "type": "crops"
+          }
+        }
+      }
+    }
+  ],
   "jsonapi": {
     "version": "1.0"
   }

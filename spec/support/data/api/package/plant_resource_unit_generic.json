@@ -13,17 +13,25 @@
       "unit_modifier": "",
       "product_modifier": "",
       "options": {
-        "cannapis": "plant",
-        "metrc_item_name": "Boss Hog Teens",
-        "metrc_item_suffix": "Teens"
+        "cannapis": "plant"
       }
     },
     "relationships": {
       "crop_variety": {
-        "meta": {
-          "included": false
+        "data": {
+          "type": "crop_varieties",
+          "id": 1
         }
       }
     }
-  }
+  },
+  "included": [
+    {
+      "type": "crop_varieties",
+      "id": 1,
+      "attributes": {
+        "name": "Boss Hog"
+      }
+    }
+  ]
 }

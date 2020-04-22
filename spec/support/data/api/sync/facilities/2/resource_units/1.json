@@ -16,12 +16,35 @@
     },
     "relationships": {
       "crop_variety": {
-        "meta": {
-          "included": false
+        "data": {
+          "type": "crop_varieties",
+          "id": "1"
         }
       }
     }
   },
+  "included": [
+    {
+      "id": "1",
+      "type": "crop_varieties",
+      "attributes": {
+        "id": 1,
+        "name": "Planting Tub",
+        "slug": "planting-tub",
+        "generic": false,
+        "crop_id": 1,
+        "predicted_harvest_unit_name": null
+      },
+      "relationships": {
+        "crop": {
+          "data": {
+            "id": "1",
+            "type": "crops"
+          }
+        }
+      }
+    }
+  ],
   "jsonapi": {
     "version": "1.0"
   }
