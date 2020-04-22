@@ -1,0 +1,29 @@
+{ 
+  "data": {
+    "id": "3",
+    "type": "resource_units",
+    "attributes": {
+      "id": 3,
+      "name": "Plant of Boss Hog Cannabis",
+      "kind": "count",
+      "unit_name": "Plant",
+      "unit_symbol": "plant",
+      "unit_precision": 0,
+      "conversion_si": 1.0,
+      "unit_modifier": "",
+      "product_modifier": "",
+      "options": {
+        "cannapis": "plant",
+        "metrc_item_name": "Boss Hog Teens",
+        "metrc_item_suffix": "Teens"
+      }
+    },
+    "relationships": {
+      "crop_variety": {
+        "meta": {
+          "included": false
+        }
+      }
+    }
+  }
+}
