@@ -55,11 +55,11 @@ namespace :artemis do
       end
 
       def resource_units
-        @resource_units ||= client.oauth_token.get("/api/v3/facilities/#{@facility_id}/resource_units")
+        @resource_units ||= client.oauth_token.get("/api/v3/facilities/#{@facility_id}/resource_units?include=crop_variety")
       end
 
       def resource_unit(id)
-        client.oauth_token.get("/api/v3/facilities/#{@facility_id}/resource_units/#{id}")
+        client.oauth_token.get("/api/v3/facilities/#{@facility_id}/resource_units/#{id}?include=crop_variety")
       end
 
       def resource_unit_ids
