@@ -1,12 +1,12 @@
 if ENV['SEND_MAILS']
   ActionMailer::Base.smtp_settings = {
-    :port           => ENV['MAILGUN_SMTP_PORT'],
-    :address        => ENV['MAILGUN_SMTP_SERVER'],
-    :user_name      => ENV['MAILGUN_SMTP_LOGIN'],
-    :password       => ENV['MAILGUN_SMTP_PASSWORD'],
+    :port           => ENV['SMTP_PORT'],
+    :address        => ENV['SMTP_ADDRESS'],
+    :user_name      => ENV['SMTP_USER_NAME'],
+    :password       => ENV['SMTP_PASSWORD'],
     :domain         => 'ar-apps-metrc-staging.herokuapp.com',
-    :authentication => :plain,
-
+    :authentication => :login,
+    enable_starttls_auto: true
   }
   ActionMailer::Base.delivery_method = :smtp
 
