@@ -168,7 +168,7 @@ RSpec.describe MetrcService::Plant::Harvest do
         stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=#{completion_id}")
           .to_return(body: { data: generate_completions }.to_json)
 
-        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/resource_units")
+        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/resource_units?include=crop_variety")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/resource_units"))
 
         stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}/items?filter[seeding_unit_id]=#{seeding_unit_id}&include=barcodes,seeding_unit")

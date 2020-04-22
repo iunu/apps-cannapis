@@ -35,12 +35,12 @@ class ArtemisService
 
   def get_resource_unit(resource_unit_id, include: nil)
     @artemis.facility(@facility_id)
-            .resource_unit(resource_unit_id, include: include)
+            .resource_unit(resource_unit_id, include: ['crop_variety', include].compact.join(','))
   end
 
   def get_resource_units(include: nil)
     @artemis.facility(@facility_id)
-            .resource_units(include: include)
+            .resource_units(include: ['crop_variety', include].compact.join(','))
   end
 
   def get_child_completions(parent_id, filter: {})

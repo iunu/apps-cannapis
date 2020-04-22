@@ -259,8 +259,8 @@ RSpec.describe MetrcService::Base do
 
   describe '#get_resource_unit' do
     include_context 'with synced data' do
-      let(:facility_id) { 1 }
-      let(:batch_id) { 331 }
+      let(:facility_id) { 2 }
+      let(:batch_id) { 84 }
     end
 
     before do
@@ -270,8 +270,8 @@ RSpec.describe MetrcService::Base do
       stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone")
         .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
 
-      stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/resource_units/8")
-        .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/resource_units/8"))
+      stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/resource_units/4?include=crop_variety")
+        .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/resource_units/4"))
     end
 
     let(:ctx) do
@@ -287,7 +287,7 @@ RSpec.describe MetrcService::Base do
     end
 
     let(:instance) { MetrcService::Base.new(ctx, integration) }
-    let(:resource_unit) { instance.send(:get_resource_unit, 8) }
+    let(:resource_unit) { instance.send(:get_resource_unit, 4) }
 
     subject { resource_unit }
 
@@ -295,7 +295,7 @@ RSpec.describe MetrcService::Base do
 
     it do
       is_expected.to have_attributes(
-        id: 8,
+        id: 4,
         name: 'Gram of Wet Material, Boss Hog Cannabis',
         unit: 'Grams',
         label: 'Wet Material',

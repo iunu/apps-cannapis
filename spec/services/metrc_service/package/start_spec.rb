@@ -136,7 +136,7 @@ RSpec.describe MetrcService::Package::Start do
           stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{crop_batch_id}?include=barcodes")
             .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{crop_batch_id}"))
 
-          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/resource_units/21")
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/resource_units/21?include=crop_variety")
             .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/resource_units/21"))
 
           stub_request(:get, 'https://sandbox-api-ca.metrc.com/harvests/v1/active?licenseNumber=LIC-0001')
@@ -223,7 +223,7 @@ RSpec.describe MetrcService::Package::Start do
           PlantBatch: '1234567890ABCD1234567890',
           Count: 5,
           Location: nil,
-          Item: 'Immature Plant',
+          Item: item_type,
           Tag: '1234567890ABCD1234567890',
           PatientLicenseNumber: nil,
           Note: '',
@@ -250,9 +250,6 @@ RSpec.describe MetrcService::Package::Start do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{crop_batch_id}?include=barcodes")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{crop_batch_id}"))
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/resource_units/3")
-          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/resource_units/3"))
-
         stub_request(:get, 'https://sandbox-api-ca.metrc.com/plantbatches/v1/active?licenseNumber=LIC-0001')
           .to_return(status: 200, body: [{ Id: 54321, Name: 'not-this-one' }, { Id: 12345, Name: '1234567890ABCD1234567890' }].to_json)
 
@@ -264,7 +261,39 @@ RSpec.describe MetrcService::Package::Start do
           .to_return(status: 200, body: '', headers: {})
       end
 
-      it { is_expected.to be_success }
+      context 'when no metrc item name is specified' do
+        # crop variety is used by default
+        let(:item_type) { 'Boss Hog' }
+
+        before do
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/resource_units/3?include=crop_variety")
+            .to_return(body: load_response_json("api/package/plant_resource_unit_generic"))
+        end
+
+        it { is_expected.to be_success }
+      end
+
+      context 'when metrc item name is specified' do
+        let(:item_type) { 'Boss Hog Teens' }
+
+        before do
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/resource_units/3?include=crop_variety")
+            .to_return(body: load_response_json("api/package/plant_resource_unit_metrc_item_name"))
+        end
+
+        it { is_expected.to be_success }
+      end
+
+      context 'when metrc item suffix is specified' do
+        let(:item_type) { 'Boss Hog Teens' }
+
+        before do
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/resource_units/3?include=crop_variety")
+            .to_return(body: load_response_json("api/package/plant_resource_unit_metrc_item_name"))
+        end
+
+        it { is_expected.to be_success }
+      end
     end
   end
 
