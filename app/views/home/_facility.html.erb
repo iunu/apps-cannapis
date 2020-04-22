@@ -31,7 +31,7 @@
 
     <div class="my">
       <%= label_tag('facility[license_number]', 'Metrc License Number') %>
-      <%= text_field_tag('facility[license_number]', integrations[facility.id]&.vendor_id, class: 'text--mono') %>
+      <%= text_field_tag('facility[license_number]', integrations[facility.id]&.license, class: 'text--mono') %>
     </div>
 
     <div class="my">

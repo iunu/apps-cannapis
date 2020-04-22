@@ -79,7 +79,7 @@ module MetrcService
       log("[#{method.to_s.upcase}] Metrc API request. URI #{@client.uri}", :debug)
       log(args.to_yaml, :debug)
 
-      response = @client.send(method, @integration.vendor_id, *args)
+      response = @client.send(method, @integration.license, *args)
       JSON.parse(response.body) if response&.body&.present?
     rescue *RETRYABLE_ERRORS => e
       log("METRC: Retryable error: #{e.inspect}", :warn)
