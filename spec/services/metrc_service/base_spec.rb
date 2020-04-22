@@ -264,13 +264,13 @@ RSpec.describe MetrcService::Base do
     end
 
     before do
-      stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}")
+      stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}")
         .to_return(body: load_response_json("api/sync/facilities/#{facility_id}"))
 
-      stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone")
+      stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone")
         .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
 
-      stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/resource_units/8")
+      stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/resource_units/8")
         .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/resource_units/8"))
     end
 
