@@ -1,6 +1,10 @@
+require_relative '../../common/plant_resource_triggers'
+
 module MetrcService
   module Plant
     class Move < Base
+      include Common::PlantResourceTriggers
+
       GROWTH_CYCLES = {
         clone: %i[clone vegetative],
         vegetative: %i[vegetative flowering],

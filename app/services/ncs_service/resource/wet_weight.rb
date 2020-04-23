@@ -1,6 +1,6 @@
 require_relative '../../common/resource_handler'
 
-module MetrcService
+module NcsService
   module Resource
     class WetWeight < Base
       include Common::ResourceHandler
@@ -16,7 +16,27 @@ module MetrcService
       private
 
       def harvest_plants
-        call_vendor(:harvest_plants, build_harvest_plants_payload(items, batch))
+        create_harvest(items, batch)
+
+        payload = build_harvest_plants_payload(items, batch)
+        call_vendor(:plant, :harvest, payload)
+      end
+
+      def create_harvest(items, batch)
+        item = items.first
+        unit = unit_of_weight(WET_WEIGHT, item)
+        payload = [{
+          Name: batch.arbitrary_id,
+          HarvestType: 'Product',
+          DryingRoomName: batch.zone.name,
+          UnitOfWeightName: unit,
+          HarvestStartDate: harvest_date
+        }]
+
+        result = call_vendor(:harvest, :create, payload)
+        get_transaction(:harvest, payload)
+
+        result
       end
 
       def build_harvest_plants_payload(items, batch)
@@ -25,13 +45,12 @@ module MetrcService
 
         items.map do |item|
           {
-            DryingLocation: batch.zone.name,
-            PatientLicenseNumber: nil,
-            ActualDate: harvest_date,
-            Plant: item.relationships.dig('barcode', 'data', 'id'),
-            Weight: average_weight,
-            UnitOfWeight: unit_of_weight(resource_name, item),
-            HarvestName: harvest_name
+            Label: item.relationships.dig('barcode', 'data', 'id'),
+            HarvestedWetWeight: average_weight,
+            HarvestedUnitOfWeightName: unit_of_weight(WET_WEIGHT, item),
+            RoomName: batch.zone.name,
+            HarvestName: harvest_name,
+            ManicuredDate: harvest_date
           }
         end
       end

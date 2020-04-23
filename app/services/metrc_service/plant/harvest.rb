@@ -1,6 +1,10 @@
+require_relative '../../common/plant_resource_triggers'
+
 module MetrcService
   module Plant
     class Harvest < Base
+      include Common::PlantResourceTriggers
+
       def call
         # allow for harvest of nursery crops - generates clones
         return success! if items.empty?

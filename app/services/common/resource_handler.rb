@@ -1,5 +1,5 @@
 module Common
-  module ResourceHandling
+  module ResourceHandler
     def self.included(base)
       base.send(:extend, ClassMethods)
     end
