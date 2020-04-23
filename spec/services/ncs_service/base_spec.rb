@@ -270,8 +270,8 @@ RSpec.describe NcsService::Base do
       stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
         .to_return(body: { data: { id: '2002', type: 'batches', attributes: { id: 2002, crop_variety: '5th Element' } } }.to_json)
 
-      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/resource_units/1')
-        .to_return(body: { data: { id: '1', type: 'resource_units', attributes: { id: 1, name: 'g of Something - 5th Element', kind: 'weight', conversion_si: 1.0 } } }.to_json)
+      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/resource_units/1?include=crop_variety')
+        .to_return(body: { data: { id: '1', type: 'resource_units', attributes: { id: 1, name: 'g of Something - 5th Element', kind: 'weight', conversion_si: 1.0 }, relationships: { crop_variety: { data: { type: 'crop_varieties', id: 1 } } } }, included: [{ type: 'crop_varieties', id: 1, attributes: { name: '5th Element' } }] }.to_json)
     end
 
     let(:ctx) do

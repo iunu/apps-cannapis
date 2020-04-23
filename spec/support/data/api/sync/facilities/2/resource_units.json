@@ -17,8 +17,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "1"
           }
         }
       }
@@ -40,8 +41,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "2"
           }
         }
       }
@@ -65,8 +67,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "3"
           }
         }
       }
@@ -90,8 +93,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "3"
           }
         }
       }
@@ -115,8 +119,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "3"
           }
         }
       }
@@ -138,8 +143,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "3"
           }
         }
       }
@@ -161,8 +167,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "3"
           }
         }
       }
@@ -184,8 +191,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "3"
           }
         }
       }
@@ -207,8 +215,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "3"
           }
         }
       }
@@ -230,8 +239,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "3"
           }
         }
       }
@@ -253,8 +263,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "3"
           }
         }
       }
@@ -276,8 +287,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "3"
           }
         }
       }
@@ -299,8 +311,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "3"
           }
         }
       }
@@ -322,8 +335,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "3"
           }
         }
       }
@@ -345,8 +359,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "3"
           }
         }
       }
@@ -368,8 +383,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "4"
           }
         }
       }
@@ -393,8 +409,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "4"
           }
         }
       }
@@ -418,8 +435,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "4"
           }
         }
       }
@@ -441,8 +459,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "4"
           }
         }
       }
@@ -464,8 +483,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "4"
           }
         }
       }
@@ -487,8 +507,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "4"
           }
         }
       }
@@ -510,8 +531,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "4"
           }
         }
       }
@@ -533,8 +555,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "4"
           }
         }
       }
@@ -556,8 +579,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "4"
           }
         }
       }
@@ -579,8 +603,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "4"
           }
         }
       }
@@ -602,8 +627,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "4"
           }
         }
       }
@@ -625,8 +651,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "4"
           }
         }
       }
@@ -648,8 +675,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "4"
           }
         }
       }
@@ -673,8 +701,91 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "type": "crop_varieties",
+            "id": "3"
+          }
+        }
+      }
+    }
+  ],
+  "included": [
+    {
+      "id": "1",
+      "type": "crop_varieties",
+      "attributes": {
+        "id": 1,
+        "name": "Planting Tub",
+        "slug": "planting-tub",
+        "generic": false,
+        "crop_id": 1,
+        "predicted_harvest_unit_name": null
+      },
+      "relationships": {
+        "crop": {
+          "data": {
+            "id": "1",
+            "type": "crops"
+          }
+        }
+      }
+    },
+    {
+      "id": "2",
+      "type": "crop_varieties",
+      "attributes": {
+        "id": 2,
+        "name": "CloneEx Rooting Gel",
+        "slug": "cloneex-rooting-gel",
+        "generic": false,
+        "crop_id": 1,
+        "predicted_harvest_unit_name": null
+      },
+      "relationships": {
+        "crop": {
+          "data": {
+            "id": "1",
+            "type": "crops"
+          }
+        }
+      }
+    },
+    {
+      "id": "3",
+      "type": "crop_varieties",
+      "attributes": {
+        "id": 3,
+        "name": "Boss Hog",
+        "slug": "boss-hog",
+        "generic": false,
+        "crop_id": 2,
+        "predicted_harvest_unit_name": null
+      },
+      "relationships": {
+        "crop": {
+          "data": {
+            "id": "2",
+            "type": "crops"
+          }
+        }
+      }
+    },
+    {
+      "id": "4",
+      "type": "crop_varieties",
+      "attributes": {
+        "id": 4,
+        "name": "5th Element",
+        "slug": "5th-element",
+        "generic": false,
+        "crop_id": 2,
+        "predicted_harvest_unit_name": null
+      },
+      "relationships": {
+        "crop": {
+          "data": {
+            "id": "2",
+            "type": "crops"
           }
         }
       }

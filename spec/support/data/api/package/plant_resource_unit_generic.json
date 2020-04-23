@@ -1,4 +1,4 @@
-{
+{ 
   "data": {
     "id": "3",
     "type": "resource_units",
@@ -20,34 +20,18 @@
       "crop_variety": {
         "data": {
           "type": "crop_varieties",
-          "id": "3"
+          "id": 1
         }
       }
     }
   },
   "included": [
     {
-      "id": "3",
       "type": "crop_varieties",
+      "id": 1,
       "attributes": {
-        "id": 3,
-        "name": "Boss Hog",
-        "slug": "boss-hog",
-        "generic": false,
-        "crop_id": 2,
-        "predicted_harvest_unit_name": null
-      },
-      "relationships": {
-        "crop": {
-          "data": {
-            "id": "2",
-            "type": "crops"
-          }
-        }
+        "name": "Boss Hog"
       }
     }
-  ],
-  "jsonapi": {
-    "version": "1.0"
-  }
+  ]
 }

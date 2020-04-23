@@ -180,8 +180,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "id": 1,
+            "type": "crop_varieties"
           }
         }
       }
@@ -483,8 +484,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "id": 2,
+            "type": "crop_varieties"
           }
         }
       }
@@ -508,8 +510,9 @@
       },
       "relationships": {
         "crop_variety": {
-          "meta": {
-            "included": false
+          "data": {
+            "id": 2,
+            "type": "crop_varieties"
           }
         }
       }
@@ -1954,6 +1957,21 @@
             "included": false
           }
         }
+      }
+    }
+  ],
+  "included": [
+    {
+      "type": "crop_varieties",
+      "id": 1,
+      "attributes": {
+        "name": "Boss Hog"
+      }
+    },{
+      "type": "crop_varieties",
+      "id": 2,
+      "attributes": {
+        "name": "5th Element"
       }
     }
   ],
