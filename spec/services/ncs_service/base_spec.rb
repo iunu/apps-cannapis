@@ -11,12 +11,12 @@ RSpec.describe NcsService::Base do
       expect(subject.instance_variable_get(:@integration)).to eq integration
     end
 
-    it 'has @logger' do
-      expect(subject.instance_variable_get(:@logger)).to eq Rails.logger
+    it 'has logger' do
+      expect(subject.logger).to eq Rails.logger
     end
 
-    it 'has @client' do
-      expect(subject.instance_variable_get(:@client)).to be_a NcsAnalytics::Client
+    it 'has @vendor' do
+      expect(subject.instance_variable_get(:@vendor)).to be_a NcsService::Client
     end
 
     it 'does not have a @batch' do
@@ -306,7 +306,7 @@ RSpec.describe NcsService::Base do
     end
   end
 
-  describe '#call_ncs error handling' do
+  describe '#call_vendor error handling' do
     let(:payload) do
       { Something: 'went wrong' }
     end
@@ -324,7 +324,7 @@ RSpec.describe NcsService::Base do
       end
 
       it 'raises an error' do
-        expect { instance.send(:call_ncs, :plant_batch, :create, payload) }.to raise_error(Cannapi::RetryableError)
+        expect { instance.send(:call_vendor, :plant_batch, :create, payload) }.to raise_error(Cannapi::RetryableError)
       end
     end
   end

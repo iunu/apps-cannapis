@@ -4,7 +4,7 @@ module NcsService
       def call
         payload = build_start_payload(batch)
 
-        call_ncs(:plant_batch, :create, payload)
+        call_vendor(:plant_batch, :create, payload)
 
         success!
       end

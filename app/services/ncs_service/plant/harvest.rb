@@ -13,10 +13,10 @@ module NcsService
           create_harvest(items, batch)
 
           payload = build_harvest_plants_payload(items, batch)
-          call_ncs(:plant, :harvest, payload)
+          call_vendor(:plant, :harvest, payload)
         else
           payload = build_manicure_plants_payload(items, batch)
-          call_ncs(:plant, :manicure, payload)
+          call_vendor(:plant, :manicure, payload)
         end
 
         remove_waste
@@ -31,7 +31,7 @@ module NcsService
 
       # TODO: Fix me
       def remove_waste
-        call_ncs(:harvest, :remove_waste, build_remove_waste_payload)
+        call_vendor(:harvest, :remove_waste, build_remove_waste_payload)
       end
 
       def create_harvest(items, batch)
@@ -45,7 +45,7 @@ module NcsService
           HarvestStartDate: harvest_date
         }]
 
-        result = call_ncs(:harvest, :create, payload)
+        result = call_vendor(:harvest, :create, payload)
         get_transaction(:harvest, payload)
 
         result
