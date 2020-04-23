@@ -1,4 +1,4 @@
-module NcsService
+module BaseService
   CROP = 'Cannabis'.freeze
 
   SEEDING_UNIT_MAP = {
@@ -8,7 +8,9 @@ module NcsService
     'plant_clone' => 'plant',
     'plants_clone' => 'plant',
     'clones' => 'plant',
-    'plants' => 'plant'
+    'clone' => 'plant',
+    'plants' => 'plant',
+    'plant' => 'plant'
   }.freeze
 
   WEIGHT_UNIT_MAP = {
@@ -32,7 +34,9 @@ module NcsService
     Lookup.new(ctx, integration).run_mode == :now
   end
 
-  module_function :perform_action, :run_now?
+  def self.included(base)
+    base.send(:module_function, :perform_action, :run_now?)
+  end
 
   class Lookup
     def initialize(ctx, integration, task = nil)
@@ -55,7 +59,7 @@ module NcsService
       action_type = completion.action_type.camelize
       seeding_unit_name = module_name_for_seeding_unit.camelize
 
-      "NcsService::#{seeding_unit_name}::#{action_type}".constantize
+      @integration.vendor_module.const_get("#{seeding_unit_name}::#{action_type}")
     rescue NameError
       raise InvalidOperation, "Processing not supported for #{seeding_unit.name} #{action_type} completions"
     end
@@ -68,7 +72,7 @@ module NcsService
     end
 
     def batch
-      @batch ||= artemis.get_batch('zone,barcodes,completions,custom_data,seeding_unit,harvest_unit,sub_zone')
+      @batch ||= artemis.get_batch('zone,zone.sub_stage,barcodes,completions,custom_data,seeding_unit,harvest_unit,sub_zone')
     end
 
     def completion

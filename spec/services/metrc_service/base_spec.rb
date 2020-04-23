@@ -399,7 +399,7 @@ RSpec.describe MetrcService::Base do
       end
 
       it 'raises an exception' do
-        expect { subject }.to raise_exception(MetrcService::InvalidAttributes, /Missing barcode for batch 'a-batch-id'/)
+        expect { subject }.to raise_exception(InvalidAttributes, /Missing barcode for batch 'a-batch-id'/)
       end
     end
 
@@ -416,7 +416,7 @@ RSpec.describe MetrcService::Base do
       end
 
       it 'raises an exception' do
-        expect { subject }.to raise_exception(MetrcService::InvalidAttributes, /Expected barcode for batch 'a-batch-id' to be alphanumeric with 24 characters. Got: Apr-20-5th-Ele-1, something-else/)
+        expect { subject }.to raise_exception(InvalidAttributes, /Expected barcode for batch 'a-batch-id' to be alphanumeric with 24 characters. Got: Apr-20-5th-Ele-1, something-else/)
       end
     end
   end

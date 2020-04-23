@@ -294,7 +294,7 @@ RSpec.describe MetrcService::Package::Start do
         let(:item_type) { 'Bud' }
 
         it 'should not raise an error' do
-          expect { subject }.to raise_error(MetrcService::InvalidAttributes, /package item type .* not supported .* No similar types/)
+          expect { subject }.to raise_error(InvalidAttributes, /package item type .* not supported .* No similar types/)
         end
       end
 
@@ -302,7 +302,7 @@ RSpec.describe MetrcService::Package::Start do
         let(:item_type) { 'Flowers' }
 
         it 'should not raise an error' do
-          expect { subject }.to raise_error(MetrcService::InvalidAttributes, /package item type .* not supported .* Did you mean "Flower"/)
+          expect { subject }.to raise_error(InvalidAttributes, /package item type .* not supported .* Did you mean "Flower"/)
         end
       end
     end

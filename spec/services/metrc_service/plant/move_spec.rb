@@ -86,6 +86,12 @@ RSpec.describe MetrcService::Plant::Move do
         stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}/items?filter[seeding_unit_id]=#{seeding_unit_id}&include=barcodes,seeding_unit")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/items"))
 
+        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=3000")
+          .to_return(body: { data: [] }.to_json)
+
+        expect_any_instance_of(MetrcService::Resource::WetWeight)
+          .not_to receive(:harvest_plants)
+
         stub_request(:post, 'https://sandbox-api-md.metrc.com/plantbatches/v1/changegrowthphase?licenseNumber=LIC-0001')
           .with(body: expected_payload.to_json)
           .to_return(status: 200)
@@ -122,6 +128,12 @@ RSpec.describe MetrcService::Plant::Move do
         stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}/items?filter[seeding_unit_id]=#{seeding_unit_id}&include=barcodes,seeding_unit")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/items"))
 
+        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=3000")
+          .to_return(body: { data: [] }.to_json)
+
+        expect_any_instance_of(MetrcService::Resource::WetWeight)
+          .not_to receive(:harvest_plants)
+
         stub_request(:post, 'https://sandbox-api-md.metrc.com/plantbatches/v1/changegrowthphase?licenseNumber=LIC-0001')
           .with(body: expected_payload.to_json)
           .to_return(status: 200)
@@ -140,6 +152,129 @@ RSpec.describe MetrcService::Plant::Move do
       end
 
       it { is_expected.to be_success }
+    end
+
+    describe 'moving and generating wet_weight' do
+      let(:batch_id) { 84 }
+      let(:seeding_unit_id) { 7 }
+      let(:completion_id) { 432 }
+
+      let(:ctx) do
+        {
+          id: completion_id,
+          relationships: {
+            batch: { data: { id: batch_id } },
+            facility: { data: { id: facility_id } }
+          },
+          attributes: {
+            start_time: '2020-04-15',
+            options: {
+              zone_id: 28,
+              quantity: 2,
+              resources: [{
+                resource_unit_id: 17,
+                generated_quantity: 5
+              },{
+                resource_unit_id: 18,
+                generated_quantity: 0.5
+              }],
+              zone_name: 'F3 - Inside',
+              sub_zone_id: nil,
+              seeding_unit_id: 7
+            }
+          },
+          completion_id: completion_id
+        }.with_indifferent_access
+      end
+
+      let(:completion_fixtures) { JSON.parse(load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/completions")) }
+
+      before do
+        @stubs = []
+
+        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}"))
+
+        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
+
+        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
+
+        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}/items?filter[seeding_unit_id]=#{seeding_unit_id}&include=barcodes,seeding_unit")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/items"))
+
+        generate_completions = completion_fixtures['data'].select do |completion|
+          completion['attributes'].slice('parent_id', 'action_type').values == [completion_id, 'generate']
+        end
+
+        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=432")
+          .to_return(body: { data: generate_completions }.to_json)
+
+        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/resource_units")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/resource_units"))
+
+        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/completions?filter%5Bcrop_batch_ids%5D%5B0%5D=#{batch_id}")
+          .to_return(body: completion_fixtures.to_json)
+
+        stub_request(:post, 'https://sandbox-api-md.metrc.com/plantbatches/v1/changegrowthphase?licenseNumber=LIC-0001')
+          .with(body: expected_payload.to_json)
+          .to_return(status: 200)
+
+        @stubs << stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/harvestplants?licenseNumber=LIC-0001')
+          .with(
+            body: [{
+              DryingLocation: 'F3 - Inside',
+              PatientLicenseNumber: nil,
+              ActualDate: '2020-04-15',
+              Plant: 'ABCDEF1234567890ABCDEF02',
+              Weight: 2.5,
+              UnitOfWeight: 'Grams',
+              HarvestName: 'Apr18-5th-Ele-Can'
+            },{
+              DryingLocation: 'F3 - Inside',
+              PatientLicenseNumber: nil,
+              ActualDate: '2020-04-15',
+              Plant: 'ABCDEF1234567890ABCDEF03',
+              Weight: 2.5,
+              UnitOfWeight: 'Grams',
+              HarvestName: 'Apr18-5th-Ele-Can'
+            }].to_json,
+          )
+          .to_return(status: 200, body: '', headers: {})
+
+        stub_request(:get, 'https://sandbox-api-md.metrc.com/harvests/v1/active?licenseNumber=LIC-0001')
+          .to_return(status: 200, body: '[{"Id":123,"Name":"Some-Other-Harvest","HarvestType":"Product","SourceStrainCount":0},{"Id":234,"Name":"Apr18-5th-Ele-Can","HarvestType":"WholePlant","SourceStrainCount":0}]')
+
+        stub_request(:get, 'https://sandbox-api-md.metrc.com/harvests/v1/waste/types')
+          .to_return(status: 200, body: [{ Name: 'Wet Waste' }].to_json, headers: {})
+
+        @stubs << stub_request(:post, 'https://sandbox-api-md.metrc.com/harvests/v1/removewaste?licenseNumber=LIC-0001')
+          .with(
+            body: [{ Id: 234, WasteType: 'Wet Waste', UnitOfWeight: 'Grams', WasteWeight: 0.5, ActualDate: '2020-04-15' }].to_json,
+          )
+          .to_return(status: 200, body: '', headers: {})
+      end
+
+      let(:expected_payload) do
+        [{
+          Name: 'ABCDEF1234567890ABCDEF01',
+          Count: 2,
+          StartingTag: 'ABCDEF1234567890ABCDEF02',
+          GrowthPhase: 'Flowering',
+          NewLocation: 'F3 - Inside',
+          GrowthDate: '2020-04-15',
+          PatientLicenseNumber: nil
+        }]
+      end
+
+      it { is_expected.to be_success }
+
+      after do
+        @stubs.each do |stub|
+          expect(stub).to have_been_requested
+        end
+      end
     end
   end
 

@@ -10,6 +10,7 @@ namespace :artemis do
 
     `open "#{url}"`
 
+    puts "Open #{url}"
     puts 'Paste the code and press enter:'
     code = STDIN.gets.strip
 
