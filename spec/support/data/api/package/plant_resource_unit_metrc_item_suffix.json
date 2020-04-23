@@ -1,37 +1,54 @@
-{ 
+{
   "data": {
-    "id": "3",
-    "type": "resource_units",
     "attributes": {
-      "id": 3,
-      "name": "Plant of Boss Hog Cannabis",
-      "kind": "count",
-      "unit_name": "Plant",
-      "unit_symbol": "plant",
-      "unit_precision": 0,
       "conversion_si": 1.0,
-      "unit_modifier": "",
-      "product_modifier": "",
+      "id": 3,
+      "kind": "count",
+      "name": "Plant of Boss Hog Cannabis",
       "options": {
         "cannapis": "plant",
-      }
+        "metrc_item_suffix": "Teens"
+      },
+      "product_modifier": "",
+      "unit_modifier": "",
+      "unit_name": "Plant",
+      "unit_precision": 0,
+      "unit_symbol": "plant"
     },
+    "id": "3",
     "relationships": {
       "crop_variety": {
         "data": {
-          "type": "crop_varieties",
-          "id": 1
+          "id": "3",
+          "type": "crop_varieties"
         }
       }
-    }
+    },
+    "type": "resource_units"
   },
   "included": [
     {
-      "type": "crop_varieties",
-      "id": 1,
       "attributes": {
-        "name": "Boss Hog"
-      }
+        "crop_id": 2,
+        "generic": false,
+        "id": 3,
+        "name": "Boss Hog",
+        "predicted_harvest_unit_name": null,
+        "slug": "boss-hog"
+      },
+      "id": "3",
+      "relationships": {
+        "crop": {
+          "data": {
+            "id": "2",
+            "type": "crops"
+          }
+        }
+      },
+      "type": "crop_varieties"
     }
-  ]
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
 }
