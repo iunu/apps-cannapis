@@ -77,14 +77,10 @@ module MetrcService
 
       def create_plant_batch_package_payload
         consume_completions.map do |consume|
-          crop_batch = crop_batch_for_consume(consume)
           plant_count = consume.options['consumed_quantity']
-          crop_batch_tag = crop_batch.relationships.dig('barcodes', 'data', 0, 'id')
-          metrc_plant_batch = lookup_metrc_plant_batch(batch_tag)
 
           {
-            Id: metrc_plant_batch['Id'],
-            PlantBatch: crop_batch.arbitrary_id,
+            PlantBatch: batch_tag,
             Count: plant_count,
             Location: nil,
             Item: PLANTINGS_PACKAGE_TYPE,
@@ -134,9 +130,9 @@ module MetrcService
       end
 
       def item_type(skip_validation: false)
-        validate_item_type!(resource_units.first.label) unless skip_validation
+        validate_item_type!(resource_units&.first&.label) unless skip_validation
 
-        resource_units.first.label
+        resource_units&.first&.label
       end
 
       def zone_name

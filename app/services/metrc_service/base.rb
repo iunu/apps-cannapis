@@ -30,7 +30,7 @@ module MetrcService
       log("[#{method.to_s.upcase}] Metrc API request. URI #{@client.uri}", :debug)
       log(args.to_yaml, :debug)
 
-      response = @client.send(method, @integration.vendor_id, *args)
+      response = @client.send(method, @integration.license, *args)
       JSON.parse(response.body) if response&.body&.present?
     rescue *RETRYABLE_ERRORS => e
       log("METRC: Retryable error: #{e.inspect}", :warn)
@@ -83,14 +83,6 @@ module MetrcService
       raise DataMismatch, "expected to find a harvest in Metrc named '#{name}' but it does not exist" if metrc_harvest.nil?
 
       metrc_harvest
-    end
-
-    def lookup_metrc_plant_batch(tag)
-      metrc_plant_batches = call_metrc(:list_plant_batches)
-      metrc_plant_batch = metrc_plant_batches&.find { |batch| batch['Name'] == tag }
-      raise DataMismatch, "expected to find a plant batch in Metrc with the tag '#{tag}' but it does not exist" if metrc_plant_batch.nil?
-
-      metrc_plant_batch
     end
   end
 end

@@ -6,7 +6,7 @@ FactoryBot.define do
     state { Faker::Address.state_abbr.downcase }
     facility_id { Faker::Number.number(digits: 4) }
     vendor { :metrc }
-    vendor_id { 'LIC-0001' }
+    license { 'LIC-0001' }
     eod { "#{Time.now.utc.hour}:00" }
     timezone { '+00:00' }
 
@@ -14,14 +14,14 @@ FactoryBot.define do
       secret { ENV['METRC_API_SECRET'] }
       state { ENV['METRC_API_STATE'] }
       vendor { :metrc }
-      vendor_id { ENV['METRC_API_LICENSE'] }
+      license { ENV['METRC_API_LICENSE'] }
     end
 
     trait :ncs_vendor do
       state { :ca }
       vendor { :ncs }
       secret { 'ABC1234567890' }
-      vendor_id { 123456 }
+      license { '123456' }
     end
   end
 end

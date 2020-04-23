@@ -220,8 +220,7 @@ RSpec.describe MetrcService::Package::Start do
     describe 'on a complete harvest' do
       let(:expected_payload) do
         [{
-          Id: 12345,
-          PlantBatch: 'Apr14-Bos-Hog-Can-19',
+          PlantBatch: '1234567890ABCD1234567890',
           Count: 5,
           Location: nil,
           Item: 'Immature Plant',
@@ -291,7 +290,7 @@ RSpec.describe MetrcService::Package::Start do
     context 'when type is not valid' do
       let(:valid_categories) { [{ Name: 'Flower' }] }
 
-      context 'and not similar to supported types' do
+      describe 'and not similar to supported types' do
         let(:item_type) { 'Bud' }
 
         it 'should not raise an error' do
@@ -299,7 +298,7 @@ RSpec.describe MetrcService::Package::Start do
         end
       end
 
-      context 'but similar to supported types' do
+      describe 'but similar to supported types' do
         let(:item_type) { 'Flowers' }
 
         it 'should not raise an error' do
