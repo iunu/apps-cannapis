@@ -1,20 +1,16 @@
 module MetrcService
   class Client < BaseService::Client
     def get_item_categories
-      response = vendor_client.get('items', 'categories').body
+      response = vendor_client.get('items', 'categories')
       parse_response(response).map { |entry| entry['Name'] }
     end
 
     def get_supported_waste_types
-      response = vendor_client.get('harvests', 'waste/types').body
+      response = vendor_client.get('harvests', 'waste/types')
       parse_response(response).map { |entry| entry['Name']  }
     end
 
     protected
-
-    def parse_response(response)
-      JSON.parse(response)
-    end
 
     def build_client
       debug = !ENV['DEMO'].nil? || Rails.env.development? || Rails.env.test?

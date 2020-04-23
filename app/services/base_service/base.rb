@@ -38,15 +38,15 @@ module BaseService
       log(e.message)
       fail!
     rescue ServiceActionFailure => e
-      log("Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{e.inspect}", :error)
+      log("#{@integration.vendor.upcase}_SERVICE_ACTION_FAILURE Failed: batch ID #{@batch_id}, completion ID #{@completion_id}; #{e.inspect}", :error)
       fail!(transaction)
     end
 
-    def call_vendor(method, *args)
-      @vendor.call(method, *args)
+    def call_vendor(*args)
+      @vendor.call(*args)
     rescue *self.class::RETRYABLE_ERRORS => e
       Bugsnag.notify(e)
-      log(": Retryable error: #{e.inspect}", :warn)
+      log("#{integration.vendor.upcase}: Retryable error: #{e.inspect}", :warn)
       requeue!(exception: e)
     rescue *self.class::FATAL_ERRORS => e
       Bugsnag.notify(e)
@@ -69,7 +69,7 @@ module BaseService
 
     def get_transaction(name, metadata = @attributes)
       Transaction.find_or_create_by(
-        vendor: :metrc, account: @integration.account, integration: @integration,
+        vendor: @integration.vendor, account: @integration.account, integration: @integration,
         batch_id: @batch_id, completion_id: @completion_id, type: name
       ) do |transaction|
         transaction.metadata = metadata
@@ -91,6 +91,7 @@ module BaseService
       options = resource_unit.options
 
       if options.present?
+        # TODO: make this generic for cannapis, with overrides possible based on vendor name
         return options['metrc_item_name'] if options['metrc_item_name']
         return "#{resource_unit.name} #{options['metrc_item_suffix']}" if options['metrc_item_suffix'].present?
       end
@@ -127,7 +128,7 @@ module BaseService
     def validate_seeding_unit!
       return if ['preprinted', 'none', nil].include?(seeding_unit.item_tracking_method)
 
-      raise InvalidBatch, "Failed: Seeding unit is not valid for Metrc #{seeding_unit.item_tracking_method}. " \
+      raise InvalidBatch, "Failed: Seeding unit is not valid for #{@integration.vendor_name} #{seeding_unit.item_tracking_method}. " \
         "Batch ID #{@batch_id}, completion ID #{@completion_id}"
     end
 
@@ -146,7 +147,7 @@ module BaseService
     end
 
     def scope
-      MetrcService
+      self.class.name.split('::').first.constantize
     end
   end
 end

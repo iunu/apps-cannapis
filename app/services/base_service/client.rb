@@ -13,14 +13,17 @@ module BaseService
       log(args.to_yaml, :debug)
 
       response = call_vendor(method, *args)
-
-      JSON.parse(response.body) if response&.body&.present?
+      parse_response(response)
     end
 
     protected
 
+    def parse_response(response)
+      JSON.parse(response.body) if response&.body&.present?
+    end
+
     def call_vendor(method, *args)
-      vendor_client.send(method, @integration.vendor_id, *args)
+      vendor_client.send(method, @integration.license, *args)
     end
 
     def vendor_client
@@ -36,7 +39,7 @@ module BaseService
     end
 
     def config
-      @config ||= Rails.application.config_for('providers/metrc')
+      @config ||= Rails.application.config_for("providers/#{@integration.vendor}")
     end
   end
 end
