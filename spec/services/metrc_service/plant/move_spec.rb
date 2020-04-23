@@ -211,7 +211,7 @@ RSpec.describe MetrcService::Plant::Move do
         stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=432")
           .to_return(body: { data: generate_completions }.to_json)
 
-        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/resource_units")
+        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/resource_units?include=crop_variety")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/resource_units"))
 
         stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/completions?filter%5Bcrop_batch_ids%5D%5B0%5D=#{batch_id}")
