@@ -2,11 +2,8 @@ module NcsService
   module Package
     class Start < NcsService::Package::Base
       run_mode :now
-      WAIT_TIME = 5.minutes
 
       def call
-        sleep(WAIT_TIME) unless Rails.env.development? || Rails.env.test?
-
         flush_upstream_tasks
 
         if plant_package
@@ -105,7 +102,7 @@ module NcsService
 
       def item_type
         @item_type ||= begin
-          case resource_units.first.name
+          case resource_units&.first&.name
           when /Plant/
             'Plant'
           else

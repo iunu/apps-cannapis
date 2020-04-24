@@ -1,4 +1,4 @@
-<% if @current_account %>
+
   <div class="my-lg ta-center">
     <h3 class="h3 mb-0">
       Welcome, <%= @current_account.name %>!
@@ -10,7 +10,6 @@
       </h4>
     <% end %>
   </div>
-<% end %>
 
 <div class="width" id="panel-wrapper">
   <% if @facilities && @facilities.count > 0 %>
