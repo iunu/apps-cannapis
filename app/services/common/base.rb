@@ -92,7 +92,7 @@ module Common
 
       if options.present?
         return options['metrc_item_name'] if options['metrc_item_name']
-        return "#{resource_unit.name} #{options['metrc_item_suffix']}" if options['metrc_item_suffix'].present?
+        return "#{resource_unit.crop_variety&.name} #{options['metrc_item_suffix']}" if options['metrc_item_suffix'].present?
       end
 
       resource_unit.crop_variety&.name
