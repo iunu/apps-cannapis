@@ -62,7 +62,7 @@ module MetrcService
         [{
           PackageLabel: label.value,
           PackageAdjustmentAmount: 0,
-          PackageAdjustmentUnitOfMeasureName: '',
+          PackageAdjustmentUnitOfMeasureName: 'Ounces',
           PlantBatchName: batch_tag,
           PlantBatchType: 'Clone',
           PlantCount: quantity,
