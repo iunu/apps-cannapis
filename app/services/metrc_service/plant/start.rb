@@ -44,7 +44,7 @@ module MetrcService
           Type: type,
           Count: quantity,
           Strain: batch.crop_variety,
-          Location: batch.zone.name,
+          Location: batch.zone&.name&.gsub(/\s*\[.*?\]/, '')&.strip,
           PatientLicenseNumber: nil,
           ActualDate: batch.seeded_at
         }]

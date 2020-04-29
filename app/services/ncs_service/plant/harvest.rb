@@ -40,7 +40,7 @@ module NcsService
         payload = [{
           Name: batch.arbitrary_id,
           HarvestType: 'Product',
-          DryingRoomName: batch.zone.name,
+          DryingRoomName: batch.zone&.name&.gsub(/\s*\[.*?\]/, '')&.strip,
           UnitOfWeightName: unit,
           HarvestStartDate: harvest_date
         }]
@@ -59,7 +59,7 @@ module NcsService
             Label: item.relationships.dig('barcode', 'data', 'id'),
             ManicuredWeight: average_weight,
             ManicuredUnitOfWeightName: item.attributes['secondary_harvest_unit'],
-            RoomName: batch.zone.name,
+            RoomName: batch.zone&.name&.gsub(/\s*\[.*?\]/, '')&.strip,
             HarvestName: nil,
             ManicuredDate: harvest_date
           }
@@ -75,7 +75,7 @@ module NcsService
             Label: item.relationships.dig('barcode', 'data', 'id'),
             HarvestedWetWeight: average_weight,
             HarvestedUnitOfWeightName: unit_of_weight(WET_WEIGHT, item),
-            RoomName: batch.zone.name,
+            RoomName: batch.zone&.name&.gsub(/\s*\[.*?\]/, '')&.strip,
             HarvestName: harvest_name,
             ManicuredDate: harvest_date
           }
