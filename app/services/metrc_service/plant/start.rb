@@ -1,14 +1,26 @@
 module MetrcService
   module Plant
     class Start < Base
+      attr_reader :transaction_type
+
+      ORIGIN_PACKAGES = [
+        'Source Package Id (Metrc)'
+      ].freeze
+
       def call
-        payload = build_start_payload(batch)
+        @transaction_type = :start_batch
+        @packaged_origin = nil
 
-        call_metrc(:create_plant_batches, payload)
+        if batch.methods.include?(:included)
+          @packaged_origin = batch.included&.dig(:custom_fields)&.detect { |obj| ORIGIN_PACKAGES.includes?(obj&.name) }
+        end
 
-        # If batch has custom field package_id
-        # then create_plantings_from_package
-        # if not create_plant_batches
+        if @packaged_origin
+          @transaction_type = :start_batch_from_package
+          create_plantings_from_package
+        else
+          create_plant_batch
+        end
 
         success!
       end
@@ -16,10 +28,14 @@ module MetrcService
       private
 
       def transaction
-        @transaction ||= get_transaction(:start_batch)
+        @transaction ||= get_transaction(@transaction_type || :start_batch)
       end
 
-      def build_start_payload(batch)
+      def create_plant_batch
+        call_metrc(:create_plant_batches, build_start_payload)
+      end
+
+      def build_start_payload
         seeding_unit = batch.zone.attributes.dig('seeding_unit', 'name').downcase
         type = /seed/.match?(seeding_unit) ? 'Seed' : 'Clone'
 
@@ -27,10 +43,10 @@ module MetrcService
           Name: batch_tag,
           Type: type,
           Count: quantity,
-          Strain: batch.attributes['crop_variety'],
+          Strain: batch.crop_variety,
           Location: batch.zone.name,
           PatientLicenseNumber: nil,
-          ActualDate: batch.attributes['seeded_at']
+          ActualDate: batch.seeded_at
         }]
       end
 
@@ -39,13 +55,14 @@ module MetrcService
       end
 
       def create_plantings_from_package_payload
-        seeding_unit = batch.zone.attributes.dig('seeding_unit', 'name').downcase
-        type = /seed/.match?(seeding_unit) ? 'Seed' : 'Clone'
+        label = batch.included&.dig(:custom_data)&.detect { |obj| obj&.custom_field_id.to_i == @packaged_origin.id.to_i }
+
+        raise InvalidOperation, "Failed: No package label was found for #{@packaged_origin&.name}" unless label
 
         [{
-          PackageLabel: tag, # from custom field
-          PackageAdjustmentAmount: nil,
-          PackageAdjustmentUnitOfMeasureName: unit_of_weight,
+          PackageLabel: label.value,
+          PackageAdjustmentAmount: 0,
+          PackageAdjustmentUnitOfMeasureName: '',
           PlantBatchName: batch_tag,
           PlantBatchType: 'Clone',
           PlantCount: quantity,
@@ -59,7 +76,7 @@ module MetrcService
       end
 
       def quantity
-        batch_quantity = batch.attributes['quantity']&.to_i
+        batch_quantity = batch.quantity&.to_i
         batch_quantity.positive? ? batch_quantity : @attributes.dig('options', 'quantity')&.to_i
       end
     end
