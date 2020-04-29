@@ -87,7 +87,7 @@ RSpec.describe NcsService::Plant::Start do
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
           .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
-        stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
+        stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
           .to_return(body: { data: { id: '2002', type: 'batches', attributes: { id: 2002, arbitrary_id: 'Jun19-Bok-Cho', quantity: '100', crop_variety: 'Banana Split', seeded_at: now, zone_name: 'Germination', crop: 'Cannabis' }, relationships: { seeding_unit: { data: { id: '1235', type: 'seeding_units' } } } }, included: [ { id: '1234', type: 'zones', attributes: { id: 1234, seeding_unit: { name: 'Clone' } } }, { id: '1235', type: 'seeding_units', attributes: { id: 1235, item_tracking_method: 'preprinted', name: 'Clone' } } ]}.to_json)
 
         stub_request(:post, "#{ENV['NCS_BASE_URI']}/pos/plantbatches/v1/createplantings")
