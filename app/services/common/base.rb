@@ -98,7 +98,6 @@ module Common
       resource_unit.crop_variety&.name
     end
 
-
     def batch
       @batch ||= get_batch
     end

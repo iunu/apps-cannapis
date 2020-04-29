@@ -25,7 +25,7 @@ module MetrcService
 
         items.map do |item|
           {
-            DryingLocation: batch.zone.name,
+            DryingLocation: batch.zone&.name&.gsub(/\s*\[.*?\]/, '')&.strip,
             PatientLicenseNumber: nil,
             ActualDate: harvest_date,
             Plant: item.relationships.dig('barcode', 'data', 'id'),
