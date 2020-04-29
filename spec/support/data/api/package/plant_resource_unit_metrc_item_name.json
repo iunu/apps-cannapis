@@ -1,0 +1,54 @@
+{
+  "data": {
+    "attributes": {
+      "conversion_si": 1.0,
+      "id": 3,
+      "kind": "count",
+      "name": "Plant of Boss Hog Cannabis",
+      "options": {
+        "cannapis": "plant",
+        "metrc_item_name": "Boss Hog Teens"
+      },
+      "product_modifier": "",
+      "unit_modifier": "",
+      "unit_name": "Plant",
+      "unit_precision": 0,
+      "unit_symbol": "plant"
+    },
+    "id": "3",
+    "relationships": {
+      "crop_variety": {
+        "data": {
+          "id": "3",
+          "type": "crop_varieties"
+        }
+      }
+    },
+    "type": "resource_units"
+  },
+  "included": [
+    {
+      "attributes": {
+        "crop_id": 2,
+        "generic": false,
+        "id": 3,
+        "name": "Boss Hog",
+        "predicted_harvest_unit_name": null,
+        "slug": "boss-hog"
+      },
+      "id": "3",
+      "relationships": {
+        "crop": {
+          "data": {
+            "id": "2",
+            "type": "crops"
+          }
+        }
+      },
+      "type": "crop_varieties"
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

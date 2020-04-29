@@ -80,12 +80,13 @@ module MetrcService
 
         consume_completions.map do |consume|
           plant_count = consume.options['consumed_quantity']
+          resource_unit = get_resource_unit(consume.options['resource_unit_id'])
 
           {
             PlantBatch: batch_tag,
             Count: plant_count,
             Location: nil,
-            Item: PLANTINGS_PACKAGE_TYPE,
+            Item: resource_unit.item_type,
             Tag: tag,
             PatientLicenseNumber: nil,
             Note: '',

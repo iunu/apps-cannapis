@@ -1,6 +1,6 @@
 module MetrcService
   module Plant
-    class Move < MetrcService::Base
+    class Move < Base
       GROWTH_CYCLES = {
         clone: %i[clone vegetative],
         vegetative: %i[vegetative flowering],
@@ -14,11 +14,13 @@ module MetrcService
 
         send(next_step_name)
 
+        handle_resources
+
         success!
       end
 
       def transaction
-        @transaction ||= get_transaction(:move_batch, @attributes.merge(sub_stage: batch.zone.sub_stage.attributes))
+        @transaction ||= get_transaction(:move_batch, @attributes.merge(sub_stage: batch.zone.sub_stage&.attributes))
       end
 
       def prior_move_transactions
@@ -78,7 +80,7 @@ module MetrcService
           {
             Id: nil,
             Label: item.relationships.dig('barcode', 'data', 'id'),
-            Location: batch.zone.name,
+            Location: batch.zone&.name&.gsub(/\s*\[.*?\]/, '')&.strip,
             ActualDate: start_time
           }
         end
@@ -89,7 +91,7 @@ module MetrcService
       def move_plant_batches
         payload = {
           Name: batch_tag,
-          Location: batch.zone.name,
+          Location: batch.zone&.name&.gsub(/\s*\[.*?\]/, '')&.strip,
           MoveDate: start_time
         }
 
@@ -105,7 +107,7 @@ module MetrcService
           Count: batch.quantity.to_i,
           StartingTag: immature? ? nil : barcode,
           GrowthPhase: normalized_growth_phase,
-          NewLocation: batch.zone.name,
+          NewLocation: batch.zone&.name&.gsub(/\s*\[.*?\]/, '')&.strip,
           GrowthDate: start_time,
           PatientLicenseNumber: nil
         }

@@ -147,7 +147,7 @@ RSpec.describe NcsService::Base do
       stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
         .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
-      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
+      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
         .to_return(body: { data: { id: '2002', type: 'batches', attributes: { id: 2002, arbitrary_id: 'Jun19-Bok-Cho', facility_id: 1568 } } }.to_json)
     end
 
@@ -267,11 +267,11 @@ RSpec.describe NcsService::Base do
       stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
         .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
-      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
+      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
         .to_return(body: { data: { id: '2002', type: 'batches', attributes: { id: 2002, crop_variety: '5th Element' } } }.to_json)
 
-      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/resource_units/1')
-        .to_return(body: { data: { id: '1', type: 'resource_units', attributes: { id: 1, name: 'g of Something - 5th Element', kind: 'weight', conversion_si: 1.0 } } }.to_json)
+      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/resource_units/1?include=crop_variety')
+        .to_return(body: { data: { id: '1', type: 'resource_units', attributes: { id: 1, name: 'g of Something - 5th Element', kind: 'weight', conversion_si: 1.0 }, relationships: { crop_variety: { data: { type: 'crop_varieties', id: 1 } } } }, included: [{ type: 'crop_varieties', id: 1, attributes: { name: '5th Element' } }] }.to_json)
     end
 
     let(:ctx) do
@@ -368,7 +368,7 @@ RSpec.describe NcsService::Base do
       end
 
       it 'raises an exception' do
-        expect { subject }.to raise_exception(NcsService::InvalidAttributes, /Missing barcode for batch 'a-batch-id'/)
+        expect { subject }.to raise_exception(InvalidAttributes, /Missing barcode for batch 'a-batch-id'/)
       end
     end
 
@@ -385,7 +385,7 @@ RSpec.describe NcsService::Base do
       end
 
       it 'raises an exception' do
-        expect { subject }.to raise_exception(NcsService::InvalidAttributes, /Expected barcode for batch 'a-batch-id' to be alphanumeric with 24 characters. Got: Apr-20-5th-Ele-1, something-else/)
+        expect { subject }.to raise_exception(InvalidAttributes, /Expected barcode for batch 'a-batch-id' to be alphanumeric with 24 characters. Got: Apr-20-5th-Ele-1, something-else/)
       end
     end
   end

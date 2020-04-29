@@ -138,7 +138,7 @@ module NcsService
         name: resource_unit.name,
         unit: service_unit,
         label: resource_unit.name[/^([\w\s]+)(,\s|\s-\s)/, 1],
-        strain: batch.crop_variety,
+        strain: resource_unit.crop_variety&.name,
         kind: resource_unit.kind,
         conversion_si: resource_unit.conversion_si
       )

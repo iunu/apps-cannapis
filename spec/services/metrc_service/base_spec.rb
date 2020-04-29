@@ -151,7 +151,7 @@ RSpec.describe MetrcService::Base do
       stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
         .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
-      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
+      stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
         .to_return(body: { data: { id: '2002', type: 'batches', attributes: { id: 2002, arbitrary_id: 'Jun19-Bok-Cho' } } }.to_json)
     end
 
@@ -259,8 +259,8 @@ RSpec.describe MetrcService::Base do
 
   describe '#get_resource_unit' do
     include_context 'with synced data' do
-      let(:facility_id) { 1 }
-      let(:batch_id) { 331 }
+      let(:facility_id) { 2 }
+      let(:batch_id) { 84 }
     end
 
     before do
@@ -270,8 +270,8 @@ RSpec.describe MetrcService::Base do
       stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone")
         .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
 
-      stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/resource_units/8")
-        .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/resource_units/8"))
+      stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/resource_units/4?include=crop_variety")
+        .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/resource_units/4"))
     end
 
     let(:ctx) do
@@ -287,7 +287,7 @@ RSpec.describe MetrcService::Base do
     end
 
     let(:instance) { MetrcService::Base.new(ctx, integration) }
-    let(:resource_unit) { instance.send(:get_resource_unit, 8) }
+    let(:resource_unit) { instance.send(:get_resource_unit, 4) }
 
     subject { resource_unit }
 
@@ -295,7 +295,7 @@ RSpec.describe MetrcService::Base do
 
     it do
       is_expected.to have_attributes(
-        id: 8,
+        id: 4,
         name: 'Gram of Wet Material, Boss Hog Cannabis',
         unit: 'Grams',
         label: 'Wet Material',
@@ -399,7 +399,7 @@ RSpec.describe MetrcService::Base do
       end
 
       it 'raises an exception' do
-        expect { subject }.to raise_exception(MetrcService::InvalidAttributes, /Missing barcode for batch 'a-batch-id'/)
+        expect { subject }.to raise_exception(InvalidAttributes, /Missing barcode for batch 'a-batch-id'/)
       end
     end
 
@@ -416,7 +416,7 @@ RSpec.describe MetrcService::Base do
       end
 
       it 'raises an exception' do
-        expect { subject }.to raise_exception(MetrcService::InvalidAttributes, /Expected barcode for batch 'a-batch-id' to be alphanumeric with 24 characters. Got: Apr-20-5th-Ele-1, something-else/)
+        expect { subject }.to raise_exception(InvalidAttributes, /Expected barcode for batch 'a-batch-id' to be alphanumeric with 24 characters. Got: Apr-20-5th-Ele-1, something-else/)
       end
     end
   end

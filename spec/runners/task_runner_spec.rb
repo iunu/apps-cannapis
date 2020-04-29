@@ -43,9 +43,6 @@ RSpec.describe(TaskRunner) do
 
     context 'when job fails with retryable error' do
       before do
-        expect(Bugsnag)
-          .to receive(:notify)
-
         expect_any_instance_of(Metrc::Client)
           .to receive(:send)
           .and_raise(Metrc::RequestError)
