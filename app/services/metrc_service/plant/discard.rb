@@ -2,21 +2,29 @@ module MetrcService
   module Plant
     class Discard < MetrcService::Base
       NOT_SPECIFIED = 'Not Specified'.freeze
+      METHOD_CALL = {
+        immature: :destroy_immature_plants,
+        mature: :destroy_mature_plants
+      }.freeze
 
       def call
-        payload = send("build_#{plant_state}_payload", discard, batch)
-        action = plant_state == 'immature' ? :destroy_plant_batches : :destroy_plants
-
-        call_metrc(action, payload)
-
+        send(METHOD_CALL[plant_state])
         success!
       end
 
       private
 
+      def destroy_immature_plants
+        call_metrc(:destroy_plant_batches, build_immature_payload(discard, batch))
+      end
+
+      def destroy_mature_plants
+        call_metrc(:destroy_plants, build_mature_payload(discard, batch))
+      end
+
       def plant_state
         tracking_method = seeding_unit.item_tracking_method
-        @plant_state ||= [nil, 'none'].include?(tracking_method) ? 'immature' : 'mature'
+        @plant_state ||= [nil, 'none'].include?(tracking_method) ? :immature : :mature
       end
 
       def transaction
@@ -24,7 +32,7 @@ module MetrcService
       end
 
       def discard
-        batch.discard(@relationships.dig('action_result', 'data', 'id'))
+        @obj ||= batch.discard(@relationships.dig('action_result', 'data', 'id')&.to_s)
       end
 
       def build_immature_payload(discard, batch)
