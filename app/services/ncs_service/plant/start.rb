@@ -26,7 +26,7 @@ module NcsService
           Type: type,
           Count: quantity,
           StrainName: batch.attributes['crop_variety'],
-          RoomName: batch.zone.name,
+          RoomName: batch.zone&.name&.gsub(/\s*\[.*?\]/, '')&.strip,
           PlantedDate: batch.attributes['seeded_at']
         }]
       end
