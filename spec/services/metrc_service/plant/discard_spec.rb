@@ -223,7 +223,7 @@ RSpec.describe MetrcService::Plant::Discard do
     end
   end
 
-  describe '#build_mature_payload', :focus do
+  describe '#build_mature_payload' do
     before do
       stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568")
         .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
