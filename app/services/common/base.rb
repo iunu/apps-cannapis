@@ -107,7 +107,7 @@ module Common
 
       barcodes = batch.relationships.dig('barcodes', 'data')&.map { |label| label['id'] }
 
-      matches = barcodes&.select { |label| /[A-Z0-9]{24,}/.match?(label) }
+      matches = barcodes&.select { |label| /[A-Z0-9]{24,24}/.match?(label) }
 
       raise InvalidAttributes, "Missing barcode for batch '#{batch.arbitrary_id}'" if barcodes.blank?
       raise InvalidAttributes, "Expected barcode for batch '#{batch.arbitrary_id}' to be alphanumeric with 24 characters. Got: #{barcodes.join(', ')}" if matches.blank?
