@@ -50,190 +50,394 @@ RSpec.describe MetrcService::Plant::Start do
       include_examples 'with corn crop'
     end
 
-    describe '#create_plant_batches' do
+    describe '#create_plant_batch' do
       subject { described_class.call(ctx, integration) }
 
-      let(:now) { Time.zone.now.strftime('%Y-%m-%d') }
-      let(:transaction) { stub_model Transaction, type: :start_batch, success: false }
-      let(:expected_payload) do
-        [
-          {
-            Name: '1A4FF01000000220000010',
-            Type: 'Clone',
-            Count: 100,
-            Strain: 'Banana Split',
-            Location: 'Germination',
-            PatientLicenseNumber: nil,
-            ActualDate: now
-          }
-        ]
-      end
+      describe '#create_plant_batches' do
+        let(:now) { Time.zone.now.strftime('%Y-%m-%d') }
+        let(:transaction) { stub_model Transaction, type: :start_batch, success: false }
+        let(:expected_payload) do
+          [
+            {
+              Name: '1A4FF01000000220000010',
+              Type: 'Clone',
+              Count: 100,
+              Strain: 'Banana Split',
+              Location: 'Germination',
+              PatientLicenseNumber: nil,
+              ActualDate: now
+            }
+          ]
+        end
 
-      before do
-        stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
-          .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
+        before do
+          stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
+            .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
-        stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone')
-          .to_return(body: {
-            data: {
-              id: '2002',
-              type: 'batches',
-              attributes: {
-                id: 2002,
-                arbitrary_id: 'Jun19-Bok-Cho',
-                quantity: '100',
-                crop_variety: 'Banana Split',
-                seeded_at: now,
-                zone_name: 'Germination',
-                crop: 'Cannabis'
-              },
-              relationships: {
-                'seeding_unit': {
-                  'data': {
-                    'id': '1235',
-                    'type': 'seeding_units'
+          stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
+            .to_return(body: {
+              data: {
+                id: '2002',
+                type: 'batches',
+                attributes: {
+                  id: 2002,
+                  arbitrary_id: 'Jun19-Bok-Cho',
+                  quantity: '100',
+                  crop_variety: 'Banana Split',
+                  seeded_at: now,
+                  zone_name: 'Germination',
+                  crop: 'Cannabis'
+                },
+                relationships: {
+                  'seeding_unit': {
+                    'data': {
+                      'id': '1235',
+                      'type': 'seeding_units'
+                    }
                   }
                 }
-              }
-            },
-            included: [
-              {
-                id: '1234',
-                type: 'zones',
-                attributes: {
-                  id: 1234,
-                  seeding_unit: {
+              },
+              included: [
+                {
+                  id: '1234',
+                  type: 'zones',
+                  attributes: {
+                    id: 1234,
+                    seeding_unit: {
+                      name: 'Clone'
+                    }
+                  }
+                },
+                {
+                  id: '1235',
+                  type: 'seeding_units',
+                  attributes: {
+                    id: 1235,
+                    item_tracking_method: 'preprinted',
                     name: 'Clone'
                   }
                 }
-              },
-              {
-                id: '1235',
-                type: 'seeding_units',
-                attributes: {
-                  id: 1235,
-                  item_tracking_method: 'preprinted',
-                  name: 'Clone'
-                }
+              ]
+            }.to_json)
+
+          stub_request(:post, 'https://sandbox-api-ca.metrc.com/plantbatches/v1/createplantings?licenseNumber=LIC-0001')
+            .with(body: "[{\"Name\":\"1A4FF01000000220000010\",\"Type\":\"Clone\",\"Count\":100,\"Strain\":\"Banana Split\",\"Location\":\"Germination\",\"PatientLicenseNumber\":null,\"ActualDate\":\"#{now}\"}]")
+            .to_return(status: 200, body: '', headers: {})
+
+          expect_any_instance_of(described_class)
+            .to receive(:get_transaction)
+            .and_return transaction
+
+          expect_any_instance_of(described_class)
+            .to receive(:build_start_payload)
+            .and_return(expected_payload)
+        end
+
+        it 'is successful' do
+          expect(subject).to be_success
+        end
+      end
+
+      describe '#build_start_payload' do
+        context 'with tracking barcode' do
+          let(:batch) do
+            zone_attributes = {
+              seeding_unit: {
+                name: 'Clone'
               }
-            ]
-          }.to_json)
+            }.with_indifferent_access
+            zone = double(:zone, attributes: zone_attributes, name: 'Germination')
 
-        stub_request(:post, 'https://sandbox-api-ca.metrc.com/plantbatches/v1/createplantings?licenseNumber=LIC-0001')
-          .with(body: "[{\"Name\":\"1A4FF01000000220000010\",\"Type\":\"Clone\",\"Count\":100,\"Strain\":\"Banana Split\",\"Location\":\"Germination\",\"PatientLicenseNumber\":null,\"ActualDate\":\"#{now}\"}]")
-          .to_return(status: 200, body: '', headers: {})
-      end
+            double(:batch,
+                    zone: zone,
+                    quantity: '100',
+                      crop_variety: 'Banana Split',
+                      seeded_at: Time.zone.now,
+                    relationships: {
+                      'barcodes': { 'data': [{ 'id': '1A4FF0100000022000001010' }] }
+                    }.with_indifferent_access)
+          end
 
-      it 'is successful' do
-        expect_any_instance_of(described_class)
-          .to receive(:get_transaction)
-          .and_return transaction
+          subject { described_class.new(ctx, integration) }
 
-        expect_any_instance_of(described_class)
-          .to receive(:build_start_payload)
-          .and_return(expected_payload)
+          it 'returns a valid payload' do
+            expect_any_instance_of(described_class)
+              .to receive(:batch)
+              .at_least(:once)
+              .and_return(batch)
+            payload = subject.send(:build_start_payload).first
 
-        expect(subject).to be_success
+            expect(payload).not_to be_nil
+            expect(payload[:Name]).to eq '1A4FF0100000022000001010'
+            expect(payload[:Type]).to eq 'Clone'
+            expect(payload[:Count]).to eq 100
+            expect(payload[:Strain]).to eq 'Banana Split'
+            expect(payload[:Location]).to eq 'Germination'
+            expect(payload[:PatientLicenseNumber]).to be_nil
+            expect(payload[:ActualDate]).not_to be_nil
+          end
+        end
+
+        describe 'with no tracking barcode' do
+          let(:ctx) do
+            {
+              id: 3000,
+              relationships: {
+                batch: { data: { id: 2002 } },
+                facility: { data: { id: 1568 } }
+              },
+              attributes: {
+                options: {
+                  zone_name: 'Germination'
+                }
+              },
+              completion_id: 1001
+            }.with_indifferent_access
+          end
+
+          let(:batch) do
+            zone_attributes = {
+              seeding_unit: {
+                name: 'Plant (Seed)'
+              }
+            }.with_indifferent_access
+            zone = double(:zone, attributes: zone_attributes, name: 'Germination')
+
+            double(:batch,
+                    zone: zone,
+                    quantity: '100',
+                  crop_variety: 'Banana Split',
+                  seeded_at: Time.zone.now,
+                    relationships: {
+                      barcodes: {
+                        'data': [{ 'type': :barcodes, 'id': '1A4FF0100000022000001101' }]
+                      }
+                    }.with_indifferent_access)
+          end
+
+          subject { described_class.new(ctx, integration) }
+
+          it 'returns a valid payload using the batch barcode' do
+            expect_any_instance_of(described_class)
+              .to receive(:batch)
+              .at_least(:once)
+              .and_return(batch)
+            payload = subject.send(:build_start_payload).first
+
+            expect(payload).not_to be_nil
+            expect(payload[:Name]).to eq '1A4FF0100000022000001101'
+            expect(payload[:Type]).to eq 'Seed'
+            expect(payload[:Count]).to eq 100
+            expect(payload[:Strain]).to eq 'Banana Split'
+            expect(payload[:Location]).to eq 'Germination'
+            expect(payload[:PatientLicenseNumber]).to be_nil
+            expect(payload[:ActualDate]).not_to be_nil
+          end
+        end
       end
     end
-  end
 
-  describe '#build_start_payload' do
-    context 'with tracking barcode' do
-      let(:batch) do
-        zone_attributes = {
-          seeding_unit: {
-            name: 'Clone'
-          }
-        }.with_indifferent_access
-        zone = double(:zone, attributes: zone_attributes, name: 'Germination')
-
-        double(:batch,
-               zone: zone,
-               relationships: {
-                 'barcodes': { 'data': [{ 'id': '1A4FF0100000022000001010' }] }
-               }.with_indifferent_access,
-               attributes: {
-                 quantity: '100',
-                 crop_variety: 'Banana Split',
-                 seeded_at: Time.zone.now
-               }.with_indifferent_access)
-      end
-
+    describe '#create_plantings_from_package' do
       subject { described_class.new(ctx, integration) }
 
-      it 'returns a valid payload' do
-        expect_any_instance_of(described_class)
-          .to receive(:batch)
-          .and_return(batch)
-        payload = subject.send(:build_start_payload, batch).first
+      describe '#create_plantings_from_package_payload' do
+        context 'with no custom data' do
+          let(:now) { Time.zone.now.strftime('%Y-%m-%d') }
 
-        expect(payload).not_to be_nil
-        expect(payload[:Name]).to eq '1A4FF0100000022000001010'
-        expect(payload[:Type]).to eq 'Clone'
-        expect(payload[:Count]).to eq 100
-        expect(payload[:Strain]).to eq 'Banana Split'
-        expect(payload[:Location]).to eq 'Germination'
-        expect(payload[:PatientLicenseNumber]).to be_nil
-        expect(payload[:ActualDate]).not_to be_nil
-      end
-    end
+          before do
+            stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
+              .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
-    describe 'with no tracking barcode' do
-      let(:ctx) do
-        {
-          id: 3000,
-          relationships: {
-            batch: { data: { id: 2002 } },
-            facility: { data: { id: 1568 } }
-          },
-          attributes: {
-            options: {
-              zone_name: 'Germination'
-            }
-          },
-          completion_id: 1001
-        }.with_indifferent_access
-      end
+            stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
+              .to_return(body: {
+                data: {
+                  id: '2002',
+                  type: 'batches',
+                  attributes: {
+                    id: 2002,
+                    arbitrary_id: 'Jun19-Bok-Cho',
+                    quantity: '100',
+                    crop_variety: 'Banana Split',
+                    seeded_at: now,
+                    zone_name: 'Germination',
+                    crop: 'Cannabis'
+                  },
+                  relationships: {
+                    'seeding_unit': {
+                      'data': {
+                        'id': '1235',
+                        'type': 'seeding_units'
+                      }
+                    }
+                  }
+                },
+                included: [
+                  {
+                    id: '1234',
+                    type: 'zones',
+                    attributes: {
+                      id: 1234,
+                      seeding_unit: {
+                        name: 'Clone'
+                      }
+                    }
+                  },
+                  {
+                    id: '1235',
+                    type: 'seeding_units',
+                    attributes: {
+                      id: 1235,
+                      item_tracking_method: 'preprinted',
+                      name: 'Clone'
+                    }
+                  }
+                ]
+              }.to_json)
 
-      let(:batch) do
-        zone_attributes = {
-          seeding_unit: {
-            name: 'Plant (Seed)'
-          }
-        }.with_indifferent_access
-        zone = double(:zone, attributes: zone_attributes, name: 'Germination')
+            # stub_request(:post, 'https://sandbox-api-ca.metrc.com/packages/v1/create/plantings?licenseNumber=LIC-0001')
+            #   .with(body: [{Name: '1A4FF01000000220000010', Type: 'Clone', Count: 100, Strain: 'Banana Split', Location: 'Germination', PatientLicenseNumber: nil, ActualDate: now}].to_json)
+            #   .to_return(status: 200, body: '', headers: {})
+          end
 
-        double(:batch,
-               zone: zone,
-               relationships: {
-                 barcodes: {
-                   'data': [{ 'type': :barcodes, 'id': '1A4FF0100000022000001101' }]
-                 }
-               }.with_indifferent_access,
-               attributes: {
-                 quantity: '100',
-                 crop_variety: 'Banana Split',
-                 seeded_at: Time.zone.now
-               }.with_indifferent_access)
-      end
+          it 'returns raises an Invalid Operation exception' do
+            expect { subject.send(:create_plantings_from_package_payload) }.to raise_error(InvalidOperation)
+          end
+        end
 
-      subject { described_class.new(ctx, integration) }
+        xcontext 'with custom data' do
+          let(:now) { Time.zone.now.strftime('%Y-%m-%d') }
 
-      it 'returns a valid payload using the batch barcode' do
-        expect_any_instance_of(described_class)
-          .to receive(:batch)
-          .and_return(batch)
-        payload = subject.send(:build_start_payload, batch).first
+          before do
+            packaged_origin = double(:custom_field, id: '388')
+            subject.instance_variable_set(:@packaged_origin, packaged_origin)
 
-        expect(payload).not_to be_nil
-        expect(payload[:Name]).to eq '1A4FF0100000022000001101'
-        expect(payload[:Type]).to eq 'Seed'
-        expect(payload[:Count]).to eq 100
-        expect(payload[:Strain]).to eq 'Banana Split'
-        expect(payload[:Location]).to eq 'Germination'
-        expect(payload[:PatientLicenseNumber]).to be_nil
-        expect(payload[:ActualDate]).not_to be_nil
+            stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
+              .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
+
+            stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
+              .to_return(body: {
+                data: {
+                  id: '2002',
+                  type: 'batches',
+                  attributes: {
+                    id: 2002,
+                    arbitrary_id: 'Jun19-Bok-Cho',
+                    quantity: '100',
+                    crop_variety: 'Banana Split',
+                    seeded_at: now,
+                    zone_name: 'Germination',
+                    crop: 'Cannabis'
+                  },
+                  relationships: {
+                    'seeding_unit': {
+                      'data': {
+                        'id': '1235',
+                        'type': 'seeding_units'
+                      }
+                    },
+                    'barcodes': {
+                      'data': [
+                        {
+                          'id': '1A4060300003B01000000838'
+                        }
+                      ]
+                    },
+                    'zones': {
+                      'data': [
+                        {
+                          'id': 7006,
+                          'types': 'zones'
+                        }
+                      ]
+                    }
+                  }
+                },
+                included: [
+                  {
+                    id: '1234',
+                    type: 'zones',
+                    attributes: {
+                      id: 1234,
+                      name: 'Nursery',
+                      seeding_unit: {
+                        name: 'Clone'
+                      }
+                    }
+                  },
+                  {
+                    id: '1235',
+                    type: 'seeding_units',
+                    attributes: {
+                      id: 1235,
+                      item_tracking_method: 'preprinted',
+                      name: 'Clone'
+                    }
+                  },
+                  {
+                    id: '64850',
+                    type: 'custom_data',
+                    attributes: {
+                      id: 64850,
+                      value: 'Latiff',
+                      crop_batch_id: 2002,
+                      custom_field_id: 388
+                    },
+                    relationships: {
+                      custom_field: {
+                        data: {
+                          id: '388',
+                          type: 'custom_fields'
+                        }
+                      },
+                      crop_batch: {
+                        data: {
+                          id: '2002',
+                          type: 'crop_batches'
+                        }
+                      }
+                    }
+                  },
+                  {
+                    id: '388',
+                    type: 'custom_fields',
+                    attributes: {
+                      id: 388,
+                      name: 'Customer',
+                      organization_id: 1049,
+                      kind: 'text',
+                      status: 'active'
+                    },
+                    relationships: {
+                      stage: {
+                        data: {
+                          id: '1053',
+                          type: 'stages'
+                        }
+                      }
+                    }
+                  }
+                ]
+              }.to_json)
+          end
+
+          it 'returns raises an Invalid Operation exception' do
+            expect { subject.send(:create_plantings_from_package_payload) }.not_to raise_error
+
+            # expect(payload).not_to be_nil
+            # expect(payload[:PackageLabel]).to eq(label.value,)
+            # expect(payload[:PackageAdjustmentAmount]).to eq(0)
+            # expect(payload[:PackageAdjustmentUnitOfMeasureName]).to eq('')
+            # expect(payload[:PlantBatchName]).to eq(batch_tag)
+            # expect(payload[:PlantBatchType]).to eq('Clone')
+            # expect(payload[:PlantCount]).to eq(quantity)
+            # expect(payload[:LocationName]).to eq(batch.zone.name)
+            # expect(payload[:RoomName]).to eq(batch.zone.name)
+            # expect(payload[:StrainName]).to eq(batch.crop_variety)
+            # expect(payload[:PatientLicenseNumber]).to eq(nil)
+            # expect(payload[:PlantedDate]).to eq(batch.seeded_at)
+            # expect(payload[:UnpackagedDate]).to eq(batch.seeded_at)
+          end
+        end
       end
     end
   end

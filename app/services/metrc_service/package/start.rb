@@ -78,10 +78,12 @@ module MetrcService
       def create_plant_batch_package_payload
         consume_completions.map do |consume|
           plant_count = consume.options['consumed_quantity']
+          source_batch_id = consume.context.dig('source_batch', 'id')
+          plant_batch_label = source_batch(source_batch_id)
           resource_unit = get_resource_unit(consume.options['resource_unit_id'])
 
           {
-            PlantBatch: batch_tag,
+            PlantBatch: plant_batch_label,
             Count: plant_count,
             Location: nil,
             Item: resource_unit.item_type,
@@ -206,6 +208,21 @@ module MetrcService
                                           metrc_response = @client.get('items', 'categories').body
                                           JSON.parse(metrc_response).map { |entry| entry['Name'] }
                                         end
+      end
+
+      def source_batch(batch_id)
+        parent_batch = @artemis.get_batch_by_id(batch_id)
+
+        raise InvalidAttributes, "Missing context batch '#{batch_id}'" unless batch_id
+
+        barcodes = parent_batch&.relationships.dig('barcodes', 'data')&.map { |label| label['id'] }
+        matches = barcodes&.select { |label| /[A-Z0-9]{24,24}/.match?(label) }
+
+        raise InvalidAttributes, "Missing barcode for batch '#{parent_batch&.arbitrary_id}'" if barcodes.blank?
+        raise InvalidAttributes, "Expected barcode for batch '#{parent_batch&.arbitrary_id}' to be alphanumeric with 24 characters. Got: #{barcodes.join(', ')}" if matches&.blank?
+
+        matches&.sort! { |a, b| a <=> b } if matches&.size > 1
+        matches&.first
       end
     end
   end
