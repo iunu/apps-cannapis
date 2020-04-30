@@ -48,6 +48,11 @@ module NcsService
       end
 
       def create_plant_package
+        unless batch_tag
+          PackageJob.wait_and_perform(:create_plant_package)
+          return
+        end
+
         payload = plant_package_payload
         call_ncs(:plant_batch, :create_packages, payload)
       end
@@ -84,6 +89,11 @@ module NcsService
       end
 
       def create_product_package
+        unless batch_tag
+          PackageJob.wait_and_perform(:create_plant_batch_package)
+          return
+        end
+
         payload = product_package_payload
         call_ncs(:harvest, :create_package, payload)
       end

@@ -72,12 +72,15 @@ module MetrcService
       end
 
       def create_plant_batch_package
+        unless batch_tag
+          PackageJob.wait_and_perform(:create_plant_batch_package)
+          return
+        end
+
         call_metrc(:create_plant_batch_package, create_plant_batch_package_payload)
       end
 
       def create_plant_batch_package_payload
-        PackageJob.wait_and_perform(:create_plant_batch_package_payload) unless batch_tag
-
         consume_completions.map do |consume|
           plant_count = consume.options['consumed_quantity']
           resource_unit = get_resource_unit(consume.options['resource_unit_id'])
@@ -98,6 +101,11 @@ module MetrcService
       end
 
       def create_product_package
+        unless batch_tag
+          PackageJob.wait_and_perform(:create_plant_batch_package)
+          return
+        end
+
         call_metrc(:create_harvest_package, create_product_package_payload, testing?)
       end
 
