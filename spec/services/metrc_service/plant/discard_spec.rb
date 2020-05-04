@@ -15,7 +15,8 @@ RSpec.describe MetrcService::Plant::Discard do
       attributes: {
         options: {
           tracking_barcode: '1A4FF01000000220000010',
-          note_content: 'And the only prescription is moar cow bell'
+          note_content: 'And the only prescription is moar cow bell',
+          calculated_quantity: '5'
         }
       },
       completion_id: 1001
@@ -151,7 +152,8 @@ RSpec.describe MetrcService::Plant::Discard do
           attributes: {
             options: {
               tracking_barcode: '1A4FF01000000220000010',
-              note_content: 'And the only prescription is moar cow bell'
+              note_content: 'And the only prescription is moar cow bell',
+              calculated_quantity: '5'
             }
           },
           completion_id: 1001
