@@ -76,8 +76,8 @@ module MetrcService
       end
 
       def quantity
-        batch_quantity = batch.quantity&.to_i
-        batch_quantity.positive? ? batch_quantity : @attributes.dig('options', 'quantity')&.to_i
+        completion_quantity = @attributes.dig('options', 'quantity')&.to_i
+        completion_quantity&.positive? ? completion_quantity : batch.quantity&.to_i
       end
     end
   end
