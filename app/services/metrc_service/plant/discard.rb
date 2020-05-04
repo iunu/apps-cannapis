@@ -2,25 +2,18 @@ module MetrcService
   module Plant
     class Discard < MetrcService::Base
       NOT_SPECIFIED = 'Not Specified'.freeze
-      METHOD_CALL = {
-        immature: :destroy_immature_plants,
-        mature: :destroy_mature_plants
-      }.freeze
 
       def call
-        send(METHOD_CALL[plant_state])
+        if plant_state == :immature
+          call_metrc(:destroy_plant_batches, build_immature_payload)
+        else
+          call_metrc(:destroy_plants, build_mature_payload)
+        end
+
         success!
       end
 
       private
-
-      def destroy_immature_plants
-        call_metrc(:destroy_plant_batches, build_immature_payload)
-      end
-
-      def destroy_mature_plants
-        call_metrc(:destroy_plants, build_mature_payload)
-      end
 
       def plant_state
         tracking_method = seeding_unit.item_tracking_method
