@@ -76,7 +76,7 @@ module NcsService
           {
             Id: nil,
             Label: item.relationships.dig('barcode', 'data', 'id'),
-            RoomName: batch.zone&.name&.gsub(/\s*\[.*?\]/, '')&.strip
+            RoomName: Common::Utils.normalize_zone_name(batch.zone&.name)
           }
         end
 
@@ -91,7 +91,7 @@ module NcsService
           Label: batch_tag,
           NewTag: immature? ? nil : barcode,
           GrowthPhase: normalized_growth_phase,
-          NewRoom: batch.zone&.name&.gsub(/\s*\[.*?\]/, '')&.strip,
+          NewRoom: Common::Utils.normalize_zone_name(batch.zone&.name),
           GrowthDate: start_time
         }
 

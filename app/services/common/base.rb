@@ -1,4 +1,5 @@
 require_relative './base_service_action'
+require_relative './utils'
 
 module Common
   class Base < BaseServiceAction
@@ -107,15 +108,21 @@ module Common
 
       barcodes = batch.relationships.dig('barcodes', 'data')&.map { |label| label['id'] }
 
+      raise InvalidAttributes, "Missing barcode for batch '#{batch.arbitrary_id}'" if barcodes.blank?
+      p '#' * 120
+      p barcodes
+      p '#' * 120
+
+      # matches = barcodes&.select { |label| /[A-Z0-9]{24,24}(-split)?/.match?(label.downcase) }
       matches = barcodes&.select { |label| /[A-Z0-9]{24,24}/.match?(label) }
 
-      raise InvalidAttributes, "Missing barcode for batch '#{batch.arbitrary_id}'" if barcodes.blank?
       raise InvalidAttributes, "Expected barcode for batch '#{batch.arbitrary_id}' to be alphanumeric with 24 characters. Got: #{barcodes.join(', ')}" if matches.blank?
 
-      return @tag = matches&.first unless matches&.size > 1
+      if matches&.size > 1
+        matches.sort! { |a, b| a <=> b }
+      end
 
-      matches.sort! { |a, b| a <=> b }
-
+      # @tag = Common::Utils.normalize_barcode(matches&.first)
       @tag = matches&.first
     end
 

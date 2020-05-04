@@ -1,3 +1,5 @@
+require_relative '../../common/utils'
+
 module MetrcService
   module Plant
     class Move < Base
@@ -80,7 +82,7 @@ module MetrcService
           {
             Id: nil,
             Label: item.relationships.dig('barcode', 'data', 'id'),
-            Location: batch.zone&.name&.gsub(/\s*\[.*?\]/, '')&.strip,
+            Location: Common::Utils.normalize_zone_name(batch.zone&.name),
             ActualDate: start_time
           }
         end
@@ -91,7 +93,7 @@ module MetrcService
       def move_plant_batches
         payload = {
           Name: batch_tag,
-          Location: batch.zone&.name&.gsub(/\s*\[.*?\]/, '')&.strip,
+          Location: Common::Utils.normalize_zone_name(batch.zone&.name),
           MoveDate: start_time
         }
 
@@ -107,7 +109,7 @@ module MetrcService
           Count: batch.quantity.to_i,
           StartingTag: immature? ? nil : barcode,
           GrowthPhase: normalized_growth_phase,
-          NewLocation: batch.zone&.name&.gsub(/\s*\[.*?\]/, '')&.strip,
+          NewLocation: Common::Utils.normalize_zone_name(batch.zone&.name),
           GrowthDate: start_time,
           PatientLicenseNumber: nil
         }
