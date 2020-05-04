@@ -10,9 +10,9 @@ GIT
 
 GIT
   remote: https://github.com/artemis-ag/artemis_api
-  revision: f0403d47ed12981b9f037a5ba4ffa0ccb00bee6b
+  revision: 5bb45690dfcad228296a825e758e72b83ca1ca71
   specs:
-    artemis_api (0.7.2)
+    artemis_api (0.7.3)
       oauth2
 
 GIT
