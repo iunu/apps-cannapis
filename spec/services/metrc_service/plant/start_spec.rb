@@ -13,7 +13,8 @@ RSpec.describe MetrcService::Plant::Start do
       attributes: {
         options: {
           tracking_barcode: '1A4FF01000000220000010',
-          zone_name: 'Germination'
+          zone_name: 'Germination',
+          quantity: '100'
         }
       },
       completion_id: 1001
@@ -24,7 +25,7 @@ RSpec.describe MetrcService::Plant::Start do
     subject { described_class.call(ctx, integration) }
 
     describe 'on an old successful transaction' do
-      let(:transaction) { stub_model Transaction, type: :start_batch, success: true }
+      let(:transaction) { create(:transaction, :start, :successful) }
       let(:ctx) do
         {
           id: 3000,
@@ -32,7 +33,11 @@ RSpec.describe MetrcService::Plant::Start do
             batch: { data: { id: 2002 } },
             facility: { data: { id: 1568 } }
           },
-          attributes: {},
+          attributes: {
+            options: {
+              quantity: '100'
+            }
+          },
           completion_id: 1001
         }
       end
@@ -55,7 +60,7 @@ RSpec.describe MetrcService::Plant::Start do
 
       describe '#create_plant_batches' do
         let(:now) { Time.zone.now.strftime('%Y-%m-%d') }
-        let(:transaction) { stub_model Transaction, type: :start_batch, success: false }
+        let(:transaction) { create(:transaction, :start, :unsuccessful) }
         let(:expected_payload) do
           [
             {
@@ -151,8 +156,8 @@ RSpec.describe MetrcService::Plant::Start do
             double(:batch,
                     zone: zone,
                     quantity: '100',
-                      crop_variety: 'Banana Split',
-                      seeded_at: Time.zone.now,
+                    crop_variety: 'Banana Split',
+                    seeded_at: Time.zone.now,
                     relationships: {
                       'barcodes': { 'data': [{ 'id': '1A4FF0100000022000001010' }] }
                     }.with_indifferent_access)
@@ -188,7 +193,8 @@ RSpec.describe MetrcService::Plant::Start do
               },
               attributes: {
                 options: {
-                  zone_name: 'Germination'
+                  zone_name: 'Germination',
+                  quantity: '100'
                 }
               },
               completion_id: 1001
@@ -206,8 +212,8 @@ RSpec.describe MetrcService::Plant::Start do
             double(:batch,
                     zone: zone,
                     quantity: '100',
-                  crop_variety: 'Banana Split',
-                  seeded_at: Time.zone.now,
+                    crop_variety: 'Banana Split',
+                    seeded_at: Time.zone.now,
                     relationships: {
                       barcodes: {
                         'data': [{ 'type': :barcodes, 'id': '1A4FF0100000022000001101' }]

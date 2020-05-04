@@ -34,8 +34,7 @@ module MetrcService
       end
 
       def build_immature_payload
-        quantity = discard.quantity&.to_i
-        reason   = reason_note
+        reason = reason_note
 
         [{
           PlantBatch: batch_tag,
@@ -77,6 +76,10 @@ module MetrcService
         reason_note = "#{reason_type.capitalize}: #{reason_description}. #{@attributes.dig('options', 'note_content')}" if reason_type && reason_description
 
         reason_note || NOT_SPECIFIED
+      end
+
+      def quantity
+        @attributes.dig('options', 'calculated_quantity')&.to_i
       end
     end
   end
