@@ -13,7 +13,8 @@ RSpec.describe MetrcService::Plant::Start do
       attributes: {
         options: {
           tracking_barcode: '1A4FF01000000220000010',
-          zone_name: 'Germination'
+          zone_name: 'Germination',
+          quantity: '100'
         }
       },
       completion_id: 1001
@@ -192,7 +193,8 @@ RSpec.describe MetrcService::Plant::Start do
               },
               attributes: {
                 options: {
-                  zone_name: 'Germination'
+                  zone_name: 'Germination',
+                  quantity: '100'
                 }
               },
               completion_id: 1001
