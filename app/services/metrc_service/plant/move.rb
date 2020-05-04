@@ -99,7 +99,7 @@ module MetrcService
       end
 
       def change_growth_phase
-        first_tag_id = items.first.id
+        first_tag_id = items&.first&.id
         barcode      = items.find { |item| item.id == first_tag_id }.relationships.dig('barcode', 'data', 'id')
 
         payload = {

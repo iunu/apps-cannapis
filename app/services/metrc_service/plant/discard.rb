@@ -4,10 +4,11 @@ module MetrcService
       NOT_SPECIFIED = 'Not Specified'.freeze
 
       def call
-        payload = send("build_#{plant_state}_payload", discard, batch)
-        action = plant_state == 'immature' ? :destroy_plant_batches : :destroy_plants
-
-        call_metrc(action, payload)
+        if plant_state == :immature
+          call_metrc(:destroy_plant_batches, build_immature_payload)
+        else
+          call_metrc(:destroy_plants, build_mature_payload)
+        end
 
         success!
       end
@@ -16,7 +17,7 @@ module MetrcService
 
       def plant_state
         tracking_method = seeding_unit.item_tracking_method
-        @plant_state ||= [nil, 'none'].include?(tracking_method) ? 'immature' : 'mature'
+        @plant_state ||= [nil, 'none'].include?(tracking_method) ? :immature : :mature
       end
 
       def transaction
@@ -24,25 +25,28 @@ module MetrcService
       end
 
       def discard
-        batch.discard(@relationships.dig('action_result', 'data', 'id'))
+        return @obj if @obj
+
+        id = @relationships.dig('action_result', 'data', 'id')&.to_i || @completion_id
+        @obj = batch.discard(id)
+
+        @obj
       end
 
-      def build_immature_payload(discard, batch)
-        reason   = reason_note(discard)
+      def build_immature_payload
+        reason = reason_note
 
-        [
-          {
-            PlantBatch: batch.arbitrary_id,
-            Count: quantity,
-            ReasonNote: reason,
-            ActualDate: discard.attributes['discarded_at']
-          }
-        ]
+        [{
+          PlantBatch: batch_tag,
+          Count: quantity,
+          ReasonNote: reason,
+          ActualDate: discard.discarded_at
+        }]
       end
 
-      def build_mature_payload(discard, batch)
+      def build_mature_payload
         discard_type = @attributes.dig('options', 'discard_type')
-        reason       = reason_note(discard)
+        reason       = reason_note
 
         if discard_type == 'partial'
           return [
@@ -50,7 +54,7 @@ module MetrcService
               Id: nil,
               Label: @attributes.dig('options', 'barcode'),
               ReasonNote: reason,
-              ActualDate: discard.attributes['discarded_at']
+              ActualDate: discard.discarded_at
             }
           ]
         end
@@ -61,22 +65,21 @@ module MetrcService
             Id: nil,
             Label: item.relationships.dig('barcode', 'data', 'id'),
             ReasonNote: reason,
-            ActualDate: discard.attributes['discarded_at']
+            ActualDate: discard.discarded_at
           }
         end
       end
 
-      def reason_note(discard)
-        reason_description = discard.attributes['reason_description']
-        reason_type = discard.attributes['reason_type']
+      def reason_note
+        reason_description = discard.reason_description
+        reason_type = discard.reason_type
         reason_note = "#{reason_type.capitalize}: #{reason_description}. #{@attributes.dig('options', 'note_content')}" if reason_type && reason_description
 
         reason_note || NOT_SPECIFIED
       end
 
       def quantity
-        completion_quantity = @attributes.dig('options', 'calculated_quantity')&.to_i
-        completion_quantity&.positive? ? completion_quantity : batch.quantity&.to_i
+        @attributes.dig('options', 'calculated_quantity')&.to_i
       end
     end
   end
