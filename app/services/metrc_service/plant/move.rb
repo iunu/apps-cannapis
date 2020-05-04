@@ -104,7 +104,7 @@ module MetrcService
 
         payload = {
           Name: batch_tag,
-          Count: batch.quantity.to_i,
+          Count: quantity,
           StartingTag: immature? ? nil : barcode,
           GrowthPhase: normalized_growth_phase,
           NewLocation: batch.zone&.name&.gsub(/\s*\[.*?\]/, '')&.strip,
@@ -138,6 +138,10 @@ module MetrcService
         else
           'Clone'
         end
+      end
+
+      def quantity
+        @attributes.dig('options', 'quantity')&.to_i
       end
     end
   end
