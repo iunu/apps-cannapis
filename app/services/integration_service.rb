@@ -10,7 +10,6 @@ class IntegrationService < ApplicationService
 
     # Refresh OAuth token
     account = integrations.first.account
-    account.refresh_token_if_needed
 
     integrations.each do |integration|
       ref_time = Time.now.getlocal(integration.timezone)

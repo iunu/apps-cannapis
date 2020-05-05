@@ -220,7 +220,7 @@ RSpec.describe MetrcService::Package::Start do
     describe 'on a complete harvest' do
       let(:expected_payload) do
         [{
-          PlantBatch: '1234567890ABCD1234567890',
+          PlantBatch: '1A4FF0000000022000006360',
           Count: 5,
           Location: nil,
           Item: item_type,
@@ -247,7 +247,7 @@ RSpec.describe MetrcService::Package::Start do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/completions"))
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{crop_batch_id}?include=barcodes")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{crop_batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{crop_batch_id}"))
 
         stub_request(:get, 'https://sandbox-api-ca.metrc.com/plantbatches/v1/active?licenseNumber=LIC-0001')
@@ -256,7 +256,7 @@ RSpec.describe MetrcService::Package::Start do
         stub_request(:get, 'https://sandbox-api-ca.metrc.com/items/v1/categories')
           .to_return(status: 200, body: [{ Name: 'Wet Material' }].to_json)
 
-        stub_request(:post, "https://sandbox-api-ca.metrc.com/plantbatches/v1/createpackages?licenseNumber=LIC-0001")
+        stub_request(:post, "https://sandbox-api-ca.metrc.com/plantbatches/v1/create/packages/frommotherplant?licenseNumber=LIC-0001")
           .with(body: expected_payload.to_json, basic_auth: [METRC_API_KEY, integration.secret])
           .to_return(status: 200, body: '', headers: {})
       end

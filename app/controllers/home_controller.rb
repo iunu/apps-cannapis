@@ -5,7 +5,6 @@ class HomeController < ApplicationController
 
     begin
       client = @current_account.client
-      @current_account.refresh_token_if_needed
 
       @facilities   = client.facilities
       @integrations = Integration.active.where(account_id: @current_account.id).index_by(&:facility_id)

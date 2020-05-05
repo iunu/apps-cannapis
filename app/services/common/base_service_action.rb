@@ -46,8 +46,6 @@ module Common
 
     def before
       raise TransactionAlreadyExecuted if transaction.success
-
-      @integration.account.refresh_token_if_needed
     end
 
     def call

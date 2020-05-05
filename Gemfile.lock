@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/artemis-ag/Metrc.git
-  revision: 8c30ad5b200400e2d3e441eebbe96357c443ab71
+  revision: b7a0d608deb95ae5c981121a1b96339ac62bd32b
   specs:
-    Metrc (0.2.8)
+    Metrc (0.2.9)
       bundler
       httparty
       rake
@@ -10,9 +10,9 @@ GIT
 
 GIT
   remote: https://github.com/artemis-ag/artemis_api
-  revision: f0403d47ed12981b9f037a5ba4ffa0ccb00bee6b
+  revision: 5bb45690dfcad228296a825e758e72b83ca1ca71
   specs:
-    artemis_api (0.7.2)
+    artemis_api (0.7.3)
       oauth2
 
 GIT
@@ -298,8 +298,8 @@ GEM
       activemodel (>= 3.0)
       activesupport (>= 3.0)
       rspec-mocks (>= 2.99, < 4.0)
-    rspec-core (3.9.1)
-      rspec-support (~> 3.9.1)
+    rspec-core (3.9.2)
+      rspec-support (~> 3.9.3)
     rspec-expectations (3.9.1)
       diff-lcs (>= 1.2.0, < 2.0)
       rspec-support (~> 3.9.0)
@@ -317,7 +317,7 @@ GEM
       rspec-expectations (~> 3.9)
       rspec-mocks (~> 3.9)
       rspec-support (~> 3.9)
-    rspec-support (3.9.2)
+    rspec-support (3.9.3)
     rubocop (0.82.0)
       jaro_winkler (~> 1.5.1)
       parallel (~> 1.10)
