@@ -72,7 +72,7 @@ module MetrcService
       end
 
       def create_plant_batch_package
-        unless batch_tag
+        unless tag
           PackageJob.wait_and_perform(:create_plant_batch_package)
           return
         end
@@ -103,8 +103,8 @@ module MetrcService
       end
 
       def create_product_package
-        unless batch_tag
-          PackageJob.wait_and_perform(:create_plant_batch_package)
+        unless batch_tag && tag
+          PackageJob.wait_and_perform(:create_product_package)
           return
         end
 
