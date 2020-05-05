@@ -17,11 +17,6 @@ Bundler.require(*Rails.groups)
 
 module Cannapi
   class Application < Rails::Application
-    # Metrc.configure do |config|
-    #   config.api_key = "hRUWxG5vydPpOlqdldox8Skh0UBWVsoa01PLAs5hTeP7lQoB"
-    #   config.base_uri = 'https://sandbox-api-ca.metrc.com'
-    #   config.state = :ca
-    # end
     # Initialize configuration defaults for originally generated Rails version.
     config.load_defaults 6.0
 
