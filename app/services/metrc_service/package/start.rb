@@ -1,5 +1,3 @@
-require_relative '../../common/utils'
-
 module MetrcService
   module Package
     class Start < MetrcService::Package::Base

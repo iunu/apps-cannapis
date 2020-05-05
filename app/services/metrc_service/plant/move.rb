@@ -1,5 +1,3 @@
-# require_relative '../../common/utils'
-
 module MetrcService
   module Plant
     class Move < Base

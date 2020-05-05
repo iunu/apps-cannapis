@@ -1,5 +1,4 @@
 require_relative './base_service_action'
-require_relative './utils'
 
 module Common
   class Base < BaseServiceAction
