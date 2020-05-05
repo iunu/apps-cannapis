@@ -136,9 +136,8 @@ module MetrcService
       end
 
       def barcode
-        first_tag_id = items&.first&.id
-        _item = items.find { |item| item.id == first_tag_id }
-        _item&.relationships&.dig('barcode', 'data', 'id')
+        ordered_items = items.sort { |a, b| a.id <=> b.id }
+        ordered_items&.first&.relationships&.dig('barcode', 'data', 'id')
       end
     end
   end
