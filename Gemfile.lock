@@ -1,8 +1,8 @@
 GIT
   remote: https://github.com/artemis-ag/Metrc.git
-  revision: b7a0d608deb95ae5c981121a1b96339ac62bd32b
+  revision: 721e5fcd3586b93e996653fd905eaa1957b06a04
   specs:
-    Metrc (0.2.9)
+    Metrc (0.2.10)
       bundler
       httparty
       rake
@@ -489,4 +489,4 @@ RUBY VERSION
    ruby 2.6.5p114
 
 BUNDLED WITH
-   2.0.2
+   2.1.4
