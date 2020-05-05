@@ -109,12 +109,8 @@ module Common
       barcodes = batch.relationships.dig('barcodes', 'data')&.map { |label| label['id'] }
 
       raise InvalidAttributes, "Missing barcode for batch '#{batch.arbitrary_id}'" if barcodes.blank?
-      p '#' * 120
-      p barcodes
-      p '#' * 120
 
-      # matches = barcodes&.select { |label| /[A-Z0-9]{24,24}(-split)?/.match?(label.downcase) }
-      matches = barcodes&.select { |label| /[A-Z0-9]{24,24}/.match?(label) }
+      matches = barcodes&.select { |label| /[A-Z0-9]{24,24}(-split)?/.match?(label) }
 
       raise InvalidAttributes, "Expected barcode for batch '#{batch.arbitrary_id}' to be alphanumeric with 24 characters. Got: #{barcodes.join(', ')}" if matches.blank?
 
@@ -122,8 +118,7 @@ module Common
         matches.sort! { |a, b| a <=> b }
       end
 
-      # @tag = Common::Utils.normalize_barcode(matches&.first)
-      @tag = matches&.first
+      @tag = Common::Utils.normalize_barcode(matches&.first)
     end
 
     def validate_batch!

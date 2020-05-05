@@ -153,16 +153,17 @@ module NcsService
 
       barcodes = batch.relationships.dig('barcodes', 'data')&.map { |label| label['id'] }
 
-      matches = barcodes&.select { |label| /[A-Z0-9]{24,}/.match?(label) }
-
       raise InvalidAttributes, "Missing barcode for batch '#{batch.arbitrary_id}'" if barcodes.blank?
+
+      matches = barcodes&.select { |label| /[A-Z0-9]{24,24}(-split)?/.match?(label) }
+
       raise InvalidAttributes, "Expected barcode for batch '#{batch.arbitrary_id}' to be alphanumeric with 24 characters. Got: #{barcodes.join(', ')}" if matches.blank?
 
-      return @tag = matches&.first unless matches&.size > 1
+      if matches&.size > 1
+        matches.sort! { |a, b| a <=> b }
+      end
 
-      matches.sort! { |a, b| a <=> b }
-
-      @tag = matches&.first
+      @tag = Common::Utils.normalize_barcode(matches&.first)
     end
 
     def validate_batch!

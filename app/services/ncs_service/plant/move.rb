@@ -84,9 +84,6 @@ module NcsService
       end
 
       def change_growth_phase(options)
-        first_tag_id = items.first.id
-        barcode      = items.find { |item| item.id == first_tag_id }.relationships.dig('barcode', 'data', 'id')
-
         payload = {
           Label: batch_tag,
           NewTag: immature? ? nil : barcode,
@@ -121,6 +118,15 @@ module NcsService
         else
           'Clone'
         end
+      end
+
+      def quantity
+        @attributes.dig('options', 'quantity')&.to_i
+      end
+
+      def barcode
+        ordered_items = items.sort { |a, b| a.id <=> b.id }
+        ordered_items&.first&.relationships&.dig('barcode', 'data', 'id')
       end
     end
   end

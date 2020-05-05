@@ -1,4 +1,4 @@
-require_relative '../../common/utils'
+# require_relative '../../common/utils'
 
 module MetrcService
   module Plant
