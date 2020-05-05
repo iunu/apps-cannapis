@@ -1,3 +1,5 @@
+require_relative '../../common/utils'
+
 module MetrcService
   module Package
     class Start < MetrcService::Package::Base
@@ -216,13 +218,22 @@ module MetrcService
         raise InvalidAttributes, "Missing context batch '#{batch_id}'" unless batch_id
 
         barcodes = parent_batch&.relationships.dig('barcodes', 'data')&.map { |label| label['id'] }
-        matches = barcodes&.select { |label| /[A-Z0-9]{24,24}/.match?(label) }
 
         raise InvalidAttributes, "Missing barcode for batch '#{parent_batch&.arbitrary_id}'" if barcodes.blank?
+
+        matches = barcodes&.select { |label| /[A-Z0-9]{24,24}(-split)?/.match?(label.downcase) }
+        # matches = barcodes&.select { |label| /[A-Z0-9]{24,24}/.match?(label) }
+
         raise InvalidAttributes, "Expected barcode for batch '#{parent_batch&.arbitrary_id}' to be alphanumeric with 24 characters. Got: #{barcodes.join(', ')}" if matches&.blank?
 
         matches&.sort! { |a, b| a <=> b } if matches&.size > 1
         matches&.first
+        if matches&.size > 1
+          matches.sort! { |a, b| a <=> b }
+        end
+
+        # matches&.first
+        Common::Utils.normalize_barcode(matches&.first)
       end
     end
   end
