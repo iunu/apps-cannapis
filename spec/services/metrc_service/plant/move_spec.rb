@@ -38,7 +38,10 @@ RSpec.describe MetrcService::Plant::Move do
           facility: { data: { id: facility_id } }
         },
         attributes: {
-          start_time: '2020-04-15'
+          start_time: '2020-04-15',
+          options: {
+            quantity: '2'
+          }
         },
         completion_id: 1001
       }.with_indifferent_access
