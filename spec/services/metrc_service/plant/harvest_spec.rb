@@ -149,29 +149,29 @@ RSpec.describe MetrcService::Plant::Harvest do
       before do
         @stubs = []
 
-        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}"))
 
-        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
 
-        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
 
-        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/completions"))
 
         generate_completions = completion_fixtures['data'].select do |completion|
           completion['attributes'].slice('parent_id', 'action_type').values == [completion_id, 'generate']
         end
 
-        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=#{completion_id}")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=#{completion_id}")
           .to_return(body: { data: generate_completions }.to_json)
 
-        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/resource_units?include=crop_variety")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/resource_units?include=crop_variety")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/resource_units"))
 
-        stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}/items?filter[seeding_unit_id]=#{seeding_unit_id}&include=barcodes,seeding_unit")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}/items?filter[seeding_unit_id]=#{seeding_unit_id}&include=barcodes,seeding_unit")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/items"))
 
         @stubs << stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/harvestplants?licenseNumber=LIC-0001')

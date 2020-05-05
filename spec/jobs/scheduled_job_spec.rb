@@ -52,7 +52,6 @@ RSpec.describe ScheduledJob, type: :job do
   end
 
   describe 'on a failing task' do
-    let!(:task) { create(:task, integration: integration, facility_id: integration.facility_id, batch_id: 3000, run_on: now) }
     let(:original_error) { double(:original_error) }
     let(:mailer_with_params) { double(:mailer) }
     let(:email) { double(:email, deliver_now: nil) }
@@ -60,6 +59,8 @@ RSpec.describe ScheduledJob, type: :job do
     let(:mailer) { double(NotificationMailer) }
 
     before do
+      create(:task, integration: integration, facility_id: integration.facility_id, batch_id: 3000, run_on: now)
+
       allow(batch)
         .to receive(:call)
         .and_raise(raised_error)
@@ -71,12 +72,12 @@ RSpec.describe ScheduledJob, type: :job do
       before do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{integration.facility_id}")
           .to_return(body: '{}')
-
-        expect_any_instance_of(TaskRunner)
-          .to receive(:report_rescheduled)
       end
 
       it 'enqueues the job' do
+        expect_any_instance_of(TaskRunner)
+          .to receive(:report_rescheduled)
+
         perform_enqueued_jobs { subject }
       end
     end
@@ -87,12 +88,12 @@ RSpec.describe ScheduledJob, type: :job do
       before do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{integration.facility_id}")
           .to_return(body: '')
-
-        expect_any_instance_of(TaskRunner)
-          .to receive(:report_failed)
       end
 
       it 'enqueues the job' do
+        expect_any_instance_of(TaskRunner)
+          .to receive(:report_failed)
+
         perform_enqueued_jobs { subject }
       end
     end
@@ -104,12 +105,12 @@ RSpec.describe ScheduledJob, type: :job do
       before do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{integration.facility_id}")
           .to_return(status: 200, body: '{}', headers: {})
-
-        expect_any_instance_of(TaskRunner)
-          .to receive(:report_failed)
       end
 
       it 'enqueues the job' do
+        expect_any_instance_of(TaskRunner)
+          .to receive(:report_failed)
+
         perform_enqueued_jobs { subject }
       end
     end

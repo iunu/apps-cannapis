@@ -72,6 +72,11 @@ module MetrcService
       end
 
       def create_plant_batch_package
+        unless tag
+          PackageJob.wait_and_perform(:create_plant_batch_package)
+          return
+        end
+
         call_metrc(:create_plant_batch_package, create_plant_batch_package_payload)
       end
 
@@ -98,6 +103,11 @@ module MetrcService
       end
 
       def create_product_package
+        unless batch_tag && tag
+          PackageJob.wait_and_perform(:create_product_package)
+          return
+        end
+
         call_metrc(:create_harvest_package, create_product_package_payload, testing?)
       end
 
