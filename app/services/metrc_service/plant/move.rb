@@ -66,12 +66,6 @@ module MetrcService
 
         return :move_plants if previous_growth_phase.include?('flow') && new_growth_phase.include?('flow')
 
-        # clone -> veg
-        # veg -> flow
-        # any other case
-        #
-        # -> default
-
         DEFAULT_MOVE_STEP
       end
 
@@ -79,7 +73,7 @@ module MetrcService
         payload = items.map do |item|
           {
             Id: nil,
-            Label: item.relationships.dig('barcode', 'data', 'id'),
+            Label: item&.relationships&.dig('barcode', 'data', 'id'),
             Location: batch.zone&.name&.gsub(/\s*\[.*?\]/, '')&.strip,
             ActualDate: start_time
           }
@@ -99,9 +93,6 @@ module MetrcService
       end
 
       def change_growth_phase
-        first_tag_id = items&.first&.id
-        barcode      = items.find { |item| item.id == first_tag_id }.relationships.dig('barcode', 'data', 'id')
-
         payload = {
           Name: batch_tag,
           Count: quantity,
@@ -142,6 +133,12 @@ module MetrcService
 
       def quantity
         @attributes.dig('options', 'quantity')&.to_i
+      end
+
+      def barcode
+        first_tag_id = items&.first&.id
+        _item = items.find { |item| item.id == first_tag_id }
+        _item&.relationships&.dig('barcode', 'data', 'id')
       end
     end
   end
