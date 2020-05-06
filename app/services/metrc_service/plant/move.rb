@@ -119,7 +119,7 @@ module MetrcService
       end
 
       def normalized_growth_phase(input = nil)
-        input ||= batch.zone.sub_stage.name
+        input ||= batch&.zone&.sub_stage&.name
 
         case input
         when /veg/i
@@ -136,7 +136,7 @@ module MetrcService
       end
 
       def barcode
-        ordered_items = items.sort { |a, b| a.id <=> b.id }
+        ordered_items = items.sort_by(&:id)
         ordered_items&.first&.relationships&.dig('barcode', 'data', 'id')
       end
     end
