@@ -256,7 +256,7 @@ RSpec.describe MetrcService::Package::Start do
         stub_request(:get, 'https://sandbox-api-ca.metrc.com/items/v1/categories')
           .to_return(status: 200, body: [{ Name: 'Wet Material' }].to_json)
 
-        stub_request(:post, "https://sandbox-api-ca.metrc.com/plantbatches/v1/createpackages?licenseNumber=LIC-0001")
+        stub_request(:post, "https://sandbox-api-ca.metrc.com/plantbatches/v1/create/plantings?licenseNumber=LIC-0001")
           .with(body: expected_payload.to_json, basic_auth: [METRC_API_KEY, integration.secret])
           .to_return(status: 200, body: '', headers: {})
       end
