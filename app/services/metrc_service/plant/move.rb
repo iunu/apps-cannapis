@@ -20,7 +20,7 @@ module MetrcService
       end
 
       def transaction
-        @transaction ||= get_transaction(:move_batch, @attributes.merge(sub_stage: batch.zone.sub_stage&.attributes))
+        @transaction ||= get_transaction(:move_batch, @attributes.merge(sub_stage: batch&.zone&.sub_stage&.attributes))
       end
 
       def prior_move_transactions

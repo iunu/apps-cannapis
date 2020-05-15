@@ -56,8 +56,6 @@ RSpec.describe MetrcService::Plant::Start do
     end
 
     describe '#create_plant_batch' do
-      subject { described_class.call(ctx, integration) }
-
       describe '#create_plant_batches' do
         let(:now) { Time.zone.now.strftime('%Y-%m-%d') }
         let(:transaction) { create(:transaction, :start, :unsuccessful) }
@@ -244,7 +242,7 @@ RSpec.describe MetrcService::Plant::Start do
     end
 
     describe '#create_plantings_from_package' do
-      subject { described_class.new(ctx, integration) }
+      subject { described_class.call(ctx, integration) }
 
       describe '#create_plantings_from_package_payload' do
         context 'with no custom data' do
@@ -309,140 +307,61 @@ RSpec.describe MetrcService::Plant::Start do
             expect { subject.send(:create_plantings_from_package_payload) }.to raise_error(InvalidOperation)
           end
         end
+      end
 
-        xcontext 'with custom data' do
-          let(:now) { Time.zone.now.strftime('%Y-%m-%d') }
+      context 'when planting are teens', :focus do
+        let(:now) { Time.zone.now.strftime('%Y-%m-%d') }
+        let(:transaction) { create(:transaction, :unsuccessful, type: :start_batch_from_package) }
+        let(:expected_payload) do
+          [{
+            PackageLabel: 'Latiff',
+            PackageAdjustmentAmount: 0,
+            PackageAdjustmentUnitOfMeasureName: 'Ounces',
+            PlantBatchName: '1A4060300003B01000000838',
+            PlantBatchType: 'Clone',
+            PlantCount: 100,
+            LocationName: 'Flowering',
+            RoomName: 'Flowering',
+            StrainName: 'Banana Split',
+            PatientLicenseNumber: nil,
+            PlantedDate: '2019-10-01',
+            UnpackagedDate: '2019-10-01'
+          }]
+        end
 
-          before do
-            packaged_origin = double(:custom_field, id: '388')
-            subject.instance_variable_set(:@packaged_origin, packaged_origin)
+        before do
+          stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
+            .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
-            stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
-              .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
+          stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
+            .to_return(body: load_response_json('api/seed/batch-96182'))
 
-            stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
-              .to_return(body: {
-                data: {
-                  id: '2002',
-                  type: 'batches',
-                  attributes: {
-                    id: 2002,
-                    arbitrary_id: 'Jun19-Bok-Cho',
-                    quantity: '100',
-                    crop_variety: 'Banana Split',
-                    seeded_at: now,
-                    zone_name: 'Germination',
-                    crop: 'Cannabis'
-                  },
-                  relationships: {
-                    'seeding_unit': {
-                      'data': {
-                        'id': '1235',
-                        'type': 'seeding_units'
-                      }
-                    },
-                    'barcodes': {
-                      'data': [
-                        {
-                          'id': '1A4060300003B01000000838'
-                        }
-                      ]
-                    },
-                    'zones': {
-                      'data': [
-                        {
-                          'id': 7006,
-                          'types': 'zones'
-                        }
-                      ]
-                    }
-                  }
-                },
-                included: [
-                  {
-                    id: '1234',
-                    type: 'zones',
-                    attributes: {
-                      id: 1234,
-                      name: 'Nursery',
-                      seeding_unit: {
-                        name: 'Clone'
-                      }
-                    }
-                  },
-                  {
-                    id: '1235',
-                    type: 'seeding_units',
-                    attributes: {
-                      id: 1235,
-                      item_tracking_method: 'preprinted',
-                      name: 'Clone'
-                    }
-                  },
-                  {
-                    id: '64850',
-                    type: 'custom_data',
-                    attributes: {
-                      id: 64850,
-                      value: 'Latiff',
-                      crop_batch_id: 2002,
-                      custom_field_id: 388
-                    },
-                    relationships: {
-                      custom_field: {
-                        data: {
-                          id: '388',
-                          type: 'custom_fields'
-                        }
-                      },
-                      crop_batch: {
-                        data: {
-                          id: '2002',
-                          type: 'crop_batches'
-                        }
-                      }
-                    }
-                  },
-                  {
-                    id: '388',
-                    type: 'custom_fields',
-                    attributes: {
-                      id: 388,
-                      name: 'Customer',
-                      organization_id: 1049,
-                      kind: 'text',
-                      status: 'active'
-                    },
-                    relationships: {
-                      stage: {
-                        data: {
-                          id: '1053',
-                          type: 'stages'
-                        }
-                      }
-                    }
-                  }
-                ]
-              }.to_json)
-          end
+          stub_request(:post, 'https://sandbox-api-ca.metrc.com/packages/v1/create/plantings?licenseNumber=LIC-0001')
+            .with(body: expected_payload.to_json)
+            .to_return(status: 200, body: '', headers: {})
 
-          it 'returns raises an Invalid Operation exception' do
-            expect { subject.send(:create_plantings_from_package_payload) }.not_to raise_error
+          stub_request(:post, 'https://sandbox-api-ca.metrc.com/plantbatches/v1/changegrowthphase?licenseNumber=LIC-0001')
+            .with(body: [{
+              Name: '1A4060300003B01000000838',
+              Count: 100,
+              StartingTag: nil,
+              GrowthPhase: 'Clone',
+              NewLocation: 'Flowering',
+              GrowthDate: nil,
+              PatientLicenseNumber: nil
+            }].to_json)
+            .to_return(status: 200, body: '', headers: {})
 
-            # expect(payload).not_to be_nil
-            # expect(payload[:PackageLabel]).to eq(label.value,)
-            # expect(payload[:PackageAdjustmentAmount]).to eq(0)
-            # expect(payload[:PackageAdjustmentUnitOfMeasureName]).to eq('')
-            # expect(payload[:PlantBatchName]).to eq(batch_tag)
-            # expect(payload[:PlantBatchType]).to eq('Clone')
-            # expect(payload[:PlantCount]).to eq(quantity)
-            # expect(payload[:LocationName]).to eq(batch.zone.name)
-            # expect(payload[:RoomName]).to eq(batch.zone.name)
-            # expect(payload[:StrainName]).to eq(batch.crop_variety)
-            # expect(payload[:PatientLicenseNumber]).to eq(nil)
-            # expect(payload[:PlantedDate]).to eq(batch.seeded_at)
-            # expect(payload[:UnpackagedDate]).to eq(batch.seeded_at)
-          end
+          stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=3000')
+            .to_return(status: 204, body: '', headers: {})
+        end
+
+        it 'is successful' do
+          expect_any_instance_of(described_class)
+            .to receive(:get_transaction)
+            .and_return transaction
+
+          expect(subject).to be_success
         end
       end
     end
