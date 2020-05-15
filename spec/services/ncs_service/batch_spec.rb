@@ -1,10 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe NcsService::Batch do
-  def load_response_json(path)
-    File.read("spec/support/data/#{path}.json")
-  end
-
   let(:account) { create(:account) }
   let(:integration) { create(:integration, :ncs_vendor, account: account) }
   let(:ctx) do

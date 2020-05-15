@@ -3,10 +3,6 @@
 require 'rails_helper'
 
 RSpec.describe(TaskRunner) do
-  def load_response_json(path)
-    File.read("spec/support/data/#{path}.json")
-  end
-
   describe '.run' do
     let(:batch_id) { 374 }
     let(:facility_id) { 2 }

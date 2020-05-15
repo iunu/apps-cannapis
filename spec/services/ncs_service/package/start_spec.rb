@@ -2,10 +2,6 @@ require 'rails_helper'
 require 'ostruct'
 
 RSpec.describe NcsService::Package::Start do
-  def load_response_json(path)
-    File.read("spec/support/data/#{path}.json")
-  end
-
   let(:account) { create(:account) }
   let(:integration) { create(:integration, :ncs_vendor, account: account) }
   let(:transaction) { create(:transaction, :ncs_vendor, :successful, :plant_package, account: account, integration: integration) }
