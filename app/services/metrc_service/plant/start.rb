@@ -49,6 +49,9 @@ module MetrcService
       def create_plantings_from_package
         call_metrc(:create_plantings_package, create_plantings_from_package_payload)
 
+        # Some clients start their plantings with teens
+        # and at a spaecific growth phase (like flowering).
+        # This sends it to the correct stage on Metrc if item tracking method is different from `none`.
         MetrcService::Plant::Move.call(@ctx, @integration) if seeding_unit.item_tracking_method != 'none'
       end
 
