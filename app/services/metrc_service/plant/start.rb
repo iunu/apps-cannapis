@@ -9,8 +9,7 @@ module MetrcService
 
       def call
         @transaction_type = :start_batch
-        @packaged_origin = nil
-        @packaged_origin = batch.included&.dig(:custom_fields)&.detect { |obj| ORIGIN_PACKAGES.include?(obj&.name) } if batch.methods.include?(:included)
+        @packaged_origin = batch.included&.dig(:custom_fields)&.detect { |obj| ORIGIN_PACKAGES.include?(obj&.name) }
 
         if @packaged_origin
           @transaction_type = :start_batch_from_package
