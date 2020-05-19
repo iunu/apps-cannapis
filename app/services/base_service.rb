@@ -57,9 +57,17 @@ module BaseService
 
     def module_for_completion
       action_type = completion.action_type.camelize
-      seeding_unit_name = module_name_for_seeding_unit.camelize
 
-      @integration.vendor_module.const_get("#{seeding_unit_name}::#{action_type}")
+      # We need to call for wet weight and wet wate resources
+      # since a resource call was received
+      if action_type == 'generate'
+        module_name = 'Resource::WetWeight'
+      else
+        seeding_unit_name = module_name_for_seeding_unit.camelize
+        module_name = "#{seeding_unit_name}::#{action_type}"
+      end
+
+      @integration.vendor_module.const_get(module_name)
     rescue NameError
       raise InvalidOperation, "Processing not supported for #{seeding_unit.name} #{action_type} completions"
     end

@@ -49,8 +49,7 @@ module MetrcService
         dictionary = DidYouMean::SpellChecker.new(dictionary: metrc_supported_waste_types)
         matches = dictionary.correct(type)
 
-        raise InvalidAttributes,
-          "The harvest waste type '#{type}' is not supported by Metrc. "\
+        raise InvalidAttributes, "The harvest waste type '#{type}' is not supported by Metrc. " \
           "#{matches.present? ? "Did you mean #{matches.map(&:inspect).join(', ')}?" : 'No similar types were found on Metrc.'}"
       end
 
@@ -58,7 +57,7 @@ module MetrcService
         # TODO: implement this call in the Metrc gem
         @metrc_supported_waste_types ||= begin
                                            metrc_response = @client.get('harvests', 'waste/types').body
-                                           JSON.parse(metrc_response).map { |entry| entry['Name']  }
+                                           JSON.parse(metrc_response).map { |entry| entry['Name'] }
                                          end
       end
 

@@ -60,6 +60,7 @@ module MetrcService
         # Filter the completions we curently support
         actions.each do |completion|
           next unless completion_supported?(completion) && !performed_transactions.include?(completion.id)
+
           arr << completion
         end
 
