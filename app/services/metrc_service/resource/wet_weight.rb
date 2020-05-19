@@ -8,7 +8,7 @@ module MetrcService
       resource_name 'wet_weight'
 
       def call
-        harvest_plants if resource_present?
+        harvest_plants if resource_present? || @ctx['attributes']['action_type'] == 'generate'
 
         success!
       end
