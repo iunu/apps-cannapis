@@ -8,22 +8,22 @@ class IntegrationService < ApplicationService
     integrations = Integration.active.where(facility_id: facility_id)
     raise 'No integrations for this facility' unless integrations.size.positive?
 
-    # Refresh OAuth token
-    account = integrations.first.account
-
     integrations.each do |integration|
       ref_time = Time.now.getlocal(integration.timezone)
 
       if ref_time.hour >= integration.eod.hour
         execute_job(integration)
+        next
+      end
 
-      elsif integration.vendor_module.run_now?(@ctx, integration)
+      if integration.vendor_module.run_now?(@ctx, integration)
         schedule_job(integration, ref_time)
         flush_job_queue(integration, ref_time)
-
-      else
-        schedule_job(integration, ref_time)
+        next
       end
+
+      schedule_job(integration, ref_time)
+      next
     end
   end
 
