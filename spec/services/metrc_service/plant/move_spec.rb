@@ -308,7 +308,7 @@ RSpec.describe MetrcService::Plant::Move do
     describe 'for a previous vegetative zone and a new vegetative zone' do
       it 'returns the move_plants step' do
         next_step = subject.send :next_step, 'vegetative', 'vegetative'
-        expect(next_step).to be :move_plants
+        expect(next_step).to be :move_plant_batches
       end
     end
 

@@ -60,11 +60,11 @@ module MetrcService
 
         new_growth_phase.downcase!
 
-        return :move_plant_batches if previous_growth_phase.include?('clone') && new_growth_phase.include?('clone')
-
-        return :move_plants if previous_growth_phase.include?('veg') && new_growth_phase.include?('veg')
+        return :move_plant_batches if %w[veg clone].any? { |phase| previous_growth_phase.include?(phase) && new_growth_phase.include?(phase) }
 
         return :move_plants if previous_growth_phase.include?('flow') && new_growth_phase.include?('flow')
+
+        return :move_harvest if %w[curing drying].any? { |phase| previous_growth_phase.include?(phase) && new_growth_phase.include?(phase) }
 
         DEFAULT_MOVE_STEP
       end
@@ -106,6 +106,17 @@ module MetrcService
         call_metrc(:change_growth_phase, [payload])
       end
 
+      def move_harvest
+        payload = {
+          HarvestName: batch.arbitrary_id,
+          DryingLocation: Common::Utils.normalize_zone_name(batch.zone&.name),
+          DryingRoom: Common::Utils.normalize_zone_name(batch.zone&.name),
+          ActualDate: start_time
+        }
+
+        call_metrc(:move_harvest, [payload])
+      end
+
       def items
         @items ||= get_items(batch.seeding_unit.id)
       end
@@ -126,6 +137,10 @@ module MetrcService
           'Vegetative'
         when /flow/i
           'Flowering'
+        when /curing/i
+          'Curing'
+        when /dry/i
+          'Drying'
         else
           'Clone'
         end
