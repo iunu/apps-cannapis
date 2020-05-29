@@ -9,11 +9,7 @@ module MetrcService
 
       def call
         @transaction_type = :start_batch
-        @packaged_origin = nil
-
-        if batch.methods.include?(:included)
-          @packaged_origin = batch.included&.dig(:custom_fields)&.detect { |obj| ORIGIN_PACKAGES.includes?(obj&.name) }
-        end
+        @packaged_origin = batch.included&.dig(:custom_fields)&.detect { |obj| ORIGIN_PACKAGES.include?(obj&.name) }
 
         if @packaged_origin
           @transaction_type = :start_batch_from_package
@@ -51,7 +47,12 @@ module MetrcService
       end
 
       def create_plantings_from_package
-        call_metrc(:create_plantings_package, create_package_plantings_payload)
+        call_metrc(:create_plantings_package, create_plantings_from_package_payload)
+
+        # Some clients start their plantings with teens
+        # and at a specific growth phase (like flowering).
+        # This sends it to the correct stage on Metrc if item tracking method is different from `none`.
+        MetrcService::Plant::Move.call(@ctx, @integration) if seeding_unit.item_tracking_method != 'none'
       end
 
       def create_plantings_from_package_payload
@@ -66,8 +67,8 @@ module MetrcService
           PlantBatchName: batch_tag,
           PlantBatchType: 'Clone',
           PlantCount: quantity,
-          LocationName: batch.zone.name,
-          RoomName: batch.zone.name,
+          LocationName: batch.zone&.name,
+          RoomName: batch.zone&.name,
           StrainName: batch.crop_variety,
           PatientLicenseNumber: nil,
           PlantedDate: batch.seeded_at,

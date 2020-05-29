@@ -1,10 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe MetrcService::Plant::Harvest do
-  def load_response_json(path)
-    File.read("spec/support/data/#{path}.json")
-  end
-
   METRC_API_KEY = ENV['METRC_SECRET_MD'] unless defined?(METRC_API_KEY)
 
   let(:account) { create(:account) }

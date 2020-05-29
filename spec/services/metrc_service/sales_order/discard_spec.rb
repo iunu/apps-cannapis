@@ -3,10 +3,6 @@ require 'rails_helper'
 RSpec.xdescribe MetrcService::SalesOrder::Discard do
   METRC_API_KEY = ENV['METRC_SECRET_CA'] unless defined?(METRC_API_KEY)
 
-  def load_response_json(path)
-    File.read("spec/support/data/#{path}.json")
-  end
-
   let(:account) { create(:account) }
   let(:integration) { create(:integration, account: account, state: :ca) }
   let(:facility_id) { 1 }

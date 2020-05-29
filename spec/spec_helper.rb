@@ -3,6 +3,7 @@ require 'simplecov-console'
 require 'capybara/rspec'
 require 'sidekiq/testing'
 require 'webmock/rspec'
+require 'support/helpers'
 
 SimpleCov.formatters = [
   SimpleCov::Formatter::HTMLFormatter,
@@ -34,6 +35,8 @@ ENV['NCS_BASE_URI']     = 'https://vendortest-posapi.ncsanalytics.com'
 #
 # See http://rubydoc.info/gems/rspec-core/RSpec/Core/Configuration
 RSpec.configure do |config|
+  config.include Helpers
+
   # rspec-expectations config goes here. You can use an alternate
   # assertion/expectation library such as wrong or the stdlib/minitest
   # assertions if you prefer.

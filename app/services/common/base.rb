@@ -109,13 +109,9 @@ module Common
 
       raise InvalidAttributes, "Missing barcode for batch '#{batch.arbitrary_id}'" if barcodes.blank?
 
-      matches = barcodes&.select { |label| /[A-Z0-9]{24,24}(-split)?/.match?(label) }
+      matches = barcodes&.select { |label| /[A-Z0-9]{24,24}(-split)?/.match?(label) }&.sort
 
       raise InvalidAttributes, "Expected barcode for batch '#{batch.arbitrary_id}' to be alphanumeric with 24 characters. Got: #{barcodes.join(', ')}" if matches.blank?
-
-      if matches&.size > 1
-        matches.sort! { |a, b| a <=> b }
-      end
 
       @tag = Common::Utils.normalize_barcode(matches&.first)
     end
