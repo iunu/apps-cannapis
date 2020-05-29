@@ -294,7 +294,7 @@ RSpec.describe MetrcService::Plant::Move do
     describe 'for a previous clone zone and a new vegetative zone' do
       it 'returns the default move step' do
         next_step = subject.send :next_step, 'clone', 'vegetative'
-        expect(next_step).to be :change_growth_phase
+        expect(next_step).to be :move_plant_batches
       end
     end
 

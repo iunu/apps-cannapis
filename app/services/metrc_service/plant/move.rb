@@ -55,16 +55,22 @@ module MetrcService
         GROWTH_CYCLES[previous_growth_phase.downcase.to_sym]&.include?(growth_phase.downcase.to_sym)
       end
 
+      def within_phases?(zone_name, expected_zones)
+        return false unless zone_name && expected_zones
+
+        expected_zones.any? { |phase| zone_name.include?(phase) }
+      end
+
       def next_step(previous_growth_phase = nil, new_growth_phase = nil) # rubocop:disable Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
         return DEFAULT_MOVE_STEP if previous_growth_phase.nil? || new_growth_phase.nil?
 
         new_growth_phase.downcase!
 
-        return :move_plant_batches if %w[veg clone].any? { |phase| previous_growth_phase.include?(phase) && new_growth_phase.include?(phase) }
+        return :move_plant_batches if within_phases?(previous_growth_phase, %w[veg clone]) && within_phases?(new_growth_phase, %w[veg clone])
 
         return :move_plants if previous_growth_phase.include?('flow') && new_growth_phase.include?('flow')
 
-        return :move_harvest if %w[curing drying].any? { |phase| previous_growth_phase.include?(phase) && new_growth_phase.include?(phase) }
+        return :move_harvest if within_phases?(previous_growth_phase, %w[curing drying]) && within_phases?(new_growth_phase, %w[curing drying])
 
         DEFAULT_MOVE_STEP
       end
