@@ -334,6 +334,8 @@ GEM
       rubocop (>= 0.72.0)
     rubocop-rspec (1.38.1)
       rubocop (>= 0.68.1)
+    rubocop-rspec-focused (1.0.0)
+      rubocop (>= 0.51)
     ruby-progressbar (1.10.1)
     ruby_dep (1.5.0)
     rubyzip (2.3.0)
@@ -467,6 +469,7 @@ DEPENDENCIES
   rubocop-performance
   rubocop-rails
   rubocop-rspec
+  rubocop-rspec-focused
   sass-rails (~> 5)
   selenium-webdriver
   shoulda-matchers

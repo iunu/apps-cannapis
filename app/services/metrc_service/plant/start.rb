@@ -32,7 +32,7 @@ module MetrcService
       end
 
       def build_start_payload
-        seeding_unit = batch.zone.attributes.dig('seeding_unit', 'name').downcase
+        seeding_unit = batch.zone&.attributes&.dig('seeding_unit', 'name')&.downcase
         type = /seed/.match?(seeding_unit) ? 'Seed' : 'Clone'
 
         [{

@@ -49,7 +49,7 @@ RSpec.describe MetrcService::Batch do
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
           .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
-        stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,completions,custom_data,seeding_unit,harvest_unit,sub_zone')
+        stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
           .to_return(body: load_response_json('api/seed/batch-2002'))
 
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/completions?filter%5Bcrop_batch_ids%5D%5B0%5D=96182')
@@ -68,7 +68,7 @@ RSpec.describe MetrcService::Batch do
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
           .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
-        stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,completions,custom_data,seeding_unit,harvest_unit,sub_zone')
+        stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
           .to_return(body: load_response_json('api/seed/batch-2002'))
 
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/completions?filter%5Bcrop_batch_ids%5D%5B0%5D=96182')

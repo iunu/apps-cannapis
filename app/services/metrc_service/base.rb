@@ -21,7 +21,7 @@ module MetrcService
         config.sandbox  = debug
       end
 
-      Metrc::Client.new(user_key: @integration.secret, debug: debug)
+      Metrc::Client.new(user_key: @integration.secret)
     end
 
     protected

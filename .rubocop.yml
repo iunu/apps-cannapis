@@ -2,6 +2,7 @@ require:
   - rubocop-rails
   - rubocop-performance
   - rubocop-rspec
+  - rubocop/rspec/focused
 
 AllCops:
   Exclude:
@@ -90,3 +91,6 @@ Layout/SpaceAroundMethodCallOperator:
 
 Style/ExponentialNotation:
   Enabled: false
+
+RSpec/Focused:
+  Enabled: true
