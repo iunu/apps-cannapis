@@ -22,7 +22,7 @@ jobs:
 
   bundle_install:
     docker:
-      - image: circleci/ruby:2.6.5
+      - image: circleci/ruby:2.6.6
 
     steps:
       - checkout
@@ -42,7 +42,7 @@ jobs:
 
   precompile_assets:
     docker:
-      - image: circleci/ruby:2.6.5-node
+      - image: circleci/ruby:2.6.6-node
 
     steps:
       - checkout
@@ -80,7 +80,7 @@ jobs:
 
   rails_unit_tests: &rails_tests
     docker:
-      - image: circleci/ruby:2.6.5-node-browsers
+      - image: circleci/ruby:2.6.6-node-browsers
         environment:
           AGRILYST_URL: 'test.com'
           DATABASE_URL: postgres://postgres@localhost/cannapi_test
@@ -136,7 +136,7 @@ jobs:
 
   # rubocop:
   #   docker:
-  #     - image: circleci/ruby:2.6.5
+  #     - image: circleci/ruby:2.6.6
   #   steps:
   #     - checkout
 
