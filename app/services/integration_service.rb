@@ -4,6 +4,12 @@ class IntegrationService < ApplicationService
   end
 
   def call
+    # Save the webhook payload data
+    Event.create(facility_id: facility_id,
+                 batch_id: batch_id,
+                 user_id: @ctx.dig('attributes', 'user_id')&.to_i,
+                 body: @ctx)
+
     # Look up for active integrations
     integrations = Integration.active.where(facility_id: facility_id)
     raise 'No integrations for this facility' unless integrations.size.positive?
