@@ -4,15 +4,11 @@ class IntegrationService < ApplicationService
   end
 
   def call
-    # Save the webhook payload data
-    Event.create(facility_id: facility_id,
-                 batch_id: batch_id,
-                 user_id: @ctx.dig('attributes', 'user_id')&.to_i,
-                 body: @ctx)
-
     # Look up for active integrations
     integrations = Integration.active.where(facility_id: facility_id)
     raise 'No integrations for this facility' unless integrations.size.positive?
+
+    trace_event
 
     integrations.each do |integration|
       ref_time = Time.now.getlocal(integration.timezone)
@@ -44,6 +40,14 @@ class IntegrationService < ApplicationService
 
   def execute_job(integration)
     VendorJob.perform_later(@ctx, integration)
+  end
+
+  def trace_event
+    # Save the webhook payload data
+    Event.create(facility_id: facility_id,
+                 batch_id: batch_id,
+                 user_id: @ctx.dig('attributes', 'user_id')&.to_i,
+                 body: @ctx)
   end
 
   def schedule_job(integration, ref_time)
