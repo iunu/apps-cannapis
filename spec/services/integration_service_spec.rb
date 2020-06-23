@@ -11,7 +11,7 @@ RSpec.describe IntegrationService, sidekiq: :fake do
 
   subject { described_class.new(params) }
 
-  context 'when there is no integration' do
+  context 'with no integration' do
     it 'raises an exception' do
       expect do
         subject.call
@@ -19,7 +19,7 @@ RSpec.describe IntegrationService, sidekiq: :fake do
     end
   end
 
-  context 'when the integration is not active' do
+  context 'with an inactive integration' do
     it 'raises an exception' do
       expect do
         subject.call
@@ -30,7 +30,21 @@ RSpec.describe IntegrationService, sidekiq: :fake do
   context 'when the integration is active' do
     let(:params) do
       ActionController::Parameters.new(
-        relationships: { facility: { data: { id: integration.facility_id } } }
+        attributes: {
+          user_id: account.artemis_id
+        },
+        relationships: {
+          batch: {
+            data: {
+              id: 1834
+            }
+          },
+          facility: {
+            data: {
+              id: integration.facility_id
+            }
+          }
+        }
       ).tap(&:permit!)
     end
 
@@ -39,6 +53,8 @@ RSpec.describe IntegrationService, sidekiq: :fake do
     it 'enqueues the job and does not raise an exception' do
       expect(MetrcService).not_to receive(:run_now?)
       expect(VendorJob).to receive(:perform_later)
+      expect(Event).to receive(:create).with(facility_id: integration.facility_id, user_id: account.artemis_id, batch_id: 1834, body: params)
+
       expect { subject.call }.not_to raise_error
     end
   end
