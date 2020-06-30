@@ -1,19 +1,18 @@
 module MetrcService
   module Plant
     class Start < Base
-      attr_reader :transaction_type
-
       ORIGIN_PACKAGES = [
         'Source Package Id (Metrc)'
       ].freeze
+      PLANT_MOTHER_NAME = /mother id/i.freeze
 
       def call
-        @transaction_type = :start_batch
-        @packaged_origin = batch.included&.dig(:custom_fields)&.detect { |obj| ORIGIN_PACKAGES.include?(obj&.name) }
-
-        if @packaged_origin
-          @transaction_type = :start_batch_from_package
+        if origin_package
+          transaction.update(type: :start_batch_from_package)
           create_plantings_from_package
+        elsif source_plant
+          transaction.update(type: :start_batch_from_source_plant)
+          create_plantings_from_source_plant
         else
           create_plant_batch
         end
@@ -24,7 +23,7 @@ module MetrcService
       private
 
       def transaction
-        @transaction ||= get_transaction(@transaction_type || :start_batch)
+        @transaction ||= get_transaction(:start_batch)
       end
 
       def create_plant_batch
@@ -40,7 +39,7 @@ module MetrcService
           Type: type,
           Count: quantity,
           Strain: batch.crop_variety,
-          Location: Common::Utils.normalize_zone_name(batch.zone&.name),
+          Location: location,
           PatientLicenseNumber: nil,
           ActualDate: batch.seeded_at
         }]
@@ -56,9 +55,9 @@ module MetrcService
       end
 
       def create_plantings_from_package_payload
-        label = batch.included&.dig(:custom_data)&.detect { |obj| obj&.custom_field_id.to_i == @packaged_origin.id.to_i }
+        label = batch.included&.dig(:custom_data)&.detect { |obj| obj&.custom_field_id.to_i == origin_package&.id.to_i }
 
-        raise InvalidOperation, "Failed: No package label was found for #{@packaged_origin&.name}" unless label && label&.value
+        raise InvalidOperation, "Failed: No package label was found for #{origin_package&.name}" unless label && label&.value
 
         [{
           PackageLabel: label.value,
@@ -67,8 +66,8 @@ module MetrcService
           PlantBatchName: batch_tag,
           PlantBatchType: 'Clone',
           PlantCount: quantity,
-          LocationName: batch.zone&.name,
-          RoomName: batch.zone&.name,
+          LocationName: location,
+          RoomName: location,
           StrainName: batch.crop_variety,
           PatientLicenseNumber: nil,
           PlantedDate: batch.seeded_at,
@@ -76,8 +75,45 @@ module MetrcService
         }]
       end
 
+      def create_plantings_from_source_plant
+        call_metrc(:create_plant_batch_plantings, create_plantings_from_source_plant_payload)
+      end
+
+      def create_plantings_from_source_plant_payload
+        tag = batch.included&.dig(:custom_data)&.detect { |obj| obj&.custom_field_id.to_i == source_plant.id.to_i }
+
+        raise InvalidOperation, "Failed: No source plant was found for #{source_plant&.name}" unless tag && tag&.value
+
+        [{
+          Id: nil,
+          PlantBatch: batch_tag,
+          Count: quantity,
+          Location: location,
+          Room: location,
+          Item: 'Immature Plants',
+          Tag: tag.value,
+          PatientLicenseNumber: nil,
+          Note: nil,
+          IsTradeSample: false,
+          IsDonation: false,
+          ActualDate: batch.seeded_at
+        }]
+      end
+
       def quantity
         @attributes.dig('options', 'quantity')&.to_i
+      end
+
+      def origin_package
+        @origin_package ||= batch.included&.dig(:custom_fields)&.detect { |obj| ORIGIN_PACKAGES.include?(obj&.name) }
+      end
+
+      def source_plant
+        @source_plant ||= batch.included&.dig(:custom_fields)&.detect { |obj| PLANT_MOTHER_NAME.match?(obj&.name) }
+      end
+
+      def location
+        Common::Utils.normalize_zone_name(batch.zone&.name)
       end
     end
   end

@@ -249,8 +249,6 @@ RSpec.describe MetrcService::Plant::Start do
           let(:now) { Time.zone.now.strftime('%Y-%m-%d') }
 
           before do
-            stub_request(:post, 'https://notify.bugsnag.com/')
-
             stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
               .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
@@ -412,6 +410,179 @@ RSpec.describe MetrcService::Plant::Start do
               GrowthDate: nil,
               PatientLicenseNumber: nil
             }].to_json)
+            .to_return(status: 200, body: '', headers: {})
+
+          stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=3000')
+            .to_return(status: 204, body: '', headers: {})
+        end
+
+        it 'is successful' do
+          expect_any_instance_of(described_class)
+            .to receive(:get_transaction)
+            .and_return transaction
+
+          expect(subject).to be_success
+        end
+      end
+    end
+
+    describe '#create_plantings_from_source_plant' do
+      subject { described_class.call(ctx, integration) }
+
+      describe '#create_plantings_from_source_plant_payload' do
+        context 'with no custom data', skip: 'Notifies Bugsnag?' do
+          let(:now) { Time.zone.now.strftime('%Y-%m-%d') }
+
+          before do
+            stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
+              .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
+
+            stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
+              .to_return(body: {
+                data: {
+                  id: '2002',
+                  type: 'batches',
+                  attributes: {
+                    id: 2002,
+                    arbitrary_id: 'Jun19-Bok-Cho',
+                    quantity: '100',
+                    crop_variety: 'Banana Split',
+                    seeded_at: now,
+                    zone_name: 'Germination',
+                    crop: 'Cannabis'
+                  },
+                  relationships: {
+                    'seeding_unit': {
+                      'data': {
+                        'id': '1235',
+                        'type': 'seeding_units'
+                      }
+                    },
+                    'custom_data': {
+                      'data': [
+                        {
+                          'type': 'custom_data',
+                          'id': '66998'
+                        }
+                      ]
+                    },
+                    'barcodes': {
+                      'data': [
+                        {
+                          'type': 'barcodes',
+                          'id': '1A406020000E4E9000003989'
+                        }
+                      ]
+                    }
+                  }
+                },
+                included: [
+                  {
+                    id: '1234',
+                    type: 'zones',
+                    attributes: {
+                      id: 1234,
+                      seeding_unit: {
+                        name: 'Clone'
+                      }
+                    }
+                  },
+                  {
+                    id: '1235',
+                    type: 'seeding_units',
+                    attributes: {
+                      id: 1235,
+                      item_tracking_method: 'preprinted',
+                      name: 'Clone'
+                    }
+                  },
+                  {
+                    id: '66998',
+                    type: 'custom_data',
+                    attributes: {
+                      id: 66998,
+                      value: '1A4060300003779000013229',
+                      crop_batch_id: 108064,
+                      custom_field_id: 407
+                    },
+                    relationships: {
+                      custom_field: {
+                        data: {
+                          id: '407',
+                          type: 'custom_fields'
+                        }
+                      },
+                      crop_batch: {
+                        data: {
+                          id: '2002',
+                          type: 'crop_batches'
+                        }
+                      }
+                    }
+                  },
+                  {
+                    id: '407',
+                    type: 'custom_fields',
+                    attributes: {
+                      id: 407,
+                      name: 'Source Package Id (Metrc)',
+                      organization_id: 1062,
+                      position: 0,
+                      kind: 'text',
+                      status: 'active'
+                    },
+                    relationships: {
+                      stage: {
+                        data: {
+                          id: '1068',
+                          type: 'stages'
+                        }
+                      }
+                    }
+                  }
+                ]
+              }.to_json)
+
+            stub_request(:post, 'https://sandbox-api-ca.metrc.com/packages/v1/create/plantings?licenseNumber=LIC-0001')
+              .with(body: [{Name: '1A4FF01000000220000010', Type: 'Clone', Count: 100, Strain: 'Banana Split', Location: 'Germination', PatientLicenseNumber: nil, ActualDate: now}].to_json)
+              .to_return(status: 200, body: '', headers: {})
+          end
+
+          it 'returns raises an Invalid Operation exception' do
+            expect { subject.send(:create_plantings_from_source_plant_payload) }.to raise_error(InvalidOperation)
+          end
+        end
+      end
+
+      context 'with a source plant' do
+        let(:now) { Time.zone.now.strftime('%Y-%m-%d') }
+        let(:transaction) { create(:transaction, :unsuccessful, type: :start_batch_from_source_plant) }
+        let(:expected_payload) do
+          [{
+            Id: nil,
+            PlantBatch: '1A4060300003B01000000838',
+            Count: 100,
+            Location: 'Flowering',
+            Room: 'Flowering',
+            Item: 'Immature Plants',
+            Tag: '1A4060300003B01000000837',
+            PatientLicenseNumber: nil,
+            Note: nil,
+            IsTradeSample: false,
+            IsDonation: false,
+            ActualDate: '2019-10-01'
+          }]
+        end
+
+        before do
+          stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
+            .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
+
+          stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
+            .to_return(body: load_response_json('api/seed/batch-96183'))
+
+          stub_request(:post, 'https://sandbox-api-ca.metrc.com/plantbatches/v1/create/plantings?licenseNumber=LIC-0001')
+            .with(body: expected_payload.to_json)
             .to_return(status: 200, body: '', headers: {})
 
           stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=3000')
