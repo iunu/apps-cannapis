@@ -232,9 +232,7 @@ module MetrcService
 
         raise InvalidAttributes, "Expected barcode for batch '#{parent_batch&.arbitrary_id}' to be alphanumeric with 24 characters. Got: #{barcodes.join(', ')}" if matches&.blank?
 
-        if matches&.size > 1
-          matches.sort! { |a, b| a <=> b }
-        end
+        matches.sort! { |a, b| a <=> b } if matches&.size > 1
 
         Common::Utils.normalize_barcode(matches&.first)
       end
