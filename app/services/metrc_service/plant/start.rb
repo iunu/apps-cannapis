@@ -39,7 +39,7 @@ module MetrcService
           Type: type,
           Count: quantity,
           Strain: batch.crop_variety,
-          Location: location,
+          Location: location_name,
           PatientLicenseNumber: nil,
           ActualDate: batch.seeded_at
         }]
@@ -51,7 +51,7 @@ module MetrcService
         # Some clients start their plantings with teens
         # and at a specific growth phase (like flowering).
         # This sends it to the correct stage on Metrc if item tracking method is different from `none`.
-        MetrcService::Plant::Move.call(@ctx, @integration) if seeding_unit.item_tracking_method != 'none'
+        MetrcService::Plant::Move.call(@ctx, @integration) if item_tracking_method != 'none'
       end
 
       def create_plantings_from_package_payload
@@ -66,8 +66,8 @@ module MetrcService
           PlantBatchName: batch_tag,
           PlantBatchType: 'Clone',
           PlantCount: quantity,
-          LocationName: location,
-          RoomName: location,
+          LocationName: location_name,
+          RoomName: location_name,
           StrainName: batch.crop_variety,
           PatientLicenseNumber: nil,
           PlantedDate: batch.seeded_at,
@@ -88,8 +88,8 @@ module MetrcService
           Id: nil,
           PlantBatch: batch_tag,
           Count: quantity,
-          Location: location,
-          Room: location,
+          Location: location_name,
+          Room: location_name,
           Item: 'Immature Plants',
           Tag: tag.value,
           PatientLicenseNumber: nil,
@@ -110,10 +110,6 @@ module MetrcService
 
       def source_plant
         @source_plant ||= batch.included&.dig(:custom_fields)&.detect { |obj| PLANT_MOTHER_NAME.match?(obj&.name) }
-      end
-
-      def location
-        Common::Utils.normalize_zone_name(batch.zone&.name)
       end
     end
   end
