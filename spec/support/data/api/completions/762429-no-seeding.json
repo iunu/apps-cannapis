@@ -1,0 +1,64 @@
+{
+  "data": {
+    "id": "762429",
+    "type": "completions",
+    "attributes": {
+      "id": 762429,
+      "status": "active",
+      "user_id": 1772,
+      "content": null,
+      "start_time": "2020-03-30T07:00:00.000Z",
+      "end_time": "2020-03-30T07:00:00.000Z",
+      "occurrence": 0,
+      "action_type": "start",
+      "parent_id": 762427,
+      "context": {
+        "source_batches": null
+      },
+      "options": {
+        "zone_id": 7249,
+        "quantity": 100,
+        "sub_zone_id": null,
+        "arbitrary_id": "Mar30-Lav-Cak-M0102",
+        "crop_variety_id": 19278,
+        "seeding_unit_id": 3591,
+        "zone_name": "Mothers"
+      }
+    },
+    "relationships": {
+      "action_result": {
+        "data": {
+          "id": null,
+          "type": null
+        }
+      },
+      "batch": {
+        "data": {
+          "id": "105681",
+          "type": "batches"
+        }
+      },
+      "facility": {
+        "data": {
+          "id": 1626,
+          "type": "facilities"
+        }
+      },
+      "user": {
+        "data": {
+          "id": 1772,
+          "type": "users"
+        }
+      },
+      "crop_batch_state": {
+        "data": {
+          "type": "crop_batch_states",
+          "id": "425818"
+        }
+      }
+    }
+  },
+  "jsonapi": {
+    "version": "1.0"
+  }
+}
