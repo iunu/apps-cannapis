@@ -95,27 +95,6 @@ Style/ExponentialNotation:
 RSpec/Focused:
   Enabled: true
 
-Layout/EmptyLinesAroundAttributeAccessor:
-  Enabled: false
-
-Lint/DeprecatedOpenSSLConstant:
-  Enabled: false
-
-Lint/MixedRegexpCaptureTypes:
-  Enabled: false
-
-Style/RedundantFetchBlock:
-  Enabled: false
-
-Style/RedundantRegexpCharacterClass:
-  Enabled: false
-
-Style/RedundantRegexpEscape:
-  Enabled: false
-
-Style/SlicingWithRange:
-  Enabled: false
-
 Metrics/CyclomaticComplexity:
   Enabled: false
 
