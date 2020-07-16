@@ -76,7 +76,7 @@ module NcsService
           {
             Id: nil,
             Label: item.relationships.dig('barcode', 'data', 'id'),
-            RoomName: Common::Utils.normalize_zone_name(batch.zone&.name)
+            RoomName: location_name
           }
         end
 
@@ -88,7 +88,7 @@ module NcsService
           Label: batch_tag,
           NewTag: immature? ? nil : barcode,
           GrowthPhase: normalized_growth_phase,
-          NewRoom: Common::Utils.normalize_zone_name(batch.zone&.name),
+          NewRoom: location_name,
           GrowthDate: start_time
         }
 

@@ -82,5 +82,9 @@ module Common
     def completion_status
       raise 'override +completion_status+ in subclass'
     end
+
+    def location_name
+      Common::Utils.normalize_zone_name(batch.zone&.name)
+    end
   end
 end
