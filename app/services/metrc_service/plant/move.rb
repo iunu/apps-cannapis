@@ -28,6 +28,8 @@ module MetrcService
           transaction.id
         ).limit(1).order('created_at desc').first
 
+        return if previous_move.nil?
+
         @prior_move = batch.completion(previous_move&.completion_id,
                                        include: 'zone,barcodes,sub_zone,action_result,crop_batch_state.seeding_unit')
       end
