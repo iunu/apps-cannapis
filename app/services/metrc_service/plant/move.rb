@@ -51,33 +51,26 @@ module MetrcService
         @prior_move ||= previous_completion
         new_growth_phase = normalized_growth_phase(completion&.options['zone_name'])
 
-        # Trust me. I don't like this either.
+        # Yeah, I don't like this either.
         previous_item_tracking_method_has_barcodes = items_have_barcodes?(previous_completion.included&.dig(:seeding_units)&.first&.item_tracking_method)
         current_item_tracking_method_has_barcodes  = items_have_barcodes?(completion.included&.dig(:seeding_units)&.first&.item_tracking_method)
-        has_no_barcodes      = !previous_item_tracking_method_has_barcodes && !current_item_tracking_method_has_barcodes
-        moved_to_barcodes    = !previous_item_tracking_method_has_barcodes &&  current_item_tracking_method_has_barcodes
-        already_had_barcodes =  previous_item_tracking_method_has_barcodes &&  current_item_tracking_method_has_barcodes
+        has_no_barcodes = !previous_item_tracking_method_has_barcodes && !current_item_tracking_method_has_barcodes
+        moved_to_barcodes = !previous_item_tracking_method_has_barcodes && current_item_tracking_method_has_barcodes
+        already_had_barcodes = previous_item_tracking_method_has_barcodes && current_item_tracking_method_has_barcodes
 
-        case
-        when previous_growth_phase.nil?, new_growth_phase.nil?
-          return DEFAULT_MOVE_STEP
+        return DEFAULT_MOVE_STEP if previous_growth_phase.nil? || new_growth_phase.nil?
 
-        when has_no_barcodes
-          return :move_plant_batches
+        return :move_plant_batches if has_no_barcodes
 
-        when ((previous_growth_phase.include?('Veg') && new_growth_phase.include?('Veg')) && moved_to_barcodes), \
-             ((!previous_growth_phase.include?('Flow') && new_growth_phase.include?('Flow')) && moved_to_barcodes)
-          return :change_growth_phase
+        return :change_growth_phase if (previous_growth_phase.include?('Veg') && new_growth_phase.include?('Veg')) && moved_to_barcodes
 
-        when ((previous_growth_phase.include?('Flow') && new_growth_phase.include?('Flow')) && already_had_barcodes)
-          return :change_plants_growth_phases
+        return :change_growth_phase if (!previous_growth_phase.include?('Flow') && new_growth_phase.include?('Flow')) && moved_to_barcodes
 
-        when already_had_barcodes
-          return :move_plants
+        return :change_plants_growth_phases if (previous_growth_phase.include?('Flow') && new_growth_phase.include?('Flow')) && already_had_barcodes
 
-        else
-          return DEFAULT_MOVE_STEP
-        end
+        return :move_plants if already_had_barcodes
+
+        DEFAULT_MOVE_STEP
       end
       memoize :next_step
 
