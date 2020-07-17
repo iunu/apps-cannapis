@@ -1,6 +1,8 @@
 module MetrcService
   module Plant
     class Move < Base
+      extend Memoist
+
       DEFAULT_MOVE_STEP = :change_growth_phase
 
       def call
@@ -18,8 +20,6 @@ module MetrcService
       end
 
       def prior_move
-        return @prior_move if @prior_move
-
         previous_move = Transaction.where(
           'batch_id = ? AND type = ? AND vendor = ? AND id NOT IN (?)',
           @batch_id,
@@ -30,24 +30,23 @@ module MetrcService
 
         return if previous_move.nil?
 
-        @prior_move = batch.completion(previous_move&.completion_id,
-                                       include: 'zone,barcodes,sub_zone,action_result,crop_batch_state.seeding_unit')
+        batch.completion(previous_move&.completion_id,
+                         include: 'zone,barcodes,sub_zone,action_result,crop_batch_state.seeding_unit')
       end
+      memoize :prior_move
 
       private
 
       def next_step_name
-        return @next_step_name if @next_step_name
-
         @completion = batch.completion(@completion_id,
                                        include: 'zone,barcodes,sub_zone,action_result,crop_batch_state.seeding_unit')
 
-        @next_step_name = next_step(prior_move, @completion)
+        next_step(prior_move, @completion)
       end
+      memoize :next_step_name
 
       def next_step(previous_completion = nil, completion = nil) # rubocop:disable Metrics/PerceivedComplexity
         return DEFAULT_MOVE_STEP if previous_completion.nil? || completion.nil?
-        return @next_step if @next_step
 
         @prior_move ||= previous_completion
         new_growth_phase = normalized_growth_phase(completion&.options['zone_name'])
@@ -59,27 +58,28 @@ module MetrcService
         moved_to_barcodes    = !previous_item_tracking_method_has_barcodes &&  current_item_tracking_method_has_barcodes
         already_had_barcodes =  previous_item_tracking_method_has_barcodes &&  current_item_tracking_method_has_barcodes
 
-        @next_step = case
-                     when previous_growth_phase.nil?, new_growth_phase.nil?
-                       DEFAULT_MOVE_STEP
+        case
+        when previous_growth_phase.nil?, new_growth_phase.nil?
+          return DEFAULT_MOVE_STEP
 
-                     when has_no_barcodes
-                       :move_plant_batches
+        when has_no_barcodes
+          return :move_plant_batches
 
-                     when ((previous_growth_phase.include?('Veg') && new_growth_phase.include?('Veg')) && moved_to_barcodes), \
-                          ((!previous_growth_phase.include?('Flow') && new_growth_phase.include?('Flow')) && moved_to_barcodes)
-                       :change_growth_phase
+        when ((previous_growth_phase.include?('Veg') && new_growth_phase.include?('Veg')) && moved_to_barcodes), \
+             ((!previous_growth_phase.include?('Flow') && new_growth_phase.include?('Flow')) && moved_to_barcodes)
+          return :change_growth_phase
 
-                     when ((previous_growth_phase.include?('Flow') && new_growth_phase.include?('Flow')) && already_had_barcodes)
-                       :change_plants_growth_phases
+        when ((previous_growth_phase.include?('Flow') && new_growth_phase.include?('Flow')) && already_had_barcodes)
+          return :change_plants_growth_phases
 
-                     when already_had_barcodes
-                       :move_plants
+        when already_had_barcodes
+          return :move_plants
 
-                     else
-                       DEFAULT_MOVE_STEP
-                     end
+        else
+          return DEFAULT_MOVE_STEP
+        end
       end
+      memoize :next_step
 
       def move_plants
         payload = items.map do |item|

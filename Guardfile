@@ -25,10 +25,6 @@
 #  * 'just' rspec: 'rspec'
 notification :terminal_notifier if `uname`.match?(/Darwin/)
 
-# group :test do
-
-# end
-
 guard :rspec, cmd: 'bundle exec rspec' do
   require 'guard/rspec/dsl'
   dsl = Guard::RSpec::Dsl.new(self)
@@ -75,9 +71,7 @@ guard :rspec, cmd: 'bundle exec rspec' do
   watch(%r{^spec/.+_spec\.rb$})
 end
 
-# group :lint, halt_on_fail: true do
-#   guard :rubocop, all_on_start: false do
-#     watch(/.+\.rb$/)
-#     watch(%r{(?:.+/)?\.rubocop(?:_todo)?\.yml$}) { |m| File.dirname(m[0]) }
-#   end
+# guard :lint, all_on_start: false do
+#   watch(/.+\.rb$/)
+#   watch(%r{(?:.+/)?\.rubocop(?:_todo)?\.yml$}) { |m| File.dirname(m[0]) }
 # end unless ENV['SKIP_LINT']
