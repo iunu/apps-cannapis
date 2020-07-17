@@ -30,8 +30,8 @@ module MetrcService
 
         return if previous_move.nil?
 
-        batch.completion(previous_move&.completion_id,
-                         include: 'zone,barcodes,sub_zone,action_result,crop_batch_state.seeding_unit')
+        @prior_move = batch.completion(previous_move&.completion_id,
+                                       include: 'zone,barcodes,sub_zone,action_result,crop_batch_state.seeding_unit')
       end
       memoize :prior_move
 
