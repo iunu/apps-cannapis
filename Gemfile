@@ -26,6 +26,7 @@ gem 'dotenv-rails', groups: %w[development test]
 gem 'bootsnap', '>= 1.4.2', require: false
 
 gem 'http'
+gem 'memoist', '~> 0.16.2'
 
 # Metrc API client
 gem 'artemis_api', git: 'https://github.com/artemis-ag/artemis_api'

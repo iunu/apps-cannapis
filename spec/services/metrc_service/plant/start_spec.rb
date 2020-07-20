@@ -1,5 +1,4 @@
 require 'rails_helper'
-require 'ostruct'
 
 RSpec.describe MetrcService::Plant::Start do
   let(:integration) { create(:integration, state: 'ca') }
@@ -369,7 +368,7 @@ RSpec.describe MetrcService::Plant::Start do
         end
       end
 
-      context 'when planting are teens' do
+      context 'when planting is teens' do
         let(:now) { Time.zone.now.strftime('%Y-%m-%d') }
         let(:transaction) { create(:transaction, :unsuccessful, type: :start_batch_from_package) }
         let(:expected_payload) do
@@ -400,12 +399,15 @@ RSpec.describe MetrcService::Plant::Start do
             .with(body: expected_payload.to_json)
             .to_return(status: 200, body: '', headers: {})
 
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/3000?include=zone,barcodes,sub_zone,action_result,crop_batch_state.seeding_unit")
+            .to_return(body: load_response_json('api/completions/3000'))
+
           stub_request(:post, 'https://sandbox-api-ca.metrc.com/plantbatches/v1/changegrowthphase?licenseNumber=LIC-0001')
             .with(body: [{
               Name: '1A4060300003B01000000838',
               Count: 100,
               StartingTag: nil,
-              GrowthPhase: 'Clone',
+              GrowthPhase: 'Vegetative',
               NewLocation: 'Flowering',
               GrowthDate: nil,
               PatientLicenseNumber: nil

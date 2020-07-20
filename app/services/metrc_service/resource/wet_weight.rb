@@ -25,7 +25,7 @@ module MetrcService
 
         items.map do |item|
           {
-            DryingLocation: Common::Utils.normalize_zone_name(batch.zone&.name),
+            DryingLocation: location_name,
             PatientLicenseNumber: nil,
             ActualDate: harvest_date,
             Plant: item.relationships.dig('barcode', 'data', 'id'),

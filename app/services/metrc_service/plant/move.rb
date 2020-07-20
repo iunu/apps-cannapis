@@ -1,11 +1,7 @@
 module MetrcService
   module Plant
     class Move < Base
-      GROWTH_CYCLES = {
-        clone: %i[clone vegetative],
-        vegetative: %i[vegetative flowering],
-        flowering: %i[flowering]
-      }.freeze
+      extend Memoist
 
       DEFAULT_MOVE_STEP = :change_growth_phase
 
@@ -23,58 +19,67 @@ module MetrcService
         @transaction ||= get_transaction(:move_batch, @attributes.merge(sub_stage: batch&.zone&.sub_stage&.attributes))
       end
 
-      def prior_move_transactions
-        Transaction.where(
+      def prior_move
+        previous_move = Transaction.where(
           'batch_id = ? AND type = ? AND vendor = ? AND id NOT IN (?)',
           @batch_id,
           :move_batch,
           :metrc,
           transaction.id
-        )
+        ).limit(1).order('created_at desc').first
+
+        return if previous_move.nil?
+
+        @prior_move = batch.completion(previous_move&.completion_id,
+                                       include: 'zone,barcodes,sub_zone,action_result,crop_batch_state.seeding_unit')
       end
+      memoize :prior_move
 
       private
 
       def next_step_name
-        transactions = prior_move_transactions
-        return DEFAULT_MOVE_STEP if transactions.count.zero?
+        @completion = batch.completion(@completion_id,
+                                       include: 'zone,barcodes,sub_zone,action_result,crop_batch_state.seeding_unit')
 
-        previous_growth_phase = normalized_growth_phase(transactions.last.metadata.dig('sub_stage', 'name'))
-
-        # Does last move includes new move?
-        is_included = is_included?(previous_growth_phase, normalized_growth_phase)
-        log("Transactions: #{transactions.size}, Previous growth phase: #{previous_growth_phase}, Growth phase is included: #{is_included}, Batch ID #{@batch_id}, completion ID #{@completion_id}")
-
-        raise InvalidOperation, "Failed: Substage #{normalized_growth_phase} is not a valid next phase for #{previous_growth_phase}. Batch ID #{@batch_id}, completion ID #{@completion_id}" \
-          unless is_included
-
-        next_step(previous_growth_phase, normalized_growth_phase)
+        next_step(prior_move, @completion)
       end
+      memoize :next_step_name
 
-      def is_included?(previous_growth_phase, growth_phase) # rubocop:disable Naming/PredicateName
-        GROWTH_CYCLES[previous_growth_phase.downcase.to_sym]&.include?(growth_phase.downcase.to_sym)
-      end
+      def next_step(previous_completion = nil, completion = nil) # rubocop:disable Metrics/PerceivedComplexity
+        return DEFAULT_MOVE_STEP if previous_completion.nil? || completion.nil?
 
-      def next_step(previous_growth_phase = nil, new_growth_phase = nil) # rubocop:disable Metrics/CyclomaticComplexity,Metrics/PerceivedComplexity
+        @prior_move ||= previous_completion
+        new_growth_phase = normalized_growth_phase(completion&.options['zone_name'])
+
+        # Yeah, I don't like this either.
+        previous_item_tracking_method_has_barcodes = items_have_barcodes?(previous_completion.included&.dig(:seeding_units)&.first&.item_tracking_method)
+        current_item_tracking_method_has_barcodes  = items_have_barcodes?(completion.included&.dig(:seeding_units)&.first&.item_tracking_method)
+        has_no_barcodes = !previous_item_tracking_method_has_barcodes && !current_item_tracking_method_has_barcodes
+        moved_to_barcodes = !previous_item_tracking_method_has_barcodes && current_item_tracking_method_has_barcodes
+        already_had_barcodes = previous_item_tracking_method_has_barcodes && current_item_tracking_method_has_barcodes
+
         return DEFAULT_MOVE_STEP if previous_growth_phase.nil? || new_growth_phase.nil?
 
-        new_growth_phase.downcase!
+        return :move_plant_batches if has_no_barcodes
 
-        return :move_plant_batches if previous_growth_phase.include?('clone') && new_growth_phase.include?('clone')
+        return :change_growth_phase if (previous_growth_phase.include?('Veg') && new_growth_phase.include?('Veg')) && moved_to_barcodes
 
-        return :move_plants if previous_growth_phase.include?('veg') && new_growth_phase.include?('veg')
+        return :change_growth_phase if (!previous_growth_phase.include?('Flow') && new_growth_phase.include?('Flow')) && moved_to_barcodes
 
-        return :move_plants if previous_growth_phase.include?('flow') && new_growth_phase.include?('flow')
+        return :change_plants_growth_phases if (previous_growth_phase.include?('Flow') && new_growth_phase.include?('Flow')) && already_had_barcodes
+
+        return :move_plants if already_had_barcodes
 
         DEFAULT_MOVE_STEP
       end
+      memoize :next_step
 
       def move_plants
         payload = items.map do |item|
           {
             Id: nil,
             Label: item&.relationships&.dig('barcode', 'data', 'id'),
-            Location: Common::Utils.normalize_zone_name(batch.zone&.name),
+            Location: location_name,
             ActualDate: start_time
           }
         end
@@ -85,7 +90,7 @@ module MetrcService
       def move_plant_batches
         payload = {
           Name: batch_tag,
-          Location: Common::Utils.normalize_zone_name(batch.zone&.name),
+          Location: location_name,
           MoveDate: start_time
         }
 
@@ -97,13 +102,29 @@ module MetrcService
           Name: batch_tag,
           Count: quantity,
           StartingTag: immature? ? nil : barcode,
-          GrowthPhase: normalized_growth_phase,
-          NewLocation: Common::Utils.normalize_zone_name(batch.zone&.name),
+          GrowthPhase: normalized_growth_phase(@completion&.options&.dig('zone_name')),
+          NewLocation: location_name,
           GrowthDate: start_time,
           PatientLicenseNumber: nil
         }
 
         call_metrc(:change_growth_phase, [payload])
+      end
+
+      def change_plants_growth_phases
+        payload = items.map do |item|
+          {
+            Id: nil,
+            Label: item&.relationships&.dig('barcode', 'data', 'id'),
+            NewLabel: nil,
+            GrowthPhase: normalized_growth_phase(@completion&.options&.dig('zone_name')),
+            NewLocation: location_name,
+            NewRoom: location_name,
+            GrowthDate: start_time
+          }
+        end
+
+        call_metrc(:change_plant_growth_phase, payload)
       end
 
       def items
@@ -119,7 +140,7 @@ module MetrcService
       end
 
       def normalized_growth_phase(input = nil)
-        input ||= batch&.zone&.sub_stage&.name
+        return unless input
 
         case input
         when /veg/i
@@ -138,6 +159,14 @@ module MetrcService
       def barcode
         ordered_items = items.sort_by(&:id)
         ordered_items&.first&.relationships&.dig('barcode', 'data', 'id')
+      end
+
+      def items_have_barcodes?(tracking_method = nil)
+        !tracking_method.nil? && tracking_method != 'none'
+      end
+
+      def previous_growth_phase
+        normalized_growth_phase(@prior_move.options['zone_name'])
       end
     end
   end

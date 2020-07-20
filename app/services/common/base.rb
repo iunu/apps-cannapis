@@ -121,9 +121,9 @@ module Common
     end
 
     def validate_seeding_unit!
-      return if ['preprinted', 'none', nil].include?(seeding_unit.item_tracking_method)
+      return if ['preprinted', 'none', nil].include?(item_tracking_method)
 
-      raise InvalidBatch, "Failed: Seeding unit is not valid for Metrc #{seeding_unit.item_tracking_method}. " \
+      raise InvalidBatch, "Failed: Seeding unit is not valid for Metrc #{item_tracking_method}. " \
         "Batch ID #{@batch_id}, completion ID #{@completion_id}"
     end
 
@@ -143,6 +143,14 @@ module Common
         .completions
         .select { |completion| %w[process generate].include?(completion.action_type) }
         .select { |completion| completion.options['resource_unit_id'] == resource_unit_id }
+    end
+
+    def location_name
+      Common::Utils.normalize_zone_name(batch.zone&.name)
+    end
+
+    def item_tracking_method
+      seeding_unit.item_tracking_method
     end
   end
 end

@@ -16,8 +16,7 @@ module MetrcService
       private
 
       def plant_state
-        tracking_method = seeding_unit.item_tracking_method
-        @plant_state ||= [nil, 'none'].include?(tracking_method) ? :immature : :mature
+        @plant_state ||= [nil, 'none'].include?(item_tracking_method) ? :immature : :mature
       end
 
       def transaction

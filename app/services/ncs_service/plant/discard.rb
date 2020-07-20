@@ -12,7 +12,7 @@ module NcsService
       private
 
       def plant_state
-        @plant_state ||= seeding_unit.item_tracking_method.nil? ? 'immature' : 'mature'
+        @plant_state ||= item_tracking_method.nil? ? 'immature' : 'mature'
       end
 
       def transaction
