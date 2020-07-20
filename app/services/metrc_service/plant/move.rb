@@ -166,7 +166,7 @@ module MetrcService
           'Vegetative'
         when /flow/i
           'Flowering'
-        when /curing/i
+        when /cur(e|ing)/i
           'Curing'
         when /dry/i
           'Drying'
