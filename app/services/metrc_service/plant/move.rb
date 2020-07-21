@@ -37,6 +37,12 @@ module MetrcService
 
       private
 
+      def within_phases?(zone_name, expected_zones)
+        return false unless zone_name && expected_zones
+
+        expected_zones.any? { |phase| zone_name.include?(phase) }
+      end
+
       def next_step_name
         @completion = batch.completion(@completion_id,
                                        include: 'zone,barcodes,sub_zone,action_result,crop_batch_state.seeding_unit')
@@ -67,6 +73,8 @@ module MetrcService
         return :change_growth_phase if (!previous_growth_phase.include?('Flow') && new_growth_phase.include?('Flow')) && moved_to_barcodes
 
         return :change_plants_growth_phases if (previous_growth_phase.include?('Flow') && new_growth_phase.include?('Flow')) && already_had_barcodes
+
+        return :move_harvest if within_phases?(previous_growth_phase, %w[Curing Drying]) && within_phases?(new_growth_phase, %w[Curing Drying]) && already_had_barcodes
 
         return :move_plants if already_had_barcodes
 
@@ -127,6 +135,17 @@ module MetrcService
         call_metrc(:change_plant_growth_phase, payload)
       end
 
+      def move_harvest
+        payload = [{
+          HarvestName: batch.arbitrary_id,
+          DryingLocation: location_name,
+          DryingRoom: location_name,
+          ActualDate: start_time
+        }]
+
+        call_metrc(:move_harvest, payload)
+      end
+
       def items
         @items ||= get_items(batch.seeding_unit.id)
       end
@@ -147,6 +166,10 @@ module MetrcService
           'Vegetative'
         when /flow/i
           'Flowering'
+        when /cur(e|ing)/i
+          'Curing'
+        when /dry/i
+          'Drying'
         else
           'Clone'
         end
