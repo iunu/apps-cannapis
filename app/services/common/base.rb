@@ -2,6 +2,8 @@ require_relative './base_service_action'
 
 module Common
   class Base < BaseServiceAction
+    extend Memoist
+
     RETRYABLE_ERRORS = [
       Net::HTTPRetriableError,
     ].freeze
@@ -99,22 +101,24 @@ module Common
     end
 
     def batch
-      @batch ||= get_batch
+      get_batch
     end
+    memoize :batch
 
     def batch_tag
-      return @tag if @tag
-
       barcodes = batch.relationships.dig('barcodes', 'data')&.map { |label| label['id'] }
 
       raise InvalidAttributes, "Missing barcode for batch '#{batch.arbitrary_id}'" if barcodes.blank?
 
       matches = barcodes&.select { |label| /[A-Z0-9]{24,24}(-split)?/.match?(label) }&.sort
 
-      raise InvalidAttributes, "Expected barcode for batch '#{batch.arbitrary_id}' to be alphanumeric with 24 characters. Got: #{barcodes.join(', ')}" if matches.blank?
+      raise InvalidAttributes, "Expected barcode for batch '#{batch.arbitrary_id}' to be alphanumeric with 24 characters. Got: #{barcodes.join(', ')}" if matches.blank? && state != :ma
 
-      @tag = Common::Utils.normalize_barcode(matches&.first)
+      return batch.arbitrary_id if matches.blank? && state == :ma
+
+      Common::Utils.normalize_barcode(matches&.first)
     end
+    memoize :batch_tag
 
     def validate_batch!
       raise BatchCropInvalid unless batch.crop == @integration.vendor_module::CROP
