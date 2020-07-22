@@ -2,6 +2,8 @@ require_relative './base_service_action'
 
 module Common
   class Base < BaseServiceAction
+    extend Memoist
+
     RETRYABLE_ERRORS = [
       Net::HTTPRetriableError,
     ].freeze
