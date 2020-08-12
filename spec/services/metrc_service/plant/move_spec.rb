@@ -609,26 +609,22 @@ RSpec.describe MetrcService::Plant::Move do
 
     context 'with an immature batch' do
       let(:expected_payload) do
-        [
-          {
-            Name: batch_tag,
-            Count: quantity,
-            StartingTag: nil,
-            GrowthPhase: normalized_growth_phase,
-            NewLocation: location_name,
-            GrowthDate: start_time,
-            PatientLicenseNumber: nil
-          }
-        ]
-      end
-
-      before do
-        expect_any_instance_of(described_class)
-          .to receive(:immature?)
-          .and_return(true)
+        [{
+          Name: batch_tag,
+          Count: quantity,
+          StartingTag: nil,
+          GrowthPhase: normalized_growth_phase,
+          NewLocation: location_name,
+          GrowthDate: start_time,
+          PatientLicenseNumber: nil
+        }]
       end
 
       it 'calls the Metrc client method' do
+        expect_any_instance_of(described_class)
+          .to receive(:immature?)
+          .and_return(true)
+
         subject.should_receive(:call_metrc)
           .with(:change_growth_phase, expected_payload)
           .and_call_original

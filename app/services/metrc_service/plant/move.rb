@@ -105,11 +105,12 @@ module MetrcService
       end
 
       def change_growth_phase
+        phase = current_growth_phase
         payload = {
           Name: batch_tag,
           Count: quantity,
-          StartingTag: immature? ? nil : barcode,
-          GrowthPhase: current_growth_phase,
+          StartingTag: immature?(phase) ? nil : barcode,
+          GrowthPhase: phase,
           NewLocation: location_name,
           GrowthDate: start_time,
           PatientLicenseNumber: nil
@@ -153,8 +154,8 @@ module MetrcService
         @attributes.dig('start_time')
       end
 
-      def immature?
-        normalized_growth_phase != 'Flowering'
+      def immature?(phase = nil)
+        phase != 'Flowering'
       end
 
       def normalized_growth_phase(input = nil)
@@ -187,17 +188,19 @@ module MetrcService
         !tracking_method.nil? && tracking_method != 'none'
       end
 
-      def growth_phase_for_completion(c)
-        normalized_growth_phase(c&.included&.dig(:sub_stages)&.first&.name)
+      def growth_phase_for_completion(comp)
+        normalized_growth_phase(comp&.included&.dig(:sub_stages)&.first&.name)
       end
 
       def current_growth_phase
         growth_phase_for_completion(@completion)
       end
+      memoize :current_growth_phase
 
       def next_previous_growth_phase
         growth_phase_for_completion(@prior_move)
       end
+      memoize :next_previous_growth_phase
 
       alias previous_growth_phase next_previous_growth_phase
     end
