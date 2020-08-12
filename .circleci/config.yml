@@ -161,7 +161,7 @@ jobs:
       - run:
           name: Deploy Production to Heroku
           command: |
-            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/apps-cannapis.git $CIRCLE_TAG:master --force
+            git push https://heroku:$HEROKU_API_KEY@git.heroku.com/apps-cannapis.git $CIRCLE_TAG:main --force
 
 workflows:
   version: 2
