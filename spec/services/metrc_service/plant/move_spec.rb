@@ -98,10 +98,10 @@ RSpec.describe MetrcService::Plant::Move do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}/items?filter[seeding_unit_id]=#{seeding_unit_id}&include=barcodes,seeding_unit")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/items"))
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3000?include=zone,barcodes,sub_zone,action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3000?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: load_response_json('api/completions/3000'))
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/#{previous_move.completion_id}?include=zone,barcodes,sub_zone,action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/#{previous_move.completion_id}?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: load_response_json('api/completions/3000'))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=3000")
@@ -145,10 +145,10 @@ RSpec.describe MetrcService::Plant::Move do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}/items?filter[seeding_unit_id]=#{seeding_unit_id}&include=barcodes,seeding_unit")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/items"))
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3000?include=zone,barcodes,sub_zone,action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3000?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: load_response_json('api/completions/3000'))
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/#{previous_move.completion_id}?include=zone,barcodes,sub_zone,action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/#{previous_move.completion_id}?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: load_response_json('api/completions/3000'))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=3000")
@@ -240,10 +240,10 @@ RSpec.describe MetrcService::Plant::Move do
           .with(body: expected_payload.to_json)
           .to_return(status: 200)
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/#{completion_id}?include=zone,barcodes,sub_zone,action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/#{completion_id}?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: load_response_json('api/completions/3000'))
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/#{previous_move.completion_id}?include=zone,barcodes,sub_zone,action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/#{previous_move.completion_id}?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: load_response_json('api/completions/3000'))
 
         @stubs << stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/harvestplants?licenseNumber=LIC-0001')
