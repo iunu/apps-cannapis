@@ -122,7 +122,7 @@
       "type": "sub_stages",
       "attributes": {
         "id": 24,
-        "name": "Flowering",
+        "name": "Vegetative",
         "position": 1
       },
       "relationships": {

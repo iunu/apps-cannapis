@@ -7,7 +7,7 @@ module Helpers
     @artemis_client ||= ArtemisApi::Client.new(
       access_token: 'abc.def.ghi',
       refresh_token: '123abc',
-      expires_at: (Time.now + 2.days).to_i
+      expires_at: (Time.zone.now + 2.days).to_i
     )
   end
 

@@ -241,11 +241,148 @@ RSpec.describe MetrcService::Plant::Start do
     end
 
     describe '#create_plantings_from_package' do
-      subject { described_class.call(ctx, integration) }
-
       describe '#create_plantings_from_package_payload' do
-        context 'with no custom data', skip: 'Notifies Bugsnag?' do
+        context 'with no custom data' do
           let(:now) { Time.zone.now.strftime('%Y-%m-%d') }
+          subject { described_class.new(ctx, integration) }
+
+          before do
+            stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
+              .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
+
+            stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
+              .to_return(body: {
+                data: {
+                  id: '2002',
+                  type: 'batches',
+                  attributes: {
+                    id: 2002,
+                    arbitrary_id: 'Jun19-Bok-Cho',
+                    quantity: '100',
+                    crop_variety: 'Banana Split',
+                    seeded_at: now,
+                    zone_name: 'Germination',
+                    crop: 'Cannabis'
+                  },
+                  relationships: {
+                    'seeding_unit': {
+                      'data': {
+                        'id': '1235',
+                        'type': 'seeding_units'
+                      }
+                    },
+                    'custom_data': {
+                      'data': [
+                        {
+                          'type': 'custom_data',
+                          'id': '66998'
+                        }
+                      ]
+                    },
+                    'barcodes': {
+                      'data': [
+                        {
+                          'type': 'barcodes',
+                          'id': '1A406020000E4E9000003989'
+                        }
+                      ]
+                    }
+                  }
+                },
+                included: [
+                  {
+                    id: '1234',
+                    type: 'zones',
+                    attributes: {
+                      id: 1234,
+                      seeding_unit: {
+                        name: 'Clone'
+                      }
+                    }
+                  },
+                  {
+                    id: '1235',
+                    type: 'seeding_units',
+                    attributes: {
+                      id: 1235,
+                      item_tracking_method: 'preprinted',
+                      name: 'Clone'
+                    }
+                  },
+                  {
+                    id: '66998',
+                    type: 'custom_data',
+                    attributes: {
+                      id: 66998,
+                      value: '1A4060300003779000013229',
+                      crop_batch_id: 108064,
+                      custom_field_id: 408
+                    },
+                    relationships: {
+                      custom_field: {
+                        data: {
+                          id: '407',
+                          type: 'custom_fields'
+                        }
+                      },
+                      crop_batch: {
+                        data: {
+                          id: '2002',
+                          type: 'crop_batches'
+                        }
+                      }
+                    }
+                  },
+                  {
+                    id: '407',
+                    type: 'custom_fields',
+                    attributes: {
+                      id: 407,
+                      name: 'Source Package Id (Metrc)',
+                      organization_id: 1062,
+                      position: 0,
+                      kind: 'text',
+                      status: 'active'
+                    },
+                    relationships: {
+                      stage: {
+                        data: {
+                          id: '1068',
+                          type: 'stages'
+                        }
+                      }
+                    }
+                  }
+                ]
+              }.to_json)
+          end
+
+          it 'returns raises an Invalid Operation exception' do
+            expect { subject.send(:create_plantings_from_package_payload) }.to raise_error(InvalidOperation)
+          end
+        end
+
+        context 'with custom data' do
+          let(:now) { Time.zone.now.strftime('%Y-%m-%d') }
+          let(:expected_payload) do
+            [
+              {
+                LocationName: nil,
+                PackageAdjustmentAmount: 0,
+                PackageAdjustmentUnitOfMeasureName: 'Ounces',
+                PackageLabel: '1A4060300003779000013229',
+                PatientLicenseNumber: nil,
+                PlantBatchName: '1A406020000E4E9000003989',
+                PlantBatchType: 'Clone',
+                PlantCount: 100,
+                PlantedDate: now,
+                RoomName: nil,
+                StrainName: 'Banana Split',
+                UnpackagedDate: now
+              }
+            ]
+          end
+          subject { described_class.new(ctx, integration) }
 
           before do
             stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
@@ -356,14 +493,10 @@ RSpec.describe MetrcService::Plant::Start do
                   }
                 ]
               }.to_json)
-
-            stub_request(:post, 'https://sandbox-api-ca.metrc.com/packages/v1/create/plantings?licenseNumber=LIC-0001')
-              .with(body: [{Name: '1A4FF01000000220000010', Type: 'Clone', Count: 100, Strain: 'Banana Split', Location: 'Germination', PatientLicenseNumber: nil, ActualDate: now}].to_json)
-              .to_return(status: 200, body: '', headers: {})
           end
 
-          it 'returns raises an Invalid Operation exception' do
-            expect { subject.send(:create_plantings_from_package_payload) }.to raise_error(InvalidOperation)
+          it 'returns the expected payload' do
+            expect(subject.send(:create_plantings_from_package_payload)).to eq(expected_payload)
           end
         end
       end
@@ -399,7 +532,7 @@ RSpec.describe MetrcService::Plant::Start do
             .with(body: expected_payload.to_json)
             .to_return(status: 200, body: '', headers: {})
 
-          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/3000?include=zone,barcodes,sub_zone,action_result,crop_batch_state.seeding_unit")
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/3000?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
             .to_return(body: load_response_json('api/completions/3000'))
 
           stub_request(:post, 'https://sandbox-api-ca.metrc.com/plantbatches/v1/changegrowthphase?licenseNumber=LIC-0001')
