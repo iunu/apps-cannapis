@@ -1,9 +1,9 @@
 {
   "data": {
-    "id": "762429",
+    "id": "762428",
     "type": "completions",
     "attributes": {
-      "id": 762429,
+      "id": 762428,
       "status": "active",
       "user_id": 1772,
       "content": null,
@@ -22,7 +22,7 @@
         "arbitrary_id": "Mar30-Lav-Cak-M0102",
         "crop_variety_id": 19278,
         "seeding_unit_id": 3591,
-        "zone_name": "Mothers [Flowering]"
+        "zone_name": "Mothers"
       }
     },
     "relationships": {
@@ -59,64 +59,6 @@
     }
   },
   "included": [
-    {
-      "id": "425818",
-      "type": "crop_batch_states",
-      "attributes": {
-        "harvest_quantity": null,
-        "id": 425818,
-        "quantity": 100
-      },
-      "relationships": {
-        "crop_batch": {
-          "data": {
-            "id": "105681",
-            "type": "crop_batches"
-          }
-        },
-        "completion": {
-          "data": {
-            "id": "762429",
-            "type": "completions"
-          }
-        },
-        "zone": {
-          "data": {
-            "id": "7249",
-            "type": "zones"
-          }
-        },
-        "sub_zone": {
-          "data": {
-            "id": "",
-            "type": "sub_zones"
-          }
-        },
-        "seeding_unit": {
-          "data": {
-            "id": "3591",
-            "type": "seeding_units"
-          }
-        },
-        "harvest_unit": {
-          "data": {
-            "id": "",
-            "type": "harvest_units"
-          }
-        }
-      }
-    },
-    {
-      "id": "3591",
-      "type": "seeding_units",
-      "attributes": {
-        "id": 3591,
-        "name": "plants",
-        "secondary_display_active": false,
-        "secondary_display_capacity": null,
-        "item_tracking_method": "preprinted"
-      }
-    },
     {
       "id": "24",
       "type": "sub_stages",

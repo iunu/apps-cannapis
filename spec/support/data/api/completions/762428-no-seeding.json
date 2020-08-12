@@ -58,6 +58,30 @@
       }
     }
   },
+  "included": [
+    {
+      "id": "24",
+      "type": "sub_stages",
+      "attributes": {
+        "id": 24,
+        "name": "Clones",
+        "position": 1
+      },
+      "relationships": {
+        "stage": {
+          "data": {
+            "id": "1068",
+            "type": "stages"
+          }
+        },
+        "zones": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    }
+  ],
   "jsonapi": {
     "version": "1.0"
   }

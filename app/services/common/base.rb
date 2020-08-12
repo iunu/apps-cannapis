@@ -5,7 +5,7 @@ module Common
     extend Memoist
 
     RETRYABLE_ERRORS = [
-      Net::HTTPRetriableError,
+      Net::HTTPRetriableError
     ].freeze
 
     attr_reader :artemis
