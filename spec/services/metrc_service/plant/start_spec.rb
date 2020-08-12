@@ -532,7 +532,7 @@ RSpec.describe MetrcService::Plant::Start do
             .with(body: expected_payload.to_json)
             .to_return(status: 200, body: '', headers: {})
 
-          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/3000?include=zone,barcodes,sub_zone,action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/3000?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
             .to_return(body: load_response_json('api/completions/3000'))
 
           stub_request(:post, 'https://sandbox-api-ca.metrc.com/plantbatches/v1/changegrowthphase?licenseNumber=LIC-0001')
