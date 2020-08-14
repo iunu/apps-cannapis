@@ -11,13 +11,16 @@ class ArtemisService
     @artemis.facility(id || @facility_id)
   end
 
-  def get_batch(include = 'zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
-    get_batch_by_id(@batch_id, include)
+  def get_batch(add = 'zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
+    get_batch_by_id(@batch_id, add)
   end
 
-  def get_batch_by_id(id, include = 'zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
-    @artemis.facility(@facility_id)
-            .batch(id, include: include)
+  def get_batch_by_id(id, add = 'zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
+    get_facility.batch(id, include: add, force: true)
+  end
+
+  def get_completion(id, add = 'action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage')
+    get_batch.completion(id, include: add)
   end
 
   def get_items(seeding_unit_id, include: 'barcodes,seeding_unit')

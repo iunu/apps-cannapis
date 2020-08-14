@@ -29,7 +29,7 @@ gem 'http'
 gem 'memoist', '~> 0.16.2'
 
 # Metrc API client
-gem 'artemis_api', git: 'https://github.com/artemis-ag/artemis_api'
+gem 'artemis_api', '~> 0.7.4'
 gem 'Metrc', git: 'https://github.com/artemis-ag/Metrc.git'
 gem 'ncs_analytics', git: 'https://github.com/artemis-ag/ncs-integration.git'
 

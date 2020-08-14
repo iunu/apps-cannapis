@@ -4,7 +4,6 @@ module MetrcService
       extend Memoist
 
       DEFAULT_MOVE_STEP = :change_growth_phase
-      DEFAULT_COMPLETION_INCLUDES = 'action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage'.freeze
 
       def call
         log("Next step: #{next_step_name}. Batch ID #{@batch_id}, completion ID #{@completion_id}")
@@ -31,7 +30,7 @@ module MetrcService
 
         return if previous_move.nil?
 
-        @prior_move = batch.completion(previous_move&.completion_id, include: DEFAULT_COMPLETION_INCLUDES)
+        @prior_move = get_completion(previous_move&.completion_id)
       end
       memoize :prior_move
 
@@ -43,10 +42,18 @@ module MetrcService
         expected_zones.any? { |phase| zone_name.include?(phase) }
       end
 
-      def next_step_name
-        @completion = batch.completion(@completion_id, include: DEFAULT_COMPLETION_INCLUDES)
+      def current_completion
+        @current_completion = get_completion(@completion_id)
+      end
+      memoize :current_completion
 
-        next_step(prior_move, @completion)
+      def next_step_name
+        step = next_step(prior_move, current_completion)
+        attributes = transaction.attributes
+        attributes.merge(sub_stage: get_substage, next_step: step)
+        transaction.update(attributes: attributes)
+
+        step
       end
       memoize :next_step_name
 
@@ -188,8 +195,13 @@ module MetrcService
         !tracking_method.nil? && tracking_method != 'none'
       end
 
+      def get_substage(comp = nil)
+        comp ||= @completion
+        comp&.included&.dig(:sub_stages)&.first&.name
+      end
+
       def growth_phase_for_completion(comp)
-        normalized_growth_phase(comp&.included&.dig(:sub_stages)&.first&.name)
+        normalized_growth_phase(get_substage(comp))
       end
 
       def current_growth_phase
