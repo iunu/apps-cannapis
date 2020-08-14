@@ -154,7 +154,7 @@ module Common
     end
 
     def item_tracking_method
-      seeding_unit.item_tracking_method
+      seeding_unit&.item_tracking_method
     end
   end
 end
