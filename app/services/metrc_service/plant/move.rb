@@ -50,7 +50,8 @@ module MetrcService
       def next_step_name
         step = next_step(prior_move, current_completion)
         attributes = transaction.attributes
-        attributes.merge(sub_stage: get_substage, next_step: step)
+        substage = get_substage
+        attributes.merge(sub_stage: substage, next_step: step)
         transaction.update(attributes: attributes)
 
         step
@@ -196,7 +197,7 @@ module MetrcService
       end
 
       def get_substage(comp = nil)
-        comp ||= @completion
+        comp ||= @current_completion
         comp&.included&.dig(:sub_stages)&.first&.name
       end
 
@@ -205,7 +206,7 @@ module MetrcService
       end
 
       def current_growth_phase
-        growth_phase_for_completion(@completion)
+        growth_phase_for_completion(@current_completion)
       end
       memoize :current_growth_phase
 
