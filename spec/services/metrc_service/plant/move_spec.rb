@@ -58,12 +58,6 @@ RSpec.describe MetrcService::Plant::Move do
       let(:zone) { double(:zone, sub_stage: sub_stage)  }
       let(:batch) { double(:batch, crop: 'Cannabis', zone: zone) }
 
-      before do
-        expect_any_instance_of(described_class)
-          .to receive(:get_batch)
-          .and_return(batch)
-      end
-
       it { is_expected.to eq(transaction) }
     end
 
