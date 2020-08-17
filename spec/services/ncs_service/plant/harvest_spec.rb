@@ -121,7 +121,7 @@ RSpec.describe NcsService::Plant::Harvest do
 
       subject { described_class.new(ctx, integration) }
 
-      it 'calls NCS\' manicure plants method' do
+      xit 'calls NCS\' manicure plants method' do
         final_transaction = subject.call
 
         expect(subject).to have_received(:get_transaction)
