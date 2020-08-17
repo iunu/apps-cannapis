@@ -35,8 +35,13 @@
     </div>
 
     <div class="my">
-      <%= label_tag('facility[api_key]', 'Metrc User API Key') %>
+      <%= label_tag('facility[api_secret]', 'Metrc User API Key') %>
       <%= text_field_tag('facility[api_secret]', integrations[facility.id]&.secret, class: 'text--mono') %>
+    </div>
+
+    <div class="my">
+      <%= label_tag('facility[sync_harvest]', 'Should sync harvests?') %>
+      <%= check_box_tag('facility[sync_harvest]', integrations[facility.id]&.sync_harvest) %>
     </div>
 
     <% if integrations[facility.id] %>

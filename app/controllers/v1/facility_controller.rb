@@ -10,6 +10,7 @@ module V1
                          secret: params.dig(:facility, :api_secret),
                          state: params.dig(:facility, :state)&.downcase,
                          eod: "#{params.dig(:facility, :eod)}:00",
+                         sync_harvest: params.dig(:facility, :sync_harvest),
                          timezone: timezone)
 
       # Subscribe the facility to the integration webhook

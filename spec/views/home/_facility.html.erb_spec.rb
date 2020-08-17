@@ -24,9 +24,10 @@ RSpec.describe 'home/_facility', type: :view do
       with_tag :section do
         with_button 'Save'
 
-        with_tag 'div.my', count: 3 do
+        with_tag 'div.my', count: 4 do
           with_text_field 'facility[license_number]', integration[subject.id.to_s]&.license
           with_text_field 'facility[api_secret]', integration[subject.id.to_s]&.secret
+          with_checkbox 'facility[sync_harvest]', integration[subject.id.to_s]&.sync_harvest
         end
       end
     end
