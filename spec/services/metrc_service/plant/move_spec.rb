@@ -726,46 +726,63 @@ RSpec.describe MetrcService::Plant::Move do
   end
 
   describe '#move_harvest' do
-    let(:batch) { instance_double('Batch', arbitrary_id: 'Apr18-5th-Ele-Can') }
-    let(:location_name) { 'F3 - Inside' }
-    let(:start_time) { '2020-04-18' }
-    let(:expected_payload) do
-      [
-        {
-          HarvestName: batch.arbitrary_id,
-          DryingLocation: location_name,
-          DryingRoom: location_name,
-          ActualDate: start_time
-        }
-      ]
-    end
     subject { described_class.new(ctx, integration) }
 
-    before do
-      expect_any_instance_of(described_class)
-        .to receive(:batch)
-        .and_return(batch)
+    context 'with harvest sync' do
+      let(:batch) { instance_double('Batch', arbitrary_id: 'Apr18-5th-Ele-Can') }
+      let(:location_name) { 'F3 - Inside' }
+      let(:start_time) { '2020-04-18' }
+      let(:expected_payload) do
+        [
+          {
+            HarvestName: batch.arbitrary_id,
+            DryingLocation: location_name,
+            DryingRoom: location_name,
+            ActualDate: start_time
+          }
+        ]
+      end
 
-      expect_any_instance_of(described_class)
-        .to receive(:location_name)
-        .twice
-        .and_return(location_name)
+      before do
+        expect_any_instance_of(described_class)
+          .to receive(:batch)
+          .and_return(batch)
 
-      expect_any_instance_of(described_class)
-        .to receive(:start_time)
-        .and_return(start_time)
+        expect_any_instance_of(described_class)
+          .to receive(:location_name)
+          .twice
+          .and_return(location_name)
 
-      stub_request(:put, 'https://sandbox-api-md.metrc.com/harvests/v1/move?licenseNumber=LIC-0001')
-        .with(body: expected_payload.to_json)
-        .to_return(status: 200)
+        expect_any_instance_of(described_class)
+          .to receive(:start_time)
+          .and_return(start_time)
+
+        stub_request(:put, 'https://sandbox-api-md.metrc.com/harvests/v1/move?licenseNumber=LIC-0001')
+          .with(body: expected_payload.to_json)
+          .to_return(status: 200)
+      end
+
+      it 'calls the Metrc client method' do
+        subject.should_receive(:call_metrc)
+               .with(:move_harvest, expected_payload)
+               .and_call_original
+
+        subject.send(:move_harvest)
+      end
     end
 
-    it 'calls the Metrc client method' do
-      subject.should_receive(:call_metrc)
-             .with(:move_harvest, expected_payload)
-             .and_call_original
 
-      subject.send(:move_harvest)
+    context 'with harvest sync disabled' do
+      let(:integration) { create(:integration, :harvest_sync_disabled, account: account, state: :md) }
+
+      it 'does not perform the call' do
+        subject.should_not_receive(:call_metrc)
+             .with(:move_harvest)
+
+        result = subject.send(:move_harvest)
+
+        expect(result).to be_nil
+      end
     end
   end
 

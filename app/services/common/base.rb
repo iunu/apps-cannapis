@@ -157,5 +157,9 @@ module Common
     def item_tracking_method
       seeding_unit&.item_tracking_method
     end
+
+    def can_sync_harvests?
+      @integration.sync_harvest
+    end
   end
 end

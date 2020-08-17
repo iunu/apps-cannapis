@@ -9,7 +9,7 @@ FactoryBot.define do
     license { 'LIC-0001' }
     eod { "#{Time.now.utc.hour}:00" }
     timezone { '+00:00' }
-    sync_harvest { true }
+    disable_harvest { false }
 
     factory :integration_with_metrc_creds do
       secret { ENV['METRC_API_SECRET'] }
@@ -26,7 +26,7 @@ FactoryBot.define do
     end
 
     trait :harvest_sync_disabled do
-      sync_harvest { false }
+      disable_harvest { true }
     end
   end
 end

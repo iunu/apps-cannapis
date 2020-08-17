@@ -8,6 +8,8 @@ module MetrcService
       resource_name 'wet_waste'
 
       def call
+        return unless can_sync_harvests?
+
         remove_waste if resource_present?
 
         success!

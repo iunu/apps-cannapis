@@ -50,7 +50,7 @@ ActiveRecord::Schema.define(version: 2020_08_17_161333) do
     t.datetime "updated_at", precision: 6, null: false
     t.time "eod", default: "2000-01-01 19:00:00", null: false
     t.string "timezone", default: "+00:00"
-    t.boolean "sync_harvest", default: true, null: false
+    t.boolean "disable_harvest", default: false
     t.index ["account_id"], name: "index_integrations_on_account_id"
     t.index ["facility_id"], name: "index_integrations_on_facility_id"
     t.index ["id"], name: "index_integrations_on_id", unique: true
