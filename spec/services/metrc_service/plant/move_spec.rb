@@ -517,7 +517,7 @@ RSpec.describe MetrcService::Plant::Move do
     end
 
     it 'calls the Metrc client method' do
-      subject.should_receive(:call_metrc)
+      expect(subject).to receive(:call_metrc)
         .with(:move_plants, expected_payload)
         .and_call_original
 
