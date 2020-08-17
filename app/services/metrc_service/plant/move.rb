@@ -144,7 +144,7 @@ module MetrcService
       end
 
       def move_harvest
-        return unless can_sync_harvests?
+        return if harvest_disabled?
 
         payload = [{
           HarvestName: batch.arbitrary_id,

@@ -158,8 +158,8 @@ module Common
       seeding_unit&.item_tracking_method
     end
 
-    def can_sync_harvests?
-      @integration.sync_harvest
+    def harvest_disabled?
+      @integration.disable_harvest
     end
   end
 end

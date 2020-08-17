@@ -8,7 +8,7 @@ module MetrcService
       resource_name 'wet_weight'
 
       def call
-        return unless can_sync_harvests?
+        return if harvest_disabled?
 
         harvest_plants if resource_present? || @ctx['attributes']['action_type'] == 'generate'
 
