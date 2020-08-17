@@ -5,10 +5,11 @@ RSpec.describe 'home/_facility', type: :view do
 
   # Since factory is an object created from the response of a request
   # to the Artemis API, we use an OpenStruct object to stub it
-  subject { OpenStruct.new(id: 123, name: 'CannaBiz', state: 'NY', city: 'New York') }
+  let(:id) { 123 }
+  subject(:facility) { double(:facility, id: id, name: 'CannaBiz', state: 'NY', city: 'New York', time_zone: 'UTC') }
   let(:integration) do
     {
-      '123': create(:integration, license: '123-ABC', secret: 'DEF')
+      '123': create(:integration, facility_id: id, license: '123-ABC', secret: 'DEF')
     }
   end
 
@@ -24,10 +25,14 @@ RSpec.describe 'home/_facility', type: :view do
       with_tag :section do
         with_button 'Save'
 
-        with_tag 'div.my', count: 4 do
+        with_tag 'div.mb', count: 2 do
           with_text_field 'facility[license_number]', integration[subject.id.to_s]&.license
           with_text_field 'facility[api_secret]', integration[subject.id.to_s]&.secret
-          with_checkbox 'facility[sync_harvest]', integration[subject.id.to_s]&.sync_harvest
+        end
+
+        with_tag 'div.mt', count: 1 do
+          with_select 'facility[eod]'
+          with_checkbox 'facility[disable_harvest]', integration[subject.id.to_s]&.disable_harvest
         end
       end
     end
