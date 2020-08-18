@@ -4,6 +4,8 @@ module MetrcService
       private
 
       def handle_resources
+        return if harvest_disabled?
+
         handle_generated_resources
         handle_processed_resources
         handle_consumed_resources

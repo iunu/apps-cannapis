@@ -144,6 +144,8 @@ module MetrcService
       end
 
       def move_harvest
+        return if harvest_disabled?
+
         payload = [{
           HarvestName: batch.arbitrary_id,
           DryingLocation: location_name,

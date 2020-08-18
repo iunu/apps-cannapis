@@ -19,23 +19,30 @@
     <% if facility.state.nil? %>
       <div class="header__alerts danger">
         <div class="alert">
-          Please define a state name on your facility's settings.
+          Please define a state name on the facility's settings.
         </div>
       </div>
     <% end %>
 
-    <div class="my">
-      <%= label_tag('facility[eod]', "Time after end-of-workday when Metrc should be updated (#{facility.time_zone})") %>
-      <%= select_hour integrations[facility.id]&.eod, prefix: :facility, field_name: :eod, ampm: true %>
+    <div class="mt row">
+      <div class="col-8">
+        <%= label_tag('facility[eod]', "End-of-workday time to perform sync (#{facility.time_zone})") %>
+        <%= select_hour integrations[facility.id]&.eod, prefix: :facility, field_name: :eod, ampm: true %>
+      </div>
+
+      <div class="col-4 check">
+        <%= label_tag('facility[disable_harvest]', 'Ignore harvests?') %>
+        <%= check_box_tag('facility[disable_harvest]', integrations[facility.id]&.disable_harvest, integrations[facility.id]&.disable_harvest, class: 'pl-xs') %>
+      </div>
     </div>
 
-    <div class="my">
+    <div class="mb">
       <%= label_tag('facility[license_number]', 'Metrc License Number') %>
       <%= text_field_tag('facility[license_number]', integrations[facility.id]&.license, class: 'text--mono') %>
     </div>
 
-    <div class="my">
-      <%= label_tag('facility[api_key]', 'Metrc User API Key') %>
+    <div class="mb">
+      <%= label_tag('facility[api_secret]', 'Metrc User API Key') %>
       <%= text_field_tag('facility[api_secret]', integrations[facility.id]&.secret, class: 'text--mono') %>
     </div>
 

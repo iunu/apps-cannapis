@@ -157,5 +157,9 @@ module Common
     def item_tracking_method
       seeding_unit&.item_tracking_method
     end
+
+    def harvest_disabled?
+      @integration.disable_harvest
+    end
   end
 end

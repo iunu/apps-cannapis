@@ -124,7 +124,7 @@ jobs:
           command: bin/rails db:migrate --trace
 
       - run:
-          name: Maybe Run Other Unit Tests
+          name: Run Unit Tests
           command: bin/bundle exec rspec --out=/tmp/test-results
 
       - store_test_results:

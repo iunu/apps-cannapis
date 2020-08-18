@@ -1,9 +1,11 @@
 {
-  "data": [{
-    "attributes": {
-      "action_type": "start"
-    },
-    "id": "987",
-    "type": "completions"
-  }]
+  "data": [
+    {
+      "attributes": {
+        "action_type": "start"
+      },
+      "id": "987",
+      "type": "completions"
+    }
+  ]
 }

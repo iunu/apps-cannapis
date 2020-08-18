@@ -46,7 +46,7 @@ module MetrcService
       end
 
       def create_plantings_from_package
-        # call_metrc(:create_plantings_package, create_plantings_from_package_payload)
+        call_metrc(:create_plantings_package, create_plantings_from_package_payload)
 
         # Some clients start their plantings with teens
         # and at a specific growth phase (like flowering).
