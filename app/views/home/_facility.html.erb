@@ -31,7 +31,7 @@
       </div>
 
       <div class="col-4 check">
-        <%= label_tag('facility[disable_harvest]', 'Harvests disabled?') %>
+        <%= label_tag('facility[disable_harvest]', 'Ignore harvests?') %>
         <%= check_box_tag('facility[disable_harvest]', integrations[facility.id]&.disable_harvest, integrations[facility.id]&.disable_harvest, class: 'pl-xs') %>
       </div>
     </div>
