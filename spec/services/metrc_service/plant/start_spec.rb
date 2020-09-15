@@ -314,17 +314,9 @@ RSpec.describe MetrcService::Plant::Start do
                     type: 'custom_data',
                     attributes: {
                       id: 66998,
-                      value: '1A4060300003779000013229',
-                      crop_batch_id: 108064,
-                      custom_field_id: 408
+                      value: '1A4060300003779000013229'
                     },
                     relationships: {
-                      custom_field: {
-                        data: {
-                          id: '407',
-                          type: 'custom_fields'
-                        }
-                      },
                       crop_batch: {
                         data: {
                           id: '2002',
@@ -453,8 +445,7 @@ RSpec.describe MetrcService::Plant::Start do
                     attributes: {
                       id: 66998,
                       value: '1A4060300003779000013229',
-                      crop_batch_id: 108064,
-                      custom_field_id: 407
+                      crop_batch_id: 108064
                     },
                     relationships: {
                       custom_field: {
@@ -637,8 +628,7 @@ RSpec.describe MetrcService::Plant::Start do
                     attributes: {
                       id: 66998,
                       value: '1A4060300003779000013229',
-                      crop_batch_id: 108064,
-                      custom_field_id: 407
+                      crop_batch_id: 108064
                     },
                     relationships: {
                       custom_field: {

@@ -55,7 +55,7 @@ module MetrcService
       end
 
       def create_plantings_from_package_payload
-        label = batch.included&.dig(:custom_data)&.detect { |obj| obj&.custom_field_id&.to_i == origin_package&.id.to_i }
+        label = package_label(origin_package&.id)
 
         raise InvalidOperation, "Failed: No package label was found for #{origin_package&.name}" unless label && label&.value
 
@@ -80,7 +80,7 @@ module MetrcService
       end
 
       def create_plantings_from_source_plant_payload
-        tag = batch.included&.dig(:custom_data)&.detect { |obj| obj&.custom_field_id.to_i == source_plant.id.to_i }
+        tag = package_label(source_plant&.id)
 
         raise InvalidOperation, "Failed: No source plant was found for #{source_plant&.name}" unless tag && tag&.value
 
@@ -110,6 +110,12 @@ module MetrcService
 
       def source_plant
         @source_plant ||= batch.included&.dig(:custom_fields)&.detect { |obj| PLANT_MOTHER_NAME.match?(obj&.name) }
+      end
+
+      def package_label(target_id)
+        return unless target_id
+
+        batch.included&.dig(:custom_data)&.detect { |obj| obj&.relationships&.dig('custom_field', 'data', 'id')&.to_i == target_id&.to_i }
       end
     end
   end

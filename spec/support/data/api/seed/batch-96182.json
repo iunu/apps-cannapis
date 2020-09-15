@@ -461,9 +461,7 @@
       "type": "custom_data",
       "attributes": {
         "id": 64850,
-        "value": "Latiff",
-        "crop_batch_id": 2002,
-        "custom_field_id": 388
+        "value": "Latiff"
       },
       "relationships": {
         "custom_field": {

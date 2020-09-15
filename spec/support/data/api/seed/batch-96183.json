@@ -461,9 +461,7 @@
       "type": "custom_data",
       "attributes": {
         "id": 64850,
-        "value": "1A4060300003B01000000837",
-        "crop_batch_id": 2002,
-        "custom_field_id": 388
+        "value": "1A4060300003B01000000837"
       },
       "relationships": {
         "custom_field": {
