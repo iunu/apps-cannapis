@@ -55,7 +55,7 @@ module MetrcService
       end
 
       def create_plantings_from_package_payload
-        label = batch.included&.dig(:custom_data)&.detect { |obj| obj&.custom_field_id.to_i == origin_package&.id.to_i }
+        label = batch.included&.dig(:custom_data)&.detect { |obj| obj&.custom_field_id&.to_i == origin_package&.id.to_i }
 
         raise InvalidOperation, "Failed: No package label was found for #{origin_package&.name}" unless label && label&.value
 
