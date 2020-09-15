@@ -113,7 +113,7 @@ module MetrcService
       end
 
       def change_growth_phase
-        phase = current_growth_phase
+        phase = current_growth_phase || 'Flowering'
         payload = {
           Name: batch_tag,
           Count: quantity,
