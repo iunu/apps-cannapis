@@ -68,7 +68,7 @@ module Common
     end
 
     def state
-      config[:state_map].fetch(@integration.state.upcase.to_sym, @integration.state)&.to_sym
+      config[:state_map].fetch(@integration.state.upcase.to_sym, @integration.state)
     end
 
     def get_transaction(name, metadata = @attributes)
@@ -113,7 +113,7 @@ module Common
       raise InvalidAttributes, "Missing barcode for batch '#{batch.arbitrary_id}'" if barcodes.blank?
 
       matches = barcodes&.select { |label| /[A-Z0-9]{24,24}(-split)?/.match?(label) }&.sort
-      arbitrary_id_allowed = STATES_WITH_ARBITRARY_BATCH_ID.include?(state)
+      arbitrary_id_allowed = STATES_WITH_ARBITRARY_BATCH_ID.include?(state&.to_sym)
 
       # In some states, you can send our batch
       # arbitrary ID instead of a Metrc tag
