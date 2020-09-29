@@ -7,6 +7,7 @@ module Common
     RETRYABLE_ERRORS = [
       Net::HTTPRetriableError
     ].freeze
+    STATES_WITH_ARBITRARY_BATCH_ID = %i[ma mo].freeze
 
     attr_reader :artemis
 
@@ -106,16 +107,19 @@ module Common
     end
     memoize :batch
 
-    def batch_tag
+    def batch_tag # rubocop:disable Metrics/PerceivedComplexity
       barcodes = batch.relationships.dig('barcodes', 'data')&.map { |label| label['id'] }
 
       raise InvalidAttributes, "Missing barcode for batch '#{batch.arbitrary_id}'" if barcodes.blank?
 
       matches = barcodes&.select { |label| /[A-Z0-9]{24,24}(-split)?/.match?(label) }&.sort
+      arbitrary_id_allowed = STATES_WITH_ARBITRARY_BATCH_ID.include?(state)
 
-      raise InvalidAttributes, "Expected barcode for batch '#{batch.arbitrary_id}' to be alphanumeric with 24 characters. Got: #{barcodes.join(', ')}" if matches.blank? && state != :ma
+      # In some states, you can send our batch
+      # arbitrary ID instead of a Metrc tag
+      raise InvalidAttributes, "Expected barcode for batch '#{batch.arbitrary_id}' to be alphanumeric with 24 characters. Got: #{barcodes.join(', ')}" if matches.blank? && !arbitrary_id_allowed
 
-      return batch.arbitrary_id if matches.blank? && state == :ma
+      return batch.arbitrary_id if matches.blank? && arbitrary_id_allowed
 
       Common::Utils.normalize_barcode(matches&.first)
     end
