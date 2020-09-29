@@ -68,7 +68,7 @@ module Common
     end
 
     def state
-      config[:state_map].fetch(@integration.state.upcase.to_sym, @integration.state)
+      config[:state_map].fetch(@integration.state.upcase.to_sym, @integration.state)&.to_sym
     end
 
     def get_transaction(name, metadata = @attributes)
