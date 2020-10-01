@@ -20,6 +20,8 @@ module MetrcService
       end
 
       def prior_move
+        return @prior_move if @prior_move
+
         previous_move = Transaction.where(
           'batch_id = ? AND type = ? AND vendor = ? AND id NOT IN (?)',
           @batch_id,
@@ -199,7 +201,7 @@ module MetrcService
       end
 
       def get_substage(comp = nil)
-        comp ||= @current_completion
+        comp ||= current_completion
         comp&.included&.dig(:sub_stages)&.first&.name
       end
 
@@ -208,16 +210,13 @@ module MetrcService
       end
 
       def current_growth_phase
-        growth_phase_for_completion(@current_completion)
+        growth_phase_for_completion(current_completion)
       end
       memoize :current_growth_phase
 
-      def next_previous_growth_phase
-        growth_phase_for_completion(@prior_move)
+      def previous_growth_phase
+        growth_phase_for_completion(prior_move)
       end
-      memoize :next_previous_growth_phase
-
-      alias previous_growth_phase next_previous_growth_phase
     end
   end
 end
