@@ -27,7 +27,7 @@ module MetrcService
         return @obj if @obj
 
         id = @relationships.dig('action_result', 'data', 'id')&.to_i || @completion_id
-        @obj = batch.discard(id)
+        @obj = get_completion(id)
 
         @obj
       end
@@ -39,7 +39,7 @@ module MetrcService
           PlantBatch: batch_tag,
           Count: quantity,
           ReasonNote: reason,
-          ActualDate: discard.discarded_at
+          ActualDate: discard.start_time
         }]
       end
 
@@ -53,7 +53,7 @@ module MetrcService
               Id: nil,
               Label: @attributes.dig('options', 'barcode'),
               ReasonNote: reason,
-              ActualDate: discard.discarded_at
+              ActualDate: discard.start_time
             }
           ]
         end
@@ -64,7 +64,7 @@ module MetrcService
             Id: nil,
             Label: item.relationships.dig('barcode', 'data', 'id'),
             ReasonNote: reason,
-            ActualDate: discard.discarded_at
+            ActualDate: discard.start_time
           }
         end
       end
