@@ -46,14 +46,14 @@ module MetrcService
         reason       = reason_note
 
         if discard_type == 'partial'
-          return [
+          return @attributes.dig('options', 'barcode').map do |barcode|
             {
               Id: nil,
-              Label: @attributes.dig('options', 'barcode'),
+              Label: barcode,
               ReasonNote: reason,
               ActualDate: discard.start_time
             }
-          ]
+          end
         end
 
         items = get_items(batch.seeding_unit.id)
