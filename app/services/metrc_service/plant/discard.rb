@@ -24,12 +24,10 @@ module MetrcService
       end
 
       def discard
-        return @obj if @obj
+        return @discard if @discard
 
         id = @relationships.dig('action_result', 'data', 'id')&.to_i || @completion_id
-        @obj = get_completion(id)
-
-        @obj
+        @discard = get_completion(id)
       end
 
       def build_immature_payload
@@ -69,16 +67,25 @@ module MetrcService
         end
       end
 
-      def reason_note
-        reason_description = discard.reason_description
-        reason_type = discard.reason_type
-        reason_note = "#{reason_type.capitalize}: #{reason_description}. #{@attributes.dig('options', 'note_content')}" if reason_type && reason_description
+      def reason_note # rubocop:disable Metrics/PerceivedComplexity
+        reason_description = if discard.options.dig('reason_description') && discard.options.dig('note_content')
+                               "#{discard.options.dig('reason_description')} #{discard.options.dig('note_content')}"
+                             elsif discard.options.dig('reason_description') && !discard.options.dig('note_content')
+                               discard.options.dig('reason_description')
+                             elsif !discard.options.dig('reason_description') && discard.options.dig('note_content')
+                               discard.options.dig('note_content')
+                             end
+        reason_type = discard.options.dig('reason_type')
+        reason_note = reason_type.capitalize if reason_type
+        reason_note += ": #{reason_description}." if reason_type && reason_description
 
         reason_note || NOT_SPECIFIED
       end
 
       def quantity
-        @attributes.dig('options', 'calculated_quantity')&.to_i
+        @attributes.dig('options', 'calculated_quantity')&.to_i || \
+          @attributes.dig('options', 'quantity')&.to_i || \
+          discard.options.fetch('quantity')
       end
     end
   end
