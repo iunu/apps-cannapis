@@ -396,6 +396,34 @@ RSpec.describe MetrcService::Plant::Move do
       end
     end
 
+    context 'with a previous flowering zone to a new dry zone, and with barcodes' do
+      let(:first_move) do
+        response = create_response('api/completions/762428-flowering-preprinted')
+        artemis_client.process_response(response, 'completions')
+      end
+      let(:second_move) do
+        response = create_response('api/completions/762429-drying-preprinted')
+        artemis_client.process_response(response, 'completions')
+      end
+      it 'returns the change_growth_phase step' do
+        expect(subject).to be :move_harvest
+      end
+    end
+
+    context 'with a previous flowering zone to a new cure zone, and with barcodes' do
+      let(:first_move) do
+        response = create_response('api/completions/762428-flowering-preprinted')
+        artemis_client.process_response(response, 'completions')
+      end
+      let(:second_move) do
+        response = create_response('api/completions/762429-curing-preprinted')
+        artemis_client.process_response(response, 'completions')
+      end
+      it 'returns the change_growth_phase step' do
+        expect(subject).to be :move_harvest
+      end
+    end
+
     context 'with a previous clone zone to a new clone zone, and with barcodes' do
       let(:first_move) do
         response = create_response('api/completions/762428-clone-preprinted')
