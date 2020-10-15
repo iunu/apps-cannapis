@@ -145,18 +145,7 @@ module MetrcService
         call_metrc(:change_plant_growth_phase, payload)
       end
 
-      def move_harvest
-        return if harvest_disabled?
-
-        payload = [{
-          HarvestName: batch.arbitrary_id,
-          DryingLocation: location_name,
-          DryingRoom: location_name,
-          ActualDate: start_time
-        }]
-
-        call_metrc(:move_harvest, payload)
-      end
+      def move_harvest; end
 
       def items
         @items ||= get_items(batch.seeding_unit.id)

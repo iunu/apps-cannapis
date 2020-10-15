@@ -768,34 +768,10 @@ RSpec.describe MetrcService::Plant::Move do
         ]
       end
 
-      before do
-        expect_any_instance_of(described_class)
-          .to receive(:batch)
-          .and_return(batch)
-
-        expect_any_instance_of(described_class)
-          .to receive(:location_name)
-          .twice
-          .and_return(location_name)
-
-        expect_any_instance_of(described_class)
-          .to receive(:start_time)
-          .and_return(start_time)
-
-        stub_request(:put, 'https://sandbox-api-md.metrc.com/harvests/v1/move?licenseNumber=LIC-0001')
-          .with(body: expected_payload.to_json)
-          .to_return(status: 200)
-      end
-
       it 'calls the Metrc client method' do
-        subject.should_receive(:call_metrc)
-               .with(:move_harvest, expected_payload)
-               .and_call_original
-
         subject.send(:move_harvest)
       end
     end
-
 
     context 'with harvest sync disabled' do
       let(:integration) { create(:integration, :harvest_sync_disabled, account: account, state: :md) }
