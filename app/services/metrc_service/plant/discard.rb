@@ -26,8 +26,7 @@ module MetrcService
       def discard
         return @discard if @discard
 
-        id = @relationships.dig('action_result', 'data', 'id')&.to_i || @completion_id
-        @discard = get_completion(id)
+        @discard = get_completion(@completion_id)
       end
 
       def build_immature_payload
