@@ -5,8 +5,6 @@ module MetrcService
         # allow for harvest of nursery crops - generates clones
         return success! if items.empty?
 
-        handle_resources
-
         success!
       end
 

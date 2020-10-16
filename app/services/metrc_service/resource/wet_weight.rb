@@ -10,7 +10,7 @@ module MetrcService
       def call
         return if harvest_disabled?
 
-        harvest_plants if resource_present? || @ctx['attributes']['action_type'] == 'generate'
+        harvest_plants if resource_present? || @attributes.dig('action_type') == 'generate'
 
         success!
       end

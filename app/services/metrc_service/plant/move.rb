@@ -10,8 +10,6 @@ module MetrcService
 
         send(next_step_name)
 
-        handle_resources
-
         success!
       end
 
