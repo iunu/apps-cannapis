@@ -24,6 +24,7 @@ module MetrcService
       def build_harvest_plants_payload(items, batch)
         harvest_name = batch.arbitrary_id
         average_weight = calculate_average_weight(items)
+        resource_unit = get_resource_unit(@ctx.dig('attributes', 'options', 'resource_unit_id'))
 
         items.map do |item|
           {
@@ -32,7 +33,7 @@ module MetrcService
             ActualDate: harvest_date,
             Plant: item.relationships.dig('barcode', 'data', 'id'),
             Weight: average_weight,
-            UnitOfWeight: unit_of_weight(resource_name, item),
+            UnitOfWeight: resource_unit.unit,
             HarvestName: harvest_name
           }
         end
