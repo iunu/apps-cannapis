@@ -1,7 +1,7 @@
 module NcsService
   module Plant
     class Harvest < NcsService::Base
-      WET_WEIGHT = 'Wet Material'.freeze
+      WET_WEIGHT = 'Wet Weight'.freeze
       WASTE_WEIGHT = 'Waste'.freeze
 
       def call

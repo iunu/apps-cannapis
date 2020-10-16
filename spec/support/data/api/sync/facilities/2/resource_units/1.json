@@ -12,7 +12,8 @@
       "conversion_si": 1.0,
       "unit_modifier": null,
       "product_modifier": null,
-      "options": null
+      "options": null,
+      "crop_variety": "5th Element"
     },
     "relationships": {
       "crop_variety": {

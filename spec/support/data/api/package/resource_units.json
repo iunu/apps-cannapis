@@ -56,7 +56,7 @@
         "conversion_si": 1.0,
         "id": 4,
         "kind": "weight",
-        "name": "g of Wet Material - Boss Hog"
+        "name": "g of Wet Weight - Boss Hog"
       },
       "id": "4",
       "relationships": {
@@ -260,7 +260,7 @@
         "conversion_si": 1.0,
         "id": 16,
         "kind": "weight",
-        "name": "g of Wet Material - 5th Element"
+        "name": "g of Wet Weight - 5th Element"
       },
       "id": "16",
       "relationships": {

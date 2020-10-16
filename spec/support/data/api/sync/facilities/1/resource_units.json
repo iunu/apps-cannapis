@@ -13,7 +13,8 @@
         "conversion_si": 1.0,
         "unit_modifier": null,
         "product_modifier": null,
-        "options": null
+        "options": null,
+        "crop_variety": "5th Element"
       },
       "relationships": {
         "crop_variety": {
@@ -82,6 +83,7 @@
         "conversion_si": 0.001,
         "unit_modifier": null,
         "product_modifier": null,
+        "crop_variety": "B-52",
         "options": null
       },
       "relationships": {
@@ -166,14 +168,14 @@
       "type": "resource_units",
       "attributes": {
         "id": 8,
-        "name": "Gram of Wet Material, Boss Hog Cannabis",
+        "name": "Gram of Wet Weight, Boss Hog Cannabis",
         "kind": "weight",
         "unit_name": "Gram",
         "unit_symbol": "g",
         "unit_precision": 0,
         "conversion_si": 1.0,
         "unit_modifier": null,
-        "product_modifier": "Wet Material",
+        "product_modifier": "Wet Weight",
         "options": {
           "metrc": "wet_weight"
         }
@@ -470,14 +472,14 @@
       "type": "resource_units",
       "attributes": {
         "id": 21,
-        "name": "Gram of Wet Material, 5th Element Cannabis",
+        "name": "Gram of Wet Weight, 5th Element Cannabis",
         "kind": "weight",
         "unit_name": "Gram",
         "unit_symbol": "g",
         "unit_precision": 0,
         "conversion_si": 1.0,
         "unit_modifier": null,
-        "product_modifier": "Wet Material",
+        "product_modifier": "Wet Weight",
         "options": {
           "metrc": "wet_weight"
         }
@@ -775,14 +777,14 @@
       "type": "resource_units",
       "attributes": {
         "id": 34,
-        "name": "Gram of Wet Material, 9 LB Hammer Cannabis",
+        "name": "Gram of Wet Weight, 9 LB Hammer Cannabis",
         "kind": "weight",
         "unit_name": "Gram",
         "unit_symbol": "g",
         "unit_precision": 0,
         "conversion_si": 1.0,
         "unit_modifier": null,
-        "product_modifier": "Wet Material",
+        "product_modifier": "Wet Weight",
         "options": {
           "metrc": "wet_weight"
         }
@@ -1078,14 +1080,14 @@
       "type": "resource_units",
       "attributes": {
         "id": 47,
-        "name": "Gram of Wet Material, Banana Crush Cannabis",
+        "name": "Gram of Wet Weight, Banana Crush Cannabis",
         "kind": "weight",
         "unit_name": "Gram",
         "unit_symbol": "g",
         "unit_precision": 0,
         "conversion_si": 1.0,
         "unit_modifier": null,
-        "product_modifier": "Wet Material",
+        "product_modifier": "Wet Weight",
         "options": {
           "metrc": "wet_weight"
         }
@@ -1381,14 +1383,14 @@
       "type": "resource_units",
       "attributes": {
         "id": 60,
-        "name": "Gram of Wet Material, Bruce Banner BX Cannabis",
+        "name": "Gram of Wet Weight, Bruce Banner BX Cannabis",
         "kind": "weight",
         "unit_name": "Gram",
         "unit_symbol": "g",
         "unit_precision": 0,
         "conversion_si": 1.0,
         "unit_modifier": null,
-        "product_modifier": "Wet Material",
+        "product_modifier": "Wet Weight",
         "options": {
           "metrc": "wet_weight"
         }
@@ -1684,14 +1686,14 @@
       "type": "resource_units",
       "attributes": {
         "id": 73,
-        "name": "Gram of Wet Material, ChemDog Cannabis",
+        "name": "Gram of Wet Weight, ChemDog Cannabis",
         "kind": "weight",
         "unit_name": "Gram",
         "unit_symbol": "g",
         "unit_precision": 0,
         "conversion_si": 1.0,
         "unit_modifier": null,
-        "product_modifier": "Wet Material",
+        "product_modifier": "Wet Weight",
         "options": {
           "metrc": "wet_weight"
         }
