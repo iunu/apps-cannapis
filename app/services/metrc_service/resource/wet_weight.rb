@@ -61,7 +61,7 @@ module MetrcService
 
       def total_weight
         resource_unit_id = @attributes.dig('options', 'resource_unit_id')
-        resource_completions_by_unit_type(resource_unit_id).sum do |completion|
+        resource_completions_by_unit_id(resource_unit_id).sum do |completion|
           completion.options['generated_quantity'] || completion.options['processed_quantity']
         end
       end
