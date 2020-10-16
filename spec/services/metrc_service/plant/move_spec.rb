@@ -396,9 +396,37 @@ RSpec.describe MetrcService::Plant::Move do
       end
     end
 
+    context 'with a previous flowering zone to a new dry zone, and with barcodes' do
+      let(:first_move) do
+        response = create_response('api/completions/762428-flowering-preprinted')
+        artemis_client.process_response(response, 'completions')
+      end
+      let(:second_move) do
+        response = create_response('api/completions/762429-drying-preprinted')
+        artemis_client.process_response(response, 'completions')
+      end
+      it 'returns the change_growth_phase step' do
+        expect(subject).to be :move_harvest
+      end
+    end
+
+    context 'with a previous flowering zone to a new cure zone, and with barcodes' do
+      let(:first_move) do
+        response = create_response('api/completions/762428-flowering-preprinted')
+        artemis_client.process_response(response, 'completions')
+      end
+      let(:second_move) do
+        response = create_response('api/completions/762429-curing-preprinted')
+        artemis_client.process_response(response, 'completions')
+      end
+      it 'returns the change_growth_phase step' do
+        expect(subject).to be :move_harvest
+      end
+    end
+
     context 'with a previous clone zone to a new clone zone, and with barcodes' do
       let(:first_move) do
-        response = create_response('api/completions/762428-clone-preprinted')
+        response = create_response('api/completions/762428-flowering-preprinted')
         artemis_client.process_response(response, 'completions')
       end
       let(:second_move) do
@@ -408,71 +436,6 @@ RSpec.describe MetrcService::Plant::Move do
 
       it 'returns the move_plants step' do
         expect(subject).to be :move_plants
-      end
-    end
-
-    context 'with a previous curing zone to a new drying zone, and with barcodes' do
-      let(:first_move) do
-        response = create_response('api/completions/762428-curing-preprinted')
-        artemis_client.process_response(response, 'completions')
-      end
-      let(:second_move) do
-        response = create_response('api/completions/762429-drying-preprinted')
-        artemis_client.process_response(response, 'completions')
-      end
-
-      it 'returns the move_harvest step' do
-        expect(subject).to be :move_harvest
-      end
-    end
-
-    context 'with a previous drying zone to a new curing zone, and with barcodes' do
-      let(:first_move) do
-        response = create_response('api/completions/762428-drying-preprinted')
-        artemis_client.process_response(response, 'completions')
-      end
-      let(:second_move) do
-        response = create_response('api/completions/762429-curing-preprinted')
-        artemis_client.process_response(response, 'completions')
-      end
-
-      it 'returns the move_harvest step' do
-        expect(subject).to be :move_harvest
-      end
-    end
-
-    context 'with a previous curing zone to a new curing zone, and with barcodes' do
-      let(:first_move) do
-        response = create_response('api/completions/762428-curing-preprinted')
-        artemis_client.process_response(response, 'completions')
-      end
-      let(:second_move) do
-        response = create_response('api/completions/762429-curing-preprinted')
-        artemis_client.process_response(response, 'completions')
-      end
-
-      it 'returns the move_harvest step' do
-        expect(subject).to be :move_harvest
-      end
-    end
-
-    context 'with a previous drying zone to a new drying zone, and with barcodes' do
-      let(:zone_name) { 'Drying' }
-      let(:first_move) do
-        response = create_response('api/completions/762428-drying-preprinted')
-        completion = artemis_client.process_response(response, 'completions')
-        completion.options['zone_name'] = zone_name
-        completion
-      end
-      let(:second_move) do
-        response = create_response('api/completions/762429-drying-preprinted')
-        completion = artemis_client.process_response(response, 'completions')
-        completion.options['zone_name'] = zone_name
-        completion
-      end
-
-      it 'returns the move_harvest step' do
-        expect(subject).to be :move_harvest
       end
     end
   end
@@ -768,34 +731,10 @@ RSpec.describe MetrcService::Plant::Move do
         ]
       end
 
-      before do
-        expect_any_instance_of(described_class)
-          .to receive(:batch)
-          .and_return(batch)
-
-        expect_any_instance_of(described_class)
-          .to receive(:location_name)
-          .twice
-          .and_return(location_name)
-
-        expect_any_instance_of(described_class)
-          .to receive(:start_time)
-          .and_return(start_time)
-
-        stub_request(:put, 'https://sandbox-api-md.metrc.com/harvests/v1/move?licenseNumber=LIC-0001')
-          .with(body: expected_payload.to_json)
-          .to_return(status: 200)
-      end
-
       it 'calls the Metrc client method' do
-        subject.should_receive(:call_metrc)
-               .with(:move_harvest, expected_payload)
-               .and_call_original
-
         subject.send(:move_harvest)
       end
     end
-
 
     context 'with harvest sync disabled' do
       let(:integration) { create(:integration, :harvest_sync_disabled, account: account, state: :md) }

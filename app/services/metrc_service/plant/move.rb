@@ -36,6 +36,24 @@ module MetrcService
       end
       memoize :prior_move
 
+
+      def prior_start
+        return @prior_start if @prior_start
+
+        previous_start = Transaction.where(
+          'batch_id = ? AND type IN (?) AND vendor = ? AND id NOT IN (?)',
+          @batch_id,
+          [:start_batch, :start_batch_from_package, :start_batch_from_source_plant],
+          :metrc,
+          transaction.id
+        ).limit(1).order('created_at desc').first
+
+        return if previous_start.nil?
+
+        @prior_start = get_completion(previous_start&.completion_id)
+      end
+      memoize :prior_start
+
       private
 
       def within_phases?(zone_name, expected_zones)
@@ -83,7 +101,7 @@ module MetrcService
 
         return :change_plants_growth_phases if (previous_growth_phase.include?('Flow') && new_growth_phase.include?('Flow')) && already_had_barcodes
 
-        return :move_harvest if within_phases?(previous_growth_phase, %w[Curing Drying]) && within_phases?(new_growth_phase, %w[Curing Drying]) && already_had_barcodes
+        return :move_harvest if previous_growth_phase.include?('Flow') && within_phases?(new_growth_phase, %w[Curing Cure Dry Drying]) && already_had_barcodes
 
         return :move_plants if already_had_barcodes
 
@@ -145,18 +163,9 @@ module MetrcService
         call_metrc(:change_plant_growth_phase, payload)
       end
 
-      def move_harvest
-        return if harvest_disabled?
-
-        payload = [{
-          HarvestName: batch.arbitrary_id,
-          DryingLocation: location_name,
-          DryingRoom: location_name,
-          ActualDate: start_time
-        }]
-
-        call_metrc(:move_harvest, payload)
-      end
+      # if this is a move harvest a generated completion of 'Wet Weight' should come next
+      # This will be reported to metrc via the wet_weight resource service.
+      def move_harvest; end
 
       def items
         @items ||= get_items(batch.seeding_unit.id)
@@ -215,7 +224,7 @@ module MetrcService
       memoize :current_growth_phase
 
       def previous_growth_phase
-        growth_phase_for_completion(prior_move)
+        growth_phase_for_completion(prior_move) || growth_phase_for_completion(prior_start)
       end
     end
   end

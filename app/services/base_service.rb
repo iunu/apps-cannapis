@@ -60,7 +60,7 @@ module BaseService
 
       # We need to call for wet weight and wet waste resources
       # since a resource call was received
-      if %w[generate consume].include?(action_type)
+      if %w[generate consume].include?(action_type.downcase)
         module_name = 'Resource::WetWeight'
       else
         seeding_unit_name = module_name_for_seeding_unit.camelize
