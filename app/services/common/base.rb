@@ -145,9 +145,7 @@ module Common
       @attributes['status']
     end
 
-    def resource_completions_by_unit_type(unit_type)
-      resource_unit_id = resource_unit(unit_type).id
-
+    def resource_completions_by_unit_id(resource_unit_id)
       batch
         .completions
         .select { |completion| %w[process generate].include?(completion.action_type) }

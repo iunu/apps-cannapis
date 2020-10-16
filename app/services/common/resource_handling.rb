@@ -30,7 +30,8 @@ module Common
     end
 
     def resource_completions
-      @resource_completions ||= resource_completions_by_unit_type(self.class.resource_name)
+      resource_unit_id = @attributes.dig('options', 'resource_unit_id')
+      @resource_completions ||= resource_completions_by_unit_id(resource_unit_id)
     end
   end
 end

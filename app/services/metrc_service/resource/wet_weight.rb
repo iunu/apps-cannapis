@@ -10,7 +10,7 @@ module MetrcService
       def call
         return if harvest_disabled?
 
-        harvest_plants if resource_present? || @ctx['attributes']['action_type'] == 'generate'
+        harvest_plants if resource_present? || @attributes.dig('action_type') == 'generate'
 
         success!
       end
@@ -24,6 +24,7 @@ module MetrcService
       def build_harvest_plants_payload(items, batch)
         harvest_name = batch.arbitrary_id
         average_weight = calculate_average_weight(items)
+        resource_unit = get_resource_unit(@ctx.dig('attributes', 'options', 'resource_unit_id'))
 
         items.map do |item|
           {
@@ -32,7 +33,7 @@ module MetrcService
             ActualDate: harvest_date,
             Plant: item.relationships.dig('barcode', 'data', 'id'),
             Weight: average_weight,
-            UnitOfWeight: unit_of_weight(resource_name, item),
+            UnitOfWeight: resource_unit.unit,
             HarvestName: harvest_name
           }
         end
@@ -58,14 +59,15 @@ module MetrcService
         resource_unit(unit_type).unit
       end
 
-      def total_weight(unit_type)
-        resource_completions_by_unit_type(unit_type).sum do |completion|
+      def total_weight
+        resource_unit_id = @attributes.dig('options', 'resource_unit_id')
+        resource_completions_by_unit_id(resource_unit_id).sum do |completion|
           completion.options['generated_quantity'] || completion.options['processed_quantity']
         end
       end
 
       def calculate_average_weight(items)
-        (total_weight(resource_name).to_f / items.size).round(2)
+        (total_weight.to_f / items.size).round(2)
       end
     end
   end

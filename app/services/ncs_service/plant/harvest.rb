@@ -83,7 +83,7 @@ module NcsService
       end
 
       def build_remove_waste_payload
-        waste_completions = resource_completions_by_unit_type(WASTE_WEIGHT)
+        waste_completions = resource_completions_by_unit_id(WASTE_WEIGHT)
         ncs_harvest = lookup_harvest(batch.arbitrary_id)
 
         waste_completions.map do |completion|
@@ -109,7 +109,7 @@ module NcsService
       end
 
       def total_weight(unit_type)
-        resource_completions_by_unit_type(unit_type).sum do |completion|
+        resource_completions_by_unit_id(unit_type).sum do |completion|
           completion.options['generated_quantity'] || completion.options['processed_quantity']
         end
       end

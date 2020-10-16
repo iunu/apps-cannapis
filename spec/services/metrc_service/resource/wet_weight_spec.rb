@@ -79,6 +79,12 @@ RSpec.describe MetrcService::Resource::WetWeight do
       stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/zones/6425")
         .to_return(body: { data: { id: '6425', type: 'zones', attributes: { id: 6425, name: 'Room' } } }.to_json)
 
+      stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/resource_units/?include=crop_variety")
+        .to_return(status: 200, body: load_response_json('api/sync/facilities/1/resource_units'))
+
+      stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/resource_units/297?include=crop_variety")
+        .to_return(status: 200, body: load_response_json('api/sync/facilities/1/resource_units/8'))
+
       stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/harvestplants?licenseNumber=LIC-0001')
         .with(body: expected_payload.to_json)
         .to_return(status: 200, body: '', headers: {})

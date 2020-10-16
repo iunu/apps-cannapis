@@ -199,7 +199,7 @@ module NcsService
       plant_batch
     end
 
-    def resource_completions_by_unit_type(unit_type)
+    def resource_completions_by_unit_id(unit_type)
       resource_unit_id = resource_unit(unit_type).id
 
       batch
