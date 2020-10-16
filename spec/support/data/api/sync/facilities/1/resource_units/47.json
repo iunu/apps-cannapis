@@ -4,7 +4,7 @@
     "type": "resource_units",
     "attributes": {
       "id": 47,
-      "name": "Gram of Wet Material, Banana Crush Cannabis",
+      "name": "Gram of Wet Weight, Banana Crush Cannabis",
       "kind": "weight",
       "unit_name": "Gram",
       "unit_symbol": "g",

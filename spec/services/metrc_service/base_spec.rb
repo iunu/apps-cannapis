@@ -296,9 +296,9 @@ RSpec.describe MetrcService::Base do
     it do
       is_expected.to have_attributes(
         id: 4,
-        name: 'Gram of Wet Material, Boss Hog Cannabis',
+        name: 'Gram of Wet Weight, Boss Hog Cannabis',
         unit: 'Grams',
-        label: 'Wet Material',
+        label: 'Wet Weight',
         strain: 'Boss Hog',
         kind: 'weight',
         metrc_type: 'wet_weight'

@@ -153,7 +153,7 @@ RSpec.describe MetrcService::Package::Start do
             .to_return(status: 200, body: '{"Id":2,"Name":"Apr7-5th-Ele-Can-26","HarvestType":"WholePlant","SourceStrainCount":0, "CurrentWeight": 0.0}')
 
           stub_request(:get, 'https://sandbox-api-ca.metrc.com/items/v1/categories')
-            .to_return(status: 200, body: [{ Name: 'Wet Material' }].to_json)
+            .to_return(status: 200, body: [{ Name: 'Wet Weight' }].to_json)
         end
 
         context 'standard package' do
@@ -254,7 +254,7 @@ RSpec.describe MetrcService::Package::Start do
           .to_return(status: 200, body: [{ Id: 54321, Name: 'not-this-one' }, { Id: 12345, Name: '1234567890ABCD1234567890' }].to_json)
 
         stub_request(:get, 'https://sandbox-api-ca.metrc.com/items/v1/categories')
-          .to_return(status: 200, body: [{ Name: 'Wet Material' }].to_json)
+          .to_return(status: 200, body: [{ Name: 'Wet Weight' }].to_json)
 
         stub_request(:post, "https://sandbox-api-ca.metrc.com/plantbatches/v1/create/plantings?licenseNumber=LIC-0001")
           .with(body: expected_payload.to_json, basic_auth: [METRC_API_KEY, integration.secret])
@@ -308,8 +308,8 @@ RSpec.describe MetrcService::Package::Start do
     end
 
     context 'when type is valid' do
-      let(:valid_categories) { [{ Name: 'Wet Material' }] }
-      let(:item_type) { 'Wet Material' }
+      let(:valid_categories) { [{ Name: 'Wet Weight' }] }
+      let(:item_type) { 'Wet Weight' }
 
       it 'should not raise an error' do
         expect { subject }.not_to raise_error

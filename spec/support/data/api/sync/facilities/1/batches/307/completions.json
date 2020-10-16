@@ -17,7 +17,7 @@
           "source_batches": [
             {
               "id": 306,
-              "unit": "Gram of Wet Material, 5th Element Cannabis",
+              "unit": "Gram of Wet Weight, 5th Element Cannabis",
               "quantity": 10.0,
               "arbitrary_id": "Apr7-5th-Ele-Can-26"
             }
@@ -135,7 +135,7 @@
         "context": {
           "source_batch": {
             "id": 306,
-            "unit": "Gram of Wet Material, 5th Element Cannabis",
+            "unit": "Gram of Wet Weight, 5th Element Cannabis",
             "quantity": 10.0,
             "arbitrary_id": "Apr7-5th-Ele-Can-26"
           },

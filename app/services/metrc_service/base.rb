@@ -44,9 +44,6 @@ module MetrcService
 
     def resource_unit(unit_type)
       resource_units = get_resource_units.select do |resource_unit|
-        if resource_unit.strain == '5th Element'
-          debugger
-        end
         resource_unit.metrc_type == unit_type && resource_unit.strain == batch.crop_variety
       end
 

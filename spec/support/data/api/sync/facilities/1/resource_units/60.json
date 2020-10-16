@@ -4,7 +4,7 @@
     "type": "resource_units",
     "attributes": {
       "id": 60,
-      "name": "Gram of Wet Material, Bruce Banner BX Cannabis",
+      "name": "Gram of Wet Weight, Bruce Banner BX Cannabis",
       "kind": "weight",
       "unit_name": "Gram",
       "unit_symbol": "g",

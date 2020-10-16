@@ -4,7 +4,7 @@
     "type": "resource_units",
     "attributes": {
       "id": 73,
-      "name": "Gram of Wet Material, ChemDog Cannabis",
+      "name": "Gram of Wet Weight, ChemDog Cannabis",
       "kind": "weight",
       "unit_name": "Gram",
       "unit_symbol": "g",
