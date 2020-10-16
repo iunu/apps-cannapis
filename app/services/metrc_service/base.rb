@@ -43,19 +43,21 @@ module MetrcService
     end
 
     def resource_unit(unit_type)
-      formatted_unit_type = unit_type.humanize.split.map(&:capitalize).join(' ')
       resource_units = get_resource_units.select do |resource_unit|
-        resource_unit.product_modifier == formatted_unit_type && resource_unit.crop_variety == batch.crop_variety
+        if resource_unit.strain == '5th Element'
+          debugger
+        end
+        resource_unit.metrc_type == unit_type && resource_unit.strain == batch.crop_variety
       end
 
       raise InvalidAttributes, "Ambiguous resource unit for #{unit_type} calculation. Expected 1 resource_unit, found #{resource_units.count}" if resource_units.count > 1
-      raise InvalidAttributes, "#{unit_type} resource unit not found" if resource_units.count.zero?
+      raise InvalidAttributes, "#{unit_type} resource unit not found for variety #{batch.crop_variety}" if resource_units.count.zero?
 
       resource_units.first
     end
 
     # Artemis API delivers resource_unit#name in the following formats:
-    # (correct as of 2020-04-07)
+    # (correct as of 2020-10-16)
     #
     #   (a):  [unit] of [resource type], [strain]
     #   (b):  [resource type], [strain]
@@ -64,7 +66,6 @@ module MetrcService
     def map_resource_unit(resource_unit)
       artemis_unit = resource_unit.unit_name
       metrc_unit = MetrcService::WEIGHT_UNIT_MAP.fetch(artemis_unit, artemis_unit)
-
       OpenStruct.new(
         id: resource_unit.id,
         name: resource_unit.name,
@@ -73,7 +74,7 @@ module MetrcService
         strain: resource_unit.crop_variety&.name,
         kind: resource_unit.kind,
         item_type: determine_item_type(resource_unit),
-        metrc_type: resource_unit&.options&.fetch('metrc', nil)
+        metrc_type: resource_unit&.product_modifier&.parameterize&.underscore
       )
     end
 
