@@ -43,9 +43,11 @@ module MetrcService
     end
 
     def resource_unit(unit_type)
+      formatted_unit_type = unit_type.humanize.split.map(&:capitalize).join(' ')
       resource_units = get_resource_units.select do |resource_unit|
-        resource_unit.metrc_type == unit_type &&
-          resource_unit.strain&.match?(batch.crop_variety)
+        resource_unit.product_modifier == formatted_unit_type &
+          # where is batch coming from here? also crop_variety is an object should it be crop_variety.name?
+          resource_unit.crop_variety.id&.match?(batch.crop_variety.id)
       end
 
       raise InvalidAttributes, "Ambiguous resource unit for #{unit_type} calculation. Expected 1 resource_unit, found #{resource_units.count}" if resource_units.count > 1
