@@ -59,14 +59,15 @@ module MetrcService
         resource_unit(unit_type).unit
       end
 
-      def total_weight(unit_type)
-        resource_completions_by_unit_type(unit_type).sum do |completion|
+      def total_weight
+        resource_unit_id = @attributes.dig('options', 'resource_unit_id')
+        resource_completions_by_unit_type(resource_unit_id).sum do |completion|
           completion.options['generated_quantity'] || completion.options['processed_quantity']
         end
       end
 
       def calculate_average_weight(items)
-        (total_weight(resource_name).to_f / items.size).round(2)
+        (total_weight.to_f / items.size).round(2)
       end
     end
   end

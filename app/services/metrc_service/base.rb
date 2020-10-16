@@ -42,17 +42,6 @@ module MetrcService
       fail!(exception: e)
     end
 
-    def resource_unit(unit_type)
-      resource_units = get_resource_units.select do |resource_unit|
-        resource_unit.metrc_type == unit_type && resource_unit.strain == batch.crop_variety
-      end
-
-      raise InvalidAttributes, "Ambiguous resource unit for #{unit_type} calculation. Expected 1 resource_unit, found #{resource_units.count}" if resource_units.count > 1
-      raise InvalidAttributes, "#{unit_type} resource unit not found for variety #{batch.crop_variety}" if resource_units.count.zero?
-
-      resource_units.first
-    end
-
     # Artemis API delivers resource_unit#name in the following formats:
     # (correct as of 2020-10-16)
     #
