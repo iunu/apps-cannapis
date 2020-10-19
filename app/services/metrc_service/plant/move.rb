@@ -224,7 +224,9 @@ module MetrcService
       memoize :current_growth_phase
 
       def previous_growth_phase
-        growth_phase_for_completion(@prior_move)
+        return growth_phase_for_completion(prior_move) if prior_move
+
+        growth_phase_for_completion(prior_start)
       end
     end
   end
