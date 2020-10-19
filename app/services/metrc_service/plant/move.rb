@@ -99,6 +99,8 @@ module MetrcService
 
         return :change_plants_growth_phases if (previous_growth_phase.include?('Flow') && new_growth_phase.include?('Flow')) && already_had_barcodes
 
+        return :change_plants_growth_phases if (previous_growth_phase.include?('Veg') && new_growth_phase.include?('Flow')) && already_had_barcodes
+
         return :move_harvest if previous_growth_phase.include?('Flow') && within_phases?(new_growth_phase, %w[Curing Cure Dry Drying]) && already_had_barcodes
 
         return :move_plants if already_had_barcodes

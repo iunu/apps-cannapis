@@ -243,6 +243,21 @@ RSpec.describe MetrcService::Plant::Move do
       end
     end
 
+    context 'with a previous veg zone to a new flowering zone, and with barcodes' do
+      let(:first_move) do
+        response = create_response('api/completions/762429-vegetative-preprinted')
+        artemis_client.process_response(response, 'completions')
+      end
+      let(:second_move) do
+        response = create_response('api/completions/762429-flowering-preprinted')
+        artemis_client.process_response(response, 'completions')
+      end
+
+      it 'returns the change_plants_growth_phase step' do
+        expect(subject).to be :change_plants_growth_phases
+      end
+    end
+
     context 'with a previous vegetative zone to a new vegetative zone, and with no previous barcode' do
       let(:first_move) do
         response = create_response('api/completions/762428-vegetative-no-seeding')
