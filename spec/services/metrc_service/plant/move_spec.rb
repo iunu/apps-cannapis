@@ -656,7 +656,7 @@ RSpec.describe MetrcService::Plant::Move do
     end
   end
 
-  describe '#next_step_name', :focus do
+  describe '#next_step_name' do
     context 'with no previous move but a start' do
       let(:facility_id) { 2 }
       let(:batch_id) { 84 }
