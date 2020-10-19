@@ -670,4 +670,38 @@ RSpec.describe MetrcService::Plant::Move do
       it { is_expected.to eq('Clone') }
     end
   end
+
+  describe '#next_step_name' do
+    context 'with no previous move but a start' do
+      let(:facility_id) { 2 }
+      let(:batch_id) { 84 }
+      let(:start_transaction) { create(:transaction, :successful, :start, account: account, integration: integration, batch_id: batch_id, completion_id: 762428) }
+      subject { described_class.new(ctx, integration) }
+
+      before do
+        start_transaction
+
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}"))
+
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
+
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/762428?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+          .to_return(body: load_response_json('api/completions/762428-flowering-preprinted'))
+
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3000?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+          .to_return(body: load_response_json('api/completions/762429-drying-preprinted'))
+      end
+
+      it 'returns move_harvest' do
+        step_name = subject.send(:next_step_name)
+        metadata = subject.transaction.metadata
+
+        expect(step_name).to be :move_harvest
+        expect(metadata.dig('sub_stage')).to eq 'Drying'
+        expect(metadata.dig('next_step')).to eq 'move_harvest'
+      end
+    end
+  end
 end

@@ -41,7 +41,7 @@ module MetrcService
         previous_start = Transaction.where(
           'batch_id = ? AND type IN (?) AND vendor = ? AND id NOT IN (?)',
           @batch_id,
-          [:start_batch, :start_batch_from_package, :start_batch_from_source_plant],
+          %i[start_batch start_batch_from_package start_batch_from_source_plant],
           :metrc,
           transaction.id
         ).limit(1).order('created_at desc').first
@@ -66,11 +66,13 @@ module MetrcService
       memoize :current_completion
 
       def next_step_name
-        step = next_step(prior_move, current_completion)
-        attributes = transaction.attributes
+        previous_completion = prior_move || prior_start
+        step = next_step(previous_completion, current_completion)
+        metadata = transaction.metadata
         substage = get_substage
-        attributes.merge(sub_stage: substage, next_step: step)
-        transaction.update(attributes: attributes)
+        metadata[:sub_stage] = substage
+        metadata[:next_step] = step
+        transaction.update(metadata: metadata)
 
         step
       end
@@ -224,7 +226,9 @@ module MetrcService
       memoize :current_growth_phase
 
       def previous_growth_phase
-        growth_phase_for_completion(prior_move) || growth_phase_for_completion(prior_start)
+        return growth_phase_for_completion(prior_move) if prior_move
+
+        growth_phase_for_completion(prior_start)
       end
     end
   end
