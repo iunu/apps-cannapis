@@ -74,7 +74,7 @@ RSpec.describe MetrcService::Plant::Move do
       let(:expected_payload) do
         [{
           Name: 'ABCDEF1234567890ABCDEF01',
-          Location: 'Mother Room',
+          Location: 'Zone 1',
           MoveDate: '2020-04-15'
         }]
       end
@@ -121,7 +121,7 @@ RSpec.describe MetrcService::Plant::Move do
       let(:expected_payload) do
         [{
           Name: 'ABCDEF1234567890ABCDEF01',
-          Location: 'F4 - Outside',
+          Location: 'Zone 1',
           MoveDate: '2020-04-15'
         }]
       end

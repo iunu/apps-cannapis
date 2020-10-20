@@ -230,6 +230,10 @@ module MetrcService
 
         growth_phase_for_completion(prior_start)
       end
+
+      def location_name
+        current_completion.included.dig(:zones)&.first&.name || super
+      end
     end
   end
 end
