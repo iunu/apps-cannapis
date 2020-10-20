@@ -532,7 +532,7 @@ RSpec.describe MetrcService::Plant::Start do
               Count: 100,
               StartingTag: nil,
               GrowthPhase: 'Vegetative',
-              NewLocation: 'Flowering',
+              NewLocation: 'Zone 1',
               GrowthDate: nil,
               PatientLicenseNumber: nil
             }].to_json)
