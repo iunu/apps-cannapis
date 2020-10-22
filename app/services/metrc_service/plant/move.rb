@@ -232,7 +232,7 @@ module MetrcService
       end
 
       def location_name
-        current_completion.included.dig(:zones)&.first&.name || super
+        current_completion&.included&.dig(:zones)&.first&.name || super
       end
     end
   end
