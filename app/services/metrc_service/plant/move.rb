@@ -112,6 +112,7 @@ module MetrcService
       memoize :next_step
 
       def move_plants
+        # TODO: Filter items based on completion content
         payload = items.map do |item|
           {
             Id: nil,
