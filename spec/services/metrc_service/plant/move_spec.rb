@@ -334,26 +334,15 @@ RSpec.describe MetrcService::Plant::Move do
 
   describe '#move_plants' do
     context 'with no split' do
-      let(:items) do
-        [
-          instance_double('Item', relationships: {
-            'barcode': {
-              'data': {
-                'id': 'ABCDEF1234567890ABCDEF01'
-              }
-            }
-          }.with_indifferent_access)
-        ]
-      end
       let(:expected_payload) do
-        items.map do |item|
+        [
           {
             Id: nil,
-            Label: item.relationships.dig('barcode', 'data', 'id'),
+            Label: 'ABCDEF1234567890ABCDEF01',
             Location: 'F3 - Inside',
             ActualDate: '2020-04-18'
           }
-        end
+        ]
       end
       subject { described_class.new(ctx, integration) }
 
@@ -365,7 +354,7 @@ RSpec.describe MetrcService::Plant::Move do
           .to_return(body: load_response_json('api/sync/facilities/2/batches/84'))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/2/completions/3000?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
-          .to_return(body: load_response_json('api/completions/3000'))
+          .to_return(body: load_response_json('api/completions/3000-move'))
 
         stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/moveplants?licenseNumber=LIC-0001')
           .with(body: expected_payload.to_json)
@@ -373,10 +362,6 @@ RSpec.describe MetrcService::Plant::Move do
       end
 
       it 'calls the Metrc client method' do
-        expect_any_instance_of(described_class)
-          .to receive(:items)
-          .and_return(items)
-
         expect_any_instance_of(described_class)
           .to receive(:location_name)
           .and_return('F3 - Inside')

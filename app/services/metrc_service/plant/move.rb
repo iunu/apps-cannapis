@@ -123,7 +123,7 @@ module MetrcService
                      current_completion.options.dig('barcode')
                    else
                      # TODO: Filter items based on completion content
-                     items.map { |item| item&.relationships&.dig('barcode', 'data', 'id') }
+                     current_completion.options.dig('item_ids')
                    end
 
         payload = barcodes.map do |barcode|
