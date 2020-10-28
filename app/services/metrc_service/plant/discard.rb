@@ -44,22 +44,11 @@ module MetrcService
         discard_type = @attributes.dig('options', 'discard_type')
         reason       = reason_note
 
-        if discard_type == 'partial'
-          return @attributes.dig('options', 'barcode').map do |barcode|
-            {
-              Id: nil,
-              Label: barcode,
-              ReasonNote: reason,
-              ActualDate: discard.start_time
-            }
-          end
-        end
-
-        items = get_items(batch.seeding_unit.id)
-        items.map do |item|
+        # TODO: update to use content: items {id, barcode} once portal info is reliable.
+        @attributes.dig('options', 'barcode').map do |barcode|
           {
             Id: nil,
-            Label: item.relationships.dig('barcode', 'data', 'id'),
+            Label: barcode,
             ReasonNote: reason,
             ActualDate: discard.start_time
           }

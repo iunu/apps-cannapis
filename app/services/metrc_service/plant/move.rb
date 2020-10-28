@@ -122,6 +122,7 @@ module MetrcService
         barcodes = if is_a_split?
                      current_completion.options.dig('barcode')
                    else
+                     # TODO: Filter items based on completion content
                      items.map { |item| item&.relationships&.dig('barcode', 'data', 'id') }
                    end
 
