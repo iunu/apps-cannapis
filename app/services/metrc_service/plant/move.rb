@@ -34,7 +34,6 @@ module MetrcService
       end
       memoize :prior_move
 
-
       def prior_start
         return @prior_start if @prior_start
 
@@ -68,6 +67,9 @@ module MetrcService
       def next_step_name
         previous_completion = prior_move || prior_start
         step = next_step(previous_completion, current_completion)
+
+        return unless step
+
         metadata = transaction.metadata
         substage = get_substage
         metadata[:sub_stage] = substage
@@ -93,6 +95,11 @@ module MetrcService
 
         return DEFAULT_MOVE_STEP if previous_growth_phase.nil? || new_growth_phase.nil?
 
+        return :move_plants if is_a_split? && already_had_barcodes
+
+        # We need this in order to avoid splits when no barcodes are available
+        return if is_a_split? && !already_had_barcodes
+
         return :move_plant_batches if has_no_barcodes
 
         return :change_growth_phase if (previous_growth_phase.include?('Veg') && new_growth_phase.include?('Veg')) && moved_to_barcodes
@@ -112,10 +119,16 @@ module MetrcService
       memoize :next_step
 
       def move_plants
-        payload = items.map do |item|
+        barcodes = if is_a_split?
+                     current_completion.options.dig('barcode')
+                   else
+                     items.map { |item| item&.relationships&.dig('barcode', 'data', 'id') }
+                   end
+
+        payload = barcodes.map do |barcode|
           {
             Id: nil,
-            Label: item&.relationships&.dig('barcode', 'data', 'id'),
+            Label: barcode,
             Location: location_name,
             ActualDate: start_time
           }
@@ -233,6 +246,10 @@ module MetrcService
 
       def location_name
         current_completion&.included&.dig(:zones)&.first&.name || super
+      end
+
+      def is_a_split?
+        current_completion.action_type == 'split'
       end
     end
   end
