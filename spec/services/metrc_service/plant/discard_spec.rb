@@ -12,7 +12,7 @@ RSpec.describe MetrcService::Plant::Discard do
       },
       attributes: {
         options: {
-          tracking_barcode: '1A4FF01000000220000010',
+          barcode: ['1A4060300003B01000000838'],
           note_content: 'And the only prescription is moar cow bell',
           calculated_quantity: '5'
         }
@@ -61,7 +61,7 @@ RSpec.describe MetrcService::Plant::Discard do
           },
           attributes: {
             options: {
-              tracking_barcode: '1A4FF01000000220000010',
+              barcode: ['1A4FF01000000220000010'],
               note_content: 'And the only prescription is moar cow bell'
             }
           },
@@ -96,7 +96,7 @@ RSpec.describe MetrcService::Plant::Discard do
           },
           attributes: {
             options: {
-              tracking_barcode: '1A4FF01000000220000010',
+              barcode: ['1A4FF010000002200000105', '1A4FF010000002200000104', '1A4FF010000002200000103'],
               note_content: 'And the only prescription is moar cow bell'
             }
           },
@@ -124,9 +124,6 @@ RSpec.describe MetrcService::Plant::Discard do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/1001?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: { data: { id: '1001', type: 'discards', attributes: { id: 1001, quantity: 5, options: { reason_type: 'disease', reason_description: nil }, start_time: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96258', type: 'batches' } }, completion: { meta: { included: false } } } } }.to_json)
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/batches/96182/items?filter[seeding_unit_id]=3479&include=barcodes,seeding_unit")
-          .to_return(body: { data: [{ id: '969664', type: 'items', attributes: { id: 969664, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams' }, relationships: { barcode: { data: { id: '1A4FF010000002200000105', type: 'barcodes' } } } }, { id: '969663', type: 'items', attributes: { id: 969663, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams' }, relationships: { barcode: { data: { id: '1A4FF010000002200000104', type: 'barcodes' } } } }, { id: '969662', type: 'items', attributes: { id: 969662, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams' }, relationships: { barcode: { data: { id: '1A4FF010000002200000103', type: 'barcodes' } } } }] }.to_json)
-
         stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/destroyplants?licenseNumber=LIC-0001')
           .with(
             body: [{ Id: nil, Label: '1A4FF010000002200000105', ReasonNote: 'Not Specified', ActualDate: '2020-03-30T07:00:00.000Z' }, { Id: nil, Label: '1A4FF010000002200000104', ReasonNote: 'Not Specified', ActualDate: '2020-03-30T07:00:00.000Z' }, { Id: nil, Label: '1A4FF010000002200000103', ReasonNote: 'Not Specified', ActualDate: '2020-03-30T07:00:00.000Z' }].to_json,
@@ -151,7 +148,7 @@ RSpec.describe MetrcService::Plant::Discard do
           },
           attributes: {
             options: {
-              tracking_barcode: '1A4FF01000000220000010',
+              barcode: ['1A4060300003B01000000838'],
               note_content: 'And the only prescription is moar cow bell',
               calculated_quantity: '5'
             }
@@ -179,9 +176,6 @@ RSpec.describe MetrcService::Plant::Discard do
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/111436?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: { data: { id: '111436', type: 'discards', attributes: { id: 111436, quantity: 5, options: { reason_type: 'disease', reason_description: nil }, start_time: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96258', type: 'batches' } }, completion: { meta: { included: false } } } } }.to_json)
-
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/batches/96182/items?filter[seeding_unit_id]=3479&include=barcodes,seeding_unit")
-          .to_return(body: { data: [{ id: '969664', type: 'items', attributes: { id: 969664, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams' }, relationships: { barcode: { data: { id: '1A4FF010000002200000105', type: 'barcodes' } } } }, { id: '969663', type: 'items', attributes: { id: 969663, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams' }, relationships: { barcode: { data: { id: '1A4FF010000002200000104', type: 'barcodes' } } } }, { id: '969662', type: 'items', attributes: { id: 969662, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams' }, relationships: { barcode: { data: { id: '1A4FF010000002200000103', type: 'barcodes' } } } }] }.to_json)
 
         stub_request(:post, 'https://sandbox-api-md.metrc.com/plantbatches/v1/destroy?licenseNumber=LIC-0001')
           .with(
@@ -280,9 +274,6 @@ RSpec.describe MetrcService::Plant::Discard do
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/3000?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: { data: { id: '111436', type: 'discards', attributes: { id: 111436, quantity: 5, options: { reason_type: 'disease', reason_description: 'Not enough cow bell' }, start_time: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96258', type: 'batches' } }, completion: { meta: { included: false } } } } }.to_json)
-
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/batches/96182/items?filter%5Bseeding_unit_id%5D=3479&include=barcodes,seeding_unit")
-          .to_return(body: { data: [{ id: '326515', type: 'items', attributes: { id: 326515, status: 'active' }, relationships: { barcode: { data: { id: '1A4060300003B01000000838', type: 'barcodes' } }, seeding_unit: { data: { id: '100', type: 'seeding_units' } } } }] }.to_json)
       end
 
       subject { described_class.new(ctx, integration) }

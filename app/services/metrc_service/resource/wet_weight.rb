@@ -44,7 +44,8 @@ module MetrcService
       end
 
       def items
-        @items ||= get_items(seeding_unit_id)
+        completion_item_ids = @attributes.dig('content', 'crop_batch_item_ids')
+        @items ||= get_items(seeding_unit_id).select { |item| completion_item_ids&.include?(item.id) }
       end
 
       def seeding_unit_id

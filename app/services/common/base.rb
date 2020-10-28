@@ -23,7 +23,7 @@ module Common
       @relationships = ctx[:relationships]
       @completion_id = ctx[:id]
       @integration = integration
-      @attributes  = ctx[:attributes]
+      @attributes = ctx[:attributes]
       @facility_id = @relationships&.dig(:facility, :data, :id)
       @batch_id = @relationships&.dig(:batch, :data, :id)
       @artemis  = ArtemisService.new(@integration.account, @batch_id, @facility_id)
