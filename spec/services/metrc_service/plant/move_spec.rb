@@ -334,6 +334,17 @@ RSpec.describe MetrcService::Plant::Move do
 
   describe '#move_plants' do
     context 'with no split' do
+      let(:items) do
+        [
+          instance_double('Item', id: 'ABCDEF1234567890ABCDEF01', relationships: {
+            'barcode': {
+              'data': {
+                'id': 'ABCDEF1234567890ABCDEF01'
+              }
+            }
+          }.with_indifferent_access)
+        ]
+      end
       let(:expected_payload) do
         [
           {
@@ -362,6 +373,10 @@ RSpec.describe MetrcService::Plant::Move do
       end
 
       it 'calls the Metrc client method' do
+        expect_any_instance_of(described_class)
+          .to receive(:items)
+          .and_return(items)
+
         expect_any_instance_of(described_class)
           .to receive(:location_name)
           .and_return('F3 - Inside')
