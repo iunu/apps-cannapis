@@ -2,7 +2,7 @@ module V1
   class WebhookController < ApplicationController
     skip_before_action :verify_authenticity_token
     before_action :valid_params, only: :handler
-    COMPLETION_TYPES = %w[start move discard harvest generate].freeze
+    COMPLETION_TYPES = %w[start move discard harvest generate split].freeze
 
     def handler
       IntegrationService.call(completion_params)

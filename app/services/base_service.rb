@@ -58,6 +58,8 @@ module BaseService
     def module_for_completion
       action_type = completion.action_type.camelize
 
+      action_type = 'Move' if completion.action_type == 'split'
+
       # We need to call for wet weight and wet waste resources
       # since a resource call was received
       if %w[generate consume].include?(action_type.downcase)

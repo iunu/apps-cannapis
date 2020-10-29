@@ -333,53 +333,111 @@ RSpec.describe MetrcService::Plant::Move do
   end
 
   describe '#move_plants' do
-    let(:items) do
-      [
-        instance_double('Item', relationships: {
-          'barcode': {
-            'data': {
-              'id': 'ABCDEF1234567890ABCDEF01'
+    context 'with no split' do
+      let(:items) do
+        [
+          instance_double('Item', id: 'ABCDEF1234567890ABCDEF01', relationships: {
+            'barcode': {
+              'data': {
+                'id': 'ABCDEF1234567890ABCDEF01'
+              }
             }
+          }.with_indifferent_access)
+        ]
+      end
+      let(:expected_payload) do
+        [
+          {
+            Id: nil,
+            Label: 'ABCDEF1234567890ABCDEF01',
+            Location: 'F3 - Inside',
+            ActualDate: '2020-04-18'
           }
-        }.with_indifferent_access)
-      ]
-    end
-    let(:expected_payload) do
-      items.map do |item|
-        {
-          Id: nil,
-          Label: item.relationships.dig('barcode', 'data', 'id'),
-          Location: 'F3 - Inside',
-          ActualDate: '2020-04-18'
-        }
+        ]
+      end
+      subject { described_class.new(ctx, integration) }
+
+      before do
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/2")
+          .to_return(body: load_response_json('api/sync/facilities/2'))
+
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/2/batches/84?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
+          .to_return(body: load_response_json('api/sync/facilities/2/batches/84'))
+
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/2/completions/3000?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+          .to_return(body: load_response_json('api/completions/3000-move'))
+
+        stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/moveplants?licenseNumber=LIC-0001')
+          .with(body: expected_payload.to_json)
+          .to_return(status: 200)
+      end
+
+      it 'calls the Metrc client method' do
+        expect_any_instance_of(described_class)
+          .to receive(:items)
+          .and_return(items)
+
+        expect_any_instance_of(described_class)
+          .to receive(:location_name)
+          .and_return('F3 - Inside')
+
+        expect_any_instance_of(described_class)
+          .to receive(:start_time)
+          .and_return('2020-04-18')
+
+        expect_any_instance_of(described_class)
+          .to receive(:call_metrc)
+          .with(:move_plants, expected_payload)
+          .and_call_original
+
+        subject.send(:move_plants)
       end
     end
-    subject { described_class.new(ctx, integration) }
 
-    before do
-      expect_any_instance_of(described_class)
-        .to receive(:items)
-        .and_return(items)
+    context 'with a split' do
+      let(:expected_payload) do
+        [
+          {
+            Id: nil,
+            Label: 'LABEL_00004001',
+            Location: 'F3 - Inside',
+            ActualDate: '2020-04-18'
+          }
+        ]
+      end
+      subject { described_class.new(ctx, integration) }
 
-      expect_any_instance_of(described_class)
-        .to receive(:location_name)
-        .and_return('F3 - Inside')
+      before do
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/2")
+          .to_return(body: load_response_json('api/sync/facilities/2'))
 
-      expect_any_instance_of(described_class)
-        .to receive(:start_time)
-        .and_return('2020-04-18')
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/2/batches/84?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
+          .to_return(body: load_response_json('api/sync/facilities/2/batches/84'))
 
-      stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/moveplants?licenseNumber=LIC-0001')
-        .with(body: expected_payload.to_json)
-        .to_return(status: 200)
-    end
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/2/completions/3000?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+          .to_return(body: load_response_json('api/completions/3000-split'))
 
-    it 'calls the Metrc client method' do
-      expect(subject).to receive(:call_metrc)
-        .with(:move_plants, expected_payload)
-        .and_call_original
+        stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/moveplants?licenseNumber=LIC-0001')
+          .with(body: expected_payload.to_json)
+          .to_return(status: 200)
+      end
 
-      subject.send(:move_plants)
+      it 'calls the Metrc client method' do
+        expect_any_instance_of(described_class)
+          .to receive(:location_name)
+          .and_return('F3 - Inside')
+
+        expect_any_instance_of(described_class)
+          .to receive(:start_time)
+          .and_return('2020-04-18')
+
+        expect_any_instance_of(described_class)
+          .to receive(:call_metrc)
+          .with(:move_plants, expected_payload)
+          .and_call_original
+
+        subject.send(:move_plants)
+      end
     end
   end
 
