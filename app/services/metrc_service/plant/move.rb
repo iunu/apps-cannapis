@@ -125,7 +125,6 @@ module MetrcService
                      # TODO: Filter items based on completion content
                      items.select { |item| current_completion.options&.dig('item_ids').include?(item.id) }
                           .map { |item| item&.relationships&.dig('barcode', 'data', 'id') }
-                     current_completion.options.dig('item_ids')
                    end
 
         payload = barcodes.map do |barcode|
