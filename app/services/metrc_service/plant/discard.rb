@@ -4,10 +4,10 @@ module MetrcService
       NOT_SPECIFIED = 'Not Specified'.freeze
 
       def call
-        if plant_state == :immature
-          call_metrc(:destroy_plant_batches, build_immature_payload)
-        else
+        if barcodes?
           call_metrc(:destroy_plants, build_mature_payload)
+        else
+          call_metrc(:destroy_plant_batches, build_immature_payload)
         end
 
         success!
@@ -29,6 +29,10 @@ module MetrcService
         @discard = get_completion(@completion_id)
       end
 
+      def barcodes?
+        @attributes.dig('options', 'barcode').present?
+      end
+
       def build_immature_payload
         reason = reason_note
 
@@ -41,8 +45,7 @@ module MetrcService
       end
 
       def build_mature_payload
-        discard_type = @attributes.dig('options', 'discard_type')
-        reason       = reason_note
+        reason = reason_note
 
         # TODO: update to use content: items {id, barcode} once portal info is reliable.
         @attributes.dig('options', 'barcode').map do |barcode|
