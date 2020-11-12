@@ -34,10 +34,12 @@ module MetrcService
       JSON.parse(response.body) if response&.body&.present?
     rescue *RETRYABLE_ERRORS => e
       log("METRC: Retryable error: #{e.inspect}", :warn)
+      log("METRC: Response: #{response.to_s[0..360]}", :warn) if response
       Bugsnag.notify(e)
       requeue!(exception: e)
     rescue Metrc::MissingConfiguration, Metrc::MissingParameter => e
       Bugsnag.notify(e)
+      log("METRC: Response: #{response.to_s[0..360]}", :warn) if response
       log("METRC: Configuration error: #{e.inspect}", :error)
       fail!(exception: e)
     end
