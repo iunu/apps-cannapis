@@ -68,6 +68,7 @@ module Common
     end
 
     def state
+      # state map will override the integration's state. Used if metrc has not yet created an endpoint for the state.
       config[:state_map].fetch(@integration.state.upcase.to_sym, @integration.state)
     end
 

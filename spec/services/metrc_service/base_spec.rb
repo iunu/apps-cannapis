@@ -321,7 +321,7 @@ RSpec.describe MetrcService::Base do
 
     context 'when MA' do
       let(:state) { 'MA' }
-      it { is_expected.to eq('CO') }
+      it { is_expected.to eq('MA') }
     end
 
     context 'when MT' do
