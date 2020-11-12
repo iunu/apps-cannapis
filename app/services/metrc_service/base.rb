@@ -39,7 +39,6 @@ module MetrcService
     rescue Metrc::MissingConfiguration, Metrc::MissingParameter => e
       Bugsnag.notify(e)
       log("METRC: Configuration error: #{e.inspect}", :error)
-      log("METRIC: Response: #{response}")
       fail!(exception: e)
     end
 
