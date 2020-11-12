@@ -19,7 +19,7 @@ namespace :metrc do
       config.sandbox = debug
     end
 
-    @client = Metrc::Client.new(user_key: integration.secret, debug: debug)
+    @client = Metrc::Client.new(user_key: integration.secret, debug: ENV['METRC_DEBUG'])
 
     puts 'Metrc client instantiated at: @client'
     Pry.start

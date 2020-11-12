@@ -21,7 +21,7 @@ module MetrcService
         config.sandbox  = debug
       end
 
-      Metrc::Client.new(user_key: @integration.secret)
+      Metrc::Client.new(user_key: @integration.secret, debug: ENV['METRC_DEBUG'])
     end
 
     protected
@@ -39,6 +39,7 @@ module MetrcService
     rescue Metrc::MissingConfiguration, Metrc::MissingParameter => e
       Bugsnag.notify(e)
       log("METRC: Configuration error: #{e.inspect}", :error)
+      log("METRIC: Response: #{response}")
       fail!(exception: e)
     end
 
