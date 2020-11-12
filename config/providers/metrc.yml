@@ -1,7 +1,6 @@
 default: &default
   state_map:
-    MT: CO 
-    MA: CO 
+    MT: CO
 
 development:
   <<: *default
