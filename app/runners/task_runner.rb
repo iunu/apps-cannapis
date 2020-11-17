@@ -22,7 +22,7 @@ class TaskRunner
     end
 
     integration = Integration.new(account: account, vendor: 'test')
-    task = Scheduler.new(integration: integration)
+    task = Scheduler.new(integration: integration, attempts: 3)
     task.current_action = 'test'
 
     runner = new(task)
@@ -47,7 +47,7 @@ class TaskRunner
     @result = vendor_module.call(build_context, @task.integration, nil, @task)
   rescue Cannapi::RetryableError => e
     Rails.logger.warn("Task #{@task.id} failed (attempt ##{@task.attempts + 1}) with retryable error, rescheduling...")
-    report_rescheduled(e.original)
+    report_rescheduled(e.original) if @task.attempts == 3
     @task.reschedule!
   rescue Cannapi::TooManyRetriesError => e
     report_failed(e.original)

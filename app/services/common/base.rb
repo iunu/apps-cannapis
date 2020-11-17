@@ -4,9 +4,7 @@ module Common
   class Base < BaseServiceAction
     extend Memoist
 
-    RETRYABLE_ERRORS = [
-      Net::HTTPRetriableError
-    ].freeze
+    RETRYABLE_ERRORS = [Net::HTTPRetriableError].freeze
     STATES_WITH_ARBITRARY_BATCH_ID = %i[ma mo].freeze
 
     attr_reader :artemis

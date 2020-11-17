@@ -75,9 +75,6 @@ RSpec.describe ScheduledJob, type: :job do
       end
 
       it 'enqueues the job' do
-        expect_any_instance_of(TaskRunner)
-          .to receive(:report_rescheduled)
-
         perform_enqueued_jobs { subject }
       end
     end

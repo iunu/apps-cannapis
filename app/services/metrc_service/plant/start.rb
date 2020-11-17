@@ -1,18 +1,16 @@
 module MetrcService
   module Plant
     class Start < Base
-      ORIGIN_PACKAGES = [
-        'Source Package Id (Metrc)'
-      ].freeze
+      ORIGIN_PACKAGES = ['Source Package Id (Metrc)'].freeze
       PLANT_MOTHER_NAME = /mother id/i.freeze
+      CLOSED_LOOP_STATES = %i[ma ca].freeze
 
       def call
         if origin_package
           transaction.update(type: :start_batch_from_package)
           create_plantings_from_package
         elsif source_plant
-          transaction.update(type: :start_batch_from_source_plant)
-          create_plantings_from_source_plant
+          create_plant_batch_from_mother
         else
           create_plant_batch
         end
@@ -75,29 +73,33 @@ module MetrcService
         }]
       end
 
-      def create_plantings_from_source_plant
-        call_metrc(:create_plant_batch_plantings, create_plantings_from_source_plant_payload)
+      def create_plant_batch_from_mother
+        call_metrc(:create_plant_batch_from_mother, create_plant_batch_from_mother_payload)
       end
 
-      def create_plantings_from_source_plant_payload
-        tag = package_label(source_plant&.id)
+      def create_plant_batch_from_mother_payload
+        source_plant_tag = package_label(source_plant&.id)
 
-        raise InvalidOperation, "Failed: No source plant was found for #{source_plant&.name}" unless tag && tag&.value
+        raise InvalidOperation, "Failed: No source plant was found for #{source_plant&.name}" unless source_plant_tag&.value
 
         [{
-          Id: nil,
-          PlantBatch: batch_tag,
-          Count: quantity,
-          Location: location_name,
-          Room: location_name,
-          Item: 'Immature Plants',
-          Tag: tag.value,
+          PlantLabel: source_plant_tag.value, # <--------- Mother plant that is being used to create the plant batch
+          PlantBatchName: batch_tag, # < ------------ Name of the plant batch that is being created
+          PlantBatchType: 'Clone',
+          PlantCount: quantity,
+          LocationName: location_name,
+          StrainName: batch.crop_variety,
           PatientLicenseNumber: nil,
-          Note: nil,
-          IsTradeSample: false,
-          IsDonation: false,
           ActualDate: batch.seeded_at
         }]
+      end
+
+      def custom_data
+        batch.included&.dig(:custom_data)
+      end
+
+      def custom_fields
+        batch.included&.dig(:custom_fields)
       end
 
       def quantity
@@ -105,17 +107,17 @@ module MetrcService
       end
 
       def origin_package
-        @origin_package ||= batch.included&.dig(:custom_fields)&.detect { |obj| ORIGIN_PACKAGES.include?(obj&.name) }
+        @origin_package ||= custom_fields&.detect { |obj| ORIGIN_PACKAGES.include?(obj&.name) }
       end
 
       def source_plant
-        @source_plant ||= batch.included&.dig(:custom_fields)&.detect { |obj| PLANT_MOTHER_NAME.match?(obj&.name) }
+        @source_plant ||= custom_fields&.detect { |obj| PLANT_MOTHER_NAME.match?(obj&.name) }
       end
 
       def package_label(target_id)
         return unless target_id
 
-        batch.included&.dig(:custom_data)&.detect { |obj| obj&.relationships&.dig('custom_field', 'data', 'id')&.to_i == target_id&.to_i }
+        custom_data&.detect { |obj| obj&.relationships&.dig('custom_field', 'data', 'id')&.to_i == target_id&.to_i }
       end
     end
   end

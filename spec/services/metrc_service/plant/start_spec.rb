@@ -552,10 +552,10 @@ RSpec.describe MetrcService::Plant::Start do
       end
     end
 
-    describe '#create_plantings_from_source_plant' do
+    describe '#create_plant_batch_from_mother' do
       subject { described_class.call(ctx, integration) }
 
-      describe '#create_plantings_from_source_plant_payload' do
+      describe '#create_plant_batch_from_mother_payload' do
         context 'with no custom data', skip: 'Notifies Bugsnag?' do
           let(:now) { Time.zone.now.strftime('%Y-%m-%d') }
 
@@ -668,8 +668,16 @@ RSpec.describe MetrcService::Plant::Start do
                 ]
               }.to_json)
 
-            stub_request(:post, 'https://sandbox-api-ca.metrc.com/packages/v1/create/plantings?licenseNumber=LIC-0001')
-              .with(body: [{Name: '1A4FF01000000220000010', Type: 'Clone', Count: 100, Strain: 'Banana Split', Location: 'Germination', PatientLicenseNumber: nil, ActualDate: now}].to_json)
+            stub_request(:post, 'https://sandbox-api-ca.metrc.com/plants/v1/create/plantings?licenseNumber=LIC-0001')
+              .with(body: [
+                { Name: '1A4FF01000000220000010',
+                  Type: 'Clone',
+                  Count: 100,
+                  Strain: 'Banana Split',
+                  Location: 'Germination',
+                  PatientLicenseNumber: nil,
+                  ActualDate: now }
+              ].to_json)
               .to_return(status: 200, body: '', headers: {})
           end
 
@@ -677,49 +685,45 @@ RSpec.describe MetrcService::Plant::Start do
             expect { subject.send(:create_plantings_from_source_plant_payload) }.to raise_error(InvalidOperation)
           end
         end
-      end
 
-      context 'with a source plant' do
-        let(:now) { Time.zone.now.strftime('%Y-%m-%d') }
-        let(:transaction) { create(:transaction, :unsuccessful, type: :start_batch_from_source_plant) }
-        let(:expected_payload) do
-          [{
-            Id: nil,
-            PlantBatch: '1A4060300003B01000000838',
-            Count: 100,
-            Location: 'Flowering',
-            Room: 'Flowering',
-            Item: 'Immature Plants',
-            Tag: '1A4060300003B01000000837',
-            PatientLicenseNumber: nil,
-            Note: nil,
-            IsTradeSample: false,
-            IsDonation: false,
-            ActualDate: '2019-10-01'
-          }]
-        end
+        context 'with a source plant' do
+          let(:now) { Time.zone.now.strftime('%Y-%m-%d') }
+          let(:transaction) { create(:transaction, :unsuccessful, type: :start_batch_from_source_plant) }
+          let(:expected_payload) do
+            [{
+              PlantLabel: '1A4060300003B01000000837',
+              PlantBatchName: '1A4060300003B01000000838',
+              PlantBatchType: 'Clone',
+              PlantCount: 100,
+              LocationName: 'Flowering',
+              StrainName: 'Banana Split',
+              PatientLicenseNumber: nil,
+              ActualDate: '2019-10-01'
+            }]
+          end
 
-        before do
-          stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
-            .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
+          before do
+            stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
+              .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
 
-          stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
-            .to_return(body: load_response_json('api/seed/batch-96183'))
+            stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/batches/2002?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
+              .to_return(body: load_response_json('api/seed/batch-96183'))
 
-          stub_request(:post, 'https://sandbox-api-ca.metrc.com/plantbatches/v1/create/plantings?licenseNumber=LIC-0001')
-            .with(body: expected_payload.to_json)
-            .to_return(status: 200, body: '', headers: {})
+            stub_request(:post, 'https://sandbox-api-ca.metrc.com/plants/v1/create/plantings?licenseNumber=LIC-0001')
+              .with(body: expected_payload.to_json)
+              .to_return(status: 200, body: '', headers: {})
 
-          stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=3000')
-            .to_return(status: 204, body: '', headers: {})
-        end
+            stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=3000')
+              .to_return(status: 204, body: '', headers: {})
+          end
 
-        it 'is successful' do
-          expect_any_instance_of(described_class)
-            .to receive(:get_transaction)
-            .and_return transaction
+          it 'is successful' do
+            expect_any_instance_of(described_class)
+              .to receive(:get_transaction)
+              .and_return transaction
 
-          expect(subject).to be_success
+            expect(subject).to be_success
+          end
         end
       end
     end
