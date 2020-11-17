@@ -22,7 +22,7 @@ class TaskRunner
     end
 
     integration = Integration.new(account: account, vendor: 'test')
-    task = Scheduler.new(integration: integration)
+    task = Scheduler.new(integration: integration, attempts: 3)
     task.current_action = 'test'
 
     runner = new(task)

@@ -80,7 +80,7 @@ module MetrcService
       def create_plant_batch_from_mother_payload
         source_plant_tag = package_label(source_plant&.id)
 
-        raise InvalidOperation, "Failed: No source plant was found for #{source_plant&.name}" unless source_plant_tag.value
+        raise InvalidOperation, "Failed: No source plant was found for #{source_plant&.name}" unless source_plant_tag&.value
 
         [{
           PlantLabel: source_plant_tag.value, # <--------- Mother plant that is being used to create the plant batch

@@ -6,7 +6,7 @@ RSpec.describe(TaskRunner) do
   describe '.run' do
     let(:batch_id) { 374 }
     let(:facility_id) { 2 }
-    let(:task) { create(:task, batch_id: batch_id, facility_id: facility_id) }
+    let(:task) { create(:task, batch_id: batch_id, facility_id: facility_id, attempts: 3) }
 
     subject { described_class.run(task) }
 
