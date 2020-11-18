@@ -10,6 +10,7 @@ module MetrcService
           transaction.update(type: :start_batch_from_package)
           create_plantings_from_package
         elsif source_plant
+          transaction.update(type: :start_batch_from_source_plant)
           create_plant_batch_from_mother
         else
           create_plant_batch

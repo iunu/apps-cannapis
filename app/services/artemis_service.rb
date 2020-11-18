@@ -16,7 +16,7 @@ class ArtemisService
   end
 
   def get_batch_by_id(id, add = 'zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
-    get_facility.batch(id, include: add, force: true)
+    get_facility.batch(id, include: add)
   end
 
   def get_completion(id, add = 'action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage')

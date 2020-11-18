@@ -21,31 +21,49 @@ module NcsService
         @transaction ||= get_transaction(:move_batch, @attributes.merge(zone: zone))
       end
 
-      def prior_move_transactions
-        Transaction.where(
-          'batch_id = ? AND type = ? AND vendor = ? AND id NOT IN (?)',
-          @batch_id,
-          :move_batch,
-          :ncs,
-          transaction.id
-        )
-      end
-
       def zone
         @zone ||= batch&.zone&.attributes
       end
 
+      def prior_move
+        return @prior_move if @prior_move
+
+        previous_move = batch.completions.select do |c|
+          c.action_type == 'move' && c.id < @completion_id
+        end.max_by(&:start_time)
+
+        return if previous_move.nil?
+
+        # calling get_completion here will ensure relationships are side loaded.
+        @prior_move = get_completion(previous_move&.id)
+      end
+      memoize :prior_move
+
+      def prior_start
+        return @prior_start if @prior_start
+
+        previous_start = batch.completions.select do |c|
+          c.action_type == 'start' && c.id < @completion_id
+        end.max_by(&:start_time)
+
+        return if previous_start.nil?
+
+        # calling get_completion here will ensure relationships are side loaded.
+        @prior_start = get_completion(previous_start&.id)
+      end
+      memoize :prior_start
+
       private
 
       def next_step_name
-        transactions = prior_move_transactions
-        return DEFAULT_MOVE_STEP if transactions.count.zero?
+        previous_completion = prior_move || prior_start
+        return DEFAULT_MOVE_STEP if previous_completion.blank?
 
-        previous_growth_phase = normalized_growth_phase(transactions.last.metadata.dig('sub_stage', 'name'))
+        previous_growth_phase = normalized_growth_phase(previous_completion.included&.dig(:sub_stages)&.first&.name)
 
         # Does last move includes new move?
         is_included = is_included?(previous_growth_phase, normalized_growth_phase)
-        log("Transactions: #{transactions.size}, Previous growth phase: #{previous_growth_phase}, Growth phase is included: #{is_included}, Batch ID #{@batch_id}, completion ID #{@completion_id}")
+        log("Previous completion: #{[previous_completion.id, previous_completion.action_type]}, Previous growth phase: #{previous_growth_phase}, Growth phase is included: #{is_included}, Batch ID #{@batch_id}, completion ID #{@completion_id}")
 
         raise InvalidOperation, "Failed: Substage #{normalized_growth_phase} is not a valid next phase for #{previous_growth_phase}. Batch ID #{@batch_id}, completion ID #{@completion_id}" \
           unless is_included

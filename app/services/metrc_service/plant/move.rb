@@ -20,16 +20,13 @@ module MetrcService
       def prior_move
         return @prior_move if @prior_move
 
-        previous_move = Transaction.where(
-          'batch_id = ? AND type = ? AND vendor = ? AND id NOT IN (?)',
-          @batch_id,
-          :move_batch,
-          :metrc,
-          transaction.id
-        ).limit(1).order('created_at desc').first
+        previous_move = batch.completions.select do |c|
+          c.action_type == 'move' && c.id < current_completion.id
+        end.max_by(&:start_time)
 
         return if previous_move.nil?
 
+        # calling get_completion here will ensure relationships are side loaded.
         @prior_move = get_completion(previous_move&.completion_id)
       end
       memoize :prior_move
@@ -37,16 +34,13 @@ module MetrcService
       def prior_start
         return @prior_start if @prior_start
 
-        previous_start = Transaction.where(
-          'batch_id = ? AND type IN (?) AND vendor = ? AND id NOT IN (?)',
-          @batch_id,
-          %i[start_batch start_batch_from_package start_batch_from_source_plant],
-          :metrc,
-          transaction.id
-        ).limit(1).order('created_at desc').first
+        previous_start = batch.completions.select do |c|
+          c.action_type == 'start' && c.id < current_completion.id
+        end.max_by(&:start_time)
 
         return if previous_start.nil?
 
+        # calling get_completion here will ensure relationships are side loaded.
         @prior_start = get_completion(previous_start&.completion_id)
       end
       memoize :prior_start
@@ -80,18 +74,18 @@ module MetrcService
       end
       memoize :next_step_name
 
-      def next_step(previous_completion = nil, completion = nil) # rubocop:disable Metrics/PerceivedComplexity
-        return DEFAULT_MOVE_STEP if previous_completion.nil? || completion.nil?
+      def next_step(previous_completion = nil, current_completion = nil) # rubocop:disable Metrics/PerceivedComplexity
+        return DEFAULT_MOVE_STEP if previous_completion.nil? || current_completion.nil?
 
         @prior_move ||= previous_completion
-        new_growth_phase = growth_phase_for_completion(completion)
+        new_growth_phase = growth_phase_for_completion(current_completion)
 
         # Yeah, I don't like this either.
-        previous_item_tracking_method_has_barcodes = items_have_barcodes?(previous_completion.included&.dig(:seeding_units)&.first&.item_tracking_method)
-        current_item_tracking_method_has_barcodes  = items_have_barcodes?(completion.included&.dig(:seeding_units)&.first&.item_tracking_method)
-        has_no_barcodes = !previous_item_tracking_method_has_barcodes && !current_item_tracking_method_has_barcodes
-        moved_to_barcodes = !previous_item_tracking_method_has_barcodes && current_item_tracking_method_has_barcodes
-        already_had_barcodes = previous_item_tracking_method_has_barcodes && current_item_tracking_method_has_barcodes
+        previous_completion_had_barcodes = items_have_barcodes?(previous_completion.included&.dig(:seeding_units)&.first&.item_tracking_method)
+        current_completion_has_barcodes  = items_have_barcodes?(current_completion.included&.dig(:seeding_units)&.first&.item_tracking_method)
+        has_no_barcodes = !previous_completion_had_barcodes && !current_completion_has_barcodes
+        moved_to_barcodes = !previous_completion_had_barcodes && current_completion_has_barcodes
+        already_had_barcodes = previous_completion_had_barcodes && current_completion_has_barcodes
 
         return DEFAULT_MOVE_STEP if previous_growth_phase.nil? || new_growth_phase.nil?
 
@@ -119,8 +113,9 @@ module MetrcService
       memoize :next_step
 
       def move_plants
+        # TODO: extract barcodes into it's own method
         barcodes = if is_a_split?
-                     current_completion.options.dig('barcode')
+                     current_completion.options['barcode']
                    else
                      # TODO: Filter items based on completion content
                      items.select { |item| current_completion.options&.dig('item_ids').include?(item.id) }
@@ -189,7 +184,7 @@ module MetrcService
       end
 
       def start_time
-        @attributes.dig('start_time')
+        @attributes['start_time']
       end
 
       def immature?(phase = nil)
