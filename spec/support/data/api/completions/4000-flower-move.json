@@ -1,9 +1,9 @@
 {
   "data": {
-    "id": "762428",
+    "id": "4000",
     "type": "completions",
     "attributes": {
-      "id": 762428,
+      "id": 4000,
       "status": "active",
       "user_id": 1772,
       "content": null,
@@ -22,10 +22,8 @@
         "arbitrary_id": "Mar30-Lav-Cak-M0102",
         "crop_variety_id": 19278,
         "seeding_unit_id": 3591,
-        "zone_name": "Mothers [Veg]",
-        "item_ids": [
-          "ABCDEF1234567890ABCDEF01"
-        ]
+        "zone_name": "Mothers [Flowering]",
+        "item_ids": ["ABCDEF1234567890ABCDEF01"]
       }
     },
     "relationships": {
@@ -79,7 +77,7 @@
         },
         "completion": {
           "data": {
-            "id": "762428",
+            "id": "4000",
             "type": "completions"
           }
         },
@@ -426,7 +424,7 @@
       "type": "sub_stages",
       "attributes": {
         "id": 24,
-        "name": "Vegetation",
+        "name": "Flowering",
         "position": 1
       },
       "relationships": {

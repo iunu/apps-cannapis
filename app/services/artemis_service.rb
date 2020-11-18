@@ -20,7 +20,7 @@ class ArtemisService
   end
 
   def get_completion(id, add = 'action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage')
-    get_batch.completion(id, include: add)
+    @artemis.find_one('completions', id, facility_id: get_facility.id, include: add, force: true)
   end
 
   def get_items(seeding_unit_id, include: 'barcodes,seeding_unit')

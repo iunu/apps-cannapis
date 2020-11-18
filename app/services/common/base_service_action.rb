@@ -1,5 +1,7 @@
 module Common
   class BaseServiceAction
+    extend Memoist
+
     DEFAULT_RUN_MODE = :later
 
     def self.call(*args, &block)

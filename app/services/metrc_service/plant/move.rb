@@ -1,7 +1,6 @@
 module MetrcService
   module Plant
     class Move < Base
-      extend Memoist
 
       DEFAULT_MOVE_STEP = :change_growth_phase
 
@@ -18,30 +17,26 @@ module MetrcService
       end
 
       def prior_move
-        return @prior_move if @prior_move
-
         previous_move = batch.completions.select do |c|
-          c.action_type == 'move' && c.id < current_completion.id
+          c.action_type == 'move' && c.id < @completion_id
         end.max_by(&:start_time)
 
         return if previous_move.nil?
 
         # calling get_completion here will ensure relationships are side loaded.
-        @prior_move = get_completion(previous_move&.completion_id)
+        get_completion(previous_move.id)
       end
       memoize :prior_move
 
       def prior_start
-        return @prior_start if @prior_start
-
         previous_start = batch.completions.select do |c|
-          c.action_type == 'start' && c.id < current_completion.id
+          c.action_type == 'start' && c.id < @completion_id
         end.max_by(&:start_time)
 
         return if previous_start.nil?
 
         # calling get_completion here will ensure relationships are side loaded.
-        @prior_start = get_completion(previous_start&.completion_id)
+        get_completion(previous_start&.id)
       end
       memoize :prior_start
 
@@ -54,12 +49,13 @@ module MetrcService
       end
 
       def current_completion
-        @current_completion = get_completion(@completion_id)
+        get_completion(@completion_id)
       end
       memoize :current_completion
 
       def next_step_name
         previous_completion = prior_move || prior_start
+        debugger
         step = next_step(previous_completion, current_completion)
 
         return unless step
@@ -76,8 +72,7 @@ module MetrcService
 
       def next_step(previous_completion = nil, current_completion = nil) # rubocop:disable Metrics/PerceivedComplexity
         return DEFAULT_MOVE_STEP if previous_completion.nil? || current_completion.nil?
-
-        @prior_move ||= previous_completion
+        debugger
         new_growth_phase = growth_phase_for_completion(current_completion)
 
         # Yeah, I don't like this either.
@@ -135,6 +130,7 @@ module MetrcService
       end
 
       def move_plant_batches
+        debugger
         payload = {
           Name: batch_tag,
           Location: location_name,

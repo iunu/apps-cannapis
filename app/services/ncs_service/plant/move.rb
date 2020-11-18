@@ -26,8 +26,6 @@ module NcsService
       end
 
       def prior_move
-        return @prior_move if @prior_move
-
         previous_move = batch.completions.select do |c|
           c.action_type == 'move' && c.id < @completion_id
         end.max_by(&:start_time)
@@ -35,13 +33,11 @@ module NcsService
         return if previous_move.nil?
 
         # calling get_completion here will ensure relationships are side loaded.
-        @prior_move = get_completion(previous_move&.id)
+        get_completion(previous_move&.id)
       end
-      memoize :prior_move
+      memoize
 
       def prior_start
-        return @prior_start if @prior_start
-
         previous_start = batch.completions.select do |c|
           c.action_type == 'start' && c.id < @completion_id
         end.max_by(&:start_time)
@@ -49,9 +45,9 @@ module NcsService
         return if previous_start.nil?
 
         # calling get_completion here will ensure relationships are side loaded.
-        @prior_start = get_completion(previous_start&.id)
+        get_completion(previous_start&.id)
       end
-      memoize :prior_start
+      memoize
 
       private
 
@@ -118,7 +114,7 @@ module NcsService
       end
 
       def start_time
-        @attributes.dig('start_time')
+        @attributes['start_time']
       end
 
       def immature?
