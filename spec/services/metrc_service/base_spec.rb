@@ -181,7 +181,7 @@ RSpec.describe MetrcService::Base do
     end
   end
 
-  describe '#get_items' do
+  describe '#get_batch_items' do
     before :all do
       stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
         .to_return(body: { data: { id: '1568', type: 'facilities', attributes: { id: 1568, name: 'Rare Dankness' } } }.to_json)
@@ -213,7 +213,7 @@ RSpec.describe MetrcService::Base do
       }
       seeding_unit_id = 100
       instance = MetrcService::Base.new(ctx, integration)
-      items = instance.send :get_items, seeding_unit_id
+      items = instance.send :get_batch_items, seeding_unit_id
       expect(items).to_not be_nil
       expect(items.first.id).to eq 326_515
       expect(items.first.relationships.dig('barcode', 'data', 'id')).to eq '1A4FF0200000022000000207'

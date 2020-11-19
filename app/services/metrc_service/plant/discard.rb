@@ -15,23 +15,14 @@ module MetrcService
 
       private
 
-      def plant_state
-        @plant_state ||= [nil, 'none'].include?(item_tracking_method) ? :immature : :mature
-      end
-
       def transaction
         @transaction ||= get_transaction(:discard_batch)
       end
 
       def discard
-        return @discard if @discard
-
-        @discard = get_completion(@completion_id)
+        get_completion(@completion_id)
       end
-
-      def barcodes?
-        @attributes.dig('options', 'barcode').present?
-      end
+      memoize :discard
 
       def build_immature_payload
         reason = reason_note
@@ -47,7 +38,6 @@ module MetrcService
       def build_mature_payload
         reason = reason_note
 
-        # TODO: update to use content: items {id, barcode} once portal info is reliable.
         @attributes.dig('options', 'barcode').map do |barcode|
           {
             Id: nil,
@@ -59,14 +49,14 @@ module MetrcService
       end
 
       def reason_note # rubocop:disable Metrics/PerceivedComplexity
-        reason_description = if discard.options.dig('reason_description') && discard.options.dig('note_content')
-                               "#{discard.options.dig('reason_description')} #{discard.options.dig('note_content')}"
-                             elsif discard.options.dig('reason_description') && !discard.options.dig('note_content')
-                               discard.options.dig('reason_description')
-                             elsif !discard.options.dig('reason_description') && discard.options.dig('note_content')
-                               discard.options.dig('note_content')
+        reason_description = if discard['reason_description'] && discard['note_content']
+                               "#{discard['reason_description']} #{discard['note_content']}"
+                             elsif discard['reason_description'] && !discard['note_content']
+                               discard['reason_description']
+                             elsif !discard['reason_description'] && discard['note_content']
+                               discard['note_content']
                              end
-        reason_type = discard.options.dig('reason_type')
+        reason_type = discard['reason_type']
         reason_note = reason_type.capitalize if reason_type
         reason_note += ": #{reason_description}." if reason_type && reason_description
 

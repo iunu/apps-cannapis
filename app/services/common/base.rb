@@ -10,7 +10,7 @@ module Common
     attr_reader :artemis
 
     delegate :seeding_unit, to: :batch
-    delegate :get_batch, :get_items,
+    delegate :get_batch, :get_batch_items,
              :get_zone, :get_completion,
              :get_child_completions,
              :get_related_completions,
@@ -123,6 +123,23 @@ module Common
       Common::Utils.normalize_barcode(matches&.first)
     end
     memoize :batch_tag
+
+    def current_completion
+      get_completion(@completion_id)
+    end
+    memoize :current_completion
+
+    def current_state
+      current_completion&.included&.dig(:crop_batch_states).first
+    end
+
+    def items
+      current_state&.dig(:cached_data, :items_snapshot)
+    end
+
+    def barcodes
+      items.map { |item| item['barcode'] if item.status == 'active' }.compact
+    end
 
     def validate_batch!
       raise BatchCropInvalid unless batch.crop == @integration.vendor_module::CROP

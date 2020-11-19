@@ -19,11 +19,14 @@ class ArtemisService
     get_facility.batch(id, include: add, force: true)
   end
 
-  def get_completion(id, add = 'action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage')
+  def get_completion(id, add = 'action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage')
     @artemis.find_one('completions', id, facility_id: get_facility.id, include: add, force: true)
   end
 
-  def get_items(seeding_unit_id, include: 'barcodes,seeding_unit')
+  # This will get the current items from the batch
+  # This probably should not be used because it could provide 
+  #   items from the future after the current_completion was performed.
+  def get_batch_items(seeding_unit_id, include: 'barcodes,seeding_unit')
     @artemis.facility(@facility_id)
             .batch(@batch_id)
             .items(seeding_unit_id: seeding_unit_id, include: include)

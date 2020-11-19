@@ -12,7 +12,7 @@ module NcsService
     attr_reader :artemis
 
     delegate :seeding_unit, to: :batch
-    delegate :get_batch, :get_items, :get_zone,
+    delegate :get_batch, :get_batch_items, :get_zone,
              :get_child_completions,
              :get_related_completions,
              to: :artemis
