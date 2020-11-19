@@ -7,10 +7,10 @@
       "status": "active",
       "user_id": 1772,
       "content": null,
-      "start_time": "2020-03-30T07:00:00.000Z",
-      "end_time": "2020-03-30T07:00:00.000Z",
+      "start_time": "2020-03-20T07:00:00.000Z",
+      "end_time": "2020-03-20T07:00:00.000Z",
       "occurrence": 0,
-      "action_type": "start",
+      "action_type": "move",
       "parent_id": 762427,
       "context": {
         "source_batches": null

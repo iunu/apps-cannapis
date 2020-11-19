@@ -17,8 +17,8 @@ module MetrcService
       end
 
       def prior_move
-        previous_move = batch.completions.select do |c|
-          c.action_type == 'move' && c.id < @completion_id
+        previous_move = batch.completions.select do |comp|
+          comp.action_type == 'move' && comp.id < @completion_id
         end.max_by(&:start_time)
 
         return if previous_move.nil?
@@ -29,10 +29,9 @@ module MetrcService
       memoize :prior_move
 
       def prior_start
-        previous_start = batch.completions.select do |c|
-          c.action_type == 'start' && c.id < @completion_id
+        previous_start = batch.completions.select do |comp|
+          comp.action_type == 'start' && comp.id < @completion_id
         end.max_by(&:start_time)
-
         return if previous_start.nil?
 
         # calling get_completion here will ensure relationships are side loaded.
@@ -55,7 +54,6 @@ module MetrcService
 
       def next_step_name
         previous_completion = prior_move || prior_start
-        debugger
         step = next_step(previous_completion, current_completion)
 
         return unless step
@@ -72,8 +70,11 @@ module MetrcService
 
       def next_step(previous_completion = nil, current_completion = nil) # rubocop:disable Metrics/PerceivedComplexity
         return DEFAULT_MOVE_STEP if previous_completion.nil? || current_completion.nil?
-        debugger
+
         new_growth_phase = growth_phase_for_completion(current_completion)
+        previous_growth_phase = growth_phase_for_completion(previous_completion)
+
+        return DEFAULT_MOVE_STEP if previous_growth_phase.nil? || new_growth_phase.nil?
 
         # Yeah, I don't like this either.
         previous_completion_had_barcodes = items_have_barcodes?(previous_completion.included&.dig(:seeding_units)&.first&.item_tracking_method)
@@ -81,8 +82,6 @@ module MetrcService
         has_no_barcodes = !previous_completion_had_barcodes && !current_completion_has_barcodes
         moved_to_barcodes = !previous_completion_had_barcodes && current_completion_has_barcodes
         already_had_barcodes = previous_completion_had_barcodes && current_completion_has_barcodes
-
-        return DEFAULT_MOVE_STEP if previous_growth_phase.nil? || new_growth_phase.nil?
 
         return :move_plants if is_a_split? && already_had_barcodes
 
@@ -130,7 +129,6 @@ module MetrcService
       end
 
       def move_plant_batches
-        debugger
         payload = {
           Name: batch_tag,
           Location: location_name,
@@ -230,12 +228,6 @@ module MetrcService
         growth_phase_for_completion(current_completion)
       end
       memoize :current_growth_phase
-
-      def previous_growth_phase
-        return growth_phase_for_completion(prior_move) if prior_move
-
-        growth_phase_for_completion(prior_start)
-      end
 
       def location_name
         current_completion&.included&.dig(:zones)&.first&.name || super

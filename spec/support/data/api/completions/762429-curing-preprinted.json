@@ -16,13 +16,13 @@
         "source_batches": null
       },
       "options": {
-        "zone_id": 7249,
+        "zone_id": 7251,
         "quantity": 100,
         "sub_zone_id": null,
         "arbitrary_id": "Mar30-Lav-Cak-M0102",
         "crop_variety_id": 19278,
         "seeding_unit_id": 3591,
-        "zone_name": "Mothers [Flowering]"
+        "zone_name": "Cure Room"
       }
     },
     "relationships": {

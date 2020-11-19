@@ -763,7 +763,29 @@ RSpec.describe MetrcService::Plant::Move do
     context 'with no previous move but a start' do
       let(:facility_id) { 2 }
       let(:batch_id) { 84 }
-      let(:start_transaction) { create(:transaction, :successful, :start, account: account, integration: integration, batch_id: batch_id, completion_id: 762428) }
+      let(:ctx) do
+        {
+          id: 762429,
+          relationships: {
+            batch: { data: { id: batch_id } },
+            facility: { data: { id: facility_id } }
+          },
+          attributes: {
+            options: {
+              zone_id: 7249,
+              quantity: 100,
+              sub_zone_id: nil,
+              arbitrary_id: 'Mar30-Lav-Cak-M0102',
+              crop_variety_id: 19278,
+              seeding_unit_id: 3591,
+              zone_name: 'Drying Room'
+            }
+          },
+          completion_id: 762429
+        }.with_indifferent_access
+      end
+
+      let(:start_transaction) { create(:transaction, :successful, :start, account: account, integration: integration, batch_id: batch_id, completion_id: 762429) }
       subject { described_class.new(ctx, integration) }
 
       before do
@@ -778,7 +800,13 @@ RSpec.describe MetrcService::Plant::Move do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/762428?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: load_response_json('api/completions/762428-flowering-preprinted'))
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3000?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
+          .to_return(body: { data: [
+            JSON.parse(load_response_json('api/completions/762428-flowering-preprinted'))['data'],
+            JSON.parse(load_response_json('api/completions/762429-drying-preprinted'))['data']
+          ] }.to_json)
+
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/762429?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: load_response_json('api/completions/762429-drying-preprinted'))
       end
 
@@ -792,29 +820,4 @@ RSpec.describe MetrcService::Plant::Move do
       end
     end
   end
-
-  # describe '#prior_move' do
-  #   let(:facility_id) { 2 }
-  #   let(:batch_id) { 84 }
-  #   let(:start_transaction) { create(:transaction, :successful, :start, account: account, integration: integration, batch_id: batch_id, completion_id: 762428) }
-  #   subject { described_class.new(ctx, integration) }
-  #
-  #   before do
-  #     start_transaction
-  #
-  #     stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{crop_batch_id}")
-  #       .to_return(body: { data: [
-  #         { id: '90210', type: 'completions', attributes: { id: 90210, start_time: '2020-03-30T07:00:00.000Z', action_type: 'start', parent_id: 90209 } },
-  #         { id: '90211', type: 'completions', attributes: { id: 90211, start_time: '2020-04-10T07:00:00.000Z', action_type: 'move', options: {} } },
-  #         { id: '90220', type: 'completions', attributes: { id: 90220, start_time: '2020-04-20T07:00:00.000Z', action_type: 'move', options: {} } }
-  #       ] }.to_json)
-  #   end
-  #
-  #   it 'returns most recent move completion' do
-  #   end
-  # end
-  # ArtemisApi::Completion.find_all(facility_id: facility_id,
-  #                                     client: client,
-  #                                     include: include,
-  #                                     filters: {crop_batch_ids: [id]}.with_indifferent_access.merge(filters))
 end

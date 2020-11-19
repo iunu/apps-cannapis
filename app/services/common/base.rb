@@ -107,7 +107,6 @@ module Common
     memoize :batch
 
     def batch_tag # rubocop:disable Metrics/PerceivedComplexity
-      debugger
       barcodes = batch.relationships.dig('barcodes', 'data')&.map { |label| label['id'] }
 
       raise InvalidAttributes, "Missing barcode for batch '#{batch.arbitrary_id}'" if barcodes.blank?
