@@ -96,8 +96,8 @@ RSpec.describe MetrcService::Plant::Move do
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
           .to_return(body: { data: [
-            { id: '2999', type: 'completions', attributes: { id: 2999, start_time: '2020-04-10T07:00:00.000Z', action_type: 'move' } },
-            { id: '3000', type: 'completions', attributes: { id: 3000, start_time: '2020-04-20T07:00:00.000Z', action_type: 'move' } }
+            JSON.parse(load_response_json('api/completions/2999-veg-move'))['data'],
+            JSON.parse(load_response_json('api/completions/3000-veg-move'))['data']
           ] }.to_json)
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/2999?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
@@ -168,8 +168,8 @@ RSpec.describe MetrcService::Plant::Move do
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
           .to_return(body: { data: [
-            { id: '3999', type: 'completions', attributes: { id: 3999, start_time: '2020-04-10T07:00:00.000Z', action_type: 'move' } },
-            { id: '4000', type: 'completions', attributes: { id: 4000, start_time: '2020-04-20T07:00:00.000Z', action_type: 'move' } }
+            JSON.parse(load_response_json('api/completions/3999-flower-move'))['data'],
+            JSON.parse(load_response_json('api/completions/4000-flower-move'))['data']
           ] }.to_json)
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3999?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
