@@ -48,7 +48,7 @@ module NcsService
       private
 
       def next_step_name
-        previous_completion = prior_move || prior_start
+        previous_completion = prior_move || start_completion
         return DEFAULT_MOVE_STEP if previous_completion.blank?
 
         previous_growth_phase = normalized_growth_phase(previous_completion.included&.dig(:sub_stages)&.first&.name)
