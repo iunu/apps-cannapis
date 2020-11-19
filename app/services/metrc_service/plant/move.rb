@@ -74,14 +74,14 @@ module MetrcService
         new_growth_phase = growth_phase_for_completion(current_completion)
         previous_growth_phase = growth_phase_for_completion(previous_completion)
 
-        return DEFAULT_MOVE_STEP if previous_growth_phase.nil? || new_growth_phase.nil?
-
         # Yeah, I don't like this either.
         previous_completion_had_barcodes = items_have_barcodes?(previous_completion.included&.dig(:seeding_units)&.first&.item_tracking_method)
         current_completion_has_barcodes  = items_have_barcodes?(current_completion.included&.dig(:seeding_units)&.first&.item_tracking_method)
         has_no_barcodes = !previous_completion_had_barcodes && !current_completion_has_barcodes
         moved_to_barcodes = !previous_completion_had_barcodes && current_completion_has_barcodes
         already_had_barcodes = previous_completion_had_barcodes && current_completion_has_barcodes
+
+        return DEFAULT_MOVE_STEP if previous_growth_phase.nil? || new_growth_phase.nil?
 
         return :move_plants if is_a_split? && already_had_barcodes
 
