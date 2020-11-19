@@ -1,7 +1,6 @@
 module MetrcService
   module Plant
     class Move < Base
-
       DEFAULT_MOVE_STEP = :change_growth_phase
 
       def call
@@ -66,7 +65,7 @@ module MetrcService
       memoize :next_step_name
 
       def next_step(previous_completion = nil, current_completion = nil) # rubocop:disable Metrics/PerceivedComplexity
-        return DEFAULT_MOVE_STEP if previous_completion.nil? || current_completion.nil?
+        return DEFAULT_MOVE_STEP if previous_completion.nil? || current_completion.nil? || current_completion.action_type == 'start'
 
         new_growth_phase = growth_phase_for_completion(current_completion)
         previous_growth_phase = growth_phase_for_completion(previous_completion)

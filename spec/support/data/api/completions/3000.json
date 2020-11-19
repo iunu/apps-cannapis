@@ -1,9 +1,9 @@
 {
   "data": {
-    "id": "762428",
+    "id": "3000",
     "type": "completions",
     "attributes": {
-      "id": 762428,
+      "id": 3000,
       "status": "active",
       "user_id": 1772,
       "content": null,
@@ -76,7 +76,7 @@
         },
         "completion": {
           "data": {
-            "id": "762428",
+            "id": "3000",
             "type": "completions"
           }
         },
