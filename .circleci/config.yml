@@ -10,8 +10,8 @@ jobs:
           name: Restore node_modules from cache
           key: node_modules-v1-{{ checksum "yarn.lock" }}
       - add_ssh_keys:
-            fingerprints:
-              - '94:83:95:15:e6:c9:0b:53:7f:a7:a2:47:9e:dc:55:70'
+          fingerprints:
+            - "94:83:95:15:e6:c9:0b:53:7f:a7:a2:47:9e:dc:55:70"
       - run: yarn install --check-files
 
       - save_cache:
@@ -82,7 +82,7 @@ jobs:
     docker:
       - image: circleci/ruby:2.6.6-node-browsers
         environment:
-          AGRILYST_URL: 'test.com'
+          AGRILYST_URL: "test.com"
           DATABASE_URL: postgres://postgres@localhost/cannapi_test
           RAILS_ENV: test
           BULLET: true
@@ -125,7 +125,7 @@ jobs:
 
       - run:
           name: Run Unit Tests
-          command: bin/bundle exec rspec --out=/tmp/test-results
+          command: bin/bundle exec rspec
 
       - store_test_results:
           path: /tmp/test-results

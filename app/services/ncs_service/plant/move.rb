@@ -21,31 +21,41 @@ module NcsService
         @transaction ||= get_transaction(:move_batch, @attributes.merge(zone: zone))
       end
 
-      def prior_move_transactions
-        Transaction.where(
-          'batch_id = ? AND type = ? AND vendor = ? AND id NOT IN (?)',
-          @batch_id,
-          :move_batch,
-          :ncs,
-          transaction.id
-        )
-      end
-
       def zone
         @zone ||= batch&.zone&.attributes
       end
 
+      def prior_move
+        previous_move = batch.completions.select { |c| c.action_type == 'move' && c.id < @completion_id }
+                             .max_by { |comp| [comp.start_time, comp.id] }
+
+        return if previous_move.nil?
+
+        # calling get_completion here will ensure relationships are side loaded.
+        get_completion(previous_move&.id)
+      end
+      memoize :prior_move
+
+      def start_completion
+        start = batch.completions.find { |comp| comp.action_type == 'start' }
+        return if start.nil?
+
+        # calling get_completion here will ensure relationships are side loaded.
+        get_completion(start&.id)
+      end
+      memoize :start_completion
+
       private
 
       def next_step_name
-        transactions = prior_move_transactions
-        return DEFAULT_MOVE_STEP if transactions.count.zero?
+        previous_completion = prior_move || start_completion
+        return DEFAULT_MOVE_STEP if previous_completion.blank?
 
-        previous_growth_phase = normalized_growth_phase(transactions.last.metadata.dig('sub_stage', 'name'))
+        previous_growth_phase = normalized_growth_phase(previous_completion.included&.dig(:sub_stages)&.first&.name)
 
         # Does last move includes new move?
         is_included = is_included?(previous_growth_phase, normalized_growth_phase)
-        log("Transactions: #{transactions.size}, Previous growth phase: #{previous_growth_phase}, Growth phase is included: #{is_included}, Batch ID #{@batch_id}, completion ID #{@completion_id}")
+        log("Previous completion: #{[previous_completion.id, previous_completion.action_type]}, Previous growth phase: #{previous_growth_phase}, Growth phase is included: #{is_included}, Batch ID #{@batch_id}, completion ID #{@completion_id}")
 
         raise InvalidOperation, "Failed: Substage #{normalized_growth_phase} is not a valid next phase for #{previous_growth_phase}. Batch ID #{@batch_id}, completion ID #{@completion_id}" \
           unless is_included
@@ -100,7 +110,7 @@ module NcsService
       end
 
       def start_time
-        @attributes.dig('start_time')
+        @attributes['start_time']
       end
 
       def immature?
