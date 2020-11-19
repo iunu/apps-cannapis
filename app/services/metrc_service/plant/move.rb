@@ -17,9 +17,8 @@ module MetrcService
       end
 
       def prior_move
-        previous_move = batch.completions.select do |comp|
-          comp.action_type == 'move' && comp.id < @completion_id
-        end.max_by(&:start_time)
+        previous_move = batch.completions.select { |comp| comp.action_type == 'move' && comp.id < @completion_id }
+                             .max_by { |comp| [comp.start_time, comp.id] }
 
         return if previous_move.nil?
 
@@ -28,16 +27,14 @@ module MetrcService
       end
       memoize :prior_move
 
-      def prior_start
-        previous_start = batch.completions.select do |comp|
-          comp.action_type == 'start' && comp.id < @completion_id
-        end.max_by(&:start_time)
-        return if previous_start.nil?
+      def start_completion
+        start = batch.completions.find { |comp| comp.action_type == 'start' }
+        return if start.nil?
 
         # calling get_completion here will ensure relationships are side loaded.
-        get_completion(previous_start&.id)
+        get_completion(start&.id)
       end
-      memoize :prior_start
+      memoize :start_completion
 
       private
 
@@ -53,7 +50,7 @@ module MetrcService
       memoize :current_completion
 
       def next_step_name
-        previous_completion = prior_move || prior_start
+        previous_completion = prior_move || start_completion
         step = next_step(previous_completion, current_completion)
 
         return unless step

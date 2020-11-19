@@ -26,28 +26,24 @@ module NcsService
       end
 
       def prior_move
-        previous_move = batch.completions.select do |c|
-          c.action_type == 'move' && c.id < @completion_id
-        end.max_by(&:start_time)
+        previous_move = batch.completions.select { |c| c.action_type == 'move' && c.id < @completion_id }
+                             .max_by { |comp| [comp.start_time, comp.id] }
 
         return if previous_move.nil?
 
         # calling get_completion here will ensure relationships are side loaded.
         get_completion(previous_move&.id)
       end
-      memoize
+      memoize :prior_move
 
-      def prior_start
-        previous_start = batch.completions.select do |c|
-          c.action_type == 'start' && c.id < @completion_id
-        end.max_by(&:start_time)
-
-        return if previous_start.nil?
+      def start_completion
+        start = batch.completions.find { |comp| comp.action_type == 'start' }
+        return if start.nil?
 
         # calling get_completion here will ensure relationships are side loaded.
-        get_completion(previous_start&.id)
+        get_completion(start&.id)
       end
-      memoize
+      memoize :start_completion
 
       private
 
