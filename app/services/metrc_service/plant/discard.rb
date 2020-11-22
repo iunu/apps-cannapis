@@ -24,6 +24,10 @@ module MetrcService
       end
       memoize :discard
 
+      def barcodes?
+        @attributes.dig('options', 'barcode').present?
+      end
+
       def build_immature_payload
         reason = reason_note
 
@@ -49,14 +53,15 @@ module MetrcService
       end
 
       def reason_note # rubocop:disable Metrics/PerceivedComplexity
-        reason_description = if discard['reason_description'] && discard['note_content']
-                               "#{discard['reason_description']} #{discard['note_content']}"
-                             elsif discard['reason_description'] && !discard['note_content']
-                               discard['reason_description']
-                             elsif !discard['reason_description'] && discard['note_content']
-                               discard['note_content']
+        reason_description = if discard.options['reason_description'] && discard.options['note_content']
+                               "#{discard.options['reason_description']} #{discard.options['note_content']}"
+                             elsif discard.options['reason_description'] && !discard.options['note_content']
+                               discard.options['reason_description']
+                             elsif !discard.options['reason_description'] && discard.options['note_content']
+                               discard.options['note_content']
                              end
-        reason_type = discard['reason_type']
+
+        reason_type = discard.options['reason_type']
         reason_note = reason_type.capitalize if reason_type
         reason_note += ": #{reason_description}." if reason_type && reason_description
 

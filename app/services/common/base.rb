@@ -130,7 +130,7 @@ module Common
     memoize :current_completion
 
     def current_state
-      current_completion&.included&.dig(:crop_batch_states).first
+      current_completion&.included&.dig(:crop_batch_states)&.first
     end
 
     def items
@@ -138,7 +138,7 @@ module Common
     end
 
     def barcodes
-      items.map { |item| item['barcode'] if item.status == 'active' }.compact
+      items&.map { |item| item['barcode'] if item.status == 'active' }&.compact
     end
 
     def validate_batch!

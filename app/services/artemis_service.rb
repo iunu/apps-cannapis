@@ -20,7 +20,7 @@ class ArtemisService
   end
 
   def get_completion(id, add = 'action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage')
-    @artemis.find_one('completions', id, facility_id: get_facility.id, include: add, force: true)
+    @artemis.find_one('completions', id, facility_id: @facility_id, include: add, force: true)
   end
 
   # This will get the current items from the batch
