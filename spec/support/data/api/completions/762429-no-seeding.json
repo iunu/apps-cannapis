@@ -60,6 +60,56 @@
   },
   "included": [
     {
+      "id": "425818",
+      "type": "crop_batch_states",
+      "attributes": {
+        "harvest_quantity": null,
+        "id": 425818,
+        "quantity": 100,
+        "cached_data": {
+          "items_snapshot": []
+        }
+      },
+      "relationships": {
+        "crop_batch": {
+          "data": {
+            "id": "105681",
+            "type": "crop_batches"
+          }
+        },
+        "completion": {
+          "data": {
+            "id": "762429",
+            "type": "completions"
+          }
+        },
+        "zone": {
+          "data": {
+            "id": "7249",
+            "type": "zones"
+          }
+        },
+        "sub_zone": {
+          "data": {
+            "id": "",
+            "type": "sub_zones"
+          }
+        },
+        "seeding_unit": {
+          "data": {
+            "id": "3591",
+            "type": "seeding_units"
+          }
+        },
+        "harvest_unit": {
+          "data": {
+            "id": "",
+            "type": "harvest_units"
+          }
+        }
+      }
+    },
+    {
       "id": "24",
       "type": "sub_stages",
       "attributes": {

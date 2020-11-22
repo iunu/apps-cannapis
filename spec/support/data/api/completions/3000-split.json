@@ -23,9 +23,7 @@
         "crop_variety_id": 19278,
         "seeding_unit_id": 3591,
         "zone_name": "Mothers [Veg]",
-        "barcode": [
-          "LABEL_00004001"
-        ]
+        "barcode": ["LABEL_00004001"]
       }
     },
     "relationships": {
@@ -68,7 +66,10 @@
       "attributes": {
         "harvest_quantity": null,
         "id": 425818,
-        "quantity": 100
+        "quantity": 100,
+        "cached_data": {
+          "items_snapshot": []
+        }
       },
       "relationships": {
         "crop_batch": {
