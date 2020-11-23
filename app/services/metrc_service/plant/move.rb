@@ -43,11 +43,6 @@ module MetrcService
         expected_zones.any? { |phase| zone_name.include?(phase) }
       end
 
-      def current_completion
-        get_completion(@completion_id)
-      end
-      memoize :current_completion
-
       def next_step_name
         previous_completion = prior_move || start_completion
         step = next_step(previous_completion, current_completion)
@@ -79,10 +74,10 @@ module MetrcService
 
         return DEFAULT_MOVE_STEP if previous_growth_phase.nil? || new_growth_phase.nil?
 
-        return :move_plants if is_a_split? && already_had_barcodes
+        return :move_plants if a_split? && already_had_barcodes
 
         # We need this in order to avoid splits when no barcodes are available
-        return if is_a_split? && !already_had_barcodes
+        return if a_split? && !already_had_barcodes
 
         return :move_plant_batches if has_no_barcodes
 
@@ -103,16 +98,9 @@ module MetrcService
       memoize :next_step
 
       def move_plants
-        # TODO: extract barcodes into it's own method
-        barcodes = if is_a_split?
-                     current_completion.options['barcode']
-                   else
-                     # TODO: Filter items based on completion content
-                     items.select { |item| current_completion.options&.dig('item_ids').include?(item.id) }
-                          .map { |item| item&.relationships&.dig('barcode', 'data', 'id') }
-                   end
+        completion_barcodes = a_split? ? current_completion.options['barcode'] : barcodes
 
-        payload = barcodes.map do |barcode|
+        payload = completion_barcodes.map do |barcode|
           {
             Id: nil,
             Label: barcode,
@@ -139,7 +127,7 @@ module MetrcService
         payload = {
           Name: batch_tag,
           Count: quantity,
-          StartingTag: immature?(phase) ? nil : barcode,
+          StartingTag: immature?(phase) ? nil : first_barcode,
           GrowthPhase: phase,
           NewLocation: location_name,
           GrowthDate: start_time,
@@ -150,10 +138,10 @@ module MetrcService
       end
 
       def change_plants_growth_phases
-        payload = items.map do |item|
+        payload = barcodes.map do |barcode|
           {
             Id: nil,
-            Label: item&.relationships&.dig('barcode', 'data', 'id'),
+            Label: barcode,
             NewLabel: nil,
             GrowthPhase: current_growth_phase,
             NewLocation: location_name,
@@ -168,10 +156,6 @@ module MetrcService
       # if this is a move harvest a generated completion of 'Wet Weight' should come next
       # This will be reported to metrc via the wet_weight resource service.
       def move_harvest; end
-
-      def items
-        @items ||= get_items(batch.seeding_unit.id)
-      end
 
       def start_time
         @attributes['start_time']
@@ -202,9 +186,11 @@ module MetrcService
         @attributes.dig('options', 'quantity')&.to_i
       end
 
-      def barcode
-        ordered_items = items.sort_by(&:id)
-        ordered_items&.first&.relationships&.dig('barcode', 'data', 'id')
+      def first_barcode
+        return nil if items.blank?
+
+        ordered_items = items.sort_by { |item| item['id'] }
+        ordered_items.first['barcode']
       end
 
       def items_have_barcodes?(tracking_method = nil)
@@ -229,7 +215,7 @@ module MetrcService
         current_completion&.included&.dig(:zones)&.first&.name || super
       end
 
-      def is_a_split?
+      def a_split?
         current_completion.action_type == 'split'
       end
     end

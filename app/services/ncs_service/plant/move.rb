@@ -81,11 +81,11 @@ module NcsService
         DEFAULT_MOVE_STEP
       end
 
-      def move_plants(options)
-        payload = items.map do |item|
+      def move_plants
+        payload = barcodes.map do |barcode|
           {
             Id: nil,
-            Label: item.relationships.dig('barcode', 'data', 'id'),
+            Label: barcode,
             RoomName: location_name
           }
         end
@@ -93,20 +93,16 @@ module NcsService
         call_ncs(:plant, :move, payload)
       end
 
-      def change_growth_phase(options)
+      def change_growth_phase
         payload = {
           Label: batch_tag,
-          NewTag: immature? ? nil : barcode,
+          NewTag: immature? ? nil : first_barcode,
           GrowthPhase: normalized_growth_phase,
           NewRoom: location_name,
           GrowthDate: start_time
         }
 
         call_ncs(:plant, :change_growth_phases, payload)
-      end
-
-      def items
-        @items ||= get_items(batch.seeding_unit.id)
       end
 
       def start_time
@@ -134,9 +130,11 @@ module NcsService
         @attributes.dig('options', 'quantity')&.to_i
       end
 
-      def barcode
-        ordered_items = items.sort { |a, b| a.id <=> b.id }
-        ordered_items&.first&.relationships&.dig('barcode', 'data', 'id')
+      def first_barcode
+        return nil if items.blank?
+
+        ordered_items = items.sort_by { |item| item['id'] }
+        ordered_items.first['barcode']
       end
     end
   end

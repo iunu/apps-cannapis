@@ -10,7 +10,7 @@ module MetrcService
       def call
         return if harvest_disabled?
 
-        harvest_plants if resource_present? || @attributes.dig('action_type') == 'generate'
+        harvest_plants if resource_present? || @attributes['action_type'] == 'generate'
 
         success!
       end
@@ -18,46 +18,41 @@ module MetrcService
       private
 
       def harvest_plants
-        call_metrc(:harvest_plants, build_harvest_plants_payload(items, batch))
+        call_metrc(:harvest_plants, build_harvest_plants_payload(completion_barcodes, batch))
       end
 
-      def build_harvest_plants_payload(items, batch)
+      def build_harvest_plants_payload(completion_barcodes, batch)
         harvest_name = batch.arbitrary_id
-        average_weight = calculate_average_weight(items)
-        resource_unit = get_resource_unit(@ctx.dig('attributes', 'options', 'resource_unit_id'))
+        average_weight = calculate_average_weight(completion_barcodes)
 
-        items.map do |item|
+        completion_barcodes.map do |barcode|
           {
             DryingLocation: location_name,
             PatientLicenseNumber: nil,
             ActualDate: harvest_date,
-            Plant: item.relationships.dig('barcode', 'data', 'id'),
+            Plant: barcode,
             Weight: average_weight,
-            UnitOfWeight: resource_unit.unit,
+            UnitOfWeight: unit_of_weight,
             HarvestName: harvest_name
           }
         end
       end
 
       def harvest_date
-        @attributes.dig(:start_time)
+        @attributes['start_time']
       end
 
-      def items
+      def completion_barcodes
         completion_item_ids = @attributes.dig('content', 'crop_batch_item_ids')
-        @items ||= get_items(seeding_unit_id).select { |item| completion_item_ids&.include?(item.id) }
+        items.map { |item| item['barcode'] if completion_item_ids&.include?(item['id']) }.compact
       end
 
       def seeding_unit_id
         @seeding_unit_id ||= @attributes.dig(:options, :seeding_unit_id)
       end
 
-      def unit_of_weight(unit_type, _item = nil)
-        # TODO: apply per-item resource lookup when available on Artemis API
-        # resource_unit = get_resource_unit(item.resource_unit_id)
-        # resource_unit.unit
-
-        resource_unit(unit_type).unit
+      def unit_of_weight
+        get_resource_unit(@ctx.dig('attributes', 'options', 'resource_unit_id')).unit
       end
 
       def total_weight
@@ -67,8 +62,8 @@ module MetrcService
         end
       end
 
-      def calculate_average_weight(items)
-        (total_weight.to_f / items.size).round(2)
+      def calculate_average_weight(barcodes)
+        (total_weight.to_f / barcodes.size).round(2)
       end
     end
   end

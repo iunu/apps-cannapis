@@ -5,17 +5,14 @@ module NcsService
       WASTE_WEIGHT = 'Waste'.freeze
 
       def call
-        seeding_unit_id = @attributes.dig(:options, :seeding_unit_id)
-        items           = get_items(seeding_unit_id)
-
         if complete?
           # We need to create a harvest first
-          create_harvest(items, batch)
+          create_harvest(batch)
 
-          payload = build_harvest_plants_payload(items, batch)
+          payload = build_harvest_plants_payload(barcodes, batch)
           call_ncs(:plant, :harvest, payload)
         else
-          payload = build_manicure_plants_payload(items, batch)
+          payload = build_manicure_plants_payload(barcodes)
           call_ncs(:plant, :manicure, payload)
         end
 
@@ -34,14 +31,12 @@ module NcsService
         call_ncs(:harvest, :remove_waste, build_remove_waste_payload)
       end
 
-      def create_harvest(items, batch)
-        item = items.first
-        unit = unit_of_weight(WET_WEIGHT, item)
+      def create_harvest(batch)
         payload = [{
           Name: batch.arbitrary_id,
           HarvestType: 'Product',
           DryingRoomName: location_name,
-          UnitOfWeightName: unit,
+          UnitOfWeightName: unit_of_weight(WET_WEIGHT),
           HarvestStartDate: harvest_date
         }]
 
@@ -51,14 +46,14 @@ module NcsService
         result
       end
 
-      def build_manicure_plants_payload(items, batch)
-        average_weight = calculate_average_weight(items)
+      def build_manicure_plants_payload(barcodes)
+        average_weight = calculate_average_weight(barcodes)
 
-        items.map do |item|
+        barcodes.map do |barcode|
           {
-            Label: item.relationships.dig('barcode', 'data', 'id'),
+            Label: barcode,
             ManicuredWeight: average_weight,
-            ManicuredUnitOfWeightName: item.attributes['secondary_harvest_unit'],
+            ManicuredUnitOfWeightName: unit_of_weight(WET_WEIGHT),
             RoomName: location_name,
             HarvestName: nil,
             ManicuredDate: harvest_date
@@ -66,15 +61,15 @@ module NcsService
         end
       end
 
-      def build_harvest_plants_payload(items, batch)
+      def build_harvest_plants_payload(barcodes, batch)
         harvest_name = batch.arbitrary_id
-        average_weight = calculate_average_weight(items)
+        average_weight = calculate_average_weight(barcodes)
 
-        items.map do |item|
+        barcodes.map do |barcode|
           {
-            Label: item.relationships.dig('barcode', 'data', 'id'),
+            Label: barcode,
             HarvestedWetWeight: average_weight,
-            HarvestedUnitOfWeightName: unit_of_weight(WET_WEIGHT, item),
+            HarvestedUnitOfWeightName: unit_of_weight(WET_WEIGHT),
             RoomName: location_name,
             HarvestName: harvest_name,
             ManicuredDate: harvest_date
@@ -97,7 +92,7 @@ module NcsService
       end
 
       def harvest_date
-        @attributes.dig(:start_time)
+        @attributes['start_time']
       end
 
       def unit_of_weight(unit_type, _item = nil)
@@ -114,8 +109,8 @@ module NcsService
         end
       end
 
-      def calculate_average_weight(items)
-        (total_weight(WET_WEIGHT).to_f / items.size).round(2)
+      def calculate_average_weight(barcodes)
+        (total_weight(WET_WEIGHT).to_f / barcodes.size).round(2)
       end
 
       def complete?

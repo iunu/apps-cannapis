@@ -5,7 +5,7 @@ RSpec.describe MetrcService::Resource::WetWeight do
   let(:integration) { create(:integration, account: account, state: :md) }
   let(:ctx) do
     {
-      id: 3000,
+      id: 2239,
       relationships: {
         batch: { data: { id: 2002 } },
         facility: { data: { id: 1568 } },
@@ -22,7 +22,7 @@ RSpec.describe MetrcService::Resource::WetWeight do
           zone_name: 'Bay 02'
         }
       },
-      completion_id: 1001
+      completion_id: 2239
     }.with_indifferent_access
   end
 
@@ -78,15 +78,8 @@ RSpec.describe MetrcService::Resource::WetWeight do
           .to_return(body:
             { data: [{ id: '652633', type: 'completions', attributes: { id: 652633, user_id: 1598, content: nil, start_time: '2019-10-01T16: 00: 00.000Z', end_time: '2019-10-01T16: 00: 00.000Z', occurrence: nil, action_type: 'batch', options: { zone_id: 6422, quantity: '5', arbitrary_id: 'Oct1-Ban-Spl-Can', growth_cycle_id: 11417, seeding_unit_id: 3479, tracking_barcode: '1A4FF01000000220000010', arbitrary_id_base: 'Ban-Spl-Can' } }, relationships: { action_result: { data: { id: 96182, type: 'CropBatch' } }, batch: { data: { id: '96182', type: 'batches' } }, facility: { data: { id: 1568, type: 'facilities' } }, user: { data: { id: 1598, type: 'users' } } } }] }.to_json)
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/batches/96182/items?filter[seeding_unit_id]&include=barcodes,seeding_unit")
-          .to_return(body: {
-            data:[
-              { id: '969664', type: 'items', attributes: { id: 969664, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams' }, relationships: { barcode: { data: { id: '1A4FF010000002200000105', type: 'barcodes' } } } },
-              { id: '969663', type: 'items', attributes: { id: 969663, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams' }, relationships: { barcode: { data: { id: '1A4FF010000002200000104', type: 'barcodes' } } } },
-              { id: '969662', type: 'items', attributes: { id: 969662, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams' }, relationships: { barcode: { data: { id: '1A4FF010000002200000103', type: 'barcodes' } } } },
-              { id: '969700', type: 'items', attributes: { id: 969700, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams', status: 'removed'}, relationships: { barcode: { data: { id: '1A4FF010000002200000103', type: 'barcodes' } } } },
-              { id: '969701', type: 'items', attributes: { id: 969701, harvest_quantity: 0, secondary_harvest_quantity: 10.0, secondary_harvest_unit: 'Grams', harvest_unit: 'Grams', status: 'removed' }, relationships: { barcode: { data: { id: '1A4FF010000002200000103', type: 'barcodes' } } } }
-            ] }.to_json)
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/2239?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+          .to_return(body: load_response_json('api/completions/2239-generate'))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/zones/6425")
           .to_return(body: {

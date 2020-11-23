@@ -1,63 +1,51 @@
 {
   "data": {
-    "id": "762428",
-    "type": "completions",
     "attributes": {
-      "id": 762428,
-      "status": "active",
-      "user_id": 1772,
-      "content": null,
-      "start_time": "2020-03-30T07:00:00.000Z",
-      "end_time": "2020-03-30T07:00:00.000Z",
-      "occurrence": 0,
-      "action_type": "split",
-      "parent_id": 762427,
-      "context": {
-        "source_batches": null
+      "action_type": "generate",
+      "content": {
+        "crop_batch_item_ids": [969664, 969663, 969662]
       },
+      "end_time": "2020-02-17T08:00:00.000Z",
+      "id": 2239,
+      "occurrence": 0,
       "options": {
-        "zone_id": 7249,
-        "quantity": 100,
-        "sub_zone_id": null,
-        "arbitrary_id": "Mar30-Lav-Cak-M0102",
-        "crop_variety_id": 19278,
-        "seeding_unit_id": 3591,
-        "zone_name": "Mothers [Veg]",
-        "barcode": ["LABEL_00004001"]
-      }
+        "generated_quantity": 100,
+        "resource_unit_id": 56
+      },
+      "start_time": "2020-02-17T08:00:00.000Z",
+      "user_id": 2
     },
+    "id": "2239",
     "relationships": {
       "action_result": {
         "data": {
-          "id": null,
-          "type": null
+          "id": 272,
+          "type": "BatchResource"
         }
       },
       "batch": {
         "data": {
-          "id": "105681",
+          "id": "352",
           "type": "batches"
         }
       },
       "facility": {
         "data": {
-          "id": 1626,
+          "id": 3,
           "type": "facilities"
         }
       },
       "user": {
         "data": {
-          "id": 1772,
+          "id": 2,
           "type": "users"
         }
-      },
-      "crop_batch_state": {
-        "data": {
-          "type": "crop_batch_states",
-          "id": "425818"
-        }
       }
-    }
+    },
+    "type": "completions"
+  },
+  "meta": {
+    "event_type": "creation"
   },
   "included": [
     {
@@ -70,9 +58,29 @@
         "cached_data": {
           "items_snapshot": [
             {
-              "id": 4,
+              "id": 969664,
               "status": "active",
-              "barcode": "LABEL_00004001"
+              "barcode": "1A4FF010000002200000105"
+            },
+            {
+              "id": 969663,
+              "status": "active",
+              "barcode": "1A4FF010000002200000104"
+            },
+            {
+              "id": 969662,
+              "status": "active",
+              "barcode": "1A4FF010000002200000103"
+            },
+            {
+              "id": 969661,
+              "status": "removed",
+              "barcode": "1A4FF010000002200000102"
+            },
+            {
+              "id": 969660,
+              "status": "removed",
+              "barcode": "1A4FF010000002200000101"
             }
           ]
         }
@@ -86,7 +94,7 @@
         },
         "completion": {
           "data": {
-            "id": "762428",
+            "id": "3000",
             "type": "completions"
           }
         },

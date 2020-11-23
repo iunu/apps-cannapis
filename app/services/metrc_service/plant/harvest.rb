@@ -3,7 +3,7 @@ module MetrcService
     class Harvest < Base
       def call
         # allow for harvest of nursery crops - generates clones
-        return success! if items.empty?
+        return success! if barcodes.empty?
 
         success!
       end
@@ -12,10 +12,6 @@ module MetrcService
 
       def transaction
         @transaction ||= get_transaction(:harvest_batch)
-      end
-
-      def items
-        @items ||= get_items(seeding_unit_id)
       end
 
       def seeding_unit_id

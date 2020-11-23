@@ -39,7 +39,7 @@ module NcsService
         ]
       end
 
-      def build_mature_payload(discard, batch)
+      def build_mature_payload(discard, _batch)
         discard_type = @attributes.dig('options', 'discard_type')
         reason       = reason_note(discard)
 
@@ -54,11 +54,11 @@ module NcsService
           ]
         end
 
-        items = get_items(batch.seeding_unit.id)
-        items.map do |item|
+        # else complete discard
+        barcodes.map do |barcode|
           {
             Id: nil,
-            Label: item.relationships.dig('barcode', 'data', 'id'),
+            Label: barcode,
             DestroyedNote: reason,
             DestroyedDate: discard.attributes['discarded_at']
           }
