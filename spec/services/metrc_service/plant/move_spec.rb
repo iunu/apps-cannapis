@@ -91,7 +91,7 @@ RSpec.describe MetrcService::Plant::Move do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}/items?filter[seeding_unit_id]=#{seeding_unit_id}&include=barcodes,seeding_unit")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/items"))
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3000?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3000?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: load_response_json('api/completions/3000-veg-move'))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
@@ -100,7 +100,7 @@ RSpec.describe MetrcService::Plant::Move do
             JSON.parse(load_response_json('api/completions/3000-veg-move'))['data']
           ] }.to_json)
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/2999?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/2999?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: load_response_json('api/completions/2999-veg-move'))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=3000")
@@ -163,7 +163,7 @@ RSpec.describe MetrcService::Plant::Move do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}/items?filter[seeding_unit_id]=#{seeding_unit_id}&include=barcodes,seeding_unit")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/items"))
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/4000?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/4000?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: load_response_json('api/completions/4000-flower-move'))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
@@ -172,7 +172,7 @@ RSpec.describe MetrcService::Plant::Move do
             JSON.parse(load_response_json('api/completions/4000-flower-move'))['data']
           ] }.to_json)
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3999?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3999?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: load_response_json('api/completions/3999-flower-move'))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=3000")
@@ -207,7 +207,7 @@ RSpec.describe MetrcService::Plant::Move do
       stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
         .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
 
-      stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3000?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+      stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3000?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
         .to_return(body: load_response_json('api/completions/3000'))
     end
 
@@ -364,22 +364,17 @@ RSpec.describe MetrcService::Plant::Move do
 
   describe '#move_plants' do
     context 'with no split' do
-      let(:items) do
-        [
-          instance_double('Item', id: 'ABCDEF1234567890ABCDEF01', relationships: {
-            'barcode': {
-              'data': {
-                'id': 'ABCDEF1234567890ABCDEF01'
-              }
-            }
-          }.with_indifferent_access)
-        ]
-      end
       let(:expected_payload) do
         [
           {
             Id: nil,
             Label: 'ABCDEF1234567890ABCDEF01',
+            Location: 'F3 - Inside',
+            ActualDate: '2020-04-18'
+          },
+          {
+            Id: nil,
+            Label: 'ABCDEF1234567890ABCDEF03',
             Location: 'F3 - Inside',
             ActualDate: '2020-04-18'
           }
@@ -394,7 +389,7 @@ RSpec.describe MetrcService::Plant::Move do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/2/batches/84?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
           .to_return(body: load_response_json('api/sync/facilities/2/batches/84'))
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/2/completions/3000?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/2/completions/3000?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: load_response_json('api/completions/3000-veg-move'))
 
         stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/moveplants?licenseNumber=LIC-0001')
@@ -404,15 +399,13 @@ RSpec.describe MetrcService::Plant::Move do
 
       it 'calls the Metrc client method' do
         expect_any_instance_of(described_class)
-          .to receive(:items)
-          .and_return(items)
-
-        expect_any_instance_of(described_class)
           .to receive(:location_name)
+          .twice
           .and_return('F3 - Inside')
 
         expect_any_instance_of(described_class)
           .to receive(:start_time)
+          .twice
           .and_return('2020-04-18')
 
         expect_any_instance_of(described_class)
@@ -444,7 +437,7 @@ RSpec.describe MetrcService::Plant::Move do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/2/batches/84?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
           .to_return(body: load_response_json('api/sync/facilities/2/batches/84'))
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/2/completions/3000?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/2/completions/3000?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: load_response_json('api/completions/3000-split'))
 
         stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/moveplants?licenseNumber=LIC-0001')
@@ -550,7 +543,7 @@ RSpec.describe MetrcService::Plant::Move do
       stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
         .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
 
-      stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3000?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+      stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3000?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
         .to_return(body: load_response_json('api/completions/3000'))
 
       stub_request(:post, 'https://sandbox-api-md.metrc.com/plantbatches/v1/changegrowthphase?licenseNumber=LIC-0001')
@@ -606,7 +599,7 @@ RSpec.describe MetrcService::Plant::Move do
           .and_return(false)
 
         expect_any_instance_of(described_class)
-          .to receive(:barcode)
+          .to receive(:first_barcode)
           .and_return(barcode)
       end
 
@@ -621,53 +614,49 @@ RSpec.describe MetrcService::Plant::Move do
   end
 
   describe '#change_plants_growth_phase' do
+    let(:barcode) { 'ABCDEF1234567890ABCDEF01' }
     let(:normalized_growth_phase) { 'Flowering' }
     let(:location_name) { 'F3 - Inside' }
     let(:start_time) { '2020-04-18' }
     let(:facility_id) { 2 }
     let(:batch_id) { 84 }
-    let(:items) do
+    let(:expected_payload) {
       [
-        instance_double('Item', relationships: {
-          'barcode': {
-            'data': {
-              'id': 'ABCDEF1234567890ABCDEF01'
-            }
-          }
-        }.with_indifferent_access)
-      ]
-    end
-    let(:expected_payload) do
-      items.map do |item|
         {
           Id: nil,
-          Label: item.relationships.dig('barcode', 'data', 'id'),
+          Label: 'ABCDEF1234567890ABCDEF01',
+          NewLabel: nil,
+          GrowthPhase: normalized_growth_phase,
+          NewLocation: location_name,
+          NewRoom: location_name,
+          GrowthDate: start_time
+        },
+        {
+          Id: nil,
+          Label: 'ABCDEF1234567890ABCDEF03',
           NewLabel: nil,
           GrowthPhase: normalized_growth_phase,
           NewLocation: location_name,
           NewRoom: location_name,
           GrowthDate: start_time
         }
-      end
-    end
+      ]
+    }
     subject { described_class.new(ctx, integration) }
 
     before do
-      expect_any_instance_of(described_class)
-        .to receive(:items)
-        .and_return(items)
-
       expect_any_instance_of(described_class)
         .to receive(:normalized_growth_phase)
         .and_return(normalized_growth_phase)
 
       expect_any_instance_of(described_class)
         .to receive(:location_name)
-        .twice
+        .exactly(4)
         .and_return(location_name)
 
       expect_any_instance_of(described_class)
         .to receive(:start_time)
+        .twice
         .and_return(start_time)
 
       stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}")
@@ -676,7 +665,7 @@ RSpec.describe MetrcService::Plant::Move do
       stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
         .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
 
-      stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3000?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+      stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3000?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
         .to_return(body: load_response_json('api/completions/3000'))
 
       stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/changegrowthphases?licenseNumber=LIC-0001')
@@ -797,7 +786,7 @@ RSpec.describe MetrcService::Plant::Move do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/762428?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/762428?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: load_response_json('api/completions/762428-flowering-preprinted'))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
@@ -806,7 +795,7 @@ RSpec.describe MetrcService::Plant::Move do
             JSON.parse(load_response_json('api/completions/762429-drying-preprinted'))['data']
           ] }.to_json)
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/762429?include=action_result,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/762429?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: load_response_json('api/completions/762429-drying-preprinted'))
       end
 

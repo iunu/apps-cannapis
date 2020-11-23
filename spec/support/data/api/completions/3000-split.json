@@ -68,7 +68,13 @@
         "id": 425818,
         "quantity": 100,
         "cached_data": {
-          "items_snapshot": []
+          "items_snapshot": [
+            {
+              "id": 4,
+              "status": "active",
+              "barcode": "LABEL_00004001"
+            }
+          ]
         }
       },
       "relationships": {

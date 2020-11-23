@@ -134,11 +134,11 @@ module Common
     end
 
     def items
-      current_state&.dig(:cached_data, :items_snapshot)
+      current_state&.attributes&.dig('cached_data', 'items_snapshot')
     end
 
     def barcodes
-      items&.map { |item| item['barcode'] if item.status == 'active' }&.compact
+      items&.map { |item| item['barcode'] if item['status'] == 'active' }&.compact
     end
 
     def validate_batch!
