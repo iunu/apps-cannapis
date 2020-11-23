@@ -1,0 +1,465 @@
+{
+  "data": {
+    "attributes": {
+      "action_type": "generate",
+      "content": {
+        "crop_batch_item_ids": [969664, 969663, 969662]
+      },
+      "end_time": "2020-02-17T08:00:00.000Z",
+      "id": 2239,
+      "occurrence": 0,
+      "options": {
+        "generated_quantity": 100,
+        "resource_unit_id": 56
+      },
+      "start_time": "2020-02-17T08:00:00.000Z",
+      "user_id": 2
+    },
+    "id": "2239",
+    "relationships": {
+      "action_result": {
+        "data": {
+          "id": 272,
+          "type": "BatchResource"
+        }
+      },
+      "batch": {
+        "data": {
+          "id": "352",
+          "type": "batches"
+        }
+      },
+      "facility": {
+        "data": {
+          "id": 3,
+          "type": "facilities"
+        }
+      },
+      "user": {
+        "data": {
+          "id": 2,
+          "type": "users"
+        }
+      }
+    },
+    "type": "completions"
+  },
+  "meta": {
+    "event_type": "creation"
+  },
+  "included": [
+    {
+      "id": "425818",
+      "type": "crop_batch_states",
+      "attributes": {
+        "harvest_quantity": null,
+        "id": 425818,
+        "quantity": 100,
+        "cached_data": {
+          "items_snapshot": [
+            {
+              "id": 969664,
+              "status": "active",
+              "barcode": "1A4FF010000002200000105"
+            },
+            {
+              "id": 969663,
+              "status": "active",
+              "barcode": "1A4FF010000002200000104"
+            },
+            {
+              "id": 969662,
+              "status": "active",
+              "barcode": "1A4FF010000002200000103"
+            },
+            {
+              "id": 969661,
+              "status": "removed",
+              "barcode": "1A4FF010000002200000102"
+            },
+            {
+              "id": 969660,
+              "status": "removed",
+              "barcode": "1A4FF010000002200000101"
+            }
+          ]
+        }
+      },
+      "relationships": {
+        "crop_batch": {
+          "data": {
+            "id": "105681",
+            "type": "crop_batches"
+          }
+        },
+        "completion": {
+          "data": {
+            "id": "3000",
+            "type": "completions"
+          }
+        },
+        "zone": {
+          "data": {
+            "id": "7249",
+            "type": "zones"
+          }
+        },
+        "sub_zone": {
+          "data": {
+            "id": "",
+            "type": "sub_zones"
+          }
+        },
+        "seeding_unit": {
+          "data": {
+            "id": "3591",
+            "type": "seeding_units"
+          }
+        },
+        "harvest_unit": {
+          "data": {
+            "id": "",
+            "type": "harvest_units"
+          }
+        }
+      }
+    },
+    {
+      "id": "3591",
+      "type": "seeding_units",
+      "attributes": {
+        "id": 3591,
+        "name": "plants",
+        "secondary_display_active": false,
+        "secondary_display_capacity": null,
+        "item_tracking_method": "none"
+      }
+    },
+    {
+      "id": "7094",
+      "type": "zones",
+      "attributes": {
+        "id": 7094,
+        "facility_id": 1634,
+        "name": "Zone 1",
+        "slug": "zone-1",
+        "zone_type": "generic",
+        "created_at": "2020-03-24T04:13:48.032Z",
+        "updated_at": "2020-07-13T20:41:30.798Z",
+        "status": "active",
+        "position": null,
+        "size": 0,
+        "seeding_unit": {
+          "id": 3601,
+          "name": "Plant (barcoded)",
+          "zones": [
+            {
+              "id": 7098,
+              "slug": "drycure--dry-",
+              "name": "Dry/Cure [Dry]",
+              "seeding_unit_id": 3601,
+              "zone_type": "generic",
+              "sub_zones": []
+            },
+            {
+              "id": 7094,
+              "slug": "zone-1",
+              "name": "Zone 1",
+              "seeding_unit_id": 3601,
+              "zone_type": "generic",
+              "sub_zones": [
+                {
+                  "id": 12232,
+                  "name": "Table 1",
+                  "slug": "table-1-48"
+                },
+                {
+                  "id": 12233,
+                  "name": "Table 2",
+                  "slug": "table-2-47"
+                },
+                {
+                  "id": 12234,
+                  "name": "Table 3",
+                  "slug": "table-3-41"
+                }
+              ]
+            },
+            {
+              "id": 7202,
+              "slug": "zone-2",
+              "name": "Zone 2",
+              "seeding_unit_id": 3601,
+              "zone_type": "generic",
+              "sub_zones": [
+                {
+                  "id": 12235,
+                  "name": "Table 4",
+                  "slug": "table-4-40"
+                },
+                {
+                  "id": 12236,
+                  "name": "Table 5",
+                  "slug": "table-5-40"
+                },
+                {
+                  "id": 12237,
+                  "name": "Table 6",
+                  "slug": "table-6-40"
+                }
+              ]
+            },
+            {
+              "id": 7095,
+              "slug": "zone-3",
+              "name": "Zone 3",
+              "seeding_unit_id": 3601,
+              "zone_type": "generic",
+              "sub_zones": [
+                {
+                  "id": 12238,
+                  "name": "Table 7",
+                  "slug": "table-7-39"
+                },
+                {
+                  "id": 12239,
+                  "name": "Table 8",
+                  "slug": "table-8-5"
+                },
+                {
+                  "id": 12240,
+                  "name": "Table 9",
+                  "slug": "table-9-1"
+                },
+                {
+                  "id": 12241,
+                  "name": "Table 10",
+                  "slug": "table-10-1"
+                }
+              ]
+            },
+            {
+              "id": 7203,
+              "slug": "zone-4",
+              "name": "Zone 4",
+              "seeding_unit_id": 3601,
+              "zone_type": "generic",
+              "sub_zones": [
+                {
+                  "id": 12242,
+                  "name": "Table 11",
+                  "slug": "table-11-1"
+                },
+                {
+                  "id": 12243,
+                  "name": "Table 12",
+                  "slug": "table-12-1"
+                },
+                {
+                  "id": 12244,
+                  "name": "Table 13",
+                  "slug": "table-13-1"
+                },
+                {
+                  "id": 12245,
+                  "name": "Table 14",
+                  "slug": "table-14-1"
+                }
+              ]
+            },
+            {
+              "id": 7096,
+              "slug": "zone-5",
+              "name": "Zone 5",
+              "seeding_unit_id": 3601,
+              "zone_type": "generic",
+              "sub_zones": [
+                {
+                  "id": 12246,
+                  "name": "Table 15",
+                  "slug": "table-15-1"
+                },
+                {
+                  "id": 12247,
+                  "name": "Table 16",
+                  "slug": "table-16-1"
+                },
+                {
+                  "id": 12248,
+                  "name": "Table 17",
+                  "slug": "table-17"
+                }
+              ]
+            },
+            {
+              "id": 7204,
+              "slug": "zone-6",
+              "name": "Zone 6",
+              "seeding_unit_id": 3601,
+              "zone_type": "generic",
+              "sub_zones": [
+                {
+                  "id": 12249,
+                  "name": "Table 18",
+                  "slug": "table-18-1"
+                },
+                {
+                  "id": 12250,
+                  "name": "Table 19",
+                  "slug": "table-19"
+                },
+                {
+                  "id": 12251,
+                  "name": "Table 20",
+                  "slug": "table-20"
+                }
+              ]
+            },
+            {
+              "id": 7097,
+              "slug": "zone-7",
+              "name": "Zone 7",
+              "seeding_unit_id": 3601,
+              "zone_type": "generic",
+              "sub_zones": [
+                {
+                  "id": 12252,
+                  "name": "Table 21",
+                  "slug": "table-21"
+                },
+                {
+                  "id": 12253,
+                  "name": "Table 22",
+                  "slug": "table-22"
+                },
+                {
+                  "id": 12254,
+                  "name": "Table 23",
+                  "slug": "table-23"
+                },
+                {
+                  "id": 12255,
+                  "name": "Table 24",
+                  "slug": "table-24"
+                },
+                {
+                  "id": 12256,
+                  "name": "Table 25",
+                  "slug": "table-25"
+                },
+                {
+                  "id": 12257,
+                  "name": "Table 26",
+                  "slug": "table-26"
+                },
+                {
+                  "id": 12258,
+                  "name": "Table 27",
+                  "slug": "table-27"
+                }
+              ]
+            },
+            {
+              "id": 7205,
+              "slug": "zone-8",
+              "name": "Zone 8",
+              "seeding_unit_id": 3601,
+              "zone_type": "generic",
+              "sub_zones": [
+                {
+                  "id": 12259,
+                  "name": "Table 28",
+                  "slug": "table-28"
+                },
+                {
+                  "id": 12260,
+                  "name": "Table 29",
+                  "slug": "table-29"
+                },
+                {
+                  "id": 12261,
+                  "name": "Table 30",
+                  "slug": "table-30"
+                },
+                {
+                  "id": 12262,
+                  "name": "Table 31",
+                  "slug": "table-31"
+                },
+                {
+                  "id": 12263,
+                  "name": "Table 32",
+                  "slug": "table-32"
+                },
+                {
+                  "id": 12264,
+                  "name": "Table 33",
+                  "slug": "table-33"
+                },
+                {
+                  "id": 12265,
+                  "name": "Table 34",
+                  "slug": "table-34"
+                }
+              ]
+            }
+          ],
+          "secondary_display_active": false,
+          "secondary_display_capacity": null
+        },
+        "seeding_unit_capacity": 1476,
+        "system": "None"
+      },
+      "relationships": {
+        "sub_zones": {
+          "meta": {
+            "included": false
+          }
+        },
+        "stage": {
+          "data": {
+            "id": "1068",
+            "type": "stages"
+          }
+        },
+        "sub_stage": {
+          "data": {
+            "id": "24",
+            "type": "sub_stages"
+          }
+        },
+        "seeding_unit": {
+          "data": {
+            "id": "3601",
+            "type": "seeding_units"
+          }
+        }
+      }
+    },
+    {
+      "id": "24",
+      "type": "sub_stages",
+      "attributes": {
+        "id": 24,
+        "name": "Vegetation",
+        "position": 1
+      },
+      "relationships": {
+        "stage": {
+          "data": {
+            "id": "1068",
+            "type": "stages"
+          }
+        },
+        "zones": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

@@ -39,7 +39,7 @@ module NcsService
         ]
       end
 
-      def build_mature_payload(discard)
+      def build_mature_payload(discard, _batch)
         discard_type = @attributes.dig('options', 'discard_type')
         reason       = reason_note(discard)
 

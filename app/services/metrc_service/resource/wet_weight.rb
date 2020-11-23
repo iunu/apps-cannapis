@@ -44,7 +44,7 @@ module MetrcService
 
       def completion_barcodes
         completion_item_ids = @attributes.dig('content', 'crop_batch_item_ids')
-        items.select { |item| item['barcode'] if completion_item_ids&.include?(item['id']) }.compact
+        items.map { |item| item['barcode'] if completion_item_ids&.include?(item['id']) }.compact
       end
 
       def seeding_unit_id
