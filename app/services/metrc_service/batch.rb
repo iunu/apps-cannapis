@@ -56,16 +56,10 @@ module MetrcService
     end
 
     def filter_and_validate_completions
-      [].tap do |arr|
-        # Filter the completions we curently support
-        actions.each do |completion|
-          next unless completion_supported?(completion) && !performed_transactions.include?(completion.id)
+      filtered_completions = all_completions.select { |c| completion_supported?(c) && !performed_transactions.include?(c.id) }
+                                            .sort_by { |c| [c.start_time, c.id] }
 
-          arr << completion
-        end
-
-        validate_completions!(arr)
-      end
+      validate_completions!(filtered_completions)
     end
 
     def completion_supported?(completion)
@@ -74,12 +68,12 @@ module MetrcService
 
     def performed_transactions
       Transaction.succeed.where(batch_id: batch.id,
-                                completion_id: actions.map(&:id),
+                                completion_id: all_completions.map(&:id),
                                 integration: @integration)&.pluck(:completion_id)
     end
 
-    def actions
-      @actions ||= batch.completions
+    def all_completions
+      @all_completions ||= batch.completions
     end
   end
 end

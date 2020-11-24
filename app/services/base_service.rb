@@ -45,7 +45,6 @@ module BaseService
       @task = task
     end
 
-    delegate :seeding_unit, to: :batch
     delegate :run_mode, to: :module_for_completion
 
     def perform_action
@@ -58,7 +57,7 @@ module BaseService
     def module_for_completion
       action_type = completion.action_type.camelize
 
-      action_type = 'Move' if completion.action_type == 'split'
+      action_type = 'move' if completion.action_type == 'split'
 
       # We need to call for wet weight and wet waste resources
       # since a resource call was received
@@ -86,7 +85,11 @@ module BaseService
     end
 
     def completion
-      @completion ||= batch.completion(@ctx['id'])
+      @completion ||= artemis.get_completion(@ctx['id'])
+    end
+
+    def seeding_unit
+      completion.included&.dig(:seeding_units)&.first
     end
 
     def artemis
