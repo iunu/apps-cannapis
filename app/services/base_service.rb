@@ -55,17 +55,15 @@ module BaseService
     end
 
     def module_for_completion
-      action_type = completion.action_type.camelize
-
-      action_type = 'move' if completion.action_type == 'split'
+      action_type = completion.action_type == 'split' ? 'move' : completion.action_type
 
       # We need to call for wet weight and wet waste resources
       # since a resource call was received
-      if %w[generate consume].include?(action_type.downcase)
+      if %w[generate consume].include?(action_type)
         module_name = 'Resource::WetWeight'
       else
         seeding_unit_name = module_name_for_seeding_unit.camelize
-        module_name = "#{seeding_unit_name}::#{action_type}"
+        module_name = "#{seeding_unit_name}::#{action_type.camelize}"
       end
 
       @integration.vendor_module.const_get(module_name)
