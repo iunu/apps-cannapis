@@ -224,7 +224,7 @@ RSpec.describe MetrcService::Plant::Move do
           ] }.to_json)
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/2999?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
-          .to_return(body: load_response_json('api/completions/2999-veg-move'))
+          .to_return(body: load_response_json('api/completions/2999-veg-split-start'))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=3000")
           .to_return(body: { data: [] }.to_json)
