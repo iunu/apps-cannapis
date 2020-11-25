@@ -27,7 +27,7 @@ module MetrcService
       memoize :prior_move
 
       def start_completion
-        start = batch.completions.find { |comp| comp.action_type == 'start' }
+        start = batch.completions.find { |comp| comp.action_type == 'start' || 'split_start' }
         return if start.nil?
 
         # calling get_completion here will ensure relationships are side loaded.
@@ -62,8 +62,10 @@ module MetrcService
       def next_step(previous_completion = nil, current_completion = nil) # rubocop:disable Metrics/PerceivedComplexity
         return DEFAULT_MOVE_STEP if previous_completion.nil? || current_completion.nil? || current_completion.action_type == 'start'
 
-        new_growth_phase = growth_phase_for_completion(current_completion)
         previous_growth_phase = growth_phase_for_completion(previous_completion)
+        new_growth_phase = growth_phase_for_completion(current_completion)
+
+        return DEFAULT_MOVE_STEP if previous_growth_phase.nil? || new_growth_phase.nil?
 
         # Yeah, I don't like this either.
         previous_completion_had_barcodes = items_have_barcodes?(previous_completion.included&.dig(:seeding_units)&.first&.item_tracking_method)
@@ -72,12 +74,11 @@ module MetrcService
         moved_to_barcodes = !previous_completion_had_barcodes && current_completion_has_barcodes
         already_had_barcodes = previous_completion_had_barcodes && current_completion_has_barcodes
 
-        return DEFAULT_MOVE_STEP if previous_growth_phase.nil? || new_growth_phase.nil?
+        # We need this in order to avoid splits when no barcodes are available
+        # TODO: create a separate split service to handle this as well as immature splits
+        return if a_split? && !already_had_barcodes
 
         return :move_plants if a_split? && already_had_barcodes
-
-        # We need this in order to avoid splits when no barcodes are available
-        return if a_split? && !already_had_barcodes
 
         return :move_plant_batches if has_no_barcodes
 
