@@ -1,51 +1,49 @@
 {
   "data": {
-    "id": "987",
+    "id": "652802",
     "type": "completions",
     "attributes": {
-      "id": 987,
-      "status": "active",
-      "start_time": "2020-03-30T07:00:00.000Z",
-      "action_type": "start",
+      "id": 652802,
+      "user_id": 1598,
+      "content": {
+        "crop_batch_item_ids": [969669, 969668, 969667, 969666, 969665]
+      },
+      "start_time": "2019-10-04T04:00:00.000Z",
+      "end_time": "2019-10-04T04:00:00.000Z",
+      "occurrence": 0,
+      "action_type": "harvest",
       "options": {
-        "zone_id": 7249,
-        "quantity": 100,
-        "sub_zone_id": null,
-        "arbitrary_id": "Mar30-Lav-Cak-M0102",
-        "crop_variety_id": 19278,
-        "seeding_unit_id": 3591,
-        "zone_name": "Mothers [Veg]"
+        "harvest_type": "partial",
+        "note_content": "Testy",
+        "harvest_unit_id": 5266,
+        "seeding_unit_id": 3479,
+        "harvest_quantity": 5,
+        "quantity_remaining": 1
       }
     },
     "relationships": {
       "action_result": {
         "data": {
-          "id": null,
-          "type": null
+          "id": 80834,
+          "type": "CropBatchHarvest"
         }
       },
       "batch": {
         "data": {
-          "id": "105681",
+          "id": "96197",
           "type": "batches"
         }
       },
       "facility": {
         "data": {
-          "id": 1626,
+          "id": 1568,
           "type": "facilities"
         }
       },
       "user": {
         "data": {
-          "id": 1772,
+          "id": 1598,
           "type": "users"
-        }
-      },
-      "crop_batch_state": {
-        "data": {
-          "type": "crop_batch_states",
-          "id": "425818"
         }
       }
     }
@@ -59,23 +57,7 @@
         "id": 425818,
         "quantity": 100,
         "cached_data": {
-          "items_snapshot": [
-            {
-              "id": 1,
-              "status": "active",
-              "barcode": "ABCDEF1234567890ABCDEF01"
-            },
-            {
-              "id": 2,
-              "status": "removed",
-              "barcode": "ABCDEF1234567890ABCDEF02"
-            },
-            {
-              "id": 3,
-              "status": "active",
-              "barcode": "ABCDEF1234567890ABCDEF03"
-            }
-          ]
+          "items_snapshot": []
         }
       },
       "relationships": {
@@ -87,7 +69,7 @@
         },
         "completion": {
           "data": {
-            "id": "3000",
+            "id": "762428",
             "type": "completions"
           }
         },

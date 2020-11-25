@@ -14,10 +14,18 @@ RSpec.describe(TaskRunner) do
       stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}")
         .to_return(status: 200, body: load_response_json('task_runner/facility'))
 
+      stub_request(:get, 'https://portal.artemisag.com/api/v3/user')
+        .to_return(status: 200, body: { data: { attributes: { full_name: 'Jimmy Two Times', email: 'jtt@cosanostra.it' } } }.to_json)
+
       stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
         .to_return(status: 200, body: load_response_json('task_runner/batch'))
 
       stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter%5Bcrop_batch_ids%5D%5B0%5D=#{batch_id}")
+        .to_return(body: { data: [
+          JSON.parse(load_response_json('task_runner/batch-completions'))['data']
+        ] }.to_json)
+
+      stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/987?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
         .to_return(status: 200, body: load_response_json('task_runner/batch-completions'))
     end
 
