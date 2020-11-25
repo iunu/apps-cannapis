@@ -45,7 +45,7 @@ module MetrcService
     end
 
     def validate_completions!(completions)
-      return if completions.size.positive?
+      return completions if completions.size.positive?
 
       @task.delete
       raise TransactionAlreadyExecuted, 'batch already processed'
