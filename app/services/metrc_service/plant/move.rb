@@ -27,7 +27,7 @@ module MetrcService
       memoize :prior_move
 
       def start_completion
-        start = batch.completions.find { |comp| comp.action_type == 'start' || 'split_start' }
+        start = batch.completions.find { |comp| comp.attributes['action_type'] == 'start' || comp.attributes['action_type'] == 'split_start' }
         return if start.nil?
 
         # calling get_completion here will ensure relationships are side loaded.
