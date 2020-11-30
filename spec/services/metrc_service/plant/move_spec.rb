@@ -68,6 +68,43 @@ RSpec.describe MetrcService::Plant::Move do
       end
     end
 
+    describe 'with non-barcoded split' do
+      let(:seeding_unit_id) { 7 }
+
+      before do
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}"))
+
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
+
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
+
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}/items?filter[seeding_unit_id]=#{seeding_unit_id}&include=barcodes,seeding_unit")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/items"))
+
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3000?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+          .to_return(body: load_response_json('api/completions/3000-non-barcode-split'))
+
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
+          .to_return(body: { data: [
+            JSON.parse(load_response_json('api/completions/2999-veg-move'))['data'],
+            JSON.parse(load_response_json('api/completions/3000-non-barcode-split'))['data']
+          ] }.to_json)
+
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/2999?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+          .to_return(body: load_response_json('api/completions/2999-veg-move'))
+
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=3000")
+          .to_return(body: { data: [] }.to_json)
+      end
+
+      it 'skips transaction' do
+        expect(subject).to be_success
+      end
+    end
+
     describe 'moving from vegetative to vegetative phase' do
       let(:seeding_unit_id) { 7 }
       let(:expected_payload) do
@@ -265,6 +302,21 @@ RSpec.describe MetrcService::Plant::Move do
     context 'with no completions' do
       it 'returns the default move step' do
         expect(subject).to be :change_growth_phase
+      end
+    end
+
+    context 'with non-barcoded split' do
+      let(:first_move) do
+        response = create_response('api/completions/2999-veg-move')
+        artemis_client.process_response(response, 'completions')
+      end
+      let(:second_move) do
+        response = create_response('api/completions/3000-non-barcode-split')
+        artemis_client.process_response(response, 'completions')
+      end
+
+      it 'returns nil' do
+        expect(subject).to be nil
       end
     end
 

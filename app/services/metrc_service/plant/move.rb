@@ -4,11 +4,13 @@ module MetrcService
       DEFAULT_MOVE_STEP = :change_growth_phase
 
       def call
-        log("Next step: #{next_step_name}. Batch ID #{@batch_id}, completion ID #{@completion_id}")
-
-        send(next_step_name)
-
-        success!
+        if next_step_name.nil?
+          skip!
+        else
+          log("Next step: #{next_step_name}. Batch ID #{@batch_id}, completion ID #{@completion_id}")
+          send(next_step_name)
+          success!
+        end
       end
 
       def transaction
@@ -74,11 +76,13 @@ module MetrcService
         moved_to_barcodes = !previous_completion_had_barcodes && current_completion_has_barcodes
         already_had_barcodes = previous_completion_had_barcodes && current_completion_has_barcodes
 
-        # We need this in order to avoid splits when no barcodes are available
-        # TODO: create a separate split service to handle this as well as immature splits
-        return if a_split? && !already_had_barcodes
+        # TODO: create a separate split service to handle barcoded and non-barcoded splits
+        if current_completion.action_type == 'split'
+          return :move_plants if already_had_barcodes
 
-        return :move_plants if a_split? && already_had_barcodes
+          # for now we skip splits when no barcodes are available
+          return nil
+        end
 
         return :move_plant_batches if has_no_barcodes
 

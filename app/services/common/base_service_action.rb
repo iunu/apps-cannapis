@@ -61,6 +61,13 @@ module Common
 
     def after; end
 
+    def skip!
+      log("Skipped: batch ID #{@batch_id}, completion ID #{@completion_id}, type #{transaction.type}")
+
+      transaction.update(success: true)
+      transaction
+    end
+
     def success!
       log("Success: batch ID #{@batch_id}, completion ID #{@completion_id}")
 
