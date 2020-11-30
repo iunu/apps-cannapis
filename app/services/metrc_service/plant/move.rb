@@ -4,11 +4,13 @@ module MetrcService
       DEFAULT_MOVE_STEP = :change_growth_phase
 
       def call
-        log("Next step: #{next_step_name}. Batch ID #{@batch_id}, completion ID #{@completion_id}")
-
-        send(next_step_name)
-
-        success!
+        if next_step_name.nil?
+          skip!
+        else
+          log("Next step: #{next_step_name}. Batch ID #{@batch_id}, completion ID #{@completion_id}")
+          send(next_step_name)
+          success!
+        end
       end
 
       def transaction
