@@ -78,7 +78,7 @@ module NcsService
     end
 
     def actions
-      @actions ||= batch.completions
+      @actions ||= batch_completions
     end
   end
 end

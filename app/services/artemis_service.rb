@@ -65,9 +65,6 @@ class ArtemisService
   end
 
   def get_related_completions(action_type = nil)
-    completions = get_batch.completions
-    completions = completions.select { |c| c.action_type == action_type.to_s } if action_type.present?
-
-    completions
+    get_batch.completions.select { |c| c.action_type == action_type&.to_s && c.status == 'active' }
   end
 end
