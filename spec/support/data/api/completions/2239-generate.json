@@ -8,6 +8,7 @@
       "end_time": "2020-02-17T08:00:00.000Z",
       "id": 2239,
       "occurrence": 0,
+      "status": "active",
       "options": {
         "generated_quantity": 100,
         "resource_unit_id": 56

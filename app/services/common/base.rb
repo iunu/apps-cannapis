@@ -124,6 +124,10 @@ module Common
     end
     memoize :batch_tag
 
+    def batch_completions
+      batch.completions.select { |c| c.status == 'active' }
+    end
+
     def current_completion
       get_completion(@completion_id)
     end
@@ -162,8 +166,7 @@ module Common
     end
 
     def resource_completions_by_unit_id(resource_unit_id)
-      batch
-        .completions
+      batch_completions
         .select { |completion| %w[process generate].include?(completion.action_type) }
         .select { |completion| completion.options['resource_unit_id'] == resource_unit_id }
     end

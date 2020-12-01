@@ -192,7 +192,7 @@ module MetrcService
       end
 
       def consume_completions
-        batch.completions.select do |completion|
+        batch_completions.select do |completion|
           completion.action_type == 'consume'
         end
       end
