@@ -6,6 +6,7 @@ class Transaction < ApplicationRecord
   validates :account_id, presence: true
   validates :integration_id, presence: true
 
+  scope :skipped, -> { where(skipped: true) }
   scope :succeed, -> { where(success: true) }
   scope :failed, -> { where(success: false) }
 end
