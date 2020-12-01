@@ -10,6 +10,7 @@
       "end_time": "2019-10-04T04:00:00.000Z",
       "occurrence": 0,
       "action_type": "discard",
+      "status": "active",
       "options": {
         "barcode": [
           "A4FF010000002200000101",

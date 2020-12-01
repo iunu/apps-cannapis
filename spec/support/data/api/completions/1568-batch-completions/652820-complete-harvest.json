@@ -12,6 +12,7 @@
       "end_time": "2019-10-09T04:00:00.000Z",
       "occurrence": 0,
       "action_type": "harvest",
+      "status": "active",
       "options": {
         "harvest_type": "complete",
         "note_content": "Testy",

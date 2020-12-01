@@ -55,16 +55,15 @@ module NcsService
       @completions ||= filter_and_validate_completions
     end
 
-    def filter_and_validate_completions
-      [].tap do |arr|
-        # Filter the completions we curently support
-        actions.each do |completion|
-          next unless completion_supported?(completion) && !performed_transactions.include?(completion.id)
-          arr << completion
-        end
+    def batch_completions
+      batch.completions.select { |c| c.status == 'active' }
+    end
 
-        validate_completions!(arr)
-      end
+    def filter_and_validate_completions
+      filtered_completions = batch_completions.select { |c| completion_supported?(c) && !performed_transactions.include?(c.id) }
+                                              .sort_by { |c| [c.start_time, c.id] }
+
+      validate_completions!(filtered_completions)
     end
 
     def completion_supported?(completion)
@@ -73,12 +72,8 @@ module NcsService
 
     def performed_transactions
       Transaction.succeed.where(batch_id: batch.id,
-                                completion_id: actions.map(&:id),
+                                completion_id: batch_completions.map(&:id),
                                 integration: @integration)&.pluck(:completion_id)
-    end
-
-    def actions
-      @actions ||= batch_completions
     end
   end
 end
