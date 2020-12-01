@@ -2,6 +2,7 @@ module MetrcService
   module Plant
     class Move < Base
       DEFAULT_MOVE_STEP = :change_growth_phase
+      WET_WEIGHT = /wet weight/i.freeze
 
       def call
         if next_step_name.nil?
@@ -63,6 +64,7 @@ module MetrcService
 
       def next_step(previous_completion = nil, current_completion = nil) # rubocop:disable Metrics/PerceivedComplexity
         return DEFAULT_MOVE_STEP if previous_completion.nil? || current_completion.nil? || current_completion.action_type == 'start'
+        return nil if move_harvest?
 
         previous_growth_phase = growth_phase_for_completion(previous_completion)
         new_growth_phase = growth_phase_for_completion(current_completion)
@@ -93,8 +95,6 @@ module MetrcService
         return :change_plants_growth_phases if (previous_growth_phase.include?('Flow') && new_growth_phase.include?('Flow')) && already_had_barcodes
 
         return :change_plants_growth_phases if (previous_growth_phase.include?('Veg') && new_growth_phase.include?('Flow')) && already_had_barcodes
-
-        return :move_harvest if previous_growth_phase.include?('Flow') && within_phases?(new_growth_phase, %w[Curing Cure Dry Drying]) && already_had_barcodes
 
         return :move_plants if already_had_barcodes
 
@@ -158,16 +158,28 @@ module MetrcService
         call_metrc(:change_plant_growth_phase, payload)
       end
 
-      # if this is a move harvest a generated completion of 'Wet Weight' should come next
-      # This will be reported to metrc via the wet_weight resource service.
-      def move_harvest; end
-
       def start_time
         @attributes['start_time']
       end
 
       def immature?(phase = nil)
         phase != 'Flowering'
+      end
+
+      # A move that creates a wet weight resource via a generate completion
+      # this type of move should not have a transaction of it's own
+      # allowing the generate completion to create a wet weight harvest payload using Resource::WetWeight service
+      def move_harvest?
+        generate_completions.select do |completion|
+          completion.parent_id.to_i == current_completion.id &&
+            WET_WEIGHT.match?(get_resource_unit(completion.dig('attributes', 'options', 'resource_unit_id'))&.name)
+        end.present?
+      end
+
+      def generate_completions
+        batch_completions.select do |completion|
+          completion.action_type == 'generate'
+        end
       end
 
       def normalized_growth_phase(input = nil)
