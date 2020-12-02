@@ -56,7 +56,7 @@ module MetrcService
     end
 
     def filter_and_validate_completions
-      filtered_completions = batch_completions.select { |c| completion_supported?(c) && !performed_transactions.include?(c.id) }
+      filtered_completions = batch_completions.select { |c| completion_supported?(c) && (!performed_transactions.include?(c.id) || !skipped_transactions.include?(c.id)) }
                                               .sort_by { |c| [c.start_time, c.id] }
 
       validate_completions!(filtered_completions)
@@ -68,6 +68,12 @@ module MetrcService
 
     def performed_transactions
       Transaction.succeed.where(batch_id: batch.id,
+                                completion_id: batch_completions.map(&:id),
+                                integration: @integration)&.pluck(:completion_id)
+    end
+
+    def skipped_transactions
+      Transaction.skipped.where(batch_id: batch.id,
                                 completion_id: batch_completions.map(&:id),
                                 integration: @integration)&.pluck(:completion_id)
     end
