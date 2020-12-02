@@ -1,53 +1,62 @@
 {
   "data": {
+    "id": "2237",
+    "type": "completions",
     "attributes": {
-      "id": 2239,
-      "action_type": "generate",
-      "content": {
-        "crop_batch_item_ids": [969664, 969663, 969662]
-      },
-      "start_time": "2020-03-30T07:00:00.000Z",
-      "end_time": "2020-02-17T08:00:00.000Z",
-      "user_id": 2,
-      "occurrence": 0,
-      "parent_id": 2238,
+      "id": 2237,
       "status": "active",
+      "user_id": 1772,
+      "content": null,
+      "start_time": "2020-03-20T07:00:00.000Z",
+      "end_time": "2020-03-20T07:00:00.000Z",
+      "occurrence": 0,
+      "action_type": "move",
+      "parent_id": 762427,
+      "context": {
+        "source_batches": null
+      },
       "options": {
-        "generated_quantity": 100,
-        "resource_unit_id": 21
+        "zone_id": 7249,
+        "quantity": 100,
+        "sub_zone_id": null,
+        "arbitrary_id": "Mar30-Lav-Cak-M0102",
+        "crop_variety_id": 19278,
+        "seeding_unit_id": 3591,
+        "zone_name": "Mothers [Veg]"
       }
     },
-    "id": "2239",
     "relationships": {
       "action_result": {
         "data": {
-          "id": 272,
-          "type": "BatchResource"
+          "id": null,
+          "type": null
         }
       },
       "batch": {
         "data": {
-          "id": "352",
+          "id": "105681",
           "type": "batches"
         }
       },
       "facility": {
         "data": {
-          "id": 3,
+          "id": 1626,
           "type": "facilities"
         }
       },
       "user": {
         "data": {
-          "id": 2,
+          "id": 1772,
           "type": "users"
         }
+      },
+      "crop_batch_state": {
+        "data": {
+          "type": "crop_batch_states",
+          "id": "425818"
+        }
       }
-    },
-    "type": "completions"
-  },
-  "meta": {
-    "event_type": "creation"
+    }
   },
   "included": [
     {
@@ -58,33 +67,7 @@
         "id": 425818,
         "quantity": 100,
         "cached_data": {
-          "items_snapshot": [
-            {
-              "id": 969664,
-              "status": "active",
-              "barcode": "1A4FF010000002200000105"
-            },
-            {
-              "id": 969663,
-              "status": "active",
-              "barcode": "1A4FF010000002200000104"
-            },
-            {
-              "id": 969662,
-              "status": "active",
-              "barcode": "1A4FF010000002200000103"
-            },
-            {
-              "id": 969661,
-              "status": "removed",
-              "barcode": "1A4FF010000002200000102"
-            },
-            {
-              "id": 969660,
-              "status": "removed",
-              "barcode": "1A4FF010000002200000101"
-            }
-          ]
+          "items_snapshot": []
         }
       },
       "relationships": {
@@ -96,7 +79,7 @@
         },
         "completion": {
           "data": {
-            "id": "3000",
+            "id": "762428",
             "type": "completions"
           }
         },
@@ -443,7 +426,7 @@
       "type": "sub_stages",
       "attributes": {
         "id": 24,
-        "name": "Vegetation",
+        "name": "Flowering",
         "position": 1
       },
       "relationships": {

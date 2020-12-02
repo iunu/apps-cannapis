@@ -172,7 +172,7 @@ module MetrcService
       def move_harvest?
         generate_completions.select do |completion|
           completion.parent_id.to_i == current_completion.id &&
-            WET_WEIGHT.match?(get_resource_unit(completion.dig('attributes', 'options', 'resource_unit_id'))&.name)
+            WET_WEIGHT.match?(get_resource_unit(completion.attributes.dig('options', 'resource_unit_id'))&.name)
         end.present?
       end
 

@@ -68,7 +68,7 @@ RSpec.describe MetrcService::Plant::Move do
       end
     end
 
-    describe 'with non-barcoded split' do
+    describe 'skipping a non-barcoded split' do
       let(:seeding_unit_id) { 7 }
 
       before do
@@ -101,7 +101,65 @@ RSpec.describe MetrcService::Plant::Move do
       end
 
       it 'skips transaction' do
-        expect(subject).to be_success
+        expect(subject).to be_skipped
+      end
+    end
+
+    describe 'skipping a move_harvest' do
+      let(:ctx) do
+        {
+          id: 2238,
+          relationships: {
+            batch: { data: { id: batch_id } },
+            facility: { data: { id: facility_id } }
+          },
+          attributes: {
+            start_time: '2020-04-15',
+            options: {
+              quantity: '2'
+            }
+          },
+          completion_id: 2238
+        }.with_indifferent_access
+      end
+
+      let(:seeding_unit_id) { 7 }
+
+      before do
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}"))
+
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
+
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
+
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}/items?filter[seeding_unit_id]=#{seeding_unit_id}&include=barcodes,seeding_unit")
+          .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/items"))
+
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/2238?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+          .to_return(body: load_response_json('api/completions/2238-curing-move'))
+
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
+          .to_return(body: { data: [
+            JSON.parse(load_response_json('api/completions/2237-flower-move'))['data'],
+            JSON.parse(load_response_json('api/completions/2238-curing-move'))['data'],
+            JSON.parse(load_response_json('api/completions/2239-generate'))['data']
+          ] }.to_json)
+
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/2237?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+          .to_return(body: load_response_json('api/completions/2237-flower-move'))
+
+        # stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=3000")
+        #   .to_return(body: { data: [] }.to_json)
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/resource_units/21?include=crop_variety")
+          .to_return(body: load_response_json('api/sync/facilities/1/resource_units/21'))
+      end
+
+      it 'skips transaction' do
+        expect(subject).to be_skipped
+        expect(subject).not_to be_success
       end
     end
 
@@ -297,6 +355,9 @@ RSpec.describe MetrcService::Plant::Move do
 
       stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3000?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
         .to_return(body: load_response_json('api/completions/3000'))
+
+      stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
+        .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/completions"))
     end
 
     context 'with no completions' do
@@ -431,7 +492,7 @@ RSpec.describe MetrcService::Plant::Move do
         artemis_client.process_response(response, 'completions')
       end
       it 'returns the change_growth_phase step' do
-        expect(subject).to be :move_harvest
+        expect(subject).to be :move_plants
       end
     end
 
@@ -445,7 +506,7 @@ RSpec.describe MetrcService::Plant::Move do
         artemis_client.process_response(response, 'completions')
       end
       it 'returns the change_growth_phase step' do
-        expect(subject).to be :move_harvest
+        expect(subject).to be :move_plants
       end
     end
 
@@ -785,43 +846,6 @@ RSpec.describe MetrcService::Plant::Move do
     end
   end
 
-  describe '#move_harvest' do
-    subject { described_class.new(ctx, integration) }
-
-    context 'with harvest sync' do
-      let(:batch) { instance_double('Batch', arbitrary_id: 'Apr18-5th-Ele-Can') }
-      let(:location_name) { 'F3 - Inside' }
-      let(:start_time) { '2020-04-18' }
-      let(:expected_payload) do
-        [
-          {
-            HarvestName: batch.arbitrary_id,
-            DryingLocation: location_name,
-            DryingRoom: location_name,
-            ActualDate: start_time
-          }
-        ]
-      end
-
-      it 'calls the Metrc client method' do
-        subject.send(:move_harvest)
-      end
-    end
-
-    context 'with harvest sync disabled' do
-      let(:integration) { create(:integration, :harvest_sync_disabled, account: account, state: :md) }
-
-      it 'does not perform the call' do
-        subject.should_not_receive(:call_metrc)
-             .with(:move_harvest)
-
-        result = subject.send(:move_harvest)
-
-        expect(result).to be_nil
-      end
-    end
-  end
-
   describe '#normalized_growth_phase' do
     let(:sub_stage) { double(:sub_stage, name: 'clone') }
     let(:zone) { double(:zone, sub_stage: sub_stage) }
@@ -902,13 +926,13 @@ RSpec.describe MetrcService::Plant::Move do
           .to_return(body: load_response_json('api/completions/762429-drying-preprinted'))
       end
 
-      it 'returns move_harvest' do
+      it 'returns move_plants' do
         step_name = subject.send(:next_step_name)
         metadata = subject.transaction.metadata
 
-        expect(step_name).to be :move_harvest
+        expect(step_name).to be :move_plants
         expect(metadata.dig('sub_stage')).to eq 'Drying'
-        expect(metadata.dig('next_step')).to eq 'move_harvest'
+        expect(metadata.dig('next_step')).to eq 'move_plants'
       end
     end
   end
