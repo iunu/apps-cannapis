@@ -77,7 +77,7 @@ module MetrcService
       if completion.created_at
         completion.created_at > @integration.activated_at
       else
-        completion.start_time > @integration.activation_type
+        completion.start_time > @integration.activated_at
       end
     end
 
