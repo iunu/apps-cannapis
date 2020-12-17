@@ -25,6 +25,7 @@ class Integration < ApplicationRecord
   private
 
   def set_activated_at
-    self.activated_at = created_at
+    # in testing environments activated_at is already set via factory.
+    self.activated_at ||= created_at
   end
 end

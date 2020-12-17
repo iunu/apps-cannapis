@@ -8,6 +8,7 @@
       "content": null,
       "start_time": "2019-10-03T04:00:00.000Z",
       "end_time": "2019-10-03T04:00:00.000Z",
+      "created_at": "2019-10-03T04:00:00.000Z",
       "occurrence": 0,
       "action_type": "move",
       "status": "active",
