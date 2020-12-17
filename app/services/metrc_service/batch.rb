@@ -56,14 +56,29 @@ module MetrcService
     end
 
     def filter_and_validate_completions
-      filtered_completions = batch_completions.select { |c| completion_supported?(c) && !performed_transactions.include?(c.id) && !skipped_transactions.include?(c.id) }
-                                              .sort_by { |c| [c.start_time, c.id] }
+      filtered_completions = batch_completions.select do |c|
+        completion_supported?(c) &&
+          completed_after_integration_activation?(c) &&
+          !performed_transactions.include?(c.id) &&
+          !skipped_transactions.include?(c.id)
+      end
+      sorted_completions = filtered_completions.sort_by { |c| [c.start_time, c.id] }
 
-      validate_completions!(filtered_completions)
+      validate_completions!(sorted_completions)
     end
 
     def completion_supported?(completion)
       V1::WebhookController::COMPLETION_TYPES.include?(completion.action_type)
+    end
+
+    # check that the completion was created after the integration was activated.
+    # these completions should have already been reported to metrc
+    def completed_after_integration_activation?(completion)
+      if completion.created_at
+        completion.created_at > @integration.activated_at
+      else
+        completion.start_time > @integration.activated_at
+      end
     end
 
     def performed_transactions

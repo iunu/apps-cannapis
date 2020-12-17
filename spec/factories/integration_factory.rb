@@ -8,6 +8,7 @@ FactoryBot.define do
     vendor { :metrc }
     license { 'LIC-0001' }
     eod { "#{Time.now.utc.hour}:00" }
+    activated_at { Time.now.utc - 10.years }
     timezone { '+00:00' }
     disable_harvest { false }
 

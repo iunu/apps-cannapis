@@ -7,6 +7,7 @@ class Integration < ApplicationRecord
   validates :facility_id, presence: true, numericality: { only_integer: true, greater_than: 0 }
 
   before_save { self.vendor.downcase! } # rubocop:disable Style/RedundantSelf
+  before_create :set_activated_at
 
   # TODO: enable this when acts_as_paranoid supports AR +6.0
   # acts_as_paranoid
@@ -19,5 +20,12 @@ class Integration < ApplicationRecord
 
   def vendor_module
     "#{vendor.camelize}Service".constantize
+  end
+
+  private
+
+  def set_activated_at
+    # in testing environments activated_at is already set via factory.
+    self.activated_at ||= created_at
   end
 end
