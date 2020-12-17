@@ -58,7 +58,7 @@ module MetrcService
     def filter_and_validate_completions
       filtered_completions = batch_completions.select do |c|
         completion_supported?(c) &&
-          completion_after_integration_activation?(c) &&
+          completed_after_integration_activation?(c) &&
           !performed_transactions.include?(c.id) &&
           !skipped_transactions.include?(c.id)
       end
@@ -73,7 +73,7 @@ module MetrcService
 
     # check that the completion was created after the integration was activated.
     # these completions should have already been reported to metrc
-    def completion_after_integration_activation?(completion)
+    def completed_after_integration_activation?(completion)
       if completion.created_at
         completion.created_at > @integration.activated_at
       else
