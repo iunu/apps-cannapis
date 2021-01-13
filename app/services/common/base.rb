@@ -72,10 +72,14 @@ module Common
 
     def get_transaction(name, metadata = @attributes)
       Transaction.find_or_create_by(
-        vendor: :metrc, account: @integration.account, integration: @integration,
-        batch_id: @batch_id, completion_id: @completion_id, type: name
+        vendor: :metrc,
+        batch_id: @batch_id,
+        completion_id: @completion_id
       ) do |transaction|
         transaction.metadata = metadata
+        transaction.account = @integration.account
+        transaction.integration = @integration
+        transaction.type = name
       end
     end
 
