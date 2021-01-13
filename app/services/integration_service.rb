@@ -51,18 +51,13 @@ class IntegrationService < ApplicationService
   end
 
   def schedule_job(integration, ref_time)
-    exists = existing_jobs(integration, ref_time)
-
-    return if exists.size.positive?
-
     later = ref_time.at_beginning_of_day + integration.eod.hour.hours
-
-    Scheduler.create(
-      integration: integration,
+    scheduler = Scheduler.find_or_create_by(
+      integration_id: integration.id,
       facility_id: facility_id,
-      batch_id: batch_id,
-      run_on: later.utc
+      batch_id: batch_id
     )
+    scheduler.update(run_on: later)
   end
 
   def existing_jobs(integration, ref_time)
