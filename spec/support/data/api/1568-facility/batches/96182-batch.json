@@ -1,0 +1,61 @@
+{
+  "data": {
+    "id": 96182,
+    "type": "batches",
+    "attributes": {
+      "id": 96182,
+      "arbitrary_id": "Oct1-Ban-Spl-Can",
+      "start_type": "seed",
+      "quantity": 0,
+      "harvest_quantity": null,
+      "expected_harvest_at": "2019-10-04",
+      "harvested_at": null,
+      "seeded_at": "2019-10-01",
+      "completed_at": "2019-10-04T16:00:00.000Z",
+      "facility_id": 1568,
+      "zone_name": "Flowering",
+      "crop_variety": "Banana Split",
+      "crop": "Cannabis"
+    },
+    "relationships": {
+      "harvests": { "meta": { "included": false } },
+      "completions": { "meta": { "included": false } },
+      "items": { "meta": { "included": false } },
+      "custom_data": { "meta": { "included": false } },
+      "barcodes": {
+        "data": [{ "type": "barcodes", "id": "1A4060300003B01000000838" }]
+      },
+      "discards": { "meta": { "included": false } },
+      "seeding_unit": {
+        "data": {
+          "type": "seeding_units",
+          "id": "3479"
+        }
+      },
+      "harvest_unit": { "meta": { "included": false } },
+      "zone": {
+        "data": {
+          "id": 6425,
+          "type": "zones"
+        }
+      },
+      "sub_zone": { "meta": { "included": false } }
+    }
+  },
+  "included": [
+    {
+      "id": "3479",
+      "type": "seeding_units",
+      "attributes": {
+        "id": 3479,
+        "name": "Plant (barcoded)",
+        "secondary_display_active": null,
+        "secondary_display_capacity": null,
+        "item_tracking_method": "custom_prefix"
+      }
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

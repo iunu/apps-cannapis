@@ -182,9 +182,10 @@ module MetrcService
       end
 
       def package_date
-        @attributes.dig(:start_time)
+        @attributes['start_time']
       end
 
+      # TODO: This is incorrect. We should only be fetching consume completions related to the start.
       def resource_units
         @resource_units ||= consume_completions.map do |completion|
           get_resource_unit(completion.options['resource_unit_id'])

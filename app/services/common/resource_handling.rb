@@ -8,8 +8,7 @@ module Common
       def resource_name(name = nil)
         return @resource_name = name if name.present?
 
-        raise 'resource_name must be set in subclass of Resource::Base' \
-          unless @resource_name.present?
+        raise 'resource_name must be set in subclass of Resource::Base' if @resource_name.blank?
 
         @resource_name
       end

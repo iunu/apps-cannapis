@@ -73,31 +73,31 @@ RSpec.describe MetrcService::Batch do
 
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568/completions?filter%5Bcrop_batch_ids%5D%5B0%5D=96182')
           .to_return(body: { data: [
-            JSON.parse(load_response_json('api/completions/1568-batch-completions/652799-start'))['data'],
-            JSON.parse(load_response_json('api/completions/1568-batch-completions/652800-move'))['data'],
-            JSON.parse(load_response_json('api/completions/1568-batch-completions/652801-move'))['data'],
-            JSON.parse(load_response_json('api/completions/1568-batch-completions/652802-partial-harvest'))['data'],
-            JSON.parse(load_response_json('api/completions/1568-batch-completions/652810-discard'))['data'],
-            JSON.parse(load_response_json('api/completions/1568-batch-completions/652820-complete-harvest'))['data']
+            JSON.parse(load_response_json('api/1568-facility/completions/652799-start'))['data'],
+            JSON.parse(load_response_json('api/1568-facility/completions/652800-move'))['data'],
+            JSON.parse(load_response_json('api/1568-facility/completions/652801-move'))['data'],
+            JSON.parse(load_response_json('api/1568-facility/completions/652802-partial-harvest'))['data'],
+            JSON.parse(load_response_json('api/1568-facility/completions/652810-discard'))['data'],
+            JSON.parse(load_response_json('api/1568-facility/completions/652820-complete-harvest'))['data']
           ] }.to_json)
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/652799?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
-          .to_return(body: load_response_json('api/completions/1568-batch-completions/652799-start'))
+          .to_return(body: load_response_json('api/1568-facility/completions/652799-start'))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/652800?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
-          .to_return(body: load_response_json('api/completions/1568-batch-completions/652800-move'))
+          .to_return(body: load_response_json('api/1568-facility/completions/652800-move'))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/652801?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
-          .to_return(body: load_response_json('api/completions/1568-batch-completions/652801-move'))
+          .to_return(body: load_response_json('api/1568-facility/completions/652801-move'))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/652802?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
-          .to_return(body: load_response_json('api/completions/1568-batch-completions/652802-partial-harvest'))
+          .to_return(body: load_response_json('api/1568-facility/completions/652802-partial-harvest'))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/652810?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
-          .to_return(body: load_response_json('api/completions/1568-batch-completions/652810-discard'))
+          .to_return(body: load_response_json('api/1568-facility/completions/652810-discard'))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/652820?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
-          .to_return(body: load_response_json('api/completions/1568-batch-completions/652820-complete-harvest'))
+          .to_return(body: load_response_json('api/1568-facility/completions/652820-complete-harvest'))
 
         expect(MetrcService::Plant::Start)
           .to receive(:call)
