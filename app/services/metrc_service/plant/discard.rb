@@ -4,40 +4,55 @@ module MetrcService
       NOT_SPECIFIED = 'Not Specified'.freeze
 
       # TODO: use `GET plants/v1/waste/reasons` to fetch appropriate reason names per facilitiy rather then hard code them here.
+      # Current key => UI translation values (what the user sees in artemis) in portal as of 02/03/2021
+      #
+      # cannabis_growth_growth_stage:
+      #   reason_options:  disease: ''
+      #     pests: ''
+      #     surplus: Pruning
+      #     underperformed: Failure to Thrive
+      #     mandated: Mandated Destruction
+      #     undesirable: Male Plants
+      #     contamination: Contamination
+      #     damage: Damage
+      #     pesticides: Pesticides
+      #     other: Other
+      #     undefined: Not specified
+
       MA_WASTE_REASON_NAME_MAP = {
-        'pruning' => 'Trimming',
-        'failure to thrive' => 'Waste',
-        'mandated destruction' => 'Waste',
-        'male plants' => 'Waste',
+        'surplus' => 'Trimming',
+        'underperformed' => 'Waste',
+        'mandated' => 'Waste',
+        'undesirable' => 'Waste',
         'contamination' => 'Spoilage',
         'damage' => 'Spoilage',
         'pesticides' => 'Spoilage',
         'other' => 'Waste',
-        'not specified' => 'Waste'
+        'undefined' => 'Waste'
       }.freeze
 
       MO_WASTE_REASON_NAME_MAP = {
-        'pruning' => 'Trimming/Prunning',
-        'failure to thrive' => 'Damaged',
-        'mandated destruction' => 'Mandated State Destruction',
-        'male plants' => 'Contamination',
+        'surplus' => 'Trimming/Prunning',
+        'underperformed' => 'Damaged',
+        'mandated' => 'Mandated State Destruction',
+        'undesirable' => 'Contamination',
         'contamination' => 'Contamination',
         'damage' => 'Damaged',
         'pesticides' => 'Contamination',
         'other' => 'Spoilage',
-        'not specified' => 'Spoilage'
+        'undefined' => 'Spoilage'
       }.freeze
 
       CA_WASTE_REASON_NAME_MAP = {
-        'pruning' => 'Pruning',
-        'failure to thrive' => 'Failure to Thrive',
-        'mandated destruction' => 'Mandated Destruction',
-        'male plants' => 'Male Plants',
+        'surplus' => 'Pruning',
+        'underperformed' => 'Failure to Thrive',
+        'mandated' => 'Mandated Destruction',
+        'undesirable' => 'Male Plants',
         'contamination' => 'Contamination',
         'damage' => 'Damage',
         'pesticides' => 'Pesticides',
         'other' => 'Damage',
-        'not specified' => 'Damage'
+        'undefined' => 'Damage'
       }.freeze
 
       STATE_WASTE_REASON_NAME_MAP = {
@@ -123,7 +138,6 @@ module MetrcService
 
         note_content = options['note_content']
         reason_description = options['reason_description']
-        reason_type = options['reason_type']&.capitalize
 
         reason_str_end = if reason_description && note_content
                            "#{reason_description} #{note_content}"
@@ -133,8 +147,8 @@ module MetrcService
                            note_content
                          end
 
-        reason_note = reason_type
-        reason_note += ": #{reason_str_end}." if reason_type && reason_str_end
+        reason_note = reason_name
+        reason_note += ": #{reason_str_end}." if reason_name && reason_str_end
 
         reason_note || NOT_SPECIFIED
       end
@@ -163,7 +177,7 @@ module MetrcService
 
       # map the options reason_type to a defined metrc value per state.
       def reason_name
-        reason_type = @attributes.dig('options', 'reason_type')&.downcase || 'not specified'
+        reason_type = @attributes.dig('options', 'reason_type')&.downcase || 'undefined'
         STATE_WASTE_REASON_NAME_MAP[@integration.state.to_sym][reason_type]
       end
     end

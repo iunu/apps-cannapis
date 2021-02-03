@@ -118,13 +118,13 @@ RSpec.describe MetrcService::Plant::Discard do
             .to_return(body: { data: { id: '96182', type: 'batches', attributes: { id: 96182, arbitrary_id: 'Oct1-Ban-Spl-Can', start_type: 'seed', quantity: 0, harvest_quantity: nil, expected_harvest_at: '2019-10-04', harvested_at: nil, seeded_at: '2019-10-01', completed_at: '2019-10-04T16:00:00.000Z', facility_id: 1568, zone_name: 'Flowering', crop_variety: 'Banana Split', crop: 'Cannabis' }, relationships: { harvests: { meta: { included: false } }, completions: { data: [] }, items: { meta: { included: false } }, custom_data: { meta: { included: false } }, barcodes: { data: [{ type: :barcodes, id: '1A4060300003B01000000838' }] }, discards: { meta: { included: false } }, seeding_unit: { data: { type: 'seeding_units', id: '3479' } }, harvest_unit: { meta: { included: false } }, zone: { data: { id: 6425, type: 'zones' } }, sub_zone: { meta: { included: false } } } }, included: [{ id: '3479', type: 'seeding_units', attributes: { id: 3479, name: 'Plant (barcoded)', secondary_display_active: nil, secondary_display_capacity: nil, item_tracking_method: 'preprinted' } }] }.to_json)
 
           stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/")
-            .to_return(body: { data: [{ id: '1001', type: 'discards', attributes: { id: 1001, quantity: 5, options: { reason_type: 'mandated destruction', reason_description: nil }, start_time: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96258', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '111435', type: 'discards', attributes: { id: 111435, quantity: 5, reason_type: 'other', reason_description: 'I don\'t like them', start_time: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96219', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '111423', type: 'discards', attributes: { id: 111423, quantity: 1, reason_type: 'other', reason_description: 'I have a fever', start_time: '2019-10-04T00:00:00.000Z' }, relationships: { batch: { data: { id: '96182', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '111331', type: 'discards', attributes: { id: 111331, quantity: 1, reason_type: 'mandated destruction', reason_description: nil, start_time: '2019-10-03T00:00:00.000Z' }, relationships: { batch: { data: { id: '95956', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '33550', type: 'discards', attributes: { id: 33550, quantity: 1, reason_type: 'mandated destruction', reason_description: nil, start_time: '2019-09-01T00:00:00.000Z' }, relationships: { batch: { data: { id: '83397', type: 'batches' } }, completion: { meta: { included: false } } } }] }.to_json)
+            .to_return(body: { data: [{ id: '1001', type: 'discards', attributes: { id: 1001, quantity: 5, options: { reason_type: 'mandated', reason_description: nil }, start_time: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96258', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '111435', type: 'discards', attributes: { id: 111435, quantity: 5, reason_type: 'other', reason_description: 'I don\'t like them', start_time: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96219', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '111423', type: 'discards', attributes: { id: 111423, quantity: 1, reason_type: 'other', reason_description: 'I have a fever', start_time: '2019-10-04T00:00:00.000Z' }, relationships: { batch: { data: { id: '96182', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '111331', type: 'discards', attributes: { id: 111331, quantity: 1, reason_type: 'mandated', reason_description: nil, start_time: '2019-10-03T00:00:00.000Z' }, relationships: { batch: { data: { id: '95956', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '33550', type: 'discards', attributes: { id: 33550, quantity: 1, reason_type: 'mandated', reason_description: nil, start_time: '2019-09-01T00:00:00.000Z' }, relationships: { batch: { data: { id: '83397', type: 'batches' } }, completion: { meta: { included: false } } } }] }.to_json)
 
           stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/3000?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
             .to_return(body: load_response_json('api/completions/3000'))
 
           stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/1001?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
-            .to_return(body: { data: { id: '1001', type: 'discards', attributes: { id: 1001, quantity: 5, options: { reason_type: 'mandated destruction', reason_description: nil }, start_time: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96258', type: 'batches' } }, completion: { meta: { included: false } } } } }.to_json)
+            .to_return(body: { data: { id: '1001', type: 'discards', attributes: { id: 1001, quantity: 5, options: { reason_type: 'mandated', reason_description: nil }, start_time: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96258', type: 'batches' } }, completion: { meta: { included: false } } } } }.to_json)
 
           # TODO: return generate completion
           stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions?filter[crop_batch_ids][]=96182")
@@ -140,7 +140,7 @@ RSpec.describe MetrcService::Plant::Discard do
                   WasteWeight: 0.0,
                   WasteUnitOfMeasureName: '',
                   WasteReasonName: 'Waste',
-                  ReasonNote: 'Not Specified',
+                  ReasonNote: 'Waste',
                   ActualDate: '2020-03-30T07:00:00.000Z' },
                 { Id: nil,
                   Label: '1A4FF010000002200000104',
@@ -149,7 +149,7 @@ RSpec.describe MetrcService::Plant::Discard do
                   WasteWeight: 0.0,
                   WasteUnitOfMeasureName: '',
                   WasteReasonName: 'Waste',
-                  ReasonNote: 'Not Specified',
+                  ReasonNote: 'Waste',
                   ActualDate: '2020-03-30T07:00:00.000Z' },
                 { Id: nil,
                   Label: '1A4FF010000002200000103',
@@ -158,7 +158,7 @@ RSpec.describe MetrcService::Plant::Discard do
                   WasteWeight: 0.0,
                   WasteUnitOfMeasureName: '',
                   WasteReasonName: 'Waste',
-                  ReasonNote: 'Not Specified',
+                  ReasonNote: 'Waste',
                   ActualDate: '2020-03-30T07:00:00.000Z' }
               ].to_json
             )
@@ -202,13 +202,13 @@ RSpec.describe MetrcService::Plant::Discard do
             .to_return(body: { data: { id: '96182', type: 'batches', attributes: { id: 96182, arbitrary_id: 'Oct1-Ban-Spl-Can', start_type: 'seed', quantity: 0, harvest_quantity: nil, expected_harvest_at: '2019-10-04', harvested_at: nil, seeded_at: '2019-10-01', completed_at: '2019-10-04T16:00:00.000Z', facility_id: 1568, zone_name: 'Flowering', crop_variety: 'Banana Split', crop: 'Cannabis' }, relationships: { harvests: { meta: { included: false } }, completions: { meta: { included: false } }, items: { meta: { included: false } }, custom_data: { meta: { included: false } }, barcodes: { data: [{ type: :barcodes, id: '1A4060300003B01000000838' }] }, discards: { meta: { included: false } }, seeding_unit: { data: { type: 'seeding_units', id: '3479' } }, harvest_unit: { meta: { included: false } }, zone: { data: { id: 6425, type: 'zones' } }, sub_zone: { meta: { included: false } } } }, included: [{ id: '3479', type: 'seeding_units', attributes: { id: 3479, name: 'Plant (barcoded)', secondary_display_active: nil, secondary_display_capacity: nil, item_tracking_method: nil } }] }.to_json)
 
           stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/")
-            .to_return(body: { data: [{ id: '111436', type: 'discards', attributes: { id: 111436, quantity: 5, options: { reason_type: 'mandated destruction', reason_description: nil }, start_time: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96258', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '111435', type: 'discards', attributes: { id: 111435, quantity: 5, reason_type: 'other', reason_description: 'I don\'t like them', start_time: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96219', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '111423', type: 'discards', attributes: { id: 111423, quantity: 1, reason_type: 'other', reason_description: 'I have a fever', start_time: '2019-10-04T00:00:00.000Z' }, relationships: { batch: { data: { id: '96182', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '111331', type: 'discards', attributes: { id: 111331, quantity: 1, reason_type: 'mandated destruction', reason_description: nil, start_time: '2019-10-03T00:00:00.000Z' }, relationships: { batch: { data: { id: '95956', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '33550', type: 'discards', attributes: { id: 33550, quantity: 1, reason_type: 'mandated destruction', reason_description: nil, start_time: '2019-09-01T00:00:00.000Z' }, relationships: { batch: { data: { id: '83397', type: 'batches' } }, completion: { meta: { included: false } } } }] }.to_json)
+            .to_return(body: { data: [{ id: '111436', type: 'discards', attributes: { id: 111436, quantity: 5, options: { reason_type: 'mandated', reason_description: nil }, start_time: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96258', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '111435', type: 'discards', attributes: { id: 111435, quantity: 5, reason_type: 'other', reason_description: 'I don\'t like them', start_time: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96219', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '111423', type: 'discards', attributes: { id: 111423, quantity: 1, reason_type: 'other', reason_description: 'I have a fever', start_time: '2019-10-04T00:00:00.000Z' }, relationships: { batch: { data: { id: '96182', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '111331', type: 'discards', attributes: { id: 111331, quantity: 1, reason_type: 'mandated', reason_description: nil, start_time: '2019-10-03T00:00:00.000Z' }, relationships: { batch: { data: { id: '95956', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '33550', type: 'discards', attributes: { id: 33550, quantity: 1, reason_type: 'mandated', reason_description: nil, start_time: '2019-09-01T00:00:00.000Z' }, relationships: { batch: { data: { id: '83397', type: 'batches' } }, completion: { meta: { included: false } } } }] }.to_json)
 
           stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/3000?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
             .to_return(body: load_response_json('api/completions/3000'))
 
           stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/111436?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
-            .to_return(body: { data: { id: '111436', type: 'discards', attributes: { id: 111436, quantity: 5, options: { reason_type: 'mandated destruction', reason_description: nil }, start_time: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96258', type: 'batches' } }, completion: { meta: { included: false } } } } }.to_json)
+            .to_return(body: { data: { id: '111436', type: 'discards', attributes: { id: 111436, quantity: 5, options: { reason_type: 'mandated', reason_description: nil }, start_time: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96258', type: 'batches' } }, completion: { meta: { included: false } } } } }.to_json)
 
           stub_request(:post, 'https://sandbox-api-ma.metrc.com/plantbatches/v1/destroy?licenseNumber=LIC-0001')
             .with(
@@ -216,7 +216,7 @@ RSpec.describe MetrcService::Plant::Discard do
                 {
                   PlantBatch: '1A4060300003B01000000838',
                   Count: 5,
-                  ReasonNote: 'Not Specified',
+                  ReasonNote: 'Waste',
                   ActualDate: '2020-03-30T07:00:00.000Z'
                 }
               ].to_json
@@ -240,10 +240,10 @@ RSpec.describe MetrcService::Plant::Discard do
           .to_return(body: { data: { id: '96182', type: 'batches', attributes: { id: 96182, arbitrary_id: 'Oct1-Ban-Spl-Can', start_type: 'seed', quantity: 0, harvest_quantity: nil, expected_harvest_at: '2019-10-04', harvested_at: nil, seeded_at: '2019-10-01', completed_at: '2019-10-04T16:00:00.000Z', facility_id: 1568, zone_name: 'Flowering', crop_variety: 'Banana Split', crop: 'Cannabis' }, relationships: { harvests: { meta: { included: false } }, completions: { meta: { included: false } }, items: { meta: { included: false } }, custom_data: { meta: { included: false } }, barcodes: { data: [{ type: :barcodes, id: '1A4060300003B01000000838' }] }, discards: { meta: { included: false } }, seeding_unit: { data: { type: 'seeding_units', id: '3479' } }, harvest_unit: { meta: { included: false } }, zone: { data: { id: 6425, type: 'zones' } }, sub_zone: { meta: { included: false } } } }, included: [{ id: '3479', type: 'seeding_units', attributes: { id: 3479, name: 'Plant (barcoded)', secondary_display_active: nil, secondary_display_capacity: nil, item_tracking_method: 'custom_prefix' } }] }.to_json)
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/")
-          .to_return(body: { data: [{ id: '111436', type: 'discards', attributes: { id: 111436, quantity: 5, options: { reason_type: 'mandated destruction', reason_description: nil }, start_time: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96258', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '111435', type: 'discards', attributes: { id: 111435, quantity: 5, reason_type: 'other', reason_description: 'I don\'t like them', start_time: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96219', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '111423', type: 'discards', attributes: { id: 111423, quantity: 1, reason_type: 'other', reason_description: 'I have a fever', start_time: '2019-10-04T00:00:00.000Z' }, relationships: { batch: { data: { id: '96182', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '111331', type: 'discards', attributes: { id: 111331, quantity: 1, reason_type: 'mandated destruction', reason_description: nil, start_time: '2019-10-03T00:00:00.000Z' }, relationships: { batch: { data: { id: '95956', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '33550', type: 'discards', attributes: { id: 33550, quantity: 1, reason_type: 'mandated destruction', reason_description: nil, start_time: '2019-09-01T00:00:00.000Z' }, relationships: { batch: { data: { id: '83397', type: 'batches' } }, completion: { meta: { included: false } } } }] }.to_json)
+          .to_return(body: { data: [{ id: '111436', type: 'discards', attributes: { id: 111436, quantity: 5, options: { reason_type: 'mandated', reason_description: nil }, start_time: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96258', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '111435', type: 'discards', attributes: { id: 111435, quantity: 5, reason_type: 'mandated', reason_description: 'I don\'t like them', start_time: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96219', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '111423', type: 'discards', attributes: { id: 111423, quantity: 1, reason_type: 'mandated', reason_description: 'I have a fever', start_time: '2019-10-04T00:00:00.000Z' }, relationships: { batch: { data: { id: '96182', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '111331', type: 'discards', attributes: { id: 111331, quantity: 1, reason_type: 'mandated', reason_description: nil, start_time: '2019-10-03T00:00:00.000Z' }, relationships: { batch: { data: { id: '95956', type: 'batches' } }, completion: { meta: { included: false } } } }, { id: '33550', type: 'discards', attributes: { id: 33550, quantity: 1, reason_type: 'mandated', reason_description: nil, start_time: '2019-09-01T00:00:00.000Z' }, relationships: { batch: { data: { id: '83397', type: 'batches' } }, completion: { meta: { included: false } } } }] }.to_json)
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/1568/completions/3000?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
-          .to_return(body: { data: { id: '3000', type: 'discards', attributes: { id: 3000, quantity: 5, options: { reason_type: 'mandated destruction', reason_description: nil }, start_time: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96258', type: 'batches' } }, completion: { meta: { included: false } } } } }.to_json)
+          .to_return(body: { data: { id: '3000', type: 'discards', attributes: { id: 3000, quantity: 5, options: { reason_type: 'mandated', reason_description: nil }, start_time: '2019-10-25T00:00:00.000Z' }, relationships: { batch: { data: { id: '96258', type: 'batches' } }, completion: { meta: { included: false } } } } }.to_json)
       end
 
       subject { described_class.new(ctx, integration) }
@@ -255,7 +255,7 @@ RSpec.describe MetrcService::Plant::Discard do
         expect(payload.first).to eq(
           PlantBatch: '1A4060300003B01000000838',
           Count: 5,
-          ReasonNote: 'Mandated destruction',
+          ReasonNote: 'Waste',
           ActualDate: '2019-10-25T00:00:00.000Z'
         )
       end
@@ -287,7 +287,7 @@ RSpec.describe MetrcService::Plant::Discard do
                 }
               ],
               calculated_quantity: 1,
-              reason_type: 'male plants',
+              reason_type: 'undesirable',
               discard_type: 'partial',
               note_content: 'The only prescription is more cowbell'
             }
@@ -346,7 +346,7 @@ RSpec.describe MetrcService::Plant::Discard do
             WasteWeight: 20,
             WasteUnitOfMeasureName: 'Grams',
             WasteReasonName: 'Waste',
-            ReasonNote: 'Male plants: The only prescription is more cowbell.',
+            ReasonNote: 'Waste: The only prescription is more cowbell.',
             ActualDate: '2019-10-04T04:00:00.000Z'
           )
         end
@@ -383,7 +383,7 @@ RSpec.describe MetrcService::Plant::Discard do
                 }
               ],
               calculated_quantity: 1,
-              reason_type: 'male plants',
+              reason_type: 'undesirable',
               discard_type: 'partial',
               note_content: 'The only prescription is more cowbell'
             }
@@ -442,7 +442,7 @@ RSpec.describe MetrcService::Plant::Discard do
             WasteWeight: 20.0,
             WasteUnitOfMeasureName: 'Grams',
             WasteReasonName: 'Male Plants',
-            ReasonNote: 'Male plants: The only prescription is more cowbell.',
+            ReasonNote: 'Male Plants: The only prescription is more cowbell.',
             ActualDate: '2019-10-04T04:00:00.000Z'
           )
         end
