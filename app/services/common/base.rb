@@ -175,6 +175,12 @@ module Common
         .select { |completion| completion.options['resource_unit_id'] == resource_unit_id }
     end
 
+    def resource_completions_by_parent_id(parent_id)
+      batch_completions
+        .select { |completion| %w[process generate].include?(completion.action_type) }
+        .select { |completion| completion.parent_id == parent_id }
+    end
+
     def location_name
       Common::Utils.normalize_zone_name(batch.zone&.name)
     end

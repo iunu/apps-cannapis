@@ -20,11 +20,18 @@
           "A4FF010000002200000104",
           "A4FF010000002200000105"
         ],
-        "quantity": 1,
-        "reason_type": "other",
+        "resources": [
+          {
+            "index": 0,
+            "strategy": "manual",
+            "resource_unit_id": 22,
+            "generated_quantity": 100
+          }
+        ],
+        "calculated_quantity": 1,
+        "reason_type": "male plants",
         "discard_type": "partial",
-        "note_content": "The only prescription is more cowbell",
-        "reason_description": "I have a fever"
+        "note_content": "The only prescription is more cowbell"
       }
     },
     "relationships": {
