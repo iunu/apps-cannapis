@@ -123,7 +123,7 @@ module MetrcService
             Id: nil,
             Label: barcode,
             WasteMethodName: waste_method_name,
-            WasteMaterialMixed: 'None', # TODO: retrieve from the options hash once implemented in portal
+            WasteMaterialMixed: waste_mixed_material,
             WasteWeight: weight_per_plant,
             WasteUnitOfMeasureName: unit_of_weight,
             WasteReasonName: waste_reason_name,
@@ -202,6 +202,10 @@ module MetrcService
 
       def calculate_average_weight(barcodes)
         (total_weight.to_f / barcodes.size).round(2)
+      end
+
+      def waste_mixed_material
+        @attributes.dig('options', 'mixed_material') || 'None'
       end
 
       # map the options' method to a defined metrc value per state.
