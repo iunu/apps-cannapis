@@ -56,11 +56,15 @@ module BaseService
 
     def module_for_completion
       action_type = completion.action_type == 'split' ? 'move' : completion.action_type
+      parent_completion = get_completion(completion.parent_id) if completion.parent_id
+      # only call resource service directly if the resource completion is a product of a move or harvest.
+      # discard waste resources are handled in the discard service
+      call_resource_service = %w[generate consume].include?(action_type) &&
+                              %w[move harvest].include?(parent_completion&.action_type)
 
-      # We need to call for wet weight and wet waste resources
-      # since a resource call was received
-      if %w[generate consume].include?(action_type)
-        module_name = 'Resource::WetWeight'
+      if call_resource_service
+        # TODO: add resource endpoints to associated parent service.. move, harvest rather than dealing with them individually.
+        module_name = find_resource_module
       else
         seeding_unit_name = module_name_for_seeding_unit.camelize
         module_name = "#{seeding_unit_name}::#{action_type.camelize}"
@@ -78,6 +82,16 @@ module BaseService
       SEEDING_UNIT_MAP.fetch(name, name)
     end
 
+    # return the correct resource service based on the resource unit name.
+    def find_resource_module
+      resource_unit = get_resource_unit(completion.options&.dig('resource_unit_id'))
+      if resource_unit.name.downcase.include?('wet weight')
+        'Resource::WetWeight'
+      elsif resource_unit.name.downcase.include?('waste')
+        'Resource::WetWaste'
+      end
+    end
+
     def batch
       @batch ||= artemis.get_batch
     end
@@ -92,10 +106,10 @@ module BaseService
 
     def artemis
       @artemis ||= begin
-                     facility_id = @ctx.dig('relationships', 'facility', 'data', 'id')
-                     batch_id = @ctx.dig('relationships', 'batch', 'data', 'id')
-                     ArtemisService.new(@integration.account, batch_id, facility_id)
-                   end
+        facility_id = @ctx.dig('relationships', 'facility', 'data', 'id')
+        batch_id = @ctx.dig('relationships', 'batch', 'data', 'id')
+        ArtemisService.new(@integration.account, batch_id, facility_id)
+      end
     end
   end
 end
