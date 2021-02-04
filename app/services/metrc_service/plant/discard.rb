@@ -18,47 +18,76 @@ module MetrcService
       #     pesticides: Pesticides
       #     other: Other
       #     undefined: Not specified
-
-      MA_WASTE_REASON_NAME_MAP = {
-        'surplus' => 'Trimming',
-        'underperformed' => 'Waste',
-        'mandated' => 'Waste',
-        'undesirable' => 'Waste',
-        'contamination' => 'Spoilage',
-        'damage' => 'Spoilage',
-        'pesticides' => 'Spoilage',
-        'other' => 'Waste',
-        'undefined' => 'Waste'
+      MA_WASTE_REASON_MAP = {
+        surplus: 'Trimming',
+        underperformed: 'Waste',
+        mandated: 'Waste',
+        undesirable: 'Waste',
+        contamination: 'Spoilage',
+        damage: 'Spoilage',
+        pesticides: 'Spoilage',
+        other: 'Waste',
+        undefined: 'Waste'
       }.freeze
 
-      MO_WASTE_REASON_NAME_MAP = {
-        'surplus' => 'Trimming/Prunning',
-        'underperformed' => 'Damaged',
-        'mandated' => 'Mandated State Destruction',
-        'undesirable' => 'Contamination',
-        'contamination' => 'Contamination',
-        'damage' => 'Damaged',
-        'pesticides' => 'Contamination',
-        'other' => 'Spoilage',
-        'undefined' => 'Spoilage'
+      MO_WASTE_REASON_MAP = {
+        surplus: 'Trimming/Prunning',
+        underperformed: 'Damaged',
+        mandated: 'Mandated State Destruction',
+        undesirable: 'Contamination',
+        contamination: 'Contamination',
+        damage: 'Damaged',
+        pesticides: 'Contamination',
+        other: 'Spoilage',
+        undefined: 'Spoilage'
       }.freeze
 
-      CA_WASTE_REASON_NAME_MAP = {
-        'surplus' => 'Pruning',
-        'underperformed' => 'Failure to Thrive',
-        'mandated' => 'Mandated Destruction',
-        'undesirable' => 'Male Plants',
-        'contamination' => 'Contamination',
-        'damage' => 'Damage',
-        'pesticides' => 'Pesticides',
-        'other' => 'Damage',
-        'undefined' => 'Damage'
+      CA_WASTE_REASON_MAP = {
+        surplus: 'Pruning',
+        underperformed: 'Failure to Thrive',
+        mandated: 'Mandated Destruction',
+        undesirable: 'Male Plants',
+        contamination: 'Contamination',
+        damage: 'Damage',
+        pesticides: 'Pesticides',
+        other: 'Damage',
+        undefined: 'Damage'
       }.freeze
 
-      STATE_WASTE_REASON_NAME_MAP = {
-        ma: MA_WASTE_REASON_NAME_MAP,
-        mo: MO_WASTE_REASON_NAME_MAP,
-        ca: CA_WASTE_REASON_NAME_MAP
+      STATE_WASTE_REASON_MAP = {
+        ma: MA_WASTE_REASON_MAP,
+        mo: MO_WASTE_REASON_MAP,
+        ca: CA_WASTE_REASON_MAP
+      }.freeze
+
+      # TODO: implement waste method in portal, for now we default to undefined value.
+      # - use `GET /plants/v1/waste/methods` to fetch appropriate values per state rather then hard code them here.
+      #   methods up-to-date as of 02/02/21
+      MA_WASTE_METHOD_MAP = {
+        compost: 'Compost',
+        self_hauler: 'Made Unrecognizable & Unusable',
+        waste_hauler: 'Made Unrecognizable & Unusable',
+        undefined: 'Made Unrecognizable & Unusable'
+      }.freeze
+
+      MO_WASTE_METHOD_MAP = {
+        compost: 'Compost',
+        self_hauler: 'Made Unusable & Recognizable',
+        waste_hauler: 'Made Unusable & Recognizable',
+        undefined: 'Made Unusable & Recognizable'
+      }.freeze
+
+      CA_WASTE_METHOD_MAP = {
+        compost: 'Compost',
+        self_hauler: 'Self-Hauler',
+        waste_hauler: 'Waste-Hauler',
+        undefined: 'Waste-Hauler'
+      }.freeze
+
+      STATE_WASTE_METHOD_MAP = {
+        ma: MA_WASTE_METHOD_MAP,
+        mo: MO_WASTE_METHOD_MAP,
+        ca: CA_WASTE_METHOD_MAP
       }.freeze
 
       def call
@@ -93,11 +122,11 @@ module MetrcService
           {
             Id: nil,
             Label: barcode,
-            WasteMethodName: 'Compost', # TODO: retrieve from the options hash once implemented in portal
-            WasteMaterialMixed: 'Soil', # TODO: retrieve from the options hash once implemented in portal
+            WasteMethodName: waste_method_name,
+            WasteMaterialMixed: waste_mixed_material,
             WasteWeight: weight_per_plant,
             WasteUnitOfMeasureName: unit_of_weight,
-            WasteReasonName: reason_name,
+            WasteReasonName: waste_reason_name,
             ReasonNote: note,
             ActualDate: discard_completion.start_time
           }
@@ -147,8 +176,8 @@ module MetrcService
                            note_content
                          end
 
-        reason_note = reason_name
-        reason_note += ": #{reason_str_end}." if reason_name && reason_str_end
+        reason_note = waste_reason_name
+        reason_note += ": #{reason_str_end}." if waste_reason_name && reason_str_end
 
         reason_note || NOT_SPECIFIED
       end
@@ -175,10 +204,20 @@ module MetrcService
         (total_weight.to_f / barcodes.size).round(2)
       end
 
-      # map the options reason_type to a defined metrc value per state.
-      def reason_name
+      def waste_mixed_material
+        @attributes.dig('options', 'mixed_material') || 'None'
+      end
+
+      # map the options' method to a defined metrc value per state.
+      def waste_method_name
+        method = @attributes.dig('options', 'method')&.downcase || 'undefined'
+        STATE_WASTE_METHOD_MAP[@integration.state.to_sym][method.to_sym]
+      end
+
+      # map the options' reason_type to a defined metrc value per state.
+      def waste_reason_name
         reason_type = @attributes.dig('options', 'reason_type')&.downcase || 'undefined'
-        STATE_WASTE_REASON_NAME_MAP[@integration.state.to_sym][reason_type]
+        STATE_WASTE_REASON_MAP[@integration.state.to_sym][reason_type.to_sym]
       end
     end
   end
