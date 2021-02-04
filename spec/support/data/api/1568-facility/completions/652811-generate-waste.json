@@ -8,8 +8,8 @@
       "end_time": "2020-02-17T08:00:00.000Z",
       "user_id": 2,
       "occurrence": 0,
-      "parent_id": 652810,
       "status": "active",
+      "parent_id": 652810,
       "options": {
         "strategy": "manual",
         "generated_quantity": 100,

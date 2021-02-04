@@ -12,6 +12,7 @@
       "occurrence": 0,
       "action_type": "move",
       "status": "active",
+      "parent_id": null,
       "options": {
         "zone_id": 6424,
         "quantity": 1,

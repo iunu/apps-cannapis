@@ -12,6 +12,7 @@
       "occurrence": 0,
       "action_type": "discard",
       "status": "active",
+      "parent_id": null,
       "options": {
         "barcode": [
           "A4FF010000002200000101",
