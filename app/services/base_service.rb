@@ -71,8 +71,8 @@ module BaseService
       end
 
       @integration.vendor_module.const_get(module_name)
-    rescue NameError
-      raise InvalidOperation, "Processing not supported for #{seeding_unit.name} #{action_type} completions"
+    rescue NameError => e
+      raise InvalidOperation, "Processing not supported for #{seeding_unit.name} #{action_type} completion #{completion.id}. #{e.inspect}"
     end
 
     private

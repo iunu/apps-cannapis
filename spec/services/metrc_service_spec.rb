@@ -72,7 +72,7 @@ RSpec.describe MetrcService do
 
     context '#module_for_completion' do
       let(:action_type) { 'start' }
-      let(:completion) { double(:completion, action_type: action_type, parent_id: nil) }
+      let(:completion) { double(:completion, id: 1, action_type: action_type, parent_id: nil) }
       subject { instance.send(:module_for_completion) }
 
       context 'plant_barcoded' do
