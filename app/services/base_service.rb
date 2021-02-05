@@ -84,7 +84,7 @@ module BaseService
 
     # return the correct resource service based on the resource unit name.
     def find_resource_module
-      resource_unit = get_resource_unit(completion.options&.dig('resource_unit_id'))
+      resource_unit = artemis.get_resource_unit(completion.options&.dig('resource_unit_id'))
       if resource_unit.name.downcase.include?('wet weight')
         'Resource::WetWeight'
       elsif resource_unit.name.downcase.include?('waste')
