@@ -56,7 +56,7 @@ module BaseService
 
     def module_for_completion
       action_type = completion.action_type == 'split' ? 'move' : completion.action_type
-      parent_completion = get_completion(completion.parent_id) if completion.parent_id
+      parent_completion = artemis.get_completion(completion.parent_id) if completion.parent_id
       # only call resource service directly if the resource completion is a product of a move or harvest.
       # discard waste resources are handled in the discard service
       call_resource_service = %w[generate consume].include?(action_type) &&
