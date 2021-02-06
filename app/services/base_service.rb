@@ -66,6 +66,8 @@ module BaseService
         # TODO: add resource endpoints to associated parent service.. move, harvest rather than dealing with them individually.
         module_name = find_resource_module
       else
+        raise "seeding_unit is undefined for completion #{completion.id} #{completion.action_type}" unless seeding_unit
+
         seeding_unit_name = module_name_for_seeding_unit.camelize
         module_name = "#{seeding_unit_name}::#{action_type.camelize}"
       end
