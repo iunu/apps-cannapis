@@ -8,7 +8,11 @@ module MetrcService
       resource_name 'wet_waste'
 
       def call
-        return if harvest_disabled?
+        parent_completion = get_completion(completion.parent_id) if completion.parent_id
+        parent_is_disard = parent_completion&.action_type == 'discard'
+
+        # discard waste resources are handled in the discard service
+        return if harvest_disabled? || parent_is_disard
 
         remove_waste if resource_present?
 
