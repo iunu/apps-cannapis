@@ -56,14 +56,9 @@ module BaseService
 
     def module_for_completion
       action_type = completion.action_type == 'split' ? 'move' : completion.action_type
-      parent_completion = artemis.get_completion(completion.parent_id) if completion.parent_id
-      # only call resource service directly if the resource completion is a product of a move or harvest.
-      # discard waste resources are handled in the discard service
-      call_resource_service = %w[generate consume].include?(action_type) &&
-                              %w[move harvest].include?(parent_completion&.action_type)
 
-      if call_resource_service
-        # TODO: add resource endpoints to associated parent service.. move, harvest rather than dealing with them individually.
+      # TODO: add resource endpoints to associated parent service.. move, harvest rather than dealing with them individually.
+      if %w[generate consume].include?(action_type)
         module_name = find_resource_module
       else
         raise "seeding_unit is undefined for completion #{completion.id} #{completion.action_type}" unless seeding_unit
