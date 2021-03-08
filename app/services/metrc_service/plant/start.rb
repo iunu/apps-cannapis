@@ -66,7 +66,6 @@ module MetrcService
           PlantBatchType: 'Clone',
           PlantCount: quantity,
           LocationName: location_name,
-          RoomName: location_name,
           StrainName: batch.crop_variety,
           PatientLicenseNumber: nil,
           PlantedDate: batch.seeded_at,
