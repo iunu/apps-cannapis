@@ -63,6 +63,7 @@ RSpec.describe MetrcService::Batch do
       include_context 'with synced data'
 
       let(:successful_transaction) { create(:transaction, :harvest, :successful) }
+      let(:skipped_transaction) { create(:transaction, :harvest, :skipped) }
 
       before do
         stub_request(:get, 'https://portal.artemisag.com/api/v3/facilities/1568')
@@ -101,7 +102,7 @@ RSpec.describe MetrcService::Batch do
 
         expect(MetrcService::Plant::Start)
           .to receive(:call)
-          .and_return(successful_transaction)
+          .and_return(skipped_transaction)
 
         expect(MetrcService::Plant::Move)
           .to receive(:call)
