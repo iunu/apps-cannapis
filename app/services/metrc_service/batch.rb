@@ -21,13 +21,12 @@ module MetrcService
         }.with_indifferent_access
 
         arr << MetrcService.perform_action(ctx, @integration, @task)
-
         # halt if the last action failed
-        break arr unless arr.last&.success?
+        break arr unless arr.last&.success? || arr.last&.skipped?
       end
 
       # a stub tranasction to represent the state of the batched transactions
-      result = Transaction.new(success: transactions.all?(&:success?))
+      result = Transaction.new(success: transactions.all? { |t| t.success? || t.skipped? })
       @task.delete if result.success?
 
       result

@@ -14,6 +14,10 @@ FactoryBot.define do
       success { true }
     end
 
+    trait :skipped do
+      skipped { true }
+    end
+
     trait :unsuccessful do
       success { false }
     end
