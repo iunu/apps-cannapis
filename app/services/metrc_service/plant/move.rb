@@ -150,7 +150,6 @@ module MetrcService
             NewLabel: nil,
             GrowthPhase: current_growth_phase,
             NewLocation: location_name,
-            NewRoom: location_name,
             GrowthDate: start_time
           }
         end

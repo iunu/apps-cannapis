@@ -370,7 +370,6 @@ RSpec.describe MetrcService::Plant::Start do
                 PlantBatchType: 'Clone',
                 PlantCount: 100,
                 PlantedDate: now,
-                RoomName: nil,
                 StrainName: 'Banana Split',
                 UnpackagedDate: now
               }
@@ -507,7 +506,6 @@ RSpec.describe MetrcService::Plant::Start do
             PlantBatchType: 'Clone',
             PlantCount: 100,
             LocationName: 'Flowering',
-            RoomName: 'Flowering',
             StrainName: 'Banana Split',
             PatientLicenseNumber: nil,
             PlantedDate: '2019-10-01',

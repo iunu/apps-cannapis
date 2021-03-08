@@ -792,7 +792,6 @@ RSpec.describe MetrcService::Plant::Move do
           NewLabel: nil,
           GrowthPhase: normalized_growth_phase,
           NewLocation: location_name,
-          NewRoom: location_name,
           GrowthDate: start_time
         },
         {
@@ -801,7 +800,6 @@ RSpec.describe MetrcService::Plant::Move do
           NewLabel: nil,
           GrowthPhase: normalized_growth_phase,
           NewLocation: location_name,
-          NewRoom: location_name,
           GrowthDate: start_time
         }
       ]
@@ -815,7 +813,7 @@ RSpec.describe MetrcService::Plant::Move do
 
       expect_any_instance_of(described_class)
         .to receive(:location_name)
-        .exactly(4)
+        .exactly(2)
         .and_return(location_name)
 
       expect_any_instance_of(described_class)
