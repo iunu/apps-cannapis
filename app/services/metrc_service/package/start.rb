@@ -192,6 +192,7 @@ module MetrcService
         end
       end
 
+      # TODO: This is incorrect. We should only be fetching consume completions related to the start.
       def consume_completions
         batch_completions.select do |completion|
           completion.action_type == 'consume'

@@ -118,6 +118,10 @@ module MetrcService
       def build_mature_payload
         weight_per_plant = calculate_average_weight(discarded_barcodes)
 
+        # Mark any waste transactions pending from waste completions as skipped
+        # They are being recorded with discard transaction.
+        Transaction.where(completion_id: waste_completions.map(&:id)).map { |t| t.update(skipped: true) }
+
         discarded_barcodes.map do |barcode|
           {
             Id: nil,
