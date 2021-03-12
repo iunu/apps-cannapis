@@ -3,14 +3,16 @@ module BaseService
 
   SEEDING_UNIT_MAP = {
     'testing_package' => 'package',
+    'clone' => 'plant',
+    'clones' => 'plant',
+    'plant' => 'plant',
+    'plants' => 'plant',
     'plant_barcoded' => 'plant',
     'plants_barcoded' => 'plant',
     'plant_clone' => 'plant',
     'plants_clone' => 'plant',
-    'clones' => 'plant',
-    'clone' => 'plant',
-    'plants' => 'plant',
-    'plant' => 'plant'
+    'plant_mom' => 'plant',
+    'plants_mom' => 'plant'
   }.freeze
 
   WEIGHT_UNIT_MAP = {
