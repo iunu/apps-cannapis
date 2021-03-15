@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe MetrcService::Plant::Move do
   let(:account) { create(:account) }
-  let(:integration) { create(:integration, account: account, state: 'md') }
+  let(:integration) { create(:integration, account: account, state: 'ma') }
   let(:ctx) do
     {
       id: 3000,
@@ -201,7 +201,7 @@ RSpec.describe MetrcService::Plant::Move do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=3000")
           .to_return(body: { data: [] }.to_json)
 
-        stub_request(:put, 'https://sandbox-api-md.metrc.com/plantbatches/v1/moveplantbatches?licenseNumber=LIC-0001')
+        stub_request(:put, 'https://sandbox-api-ma.metrc.com/plantbatches/v1/moveplantbatches?licenseNumber=LIC-0001')
           .with(body: expected_payload.to_json)
           .to_return(status: 200)
       end
@@ -273,7 +273,7 @@ RSpec.describe MetrcService::Plant::Move do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=3000")
           .to_return(body: { data: [] }.to_json)
 
-        stub_request(:put, 'https://sandbox-api-md.metrc.com/plantbatches/v1/moveplantbatches?licenseNumber=LIC-0001')
+        stub_request(:put, 'https://sandbox-api-ma.metrc.com/plantbatches/v1/moveplantbatches?licenseNumber=LIC-0001')
           .with(body: expected_payload.to_json)
           .to_return(status: 200)
       end
@@ -324,7 +324,7 @@ RSpec.describe MetrcService::Plant::Move do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=3000")
           .to_return(body: { data: [] }.to_json)
 
-        stub_request(:put, 'https://sandbox-api-md.metrc.com/plantbatches/v1/moveplantbatches?licenseNumber=LIC-0001')
+        stub_request(:put, 'https://sandbox-api-ma.metrc.com/plantbatches/v1/moveplantbatches?licenseNumber=LIC-0001')
           .with(body: expected_payload.to_json)
           .to_return(status: 200)
       end
@@ -556,7 +556,7 @@ RSpec.describe MetrcService::Plant::Move do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/2/completions/3000?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: load_response_json('api/completions/3000-veg-move'))
 
-        stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/moveplants?licenseNumber=LIC-0001')
+        stub_request(:post, 'https://sandbox-api-ma.metrc.com/plants/v1/moveplants?licenseNumber=LIC-0001')
           .with(body: expected_payload.to_json)
           .to_return(status: 200)
       end
@@ -604,7 +604,7 @@ RSpec.describe MetrcService::Plant::Move do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/2/completions/3000?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: load_response_json('api/completions/3000-split'))
 
-        stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/moveplants?licenseNumber=LIC-0001')
+        stub_request(:post, 'https://sandbox-api-ma.metrc.com/plants/v1/moveplants?licenseNumber=LIC-0001')
           .with(body: expected_payload.to_json)
           .to_return(status: 200)
       end
@@ -656,7 +656,7 @@ RSpec.describe MetrcService::Plant::Move do
         .to receive(:start_time)
         .and_return(start_time)
 
-      stub_request(:put, 'https://sandbox-api-md.metrc.com/plantbatches/v1/moveplantbatches?licenseNumber=LIC-0001')
+      stub_request(:put, 'https://sandbox-api-ma.metrc.com/plantbatches/v1/moveplantbatches?licenseNumber=LIC-0001')
         .with(body: expected_payload.to_json)
         .to_return(status: 200)
     end
@@ -710,7 +710,7 @@ RSpec.describe MetrcService::Plant::Move do
       stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3000?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
         .to_return(body: load_response_json('api/completions/3000'))
 
-      stub_request(:post, 'https://sandbox-api-md.metrc.com/plantbatches/v1/changegrowthphase?licenseNumber=LIC-0001')
+      stub_request(:post, 'https://sandbox-api-ma.metrc.com/plantbatches/v1/changegrowthphase?licenseNumber=LIC-0001')
         .with(body: expected_payload.to_json)
         .to_return(status: 200)
     end
@@ -830,7 +830,7 @@ RSpec.describe MetrcService::Plant::Move do
       stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3000?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
         .to_return(body: load_response_json('api/completions/3000'))
 
-      stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/changegrowthphases?licenseNumber=LIC-0001')
+      stub_request(:post, 'https://sandbox-api-ma.metrc.com/plants/v1/changegrowthphases?licenseNumber=LIC-0001')
         .with(body: expected_payload.to_json)
         .to_return(status: 200)
     end
