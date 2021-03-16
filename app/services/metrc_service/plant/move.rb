@@ -4,7 +4,6 @@ module MetrcService
       DEFAULT_MOVE_STEP = :change_growth_phase
       WET_WEIGHT = /wet weight/i.freeze
 
-      # TODO: use `GET plants/v1/waste/reasons` to fetch appropriate reason names per facilitiy rather then hard code them here.
       # CA only allows flowering growth phase.
       # Because artemis stages and zones are tightly coupled, sometimes plants will be move into barcoded flowering stage but still be in a "veg" zone
       CA_GROWTH_PHASE_MAP = {
@@ -47,7 +46,6 @@ module MetrcService
                                          .max_by { |comp| [comp.start_time, comp.id] }
 
         return if previous_move.nil?
-
 
         # calling get_completion here will ensure relationships are side loaded.
         get_completion(previous_move.id)

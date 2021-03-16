@@ -1,0 +1,149 @@
+{
+  "data": {
+    "id": "2240",
+    "type": "completions",
+    "attributes": {
+      "id": 2240,
+      "status": "active",
+      "user_id": 1772,
+      "content": null,
+      "start_time": "2020-03-30T07:00:00.000Z",
+      "end_time": "2020-03-30T07:00:00.000Z",
+      "occurrence": 0,
+      "action_type": "move",
+      "parent_id": null,
+      "context": {
+        "source_batches": null
+      },
+      "options": {
+        "zone_id": 7251,
+        "quantity": 100,
+        "sub_zone_id": null,
+        "arbitrary_id": "Mar30-Lav-Cak-M0102",
+        "crop_variety_id": 19278,
+        "seeding_unit_id": 3591,
+        "zone_name": "Drying Rack"
+      }
+    },
+    "relationships": {
+      "action_result": {
+        "data": {
+          "id": null,
+          "type": null
+        }
+      },
+      "batch": {
+        "data": {
+          "id": "105681",
+          "type": "batches"
+        }
+      },
+      "facility": {
+        "data": {
+          "id": 1626,
+          "type": "facilities"
+        }
+      },
+      "user": {
+        "data": {
+          "id": 1772,
+          "type": "users"
+        }
+      },
+      "crop_batch_state": {
+        "data": {
+          "type": "crop_batch_states",
+          "id": "425818"
+        }
+      }
+    }
+  },
+  "included": [
+    {
+      "id": "425818",
+      "type": "crop_batch_states",
+      "attributes": {
+        "harvest_quantity": null,
+        "id": 425818,
+        "quantity": 100,
+        "cached_data": {
+          "items_snapshot": []
+        }
+      },
+      "relationships": {
+        "crop_batch": {
+          "data": {
+            "id": "105681",
+            "type": "crop_batches"
+          }
+        },
+        "completion": {
+          "data": {
+            "id": "2240",
+            "type": "completions"
+          }
+        },
+        "zone": {
+          "data": {
+            "id": "7249",
+            "type": "zones"
+          }
+        },
+        "sub_zone": {
+          "data": {
+            "id": "",
+            "type": "sub_zones"
+          }
+        },
+        "seeding_unit": {
+          "data": {
+            "id": "3591",
+            "type": "seeding_units"
+          }
+        },
+        "harvest_unit": {
+          "data": {
+            "id": "",
+            "type": "harvest_units"
+          }
+        }
+      }
+    },
+    {
+      "id": "3591",
+      "type": "seeding_units",
+      "attributes": {
+        "id": 3591,
+        "name": "plants",
+        "secondary_display_active": false,
+        "secondary_display_capacity": null,
+        "item_tracking_method": "preprinted"
+      }
+    },
+    {
+      "id": "24",
+      "type": "sub_stages",
+      "attributes": {
+        "id": 24,
+        "name": "Curing",
+        "position": 1
+      },
+      "relationships": {
+        "stage": {
+          "data": {
+            "id": "1068",
+            "type": "stages"
+          }
+        },
+        "zones": {
+          "meta": {
+            "included": false
+          }
+        }
+      }
+    }
+  ],
+  "jsonapi": {
+    "version": "1.0"
+  }
+}

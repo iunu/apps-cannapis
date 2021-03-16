@@ -536,8 +536,8 @@ RSpec.describe MetrcService::Plant::Start do
             .with(body: [{
               Name: '1A4060300003B01000000838',
               Count: 100,
-              StartingTag: nil,
-              GrowthPhase: 'Vegetative',
+              StartingTag: 'ABCDEF1234567890ABCDEF01',
+              GrowthPhase: 'Flowering',
               NewLocation: 'Zone 1',
               GrowthDate: nil,
               PatientLicenseNumber: nil
