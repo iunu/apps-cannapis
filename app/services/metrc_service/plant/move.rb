@@ -4,6 +4,29 @@ module MetrcService
       DEFAULT_MOVE_STEP = :change_growth_phase
       WET_WEIGHT = /wet weight/i.freeze
 
+      # CA only allows flowering growth phase.
+      # Because artemis stages and zones are tightly coupled, sometimes plants will be move into barcoded flowering stage but still be in a "veg" zone
+      CA_GROWTH_PHASE_MAP = {
+        vegetative: 'Flowering',
+        flowering: 'Flowering'
+      }.freeze
+
+      MA_GROWTH_PHASE_MAP = {
+        vegetative: 'Vegetative',
+        flowering: 'Flowering'
+      }.freeze
+
+      MO_GROWTH_PHASE_MAP = {
+        vegetative: 'Vegetative',
+        flowering: 'Flowering'
+      }.freeze
+
+      STATE_GROWTH_PHASE_MAP = {
+        ca: CA_GROWTH_PHASE_MAP,
+        ma: MA_GROWTH_PHASE_MAP,
+        mo: MO_GROWTH_PHASE_MAP
+      }.freeze
+
       def call
         if next_step_name.nil?
           skip!
@@ -128,12 +151,11 @@ module MetrcService
       end
 
       def change_growth_phase
-        phase = current_growth_phase || 'Flowering'
         payload = {
           Name: batch_tag,
           Count: quantity,
-          StartingTag: immature?(phase) ? nil : first_barcode,
-          GrowthPhase: phase,
+          StartingTag: immature?(growth_phase_for_payload) ? nil : first_barcode,
+          GrowthPhase: growth_phase_for_payload,
           NewLocation: location_name,
           GrowthDate: start_time,
           PatientLicenseNumber: nil
@@ -148,7 +170,7 @@ module MetrcService
             Id: nil,
             Label: barcode,
             NewLabel: nil,
-            GrowthPhase: current_growth_phase,
+            GrowthPhase: growth_phase_for_payload,
             NewLocation: location_name,
             GrowthDate: start_time
           }
@@ -222,10 +244,28 @@ module MetrcService
         normalized_growth_phase(get_substage(comp))
       end
 
-      def current_growth_phase
-        growth_phase_for_completion(current_completion)
+      def growth_phase_for_payload
+        phase = growth_phase_for_completion(current_completion)
+        validate_growth_phase_for_payload!(phase)
+
+        STATE_GROWTH_PHASE_MAP[@integration.state.to_sym][phase.downcase.to_sym]
       end
-      memoize :current_growth_phase
+      memoize :growth_phase_for_payload
+
+      def validate_growth_phase_for_payload!(growth_phase)
+        growth_phase_key = growth_phase&.downcase&.to_sym
+
+        case growth_phase_key
+        when :vegetative
+          true
+        when :flowering
+          true
+        when :drying
+          raise InvalidAttributes, "Missing wet weight output for move completion #{current_completion.id} when moving to Dry" unless move_harvest
+        else
+          raise InvalidAttributes, "#{growth_phase} is not a valid growth phase for the state of #{@integration.state}"
+        end
+      end
 
       def location_name
         current_completion&.included&.dig(:zones)&.first&.name || super

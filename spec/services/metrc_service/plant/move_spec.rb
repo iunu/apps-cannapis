@@ -2,7 +2,7 @@ require 'rails_helper'
 
 RSpec.describe MetrcService::Plant::Move do
   let(:account) { create(:account) }
-  let(:integration) { create(:integration, account: account, state: 'md') }
+  let(:integration) { create(:integration, account: account, state: 'ma') }
   let(:ctx) do
     {
       id: 3000,
@@ -201,7 +201,7 @@ RSpec.describe MetrcService::Plant::Move do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=3000")
           .to_return(body: { data: [] }.to_json)
 
-        stub_request(:put, 'https://sandbox-api-md.metrc.com/plantbatches/v1/moveplantbatches?licenseNumber=LIC-0001')
+        stub_request(:put, 'https://sandbox-api-ma.metrc.com/plantbatches/v1/moveplantbatches?licenseNumber=LIC-0001')
           .with(body: expected_payload.to_json)
           .to_return(status: 200)
       end
@@ -273,7 +273,7 @@ RSpec.describe MetrcService::Plant::Move do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=3000")
           .to_return(body: { data: [] }.to_json)
 
-        stub_request(:put, 'https://sandbox-api-md.metrc.com/plantbatches/v1/moveplantbatches?licenseNumber=LIC-0001')
+        stub_request(:put, 'https://sandbox-api-ma.metrc.com/plantbatches/v1/moveplantbatches?licenseNumber=LIC-0001')
           .with(body: expected_payload.to_json)
           .to_return(status: 200)
       end
@@ -324,7 +324,7 @@ RSpec.describe MetrcService::Plant::Move do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter%5Baction_type%5D=generate&filter%5Bparent_id%5D=3000")
           .to_return(body: { data: [] }.to_json)
 
-        stub_request(:put, 'https://sandbox-api-md.metrc.com/plantbatches/v1/moveplantbatches?licenseNumber=LIC-0001')
+        stub_request(:put, 'https://sandbox-api-ma.metrc.com/plantbatches/v1/moveplantbatches?licenseNumber=LIC-0001')
           .with(body: expected_payload.to_json)
           .to_return(status: 200)
       end
@@ -334,6 +334,110 @@ RSpec.describe MetrcService::Plant::Move do
           .not_to receive(:harvest_plants)
 
         expect(subject).to be_success
+      end
+    end
+
+    describe 'moves to unsupported growth phases will raise an exception' do
+      describe 'move to cure growth phase raises exception' do
+        let(:ctx) do
+          {
+            id: 2238,
+            relationships: {
+              batch: { data: { id: batch_id } },
+              facility: { data: { id: facility_id } }
+            },
+            attributes: {
+              start_time: '2020-04-15',
+              options: {
+                quantity: '2'
+              }
+            },
+            completion_id: 2238
+          }.with_indifferent_access
+        end
+
+        let(:seeding_unit_id) { 7 }
+
+        before do
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}")
+            .to_return(body: load_response_json("api/sync/facilities/#{facility_id}"))
+
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}")
+            .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
+
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
+            .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
+
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}/items?filter[seeding_unit_id]=#{seeding_unit_id}&include=barcodes,seeding_unit")
+            .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/items"))
+
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/2238?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+            .to_return(body: load_response_json('api/completions/2238-curing-move'))
+
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
+            .to_return(body: { data: [
+              JSON.parse(load_response_json('api/completions/2237-flower-move'))['data'],
+              JSON.parse(load_response_json('api/completions/2238-curing-move'))['data']
+            ] }.to_json)
+
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/2237?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+            .to_return(body: load_response_json('api/completions/2237-flower-move'))
+        end
+
+        it 'raises an exception' do
+          expect { subject }.to raise_exception(InvalidAttributes, /Curing is not a valid growth phase for the state of ma/)
+        end
+      end
+
+      describe 'move to dry growth phase w/o a harvest weight reported raises exception' do
+        let(:ctx) do
+          {
+            id: 2240,
+            relationships: {
+              batch: { data: { id: batch_id } },
+              facility: { data: { id: facility_id } }
+            },
+            attributes: {
+              start_time: '2020-04-15',
+              options: {
+                quantity: '2'
+              }
+            },
+            completion_id: 2240
+          }.with_indifferent_access
+        end
+
+        let(:seeding_unit_id) { 7 }
+
+        before do
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}")
+            .to_return(body: load_response_json("api/sync/facilities/#{facility_id}"))
+
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}")
+            .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
+
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
+            .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
+
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}/items?filter[seeding_unit_id]=#{seeding_unit_id}&include=barcodes,seeding_unit")
+            .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/items"))
+
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/2240?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+            .to_return(body: load_response_json('api/completions/2240-drying-move'))
+
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
+            .to_return(body: { data: [
+              JSON.parse(load_response_json('api/completions/2237-flower-move'))['data'],
+              JSON.parse(load_response_json('api/completions/2240-drying-move'))['data']
+            ] }.to_json)
+
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/2237?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
+            .to_return(body: load_response_json('api/completions/2237-flower-move'))
+        end
+
+        it 'raises an exception' do
+          expect { subject }.to raise_exception(InvalidAttributes, /Curing is not a valid growth phase for the state of ma/)
+        end
       end
     end
   end
@@ -556,7 +660,7 @@ RSpec.describe MetrcService::Plant::Move do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/2/completions/3000?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: load_response_json('api/completions/3000-veg-move'))
 
-        stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/moveplants?licenseNumber=LIC-0001')
+        stub_request(:post, 'https://sandbox-api-ma.metrc.com/plants/v1/moveplants?licenseNumber=LIC-0001')
           .with(body: expected_payload.to_json)
           .to_return(status: 200)
       end
@@ -604,7 +708,7 @@ RSpec.describe MetrcService::Plant::Move do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/2/completions/3000?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
           .to_return(body: load_response_json('api/completions/3000-split'))
 
-        stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/moveplants?licenseNumber=LIC-0001')
+        stub_request(:post, 'https://sandbox-api-ma.metrc.com/plants/v1/moveplants?licenseNumber=LIC-0001')
           .with(body: expected_payload.to_json)
           .to_return(status: 200)
       end
@@ -656,7 +760,7 @@ RSpec.describe MetrcService::Plant::Move do
         .to receive(:start_time)
         .and_return(start_time)
 
-      stub_request(:put, 'https://sandbox-api-md.metrc.com/plantbatches/v1/moveplantbatches?licenseNumber=LIC-0001')
+      stub_request(:put, 'https://sandbox-api-ma.metrc.com/plantbatches/v1/moveplantbatches?licenseNumber=LIC-0001')
         .with(body: expected_payload.to_json)
         .to_return(status: 200)
     end
@@ -710,7 +814,7 @@ RSpec.describe MetrcService::Plant::Move do
       stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3000?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
         .to_return(body: load_response_json('api/completions/3000'))
 
-      stub_request(:post, 'https://sandbox-api-md.metrc.com/plantbatches/v1/changegrowthphase?licenseNumber=LIC-0001')
+      stub_request(:post, 'https://sandbox-api-ma.metrc.com/plantbatches/v1/changegrowthphase?licenseNumber=LIC-0001')
         .with(body: expected_payload.to_json)
         .to_return(status: 200)
     end
@@ -830,7 +934,7 @@ RSpec.describe MetrcService::Plant::Move do
       stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions/3000?include=action_result,crop_batch_state,crop_batch_state.seeding_unit,crop_batch_state.zone.sub_stage")
         .to_return(body: load_response_json('api/completions/3000'))
 
-      stub_request(:post, 'https://sandbox-api-md.metrc.com/plants/v1/changegrowthphases?licenseNumber=LIC-0001')
+      stub_request(:post, 'https://sandbox-api-ma.metrc.com/plants/v1/changegrowthphases?licenseNumber=LIC-0001')
         .with(body: expected_payload.to_json)
         .to_return(status: 200)
     end
