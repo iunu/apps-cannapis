@@ -51,7 +51,6 @@ module BaseService
 
     def perform_action
       handler = module_for_completion
-      return if handler.blank?
 
       @task&.current_action = handler.name.underscore
       handler.call(@ctx, @integration, batch)
@@ -63,7 +62,6 @@ module BaseService
       # TODO: add resource endpoints to associated parent service.. move, harvest rather than dealing with them individually.
       if %w[generate consume].include?(action_type)
         module_name = find_resource_module
-        return if module_name.blank?
       else
         raise "seeding_unit is undefined for completion #{completion.id} #{completion.action_type}" unless seeding_unit
 

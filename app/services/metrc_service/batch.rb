@@ -66,8 +66,18 @@ module MetrcService
       validate_completions!(sorted_completions)
     end
 
+    # Completion type is supported (COMPLETION_TYPES)
+    #  - If completion type is generate or consume the resource unit type must also be supported.
     def completion_supported?(completion)
-      V1::WebhookController::COMPLETION_TYPES.include?(completion.action_type)
+      return false unless V1::WebhookController::COMPLETION_TYPES.include?(completion.action_type)
+
+      %w[generate consume].include?(completion.action_type) ? resource_unit_type_supported(completion) : true
+    end
+
+    def resource_unit_type_supported?(completion)
+      resource_unit = artemis.get_resource_unit(completion.options&.dig('resource_unit_id'))
+      resource_unit&.name&.downcase&.include?('wet weight') ||
+        resource_unit&.name&.downcase&.include?('waste')
     end
 
     # check that the completion was created after the integration was activated.
