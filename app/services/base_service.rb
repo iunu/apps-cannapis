@@ -51,6 +51,7 @@ module BaseService
 
     def perform_action
       handler = module_for_completion
+      return unless handler
 
       @task&.current_action = handler.name.underscore
       handler.call(@ctx, @integration, batch)
@@ -68,6 +69,7 @@ module BaseService
         seeding_unit_name = module_name_for_seeding_unit.camelize
         module_name = "#{seeding_unit_name}::#{action_type.camelize}"
       end
+      return unless module_name
 
       @integration.vendor_module.const_get(module_name)
     rescue NameError => e
