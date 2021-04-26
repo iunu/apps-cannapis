@@ -42,7 +42,7 @@ module MetrcService
       end
 
       def prior_move
-        previous_move = batch_completions.select { |comp| comp.action_type == 'move' && comp.id < @completion_id }
+        previous_move = batch_completions.select { |comp| comp.action_type == 'move' && comp.id.to_i < @completion_id.to_i }
                                          .max_by { |comp| [comp.start_time, comp.id] }
 
         return if previous_move.nil?
