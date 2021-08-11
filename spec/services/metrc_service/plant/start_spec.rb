@@ -363,7 +363,7 @@ RSpec.describe MetrcService::Plant::Start do
               {
                 LocationName: nil,
                 PackageAdjustmentAmount: nil,
-                PackageAdjustmentUnitOfMeasureName: nil,
+                PackageAdjustmentUnitOfMeasureName: 'Each',
                 PackageLabel: '1A4060300003779000013229',
                 PatientLicenseNumber: nil,
                 PlantBatchName: '1A406020000E4E9000003989',
@@ -501,7 +501,7 @@ RSpec.describe MetrcService::Plant::Start do
           [{
             PackageLabel: 'Latiff',
             PackageAdjustmentAmount: nil,
-            PackageAdjustmentUnitOfMeasureName: nil,
+            PackageAdjustmentUnitOfMeasureName: 'Each',
             PlantBatchName: '1A4060300003B01000000838',
             PlantBatchType: 'Clone',
             PlantCount: 100,
