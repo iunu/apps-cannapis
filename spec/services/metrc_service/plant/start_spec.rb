@@ -153,13 +153,13 @@ RSpec.describe MetrcService::Plant::Start do
             zone = double(:zone, attributes: zone_attributes, name: 'Germination')
 
             double(:batch,
-                    zone: zone,
-                    quantity: '100',
-                    crop_variety: 'Banana Split',
-                    seeded_at: Time.zone.now,
-                    relationships: {
-                      'barcodes': { 'data': [{ 'id': '1A4FF0100000022000001010' }] }
-                    }.with_indifferent_access)
+                   zone: zone,
+                   quantity: '100',
+                   crop_variety: 'Banana Split',
+                   seeded_at: Time.zone.now,
+                   relationships: {
+                     'barcodes': { 'data': [{ 'id': '1A4FF0100000022000001010' }] }
+                   }.with_indifferent_access)
           end
 
           subject { described_class.new(ctx, integration) }
@@ -209,15 +209,15 @@ RSpec.describe MetrcService::Plant::Start do
             zone = double(:zone, attributes: zone_attributes, name: 'Germination')
 
             double(:batch,
-                    zone: zone,
-                    quantity: '100',
-                    crop_variety: 'Banana Split',
-                    seeded_at: Time.zone.now,
-                    relationships: {
-                      barcodes: {
-                        'data': [{ 'type': :barcodes, 'id': '1A4FF0100000022000001101' }]
-                      }
-                    }.with_indifferent_access)
+                   zone: zone,
+                   quantity: '100',
+                   crop_variety: 'Banana Split',
+                   seeded_at: Time.zone.now,
+                   relationships: {
+                     barcodes: {
+                       'data': [{ 'type': :barcodes, 'id': '1A4FF0100000022000001101' }]
+                     }
+                   }.with_indifferent_access)
           end
 
           subject { described_class.new(ctx, integration) }
@@ -362,8 +362,8 @@ RSpec.describe MetrcService::Plant::Start do
             [
               {
                 LocationName: nil,
-                PackageAdjustmentAmount: 0,
-                PackageAdjustmentUnitOfMeasureName: 'Ounces',
+                PackageAdjustmentAmount: nil,
+                PackageAdjustmentUnitOfMeasureName: nil,
                 PackageLabel: '1A4060300003779000013229',
                 PatientLicenseNumber: nil,
                 PlantBatchName: '1A406020000E4E9000003989',
@@ -500,8 +500,8 @@ RSpec.describe MetrcService::Plant::Start do
         let(:expected_payload) do
           [{
             PackageLabel: 'Latiff',
-            PackageAdjustmentAmount: 0,
-            PackageAdjustmentUnitOfMeasureName: 'Ounces',
+            PackageAdjustmentAmount: nil,
+            PackageAdjustmentUnitOfMeasureName: nil,
             PlantBatchName: '1A4060300003B01000000838',
             PlantBatchType: 'Clone',
             PlantCount: 100,
