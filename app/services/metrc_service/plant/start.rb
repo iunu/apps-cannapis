@@ -60,7 +60,7 @@ module MetrcService
 
         [{
           PackageLabel: label.value,
-          PackageAdjustmentAmount: nil,
+          PackageAdjustmentAmount: 0,
           PackageAdjustmentUnitOfMeasureName: 'Each',
           PlantBatchName: batch_tag,
           PlantBatchType: 'Clone',
