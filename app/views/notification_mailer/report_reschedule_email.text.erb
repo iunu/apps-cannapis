@@ -4,10 +4,10 @@ Attempt number <%=@attempts%> has been scheduled for the next cycle.
 
 Vendor: <%=@integration.vendor_name %>
 Batch ID: <%=@task.batch_id %>
-Artemis account ID: <%=@account.id %>
+Artemis facility ID: <%=@task.facility_id %>
+Artemis user ID: <%=@account.id %>
 User contact: <%=@account.full_name %> <<%=@account.email%>>
 Completion Type: <%=@task.current_action %>
 
 Error:
 <%=@error.message %>
-
