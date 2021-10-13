@@ -50,11 +50,20 @@ module BaseService
     delegate :run_mode, to: :module_for_completion
 
     def perform_action
-      handler = module_for_completion
-      return unless handler
+      if completion.status == 'removed'
+        remove_transaction(completion.id)
+      else
+        handler = module_for_completion
+        return unless handler
 
-      @task&.current_action = handler.name.underscore
-      handler.call(@ctx, @integration, batch)
+        @task&.current_action = handler.name.underscore
+        handler.call(@ctx, @integration, batch)
+      end
+    end
+
+    def remove_transaction(completion_id)
+      transactions = Transaction.where(completion_id: completion_id)
+      transactions.destroy_all
     end
 
     def module_for_completion
