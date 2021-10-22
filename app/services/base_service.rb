@@ -1,6 +1,7 @@
 module BaseService
   CROP = 'Cannabis'.freeze
 
+  # noop seeding units do not need to be reported to metrc
   SEEDING_UNIT_MAP = {
     'testing_package' => 'package',
     'clone' => 'plant',
@@ -12,7 +13,10 @@ module BaseService
     'plant_clone' => 'plant',
     'plants_clone' => 'plant',
     'plant_mom' => 'plant',
-    'plants_mom' => 'plant'
+    'plants_mom' => 'plant',
+    'bin' => 'noop',
+    'plant_cutting' => 'noop',
+    'plant_cuttings' => 'noop'
   }.freeze
 
   WEIGHT_UNIT_MAP = {
@@ -66,6 +70,8 @@ module BaseService
       transactions.destroy_all
     end
 
+    # Determines the correct cannAPIs module to use for creating a payload to send to metrc.
+    # for example `MetrcService::Plant::Move`
     def module_for_completion
       action_type = completion.action_type == 'split' ? 'move' : completion.action_type
 
@@ -75,8 +81,11 @@ module BaseService
       else
         raise "seeding_unit is undefined for completion #{completion.id} #{completion.action_type}" unless seeding_unit
 
-        seeding_unit_name = module_name_for_seeding_unit.camelize
-        module_name = "#{seeding_unit_name}::#{action_type.camelize}"
+        seeding_unit_name = module_name_for_seeding_unit
+        # completions using a noop seeding unit do not need to be reported to metrc
+        return if seeding_unit_name == 'noop'
+
+        module_name = "#{seeding_unit_name&.camelize}::#{action_type.camelize}"
       end
       return unless module_name
 
