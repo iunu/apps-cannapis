@@ -1,12 +1,6 @@
 require 'rails_helper'
 
 RSpec.describe MetrcService do
-  context '::CROP' do
-    subject { described_class::CROP }
-    it { is_expected.to_not be_empty }
-    it { is_expected.to eq 'Cannabis' }
-  end
-
   let(:ctx) do
     {
       id: 3000,
@@ -16,6 +10,12 @@ RSpec.describe MetrcService do
       },
       completion_id: 1001
     }.with_indifferent_access
+  end
+  context '::CROP' do
+    subject { described_class::CROP }
+
+    it { is_expected.not_to be_empty }
+    it { is_expected.to eq 'Cannabis' }
   end
 
   context 'module lookup' do
@@ -36,7 +36,7 @@ RSpec.describe MetrcService do
         .and_return(completion)
     end
 
-    context '#module_name_for_seeding_unit' do
+    describe '#module_name_for_seeding_unit' do
       subject { instance.send(:module_name_for_seeding_unit) }
 
       context 'plant_barcoded' do
@@ -68,9 +68,24 @@ RSpec.describe MetrcService do
         let(:seeding_unit_name) { 'Sales Order' }
         it { is_expected.to eq('sales_order') }
       end
+
+      context 'bin' do
+        let(:seeding_unit_name) { 'Bin' }
+        it { is_expected.to eq('noop') }
+      end
+
+      context 'cutting' do
+        let(:seeding_unit_name) { 'Plant (Cutting)' }
+        it { is_expected.to eq('noop') }
+      end
+
+      context 'cuttings' do
+        let(:seeding_unit_name) { 'Plant (Cuttings)' }
+        it { is_expected.to eq('noop') }
+      end
     end
 
-    context '#module_for_completion' do
+    describe '#module_for_completion' do
       let(:action_type) { 'start' }
       let(:completion) { double(:completion, id: 1, action_type: action_type, parent_id: nil) }
       subject { instance.send(:module_for_completion) }
@@ -112,6 +127,24 @@ RSpec.describe MetrcService do
         it 'fails with an error' do
           expect { subject }.to raise_error(InvalidOperation)
         end
+      end
+
+      context 'bin' do
+        let(:action_type) { 'move' }
+        let(:seeding_unit_name) { 'Bin' }
+        it { is_expected.to eq(nil) }
+      end
+
+      context 'cutting' do
+        let(:action_type) { 'move' }
+        let(:seeding_unit_name) { 'Plant (Cutting)' }
+        it { is_expected.to eq(nil) }
+      end
+
+      context 'cuttings' do
+        let(:action_type) { 'move' }
+        let(:seeding_unit_name) { 'Plant (Cuttings)' }
+        it { is_expected.to eq(nil) }
       end
     end
   end
