@@ -18,7 +18,6 @@
       "options": {
         "harvest_type": "complete",
         "note_content": "Testy",
-        "harvest_unit_id": 5269,
         "seeding_unit_id": 3479,
         "harvest_quantity": 100,
         "quantity_remaining": 1
@@ -92,12 +91,6 @@
           "data": {
             "id": "3591",
             "type": "seeding_units"
-          }
-        },
-        "harvest_unit": {
-          "data": {
-            "id": "",
-            "type": "harvest_units"
           }
         }
       }

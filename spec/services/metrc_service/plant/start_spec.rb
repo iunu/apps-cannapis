@@ -78,7 +78,7 @@ RSpec.describe MetrcService::Plant::Start do
           stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}")
             .to_return(body: { data: { id: facility_id, type: 'facilities', attributes: { id: facility_id, name: 'Rare Dankness' } } }.to_json)
 
-          stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
+          stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,sub_zone,custom_data.custom_field")
             .to_return(body: {
               data: {
                 id: batch_id,
@@ -252,7 +252,7 @@ RSpec.describe MetrcService::Plant::Start do
             stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}")
               .to_return(body: { data: { id: facility_id, type: 'facilities', attributes: { id: facility_id, name: 'Rare Dankness' } } }.to_json)
 
-            stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
+            stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,sub_zone,custom_data.custom_field")
               .to_return(body: {
                 data: {
                   id: batch_id,
@@ -381,7 +381,7 @@ RSpec.describe MetrcService::Plant::Start do
             stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}")
               .to_return(body: { data: { id: facility_id, type: 'facilities', attributes: { id: facility_id, name: 'Rare Dankness' } } }.to_json)
 
-            stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
+            stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,sub_zone,custom_data.custom_field")
               .to_return(body: {
                 data: {
                   id: batch_id,
@@ -517,7 +517,7 @@ RSpec.describe MetrcService::Plant::Start do
           stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}")
             .to_return(body: { data: { id: facility_id, type: 'facilities', attributes: { id: facility_id, name: 'Rare Dankness' } } }.to_json)
 
-          stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
+          stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,sub_zone,custom_data.custom_field")
             .to_return(body: load_response_json('api/seed/batch-96182'))
 
           stub_request(:post, 'https://sandbox-api-ca.metrc.com/packages/v1/create/plantings?licenseNumber=LIC-0001')
@@ -569,7 +569,7 @@ RSpec.describe MetrcService::Plant::Start do
             stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}")
               .to_return(body: { data: { id: facility_id, type: 'facilities', attributes: { id: facility_id, name: 'Rare Dankness' } } }.to_json)
 
-            stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
+            stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,sub_zone,custom_data.custom_field")
               .to_return(body: {
                 data: {
                   id: batch_id,
@@ -712,7 +712,7 @@ RSpec.describe MetrcService::Plant::Start do
             stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}")
               .to_return(body: { data: { id: facility_id, type: 'facilities', attributes: { id: facility_id, name: 'Rare Dankness' } } }.to_json)
 
-            stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
+            stub_request(:get, "https://portal.artemisag.com/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,sub_zone,custom_data.custom_field")
               .to_return(body: load_response_json('api/seed/batch-96183'))
 
             stub_request(:post, 'https://sandbox-api-ca.metrc.com/plants/v1/create/plantings?licenseNumber=LIC-0001')

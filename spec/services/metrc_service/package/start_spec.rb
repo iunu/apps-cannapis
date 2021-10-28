@@ -127,7 +127,7 @@ RSpec.describe MetrcService::Package::Start do
           stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}")
             .to_return(body: load_response_json("api/sync/facilities/#{facility_id}"))
 
-          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
+          stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,sub_zone,custom_data.custom_field")
             .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
 
           stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
@@ -175,7 +175,7 @@ RSpec.describe MetrcService::Package::Start do
                 run_on: run_on
               )
 
-              stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{crop_batch_id}?include=zone,zone.sub_stage,barcodes,completions,custom_data,seeding_unit,harvest_unit,sub_zone")
+              stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{crop_batch_id}?include=zone,zone.sub_stage,barcodes,completions,custom_data,seeding_unit,sub_zone")
                 .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{crop_batch_id}"))
 
               stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter%5Bcrop_batch_ids%5D%5B0%5D=#{crop_batch_id}")
@@ -241,13 +241,13 @@ RSpec.describe MetrcService::Package::Start do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}"))
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,sub_zone,custom_data.custom_field")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}"))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{batch_id}")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{batch_id}/completions"))
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{crop_batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{crop_batch_id}?include=zone,zone.sub_stage,barcodes,custom_data,seeding_unit,sub_zone,custom_data.custom_field")
           .to_return(body: load_response_json("api/sync/facilities/#{facility_id}/batches/#{crop_batch_id}"))
 
         stub_request(:get, 'https://sandbox-api-ca.metrc.com/plantbatches/v1/active?licenseNumber=LIC-0001')

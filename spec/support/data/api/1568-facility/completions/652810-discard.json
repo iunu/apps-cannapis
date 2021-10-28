@@ -104,12 +104,6 @@
             "id": "3591",
             "type": "seeding_units"
           }
-        },
-        "harvest_unit": {
-          "data": {
-            "id": "",
-            "type": "harvest_units"
-          }
         }
       }
     },
