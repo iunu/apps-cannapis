@@ -11,11 +11,11 @@ class ArtemisService
     @artemis.facility(id || @facility_id)
   end
 
-  def get_batch(add = 'zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
+  def get_batch(add = 'zone,zone.sub_stage,barcodes,custom_data,seeding_unit,sub_zone,custom_data.custom_field')
     get_batch_by_id(@batch_id, add)
   end
 
-  def get_batch_by_id(id, add = 'zone,zone.sub_stage,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone,custom_data.custom_field')
+  def get_batch_by_id(id, add = 'zone,zone.sub_stage,barcodes,custom_data,seeding_unit,sub_zone,custom_data.custom_field')
     get_facility.batch(id, include: add, force: true)
   end
 
@@ -24,7 +24,7 @@ class ArtemisService
   end
 
   # This will get the current items from the batch
-  # This probably should not be used because it could provide 
+  # This probably should not be used because it could provide
   #   items from the future after the current_completion was performed.
   def get_batch_items(seeding_unit_id, include: 'barcodes,seeding_unit')
     @artemis.facility(@facility_id)

@@ -27,7 +27,6 @@ RSpec.describe NcsService::Package::Start do
           ],
           harvest_type: 'complete',
           note_content: '',
-          harvest_unit_id: 12,
           seeding_unit_id: 11,
           quantity_remaining: 1,
           calculated_quantity: 1.0
@@ -118,7 +117,7 @@ RSpec.describe NcsService::Package::Start do
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}")
           .to_return(body: load_response_json('api/package/facility'))
 
-        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{crop_batch_id}?include=zone,barcodes,custom_data,seeding_unit,harvest_unit,sub_zone")
+        stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/batches/#{crop_batch_id}?include=zone,barcodes,custom_data,seeding_unit,sub_zone")
           .to_return(body: load_response_json("api/package/batch#{testing ? '-testing' : ''}"))
 
         stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/api/v3/facilities/#{facility_id}/completions?filter[crop_batch_ids][]=#{crop_batch_id}")
@@ -163,7 +162,7 @@ RSpec.describe NcsService::Package::Start do
               run_on: run_on
             )
 
-            stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/v3/facilities/2/batches/15?include=zone,barcodes,completions,custom_data,seeding_unit,harvest_unit,sub_zone")
+            stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/v3/facilities/2/batches/15?include=zone,barcodes,completions,custom_data,seeding_unit,sub_zone")
               .to_return(body: load_response_json('api/package/crop-batch'))
 
             stub_request(:get, "#{ENV['ARTEMIS_BASE_URI']}/v3/facilities/1/completions?filter%5Bcrop_batch_ids%5D%5B0%5D=15")
