@@ -51,7 +51,7 @@ module BaseService
       @task = task
     end
 
-    delegate :run_mode, to: :module_for_completion
+    delegate :run_mode, to: :module_for_completion, allow_nil: true
 
     def perform_action
       if completion.status == 'removed'
