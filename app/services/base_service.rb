@@ -2,6 +2,7 @@ module BaseService
   CROP = 'Cannabis'.freeze
 
   # noop seeding units do not need to be reported to metrc
+  # TODO: filter out completions with seeding units that evaluate to noop in MetrcService::Batch#completion_supported? rather than here.
   SEEDING_UNIT_MAP = {
     'testing_package' => 'package',
     'clone' => 'plant',
@@ -16,7 +17,8 @@ module BaseService
     'plants_mom' => 'plant',
     'bin' => 'noop',
     'plant_cutting' => 'noop',
-    'plant_cuttings' => 'noop'
+    'plant_cuttings' => 'noop',
+    'sop' => 'noop'
   }.freeze
 
   WEIGHT_UNIT_MAP = {
