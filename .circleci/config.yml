@@ -27,7 +27,7 @@ jobs:
     steps:
       - checkout
       - restore_cache:
-          key: cannapi-bundle-v1-{{ checksum "Gemfile.lock" }}
+          key: cannapi-bundle-v2-{{ checksum "Gemfile.lock" }}
 
       - run:
           name: Install bundle
@@ -36,7 +36,7 @@ jobs:
       - run: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
 
       - save_cache:
-          key: cannapi-bundle-v1-{{ checksum "Gemfile.lock" }}
+          key: cannapi-bundle-v2-{{ checksum "Gemfile.lock" }}
           paths:
             - vendor/bundle
 
@@ -48,7 +48,7 @@ jobs:
       - checkout
       - restore_cache:
           name: Restore bundled gems from cache
-          key: cannapi-bundle-v1-{{ checksum "Gemfile.lock" }}
+          key: cannapi-bundle-v2-{{ checksum "Gemfile.lock" }}
       - restore_cache:
           name: Restore node_modules from cache
           key: node_modules-v1-{{ checksum "yarn.lock" }}
@@ -97,7 +97,7 @@ jobs:
 
       - restore_cache:
           name: Restore bundled gems from cache
-          key: cannapi-bundle-v1-{{ checksum "Gemfile.lock" }}
+          key: cannapi-bundle-v2-{{ checksum "Gemfile.lock" }}
 
       - restore_cache:
           name: Restore precompiled assets from cache
