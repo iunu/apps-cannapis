@@ -2,7 +2,7 @@ version: 2.1
 jobs:
   yarn_install:
     docker:
-      - image: circleci/node:10.15.0
+      - image: circleci/node:16.13.0
 
     steps:
       - checkout
@@ -31,7 +31,7 @@ jobs:
 
       - run:
           name: Install bundle
-          command: sudo gem install bundler:2.0.2
+          command: sudo gem install bundler:2.2.26
 
       - run: bundle check --path=vendor/bundle || bundle install --path=vendor/bundle --jobs 4 --retry 3
 
@@ -55,7 +55,7 @@ jobs:
 
       - run:
           name: Install dependencies
-          command: sudo gem install bundler:2.0.2
+          command: sudo gem install bundler:2.2.26
 
       - run:
           name: Install any missing gems / dependencies / extensions
@@ -105,7 +105,7 @@ jobs:
 
       - run:
           name: Install bundle
-          command: sudo gem install bundler:2.0.2
+          command: sudo gem install bundler:2.2.26
 
       - run:
           name: Install any missing gems / dependencies / extensions
@@ -142,7 +142,7 @@ jobs:
 
   #     - run:
   #         name: Install bundle
-  #         command: sudo gem install bundler:2.0.2
+  #         command: sudo gem install bundler:2.2.26
 
   #     - run:
   #         name: Install dependencies
