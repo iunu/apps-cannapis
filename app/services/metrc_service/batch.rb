@@ -26,7 +26,7 @@ module MetrcService
       end
 
       # a stub tranasction to represent the state of the batched transactions
-      result = Transaction.new(success: transactions.all? { |t| t.success? || t.skipped? })
+      result = Transaction.new(success: transactions.all? { |t| t&.success? || t&.skipped? })
       @task.delete if result.success?
 
       result
