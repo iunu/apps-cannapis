@@ -38,7 +38,7 @@ gem 'ncs_analytics', git: 'https://github.com/artemis-ag/ncs-integration.git'
 gem 'jsonapi-rails', '~> 0.4.0' # JSONAPI serialization
 
 gem 'pry'
-gem 'sidekiq', '~> 5.2', '>= 5.2.7'
+gem 'sidekiq', '~> 5.2'
 gem 'sidekiq-scheduler', '~> 3.0'
 
 # Windows does not include zoneinfo files, so bundle the tzinfo-data gem
